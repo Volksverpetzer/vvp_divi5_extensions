@@ -1,0 +1,13 @@
+{
+    "name": "volksverpetzer/instagram-slideshow-extension",
+    "description": "DIVI 5 Instagram Slideshow Extension - Display Instagram carousel posts as interactive slideshows",
+    "type": "wordpress-plugin",
+    "autoload": {
+        "psr-4": {
+            "VVP\\\\InstagramSlideshow\\\\": "modules/"
+        }
+    },
+    "require": {
+        "php": ">=7.4"
+    }
+}

@@ -1,0 +1,14 @@
+/* Instagram Slideshow Visual Builder Specific Styles */
+
+.et-fb {
+    .instagram-slideshow {
+        &__inner {
+            min-height: 200px;
+        }
+
+        &__loading,
+        &__error {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+    }
+}
