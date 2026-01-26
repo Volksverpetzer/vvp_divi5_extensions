@@ -3,6 +3,14 @@
  */
 (function () {
     'use strict';
+    let initTimer = null;
+
+    function scheduleInit() {
+        if (initTimer) {
+            clearTimeout(initTimer);
+        }
+        initTimer = setTimeout(initSlideshows, 100);
+    }
 
     /**
      * Initialize all Instagram Slideshows on the page.
@@ -28,6 +36,23 @@
             let currentIndex = 0;
             let autoplayInterval = null;
 
+            function ensureImageLoaded(index) {
+                if (!slides[index]) return;
+                const img = slides[index].querySelector('img');
+                if (!img) return;
+                const dataSrc = img.getAttribute('data-src');
+                if (dataSrc && !img.getAttribute('data-loaded')) {
+                    img.setAttribute('src', dataSrc);
+                    img.setAttribute('data-loaded', 'true');
+                }
+            }
+
+            function preloadNext() {
+                if (slides.length <= 1) return;
+                const nextIndex = (currentIndex + 1) % slides.length;
+                ensureImageLoaded(nextIndex);
+            }
+
             /**
              * Show a specific slide by index.
              */
@@ -40,6 +65,9 @@
 
                 // Set new index
                 currentIndex = (index + slides.length) % slides.length;
+
+                ensureImageLoaded(currentIndex);
+                preloadNext();
 
                 // Add active class to new slide and dot
                 slides[currentIndex].classList.add('active');
@@ -150,6 +178,8 @@
             });
 
             // Start autoplay if enabled
+            ensureImageLoaded(currentIndex);
+            preloadNext();
             startAutoplay();
 
             // Mark as initialized
@@ -164,10 +194,12 @@
         initSlideshows();
     }
 
-    // Handle DIVI AJAX loads or visual builder updates
-    if (window.jQuery) {
-        window.jQuery(document).on('ajaxComplete et_pb_reinit_modules', function () {
-            setTimeout(initSlideshows, 100);
-        });
+    // Handle DOM changes and Divi re-init events without jQuery.
+    document.addEventListener('et_pb_reinit_modules', scheduleInit);
+    document.addEventListener('ajaxComplete', scheduleInit);
+
+    if (document.body && 'MutationObserver' in window) {
+        const observer = new MutationObserver(scheduleInit);
+        observer.observe(document.body, { childList: true, subtree: true });
     }
 })();

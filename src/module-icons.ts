@@ -1,11 +1,10 @@
-import { registerIconLibrary } from '@divi/icon-library';
-import { InstagramSlideshowIcon } from './instagram-slideshow';
+import { addFilter } from '@wordpress/hooks';
+import * as instagramSlideshowIcon from './icons/instagram-slideshow';
 
-export const moduleIcons = {
-    'vvp/instagram-slideshow-icon': InstagramSlideshowIcon,
-};
-
-// Register icons with DIVI.
-Object.entries(moduleIcons).forEach(([name, component]) => {
-    registerIconLibrary(name, component);
+// Add module icons to the icon library.
+addFilter('divi.iconLibrary.icon.map', 'vvp/instagramSlideshow', (icons) => {
+    return {
+        ...icons,
+        [instagramSlideshowIcon.name]: instagramSlideshowIcon,
+    };
 });

@@ -31,8 +31,12 @@ export const InstagramSlideshowEdit = (props: InstagramSlideshowEditProps): Reac
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [currentSlide, setCurrentSlide] = useState(0);
+    const feedApiUrl = 'https://volksverpetzer-app.de/proxy/instaFeed';
 
     // Get attribute values.
+    const useLatest = attrs.useLatest?.desktop?.value ?? 'off';
+    const latestIndexRaw = attrs.latestIndex?.desktop?.value ?? '1';
+    const latestIndex = Math.max(1, parseInt(String(latestIndexRaw), 10) || 1);
     const postId = attrs.postId?.desktop?.value ?? '';
     const apiBaseUrl = attrs.apiBaseUrl?.desktop?.value ?? 'https://volksverpetzer-app.de/proxy/instaById/';
     const showCaption = attrs.showCaption?.desktop?.value ?? 'on';
@@ -41,35 +45,80 @@ export const InstagramSlideshowEdit = (props: InstagramSlideshowEditProps): Reac
 
     // Fetch Instagram data when postId changes.
     useEffect(() => {
-        if (!postId) {
-            setError('Please enter an Instagram Post ID');
-            setInstagramData(null);
-            return;
-        }
+        let cancelled = false;
 
-        setLoading(true);
-        setError(null);
-
-        const apiUrl = `${apiBaseUrl.replace(/\/$/, '')}/${postId}`;
-
-        fetch(apiUrl)
-            .then((response) => {
+        const fetchById = (targetPostId: string) => {
+            const apiUrl = `${apiBaseUrl.replace(/\/$/, '')}/${targetPostId}`;
+            return fetch(apiUrl).then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 return response.json();
-            })
+            });
+        };
+
+        const fetchLatest = async () => {
+            const response = await fetch(feedApiUrl);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const feedData = await response.json();
+            const items = Array.isArray(feedData?.data) ? feedData.data : [];
+            if (!items.length || !items[latestIndex - 1]?.id) {
+                throw new Error('Latest index is out of range');
+            }
+            return fetchById(items[latestIndex - 1].id);
+        };
+
+        setLoading(true);
+        setError(null);
+
+        if (useLatest === 'on') {
+            fetchLatest()
+                .then((data: InstagramData) => {
+                    if (cancelled) return;
+                    setInstagramData(data);
+                    setLoading(false);
+                    setCurrentSlide(0);
+                })
+                .catch((err) => {
+                    if (cancelled) return;
+                    setError(err.message || 'Failed to fetch Instagram data');
+                    setLoading(false);
+                    setInstagramData(null);
+                });
+            return () => {
+                cancelled = true;
+            };
+        }
+
+        if (!postId) {
+            setError('Please enter an Instagram Post ID');
+            setLoading(false);
+            setInstagramData(null);
+            return () => {
+                cancelled = true;
+            };
+        }
+
+        fetchById(postId)
             .then((data: InstagramData) => {
+                if (cancelled) return;
                 setInstagramData(data);
                 setLoading(false);
                 setCurrentSlide(0);
             })
             .catch((err) => {
+                if (cancelled) return;
                 setError(err.message || 'Failed to fetch Instagram data');
                 setLoading(false);
                 setInstagramData(null);
             });
-    }, [postId, apiBaseUrl]);
+
+        return () => {
+            cancelled = true;
+        };
+    }, [postId, apiBaseUrl, useLatest, latestIndex]);
 
     // Extract images from Instagram data.
     const images: InstagramImage[] = instagramData?.children?.data ??
@@ -118,20 +167,29 @@ export const InstagramSlideshowEdit = (props: InstagramSlideshowEditProps): Reac
                     <>
                         <div className="instagram-slideshow__container">
                             <div className="instagram-slideshow__slides">
-                                {images.map((image, index) => (
-                                    <div
-                                        key={image.id || index}
-                                        className={`instagram-slideshow__slide${index === currentSlide ? ' active' : ''}`}
-                                        data-slide-index={index}
-                                        style={{ display: index === currentSlide ? 'block' : 'none' }}
-                                    >
-                                        <img
-                                            src={image.media_url}
-                                            alt={`Instagram image ${index + 1}`}
-                                            loading={index === 0 ? 'eager' : 'lazy'}
-                                        />
-                                    </div>
-                                ))}
+                                {images.map((image, index) => {
+                                    const isActive = index === currentSlide;
+                                    const nextIndex = (currentSlide + 1) % images.length;
+                                    const shouldLoad = images.length <= 1 || isActive || index === nextIndex;
+                                    const src = shouldLoad
+                                        ? image.media_url
+                                        : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/%3E";
+
+                                    return (
+                                        <div
+                                            key={image.id || index}
+                                            className={`instagram-slideshow__slide${index === currentSlide ? ' active' : ''}`}
+                                            data-slide-index={index}
+                                        >
+                                            <img
+                                                src={src}
+                                                data-src={image.media_url}
+                                                alt={`Instagram image ${index + 1}`}
+                                                loading={index === 0 ? 'eager' : 'lazy'}
+                                            />
+                                        </div>
+                                    );
+                                })}
                             </div>
 
                             {showNavigation === 'on' && images.length > 1 && (

@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+reference/
 vendor/
 
 # Build outputs
@@ -8,7 +9,7 @@ scripts/bundle.js.map
 styles/*.css
 dist/
 *.zip
-reference/
+
 
 # OS files
 .DS_Store

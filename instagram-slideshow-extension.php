@@ -32,10 +32,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'INSTAGRAM_SLIDESHOW_PATH', plugin_dir_path( __FILE__ ) );
 define( 'INSTAGRAM_SLIDESHOW_URL', plugin_dir_url( __FILE__ ) );
 define( 'INSTAGRAM_SLIDESHOW_VERSION', '1.0.0' );
+define( 'INSTAGRAM_SLIDESHOW_JSON_PATH', INSTAGRAM_SLIDESHOW_PATH . 'modules-json/' );
 
 /**
- * Requires Composer Autoloader.
+ * Requires module autoloader and Composer autoloader (if present).
  */
+require_once INSTAGRAM_SLIDESHOW_PATH . 'modules/autoload.php';
+
 if ( file_exists( INSTAGRAM_SLIDESHOW_PATH . 'vendor/autoload.php' ) ) {
 	require INSTAGRAM_SLIDESHOW_PATH . 'vendor/autoload.php';
 }
@@ -73,7 +76,7 @@ function instagram_slideshow_enqueue_vb_scripts() {
 				'name'    => 'instagram-slideshow-builder-vb-bundle-style',
 				'version' => INSTAGRAM_SLIDESHOW_VERSION,
 				'style'   => [
-					'src'                => INSTAGRAM_SLIDESHOW_URL . 'styles/vb-bundle.css',
+					'src'                => INSTAGRAM_SLIDESHOW_URL . 'styles/main.css',
 					'deps'               => [],
 					'enqueue_top_window' => false,
 					'enqueue_app_window' => true,
@@ -92,7 +95,7 @@ add_action( 'divi_visual_builder_assets_before_enqueue_scripts', 'instagram_slid
 function instagram_slideshow_enqueue_frontend_scripts() {
 	wp_enqueue_style(
 		'instagram-slideshow-bundle-style',
-		INSTAGRAM_SLIDESHOW_URL . 'styles/bundle.css',
+		INSTAGRAM_SLIDESHOW_URL . 'styles/main.css',
 		array(),
 		INSTAGRAM_SLIDESHOW_VERSION
 	);

@@ -58,6 +58,36 @@ trait RenderCallbackTrait
     }
 
     /**
+     * Fetch Instagram feed data.
+     *
+     * @since 1.0.0
+     *
+     * @param string $feed_url Feed endpoint URL.
+     *
+     * @return array|WP_Error Feed data or error.
+     */
+    private static function fetch_instagram_feed($feed_url)
+    {
+        $response = wp_remote_get($feed_url, [
+            'timeout' => 15,
+            'sslverify' => true,
+        ]);
+
+        if (is_wp_error($response)) {
+            return $response;
+        }
+
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        if (empty($data) || !is_array($data) || empty($data['data']) || !is_array($data['data'])) {
+            return new \WP_Error('invalid_feed_response', __('Invalid Instagram feed response.', 'instagram-slideshow-extension'));
+        }
+
+        return $data;
+    }
+
+    /**
      * Instagram Slideshow module render callback for server-side rendering.
      *
      * @since 1.0.0
@@ -72,8 +102,11 @@ trait RenderCallbackTrait
     public static function render_callback($attrs, $content, $block, $elements)
     {
         // Get module settings.
+        $use_latest = $attrs['useLatest']['desktop']['value'] ?? 'off';
+        $latest_index = (int) ($attrs['latestIndex']['desktop']['value'] ?? 1);
         $post_id = $attrs['postId']['desktop']['value'] ?? '';
         $api_base_url = $attrs['apiBaseUrl']['desktop']['value'] ?? 'https://volksverpetzer-app.de/proxy/instaById/';
+        $feed_url = 'https://volksverpetzer-app.de/proxy/instaFeed';
         $show_caption = $attrs['showCaption']['desktop']['value'] ?? 'on';
         $show_navigation = $attrs['showNavigation']['desktop']['value'] ?? 'on';
         $show_pagination = $attrs['showPagination']['desktop']['value'] ?? 'on';
@@ -81,6 +114,40 @@ trait RenderCallbackTrait
         $transition_speed = $attrs['transitionSpeed']['desktop']['value'] ?? '3';
 
         // Fetch Instagram data.
+        if ($use_latest === 'on') {
+            if ($latest_index < 1) {
+                $latest_index = 1;
+            }
+            $feed_data = self::fetch_instagram_feed($feed_url);
+            if (is_wp_error($feed_data)) {
+                return HTMLUtility::render([
+                    'tag' => 'div',
+                    'attributes' => [
+                        'class' => 'instagram-slideshow__error',
+                    ],
+                    'childrenSanitizer' => 'esc_html',
+                    'children' => sprintf(
+                        __('Error loading Instagram feed: %s', 'instagram-slideshow-extension'),
+                        $feed_data->get_error_message()
+                    ),
+                ]);
+            }
+
+            $items = $feed_data['data'];
+            if (empty($items[$latest_index - 1]['id'])) {
+                return HTMLUtility::render([
+                    'tag' => 'div',
+                    'attributes' => [
+                        'class' => 'instagram-slideshow__error',
+                    ],
+                    'childrenSanitizer' => 'esc_html',
+                    'children' => __('Latest index is out of range.', 'instagram-slideshow-extension'),
+                ]);
+            }
+
+            $post_id = $items[$latest_index - 1]['id'];
+        }
+
         $instagram_data = self::fetch_instagram_data($post_id, $api_base_url);
 
         if (is_wp_error($instagram_data)) {
@@ -126,16 +193,21 @@ trait RenderCallbackTrait
         $slides_html = '';
         foreach ($images as $index => $image) {
             $is_active = $index === 0 ? ' active' : '';
+            $should_load = $index === 0 || $index === 1 || count( $images ) === 1;
+            $placeholder_src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/%3E";
+            $img_src = $should_load ? esc_url($image['media_url']) : $placeholder_src;
             $slides_html .= HTMLUtility::render([
                 'tag' => 'div',
                 'attributes' => [
                     'class' => 'instagram-slideshow__slide' . $is_active,
                     'data-slide-index' => $index,
                 ],
+                'childrenSanitizer' => 'et_core_esc_previously',
                 'children' => HTMLUtility::render([
                     'tag' => 'img',
                     'attributes' => [
-                        'src' => esc_url($image['media_url']),
+                        'src' => $img_src,
+                        'data-src' => esc_url($image['media_url']),
                         'alt' => sprintf(__('Instagram image %d', 'instagram-slideshow-extension'), $index + 1),
                         'loading' => $index === 0 ? 'eager' : 'lazy',
                     ],

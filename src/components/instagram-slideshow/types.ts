@@ -4,6 +4,8 @@ import { type ModuleLibrary } from '@divi/types';
 // Module attributes interface.
 export interface InstagramSlideshowAttrs {
     module: object;
+    useLatest: object;
+    latestIndex: object;
     postId: object;
     apiBaseUrl: object;
     showCaption: object;

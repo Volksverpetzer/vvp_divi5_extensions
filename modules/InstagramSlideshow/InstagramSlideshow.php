@@ -38,13 +38,18 @@ class InstagramSlideshow implements DependencyInterface
      */
     public function load()
     {
-        $module_json_file = __DIR__ . '/module.json';
+        $module_json_folder_path = INSTAGRAM_SLIDESHOW_JSON_PATH . 'instagram-slideshow/';
+        $source_module_json_path = INSTAGRAM_SLIDESHOW_PATH . 'src/components/instagram-slideshow/module.json';
+
+        if ( ! file_exists( $module_json_folder_path . 'module.json' ) && file_exists( $source_module_json_path ) ) {
+            $module_json_folder_path = dirname( $source_module_json_path ) . '/';
+        }
 
         add_action(
             'init',
-            function () use ($module_json_file) {
+            function () use ($module_json_folder_path) {
                 ModuleRegistration::register_module(
-                    $module_json_file,
+                    $module_json_folder_path,
                     [
                         'render_callback' => [InstagramSlideshow::class, 'render_callback'],
                     ]

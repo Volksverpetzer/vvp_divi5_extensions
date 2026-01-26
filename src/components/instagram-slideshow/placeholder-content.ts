@@ -1,4 +1,14 @@
 export const placeholderContent = {
+    useLatest: {
+        desktop: {
+            value: 'off',
+        },
+    },
+    latestIndex: {
+        desktop: {
+            value: '1',
+        },
+    },
     postId: {
         desktop: {
             value: '17881655640351114',
