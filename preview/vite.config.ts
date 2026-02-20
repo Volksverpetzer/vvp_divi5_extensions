@@ -17,7 +17,7 @@ export default defineConfig({
             allow: [path.resolve(__dirname, '..')],
         },
         proxy: {
-            '/api/instaById': {
+            '/proxy': {
                 target: 'https://volksverpetzer-app.de',
                 changeOrigin: true,
                 secure: true,
