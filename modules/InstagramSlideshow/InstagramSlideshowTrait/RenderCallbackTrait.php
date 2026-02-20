@@ -289,7 +289,7 @@ trait RenderCallbackTrait
                 ],
                 'childrenSanitizer' => 'et_core_esc_previously',
                 'children' => $slides_html,
-            ]) . $navigation_html . $pagination_html,
+            ]) . $navigation_html,
         ]);
 
         // Get parent for context.
@@ -328,7 +328,7 @@ trait RenderCallbackTrait
                         'data-transition-speed' => $transition_speed,
                     ],
                     'childrenSanitizer' => 'et_core_esc_previously',
-                    'children' => $slideshow_html . $caption_html,
+                    'children' => $slideshow_html . $pagination_html . $caption_html,
                 ]),
             ],
         ]);

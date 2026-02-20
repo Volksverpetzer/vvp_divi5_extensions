@@ -26,7 +26,7 @@
             if (!container) return;
 
             const slides = Array.from(container.querySelectorAll('.instagram-slideshow__slide'));
-            const dots = Array.from(container.querySelectorAll('.instagram-slideshow__dot'));
+            const dots = Array.from(slideshow.querySelectorAll('.instagram-slideshow__dot'));
             const prevBtn = container.querySelector('.instagram-slideshow__nav--prev');
             const nextBtn = container.querySelector('.instagram-slideshow__nav--next');
 

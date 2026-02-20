@@ -214,20 +214,20 @@ export const InstagramSlideshowEdit = (props: InstagramSlideshowEditProps): Reac
                                     </button>
                                 </>
                             )}
-
-                            {showPagination === 'on' && images.length > 1 && (
-                                <div className="instagram-slideshow__pagination">
-                                    {images.map((_, index) => (
-                                        <button
-                                            key={index}
-                                            className={`instagram-slideshow__dot${index === currentSlide ? ' active' : ''}`}
-                                            onClick={() => goToSlide(index)}
-                                            aria-label={`Go to slide ${index + 1}`}
-                                        />
-                                    ))}
-                                </div>
-                            )}
                         </div>
+
+                        {showPagination === 'on' && images.length > 1 && (
+                            <div className="instagram-slideshow__pagination">
+                                {images.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        className={`instagram-slideshow__dot${index === currentSlide ? ' active' : ''}`}
+                                        onClick={() => goToSlide(index)}
+                                        aria-label={`Go to slide ${index + 1}`}
+                                    />
+                                ))}
+                            </div>
+                        )}
 
                         {showCaption === 'on' && instagramData?.caption && (
                             <div className="instagram-slideshow__caption">
