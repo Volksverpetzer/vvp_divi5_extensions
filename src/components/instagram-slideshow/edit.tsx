@@ -31,6 +31,7 @@ export const InstagramSlideshowEdit = (props: InstagramSlideshowEditProps): Reac
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [isOverlayOpen, setIsOverlayOpen] = useState(false);
 
     // Get attribute values.
     const useLatest = attrs.useLatest?.desktop?.value ?? 'off';
@@ -141,6 +142,27 @@ export const InstagramSlideshowEdit = (props: InstagramSlideshowEditProps): Reac
         setCurrentSlide(index);
     };
 
+    /**
+     * Convert URLs in text to clickable links.
+     */
+    const linkify = (text: string) => {
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        return text.split(urlRegex).map((part, i) => {
+            if (part.match(urlRegex)) {
+                return (
+                    <a key={i} href={part} target="_blank" rel="noopener noreferrer">
+                        {part}
+                    </a>
+                );
+            }
+            return part;
+        });
+    };
+
+    const caption = instagramData?.caption ?? '';
+    const isLongCaption = caption.length > 200;
+    const truncatedCaption = isLongCaption ? `${caption.substring(0, 200)}... ` : caption;
+
     return (
         <ModuleContainer
             attrs={attrs}
@@ -229,9 +251,17 @@ export const InstagramSlideshowEdit = (props: InstagramSlideshowEditProps): Reac
                             </div>
                         )}
 
-                        {showCaption === 'on' && instagramData?.caption && (
+                        {showCaption === 'on' && caption && (
                             <div className="instagram-slideshow__caption">
-                                {instagramData.caption}
+                                {linkify(truncatedCaption)}
+                                {isLongCaption && (
+                                    <button
+                                        className="instagram-slideshow__read-more"
+                                        onClick={() => setIsOverlayOpen(true)}
+                                    >
+                                        Read More
+                                    </button>
+                                )}
                             </div>
                         )}
                     </>
@@ -243,6 +273,23 @@ export const InstagramSlideshowEdit = (props: InstagramSlideshowEditProps): Reac
                     </div>
                 )}
             </div>
+
+            {isOverlayOpen && (
+                <div className="instagram-slideshow__overlay">
+                    <div className="instagram-slideshow__overlay-content">
+                        <button
+                            className="instagram-slideshow__overlay-close"
+                            onClick={() => setIsOverlayOpen(false)}
+                            aria-label="Close"
+                        >
+                            ×
+                        </button>
+                        <div className="instagram-slideshow__overlay-body">
+                            {linkify(caption)}
+                        </div>
+                    </div>
+                </div>
+            )}
         </ModuleContainer>
     );
 };

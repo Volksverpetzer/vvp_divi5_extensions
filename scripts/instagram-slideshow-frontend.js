@@ -29,6 +29,9 @@
             const dots = Array.from(slideshow.querySelectorAll('.instagram-slideshow__dot'));
             const prevBtn = container.querySelector('.instagram-slideshow__nav--prev');
             const nextBtn = container.querySelector('.instagram-slideshow__nav--next');
+            const readMoreBtn = slideshow.querySelector('.instagram-slideshow__read-more');
+            const overlay = slideshow.querySelector('.instagram-slideshow__overlay');
+            const overlayClose = slideshow.querySelector('.instagram-slideshow__overlay-close');
 
             const autoplay = slideshow.dataset.autoplay === 'on';
             const intervalTime = parseInt(slideshow.dataset.transitionSpeed || '3', 10) * 1000;
@@ -133,6 +136,29 @@
                     startAutoplay(); // Restart interval on manual click
                 });
             });
+
+            // Overlay handlers
+            if (readMoreBtn && overlay) {
+                readMoreBtn.addEventListener('click', () => {
+                    overlay.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+
+            if (overlayClose && overlay) {
+                overlayClose.addEventListener('click', () => {
+                    overlay.style.display = 'none';
+                    document.body.style.overflow = '';
+                });
+
+                // Close on background click
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        overlay.style.display = 'none';
+                        document.body.style.overflow = '';
+                    }
+                });
+            }
 
             // Touch support
             let touchStartX = 0;
