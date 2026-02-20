@@ -11,7 +11,9 @@ const elements = {
 
 const attrs = {
     postId: { desktop: { value: '17881655640351114' } },
-    apiBaseUrl: { desktop: { value: 'https://volksverpetzer-app.de/proxy/instaById/' } },
+    useLatest: { desktop: { value: 'off' } },
+    latestIndex: { desktop: { value: '1' } },
+    apiBaseUrl: { desktop: { value: '/proxy/instaById/' } },
     showCaption: { desktop: { value: 'on' } },
     showNavigation: { desktop: { value: 'on' } },
     showPagination: { desktop: { value: 'on' } },

@@ -88,6 +88,24 @@ trait RenderCallbackTrait
     }
 
     /**
+     * Convert URLs in text to clickable links.
+     *
+     * @since 1.0.0
+     *
+     * @param string $text Input text.
+     *
+     * @return string Linkified HTML.
+     */
+    private static function linkify($text)
+    {
+        return preg_replace(
+            '/(https?:\/\/[^\s]+)/',
+            '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>',
+            $text
+        );
+    }
+
+    /**
      * Instagram Slideshow module render callback for server-side rendering.
      *
      * @since 1.0.0
@@ -264,15 +282,65 @@ trait RenderCallbackTrait
 
         // Caption.
         $caption_html = '';
-        if ($show_caption === 'on' && !empty($instagram_data['caption'])) {
+        $overlay_html = '';
+        $caption = $instagram_data['caption'] ?? '';
+        if ($show_caption === 'on' && !empty($caption)) {
+            $is_long_caption = mb_strlen($caption) > 200;
+            $truncated_caption = $is_long_caption ? mb_substr($caption, 0, 200) . '... ' : $caption;
+
+            $read_more_html = $is_long_caption ? HTMLUtility::render([
+                'tag' => 'button',
+                'attributes' => [
+                    'class' => 'instagram-slideshow__read-more',
+                    'type' => 'button',
+                ],
+                'childrenSanitizer' => 'esc_html',
+                'children' => __('Read More', 'instagram-slideshow-extension'),
+            ]) : '';
+
             $caption_html = HTMLUtility::render([
                 'tag' => 'div',
                 'attributes' => [
                     'class' => 'instagram-slideshow__caption',
                 ],
-                'childrenSanitizer' => 'wp_kses_post',
-                'children' => $instagram_data['caption'],
+                'childrenSanitizer' => 'et_core_esc_previously',
+                'children' => self::linkify(esc_html($truncated_caption)) . $read_more_html,
             ]);
+
+            if ($is_long_caption) {
+                $overlay_html = HTMLUtility::render([
+                    'tag' => 'div',
+                    'attributes' => [
+                        'class' => 'instagram-slideshow__overlay',
+                        'style' => 'display: none;',
+                    ],
+                    'childrenSanitizer' => 'et_core_esc_previously',
+                    'children' => HTMLUtility::render([
+                        'tag' => 'div',
+                        'attributes' => [
+                            'class' => 'instagram-slideshow__overlay-content',
+                        ],
+                        'childrenSanitizer' => 'et_core_esc_previously',
+                        'children' => HTMLUtility::render([
+                            'tag' => 'button',
+                            'attributes' => [
+                                'class' => 'instagram-slideshow__overlay-close',
+                                'type' => 'button',
+                                'aria-label' => __('Close', 'instagram-slideshow-extension'),
+                            ],
+                            'childrenSanitizer' => 'et_core_esc_previously',
+                            'children' => '×',
+                        ]) . HTMLUtility::render([
+                            'tag' => 'div',
+                            'attributes' => [
+                                'class' => 'instagram-slideshow__overlay-body',
+                            ],
+                            'childrenSanitizer' => 'et_core_esc_previously',
+                            'children' => self::linkify(esc_html($caption)),
+                        ]),
+                    ]),
+                ]);
+            }
         }
 
         // Slideshow container.
@@ -289,7 +357,7 @@ trait RenderCallbackTrait
                 ],
                 'childrenSanitizer' => 'et_core_esc_previously',
                 'children' => $slides_html,
-            ]) . $navigation_html . $pagination_html,
+            ]) . $navigation_html,
         ]);
 
         // Get parent for context.
@@ -328,7 +396,7 @@ trait RenderCallbackTrait
                         'data-transition-speed' => $transition_speed,
                     ],
                     'childrenSanitizer' => 'et_core_esc_previously',
-                    'children' => $slideshow_html . $caption_html,
+                    'children' => $slideshow_html . $pagination_html . $caption_html . $overlay_html,
                 ]),
             ],
         ]);

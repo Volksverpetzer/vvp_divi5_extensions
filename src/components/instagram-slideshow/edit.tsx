@@ -31,7 +31,7 @@ export const InstagramSlideshowEdit = (props: InstagramSlideshowEditProps): Reac
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [currentSlide, setCurrentSlide] = useState(0);
-    const feedApiUrl = 'https://volksverpetzer-app.de/proxy/instaFeed';
+    const [isOverlayOpen, setIsOverlayOpen] = useState(false);
 
     // Get attribute values.
     const useLatest = attrs.useLatest?.desktop?.value ?? 'off';
@@ -42,6 +42,10 @@ export const InstagramSlideshowEdit = (props: InstagramSlideshowEditProps): Reac
     const showCaption = attrs.showCaption?.desktop?.value ?? 'on';
     const showNavigation = attrs.showNavigation?.desktop?.value ?? 'on';
     const showPagination = attrs.showPagination?.desktop?.value ?? 'on';
+
+    const feedApiUrl = apiBaseUrl.includes('instaById')
+        ? apiBaseUrl.replace('instaById', 'instaFeed').replace(/\/$/, '')
+        : 'https://volksverpetzer-app.de/proxy/instaFeed';
 
     // Fetch Instagram data when postId changes.
     useEffect(() => {
@@ -83,6 +87,7 @@ export const InstagramSlideshowEdit = (props: InstagramSlideshowEditProps): Reac
                 })
                 .catch((err) => {
                     if (cancelled) return;
+                    console.error('Instagram Slideshow Error:', err);
                     setError(err.message || 'Failed to fetch Instagram data');
                     setLoading(false);
                     setInstagramData(null);
@@ -136,6 +141,27 @@ export const InstagramSlideshowEdit = (props: InstagramSlideshowEditProps): Reac
     const goToSlide = (index: number) => {
         setCurrentSlide(index);
     };
+
+    /**
+     * Convert URLs in text to clickable links.
+     */
+    const linkify = (text: string) => {
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        return text.split(urlRegex).map((part, i) => {
+            if (part.match(urlRegex)) {
+                return (
+                    <a key={i} href={part} target="_blank" rel="noopener noreferrer">
+                        {part}
+                    </a>
+                );
+            }
+            return part;
+        });
+    };
+
+    const caption = instagramData?.caption ?? '';
+    const isLongCaption = caption.length > 200;
+    const truncatedCaption = isLongCaption ? `${caption.substring(0, 200)}... ` : caption;
 
     return (
         <ModuleContainer
@@ -210,24 +236,32 @@ export const InstagramSlideshowEdit = (props: InstagramSlideshowEditProps): Reac
                                     </button>
                                 </>
                             )}
-
-                            {showPagination === 'on' && images.length > 1 && (
-                                <div className="instagram-slideshow__pagination">
-                                    {images.map((_, index) => (
-                                        <button
-                                            key={index}
-                                            className={`instagram-slideshow__dot${index === currentSlide ? ' active' : ''}`}
-                                            onClick={() => goToSlide(index)}
-                                            aria-label={`Go to slide ${index + 1}`}
-                                        />
-                                    ))}
-                                </div>
-                            )}
                         </div>
 
-                        {showCaption === 'on' && instagramData?.caption && (
+                        {showPagination === 'on' && images.length > 1 && (
+                            <div className="instagram-slideshow__pagination">
+                                {images.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        className={`instagram-slideshow__dot${index === currentSlide ? ' active' : ''}`}
+                                        onClick={() => goToSlide(index)}
+                                        aria-label={`Go to slide ${index + 1}`}
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        {showCaption === 'on' && caption && (
                             <div className="instagram-slideshow__caption">
-                                {instagramData.caption}
+                                {linkify(truncatedCaption)}
+                                {isLongCaption && (
+                                    <button
+                                        className="instagram-slideshow__read-more"
+                                        onClick={() => setIsOverlayOpen(true)}
+                                    >
+                                        Read More
+                                    </button>
+                                )}
                             </div>
                         )}
                     </>
@@ -239,6 +273,23 @@ export const InstagramSlideshowEdit = (props: InstagramSlideshowEditProps): Reac
                     </div>
                 )}
             </div>
+
+            {isOverlayOpen && (
+                <div className="instagram-slideshow__overlay">
+                    <div className="instagram-slideshow__overlay-content">
+                        <button
+                            className="instagram-slideshow__overlay-close"
+                            onClick={() => setIsOverlayOpen(false)}
+                            aria-label="Close"
+                        >
+                            ×
+                        </button>
+                        <div className="instagram-slideshow__overlay-body">
+                            {linkify(caption)}
+                        </div>
+                    </div>
+                </div>
+            )}
         </ModuleContainer>
     );
 };
