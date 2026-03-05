@@ -62,15 +62,22 @@
     top: 50%;
     transform: translateY(-50%);
     background: rgba(41, 34, 207, 1);
-    color: #fff;
     border: none;
-    font-size: 3rem;
-    line-height: 1;
-    padding: 1rem 1.5rem;
+    padding: 0.5rem;
     cursor: pointer;
     transition: background 0.3s ease;
     z-index: 10;
     border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 48px;
+      height: 48px;
+      display: block;
+      filter: brightness(0) invert(1);
+    }
 
     &:hover {
       background: rgba(0, 0, 0, 0.8);
@@ -78,6 +85,9 @@
 
     &--prev {
       left: 1rem;
+      img {
+        transform: scaleX(-1);
+      }
     }
 
     &--next {
@@ -99,8 +109,11 @@
     }
 
     @media (max-width: 767px) {
-      font-size: 2rem;
-      padding: 0.5rem 1rem;
+      padding: 0.25rem;
+      img {
+        width: 32px;
+        height: 32px;
+      }
     }
   }
 

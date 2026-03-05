@@ -227,14 +227,14 @@ export const InstagramSlideshowEdit = (props: InstagramSlideshowEditProps): Reac
                                         onClick={goToPrevSlide}
                                         aria-label="Previous slide"
                                     >
-                                        ‹
+                                        <img src="https://cdn.builder.io/api/v1/image/assets%2Fe99579ff5599422aa5d61e12aea3fc2d%2F932f2236430843f8b98358d100d8940f?format=webp&width=800&height=1200" alt="Previous" />
                                     </button>
                                     <button
                                         className="instagram-slideshow__nav instagram-slideshow__nav--next"
                                         onClick={goToNextSlide}
                                         aria-label="Next slide"
                                     >
-                                        ›
+                                        <img src="https://cdn.builder.io/api/v1/image/assets%2Fe99579ff5599422aa5d61e12aea3fc2d%2F932f2236430843f8b98358d100d8940f?format=webp&width=800&height=1200" alt="Next" />
                                     </button>
                                 </>
                             )}
