@@ -191,31 +191,33 @@ export const InstagramSlideshowEdit = (props: InstagramSlideshowEditProps): Reac
 
                 {!loading && !error && images.length > 0 && (
                     <>
-                        <div className="instagram-slideshow__container">
-                            <div className="instagram-slideshow__slides">
-                                {images.map((image, index) => {
-                                    const isActive = index === currentSlide;
-                                    const nextIndex = (currentSlide + 1) % images.length;
-                                    const shouldLoad = images.length <= 1 || isActive || index === nextIndex;
-                                    const src = shouldLoad
-                                        ? image.media_url
-                                        : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/%3E";
+                        <div className="instagram-slideshow__main-wrapper">
+                            <div className="instagram-slideshow__container">
+                                <div className="instagram-slideshow__slides">
+                                    {images.map((image, index) => {
+                                        const isActive = index === currentSlide;
+                                        const nextIndex = (currentSlide + 1) % images.length;
+                                        const shouldLoad = images.length <= 1 || isActive || index === nextIndex;
+                                        const src = shouldLoad
+                                            ? image.media_url
+                                            : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/%3E";
 
-                                    return (
-                                        <div
-                                            key={image.id || index}
-                                            className={`instagram-slideshow__slide${index === currentSlide ? ' active' : ''}`}
-                                            data-slide-index={index}
-                                        >
-                                            <img
-                                                src={src}
-                                                data-src={image.media_url}
-                                                alt={`Instagram image ${index + 1}`}
-                                                loading={index === 0 ? 'eager' : 'lazy'}
-                                            />
-                                        </div>
-                                    );
-                                })}
+                                        return (
+                                            <div
+                                                key={image.id || index}
+                                                className={`instagram-slideshow__slide${index === currentSlide ? ' active' : ''}`}
+                                                data-slide-index={index}
+                                            >
+                                                <img
+                                                    src={src}
+                                                    data-src={image.media_url}
+                                                    alt={`Instagram image ${index + 1}`}
+                                                    loading={index === 0 ? 'eager' : 'lazy'}
+                                                />
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
 
                             {showNavigation === 'on' && images.length > 1 && (
