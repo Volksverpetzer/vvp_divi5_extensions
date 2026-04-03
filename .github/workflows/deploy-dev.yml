@@ -31,27 +31,21 @@ jobs:
         run: pnpm run build
 
       - name: Upload to FTP (dev)
+        env:
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_HOST: ${{ secrets.FTP_HOST }}
         run: |
-          # Upload only necessary production files
           sudo apt-get update && sudo apt-get install -y lftp
-          lftp -e "
-            set ftp:ssl-allow yes
-            set ftp:ssl-force yes
-            set ftp:ssl-protect-data yes
-            set ssl:verify-certificate no
-            open -u ${{ secrets.FTP_USER }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_HOST }}
-            mirror --reverse --delete --verbose \
-              --exclude=.git \
-              --exclude=node_modules \
-              --exclude=src \
-              --exclude=preview \
-              --exclude=reference \
-              --exclude=.* \
-              --exclude=webpack.config.js \
-              --exclude=gulpfile.js \
-              --exclude=tsconfig.json \
-              --exclude=package-lock.json \
-              --exclude=pnpm-lock.yaml \
-              ./ /public_html/wp-content/plugins/vvp-fact-check-search-dev/
-            bye
-          "
+          cat > /tmp/lftp-script.txt << 'LFTP'
+          set ftp:ssl-allow yes
+          set ftp:ssl-force yes
+          set ftp:ssl-protect-data yes
+          set ssl:verify-certificate no
+          LFTP
+          echo "open -u ${FTP_USER},${FTP_PASSWORD} ${FTP_HOST}" >> /tmp/lftp-script.txt
+          cat >> /tmp/lftp-script.txt << 'LFTP'
+          mirror --reverse --delete --verbose --exclude-glob=.git --exclude-glob=node_modules --exclude-glob=src --exclude-glob=dist --exclude-glob=vite --exclude-glob=preview --exclude-glob=reference --exclude-glob=.* --exclude-glob=webpack.config.js --exclude-glob=gulpfile.js --exclude-glob=tsconfig.json --exclude-glob=package.json --exclude-glob=package-lock.json --exclude-glob=pnpm-lock.yaml --exclude-glob=composer.json --exclude-glob=composer.lock --exclude-glob=README.md --exclude-glob=search.tsx --exclude-glob=*.map ./ /public_html/wp-content/plugins/vvp-fact-check-search-dev/
+          bye
+          LFTP
+          lftp -f /tmp/lftp-script.txt
