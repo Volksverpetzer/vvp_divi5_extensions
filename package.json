@@ -16,7 +16,7 @@
     },
     "devDependencies": {
         "@babel/core": "^7.29.0",
-        "@babel/plugin-proposal-class-properties": "^7.18.6",
+        "@babel/plugin-transform-class-properties": "^7.28.6",
         "@babel/plugin-transform-runtime": "^7.29.0",
         "@babel/preset-env": "^7.29.2",
         "@babel/preset-react": "^7.28.5",
@@ -50,7 +50,6 @@
         "@types/divi__style-library": "npm:divi-types-style-library@^1.0.10",
         "@types/react": "17.0.44",
         "@types/react-dom": "17.0.14",
-        "@types/wordpress__i18n": "^3.11.0",
         "@vitejs/plugin-react": "^4.7.0",
         "@wordpress/hooks": "^3.58.0",
         "@wordpress/i18n": "^4.58.0",
@@ -81,5 +80,40 @@
     "resolutions": {
         "@types/react": "17.0.44",
         "@types/react-dom": "17.0.14"
+    },
+    "pnpm": {
+        "allowedDeprecatedVersions": {
+            "divi-types": "1.0.10",
+            "divi-types-app-preferences": "1.0.10",
+            "divi-types-app-ui": "1.0.10",
+            "divi-types-conversion": "1.0.10",
+            "divi-types-data": "1.0.10",
+            "divi-types-draggable": "1.0.10",
+            "divi-types-edit-post": "1.0.10",
+            "divi-types-error-boundary": "1.0.10",
+            "divi-types-events": "1.0.10",
+            "divi-types-external": "1.0.10",
+            "divi-types-field-library": "1.0.10",
+            "divi-types-fonts": "1.0.10",
+            "divi-types-help": "1.0.10",
+            "divi-types-history": "1.0.10",
+            "divi-types-icon-library": "1.0.10",
+            "divi-types-keyboard-shortcuts": "1.0.10",
+            "divi-types-modal": "1.0.10",
+            "divi-types-modal-library": "1.0.10",
+            "divi-types-module": "1.0.10",
+            "divi-types-module-library": "1.0.10",
+            "divi-types-module-utils": "1.0.10",
+            "divi-types-rest": "1.0.10",
+            "divi-types-right-click-options": "1.0.10",
+            "divi-types-script-library": "1.0.10",
+            "divi-types-serialized-post": "1.0.10",
+            "divi-types-settings": "1.0.10",
+            "divi-types-shortcode-module": "1.0.10",
+            "divi-types-style-library": "1.0.10",
+            "@babel/plugin-proposal-class-properties": "*",
+            "@types/wordpress__i18n": "*",
+            "airbnb-prop-types": "*"
+        }
     }
 }
