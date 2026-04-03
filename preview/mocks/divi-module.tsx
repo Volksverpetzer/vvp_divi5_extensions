@@ -1,5 +1,5 @@
 import React from 'react';
 
 export const ModuleContainer = ({ children }: { children: React.ReactNode }) => {
-    return <div className="instagram-slideshow">{children}</div>;
+    return <div className="vvp-fact-check-search">{children}</div>;
 };

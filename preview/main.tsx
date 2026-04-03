@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { InstagramSlideshowEdit } from '../src/components/instagram-slideshow/edit';
-import '../src/components/instagram-slideshow/style.scss';
+import { FactCheckSearchEdit } from '../src/components/fact-check-search/edit';
+import '../src/components/fact-check-search/style.scss';
 
 const app = document.querySelector('#app');
 
@@ -10,24 +10,17 @@ const elements = {
 };
 
 const attrs = {
-    postId: { desktop: { value: '17881655640351114' } },
-    useLatest: { desktop: { value: 'off' } },
-    latestIndex: { desktop: { value: '1' } },
-    apiBaseUrl: { desktop: { value: '/proxy/instaById/' } },
-    showCaption: { desktop: { value: 'on' } },
-    showNavigation: { desktop: { value: 'on' } },
-    showPagination: { desktop: { value: 'on' } },
-    autoplay: { desktop: { value: 'on' } },
-    transitionSpeed: { desktop: { value: '3' } },
+    searchApiUrl: { desktop: { value: '' } },
+    importApiUrl: { desktop: { value: '' } },
 };
 
 if (app) {
     ReactDOM.render(
-        <InstagramSlideshowEdit
+        <FactCheckSearchEdit
             attrs={attrs as any}
             elements={elements as any}
-            id="preview-instagram-slideshow"
-            name="vvp/instagram-slideshow"
+            id="preview-fact-check-search"
+            name="vvp/fact-check-search"
         />,
         app
     );

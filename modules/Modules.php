@@ -2,21 +2,21 @@
 /**
  * Register all modules with dependency tree.
  *
- * @package VVP\InstagramSlideshow
+ * @package VVP\FactCheckSearch
  * @since 1.0.0
  */
 
-namespace VVP\InstagramSlideshow;
+namespace VVP\FactCheckSearch;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');
 }
 
-use VVP\InstagramSlideshow\InstagramSlideshow\InstagramSlideshow;
+use VVP\FactCheckSearch\FactCheckSearch\FactCheckSearch;
 
 add_action(
     'divi_module_library_modules_dependency_tree',
     function ($dependency_tree) {
-        $dependency_tree->add_dependency(new InstagramSlideshow());
+        $dependency_tree->add_dependency(new FactCheckSearch());
     }
 );

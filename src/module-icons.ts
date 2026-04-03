@@ -1,10 +1,10 @@
 import { addFilter } from '@wordpress/hooks';
-import * as instagramSlideshowIcon from './icons/instagram-slideshow';
+import * as factCheckSearchIcon from './icons/fact-check-search';
 
 // Add module icons to the icon library.
-addFilter('divi.iconLibrary.icon.map', 'vvp/instagramSlideshow', (icons) => {
+addFilter('divi.iconLibrary.icon.map', 'vvp/factCheckSearch', (icons) => {
     return {
         ...icons,
-        [instagramSlideshowIcon.name]: instagramSlideshowIcon,
+        [factCheckSearchIcon.name]: factCheckSearchIcon,
     };
 });

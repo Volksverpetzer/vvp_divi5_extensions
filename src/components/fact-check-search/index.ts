@@ -6,19 +6,19 @@ import {
 
 // Local dependencies.
 import metadata from './module.json';
-import { InstagramSlideshowEdit } from './edit';
-import { InstagramSlideshowAttrs } from './types';
+import { FactCheckSearchEdit } from './edit';
+import { FactCheckSearchAttrs } from './types';
 import { placeholderContent } from './placeholder-content';
 
 // Styles.
 import './style.scss';
 import './module.scss';
 
-export const instagramSlideshow: ModuleLibrary.Module.RegisterDefinition<InstagramSlideshowAttrs> = {
+export const factCheckSearch: ModuleLibrary.Module.RegisterDefinition<FactCheckSearchAttrs> = {
     // Imported json has no inferred type hence type-cast is necessary.
-    metadata: metadata as Metadata.Values<InstagramSlideshowAttrs>,
+    metadata: metadata as Metadata.Values<FactCheckSearchAttrs>,
     placeholderContent,
     renderers: {
-        edit: InstagramSlideshowEdit,
+        edit: FactCheckSearchEdit,
     },
 };

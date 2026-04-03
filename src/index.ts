@@ -3,12 +3,12 @@ import { addAction } from '@wordpress/hooks';
 import { registerModule } from '@divi/module-library';
 
 // Import module.
-import { instagramSlideshow } from './components/instagram-slideshow';
+import { factCheckSearch } from './components/fact-check-search';
 
 // Import icons.
 import './module-icons';
 
-// Register Instagram Slideshow module with DIVI.
-addAction('divi.moduleLibrary.registerModuleLibraryStore.after', 'vvp/instagramSlideshow', () => {
-    registerModule(instagramSlideshow.metadata, omit(instagramSlideshow, 'metadata'));
+// Register Faktencheck Search module with DIVI.
+addAction('divi.moduleLibrary.registerModuleLibraryStore.after', 'vvp/factCheckSearch', () => {
+    registerModule(factCheckSearch.metadata, omit(factCheckSearch, 'metadata'));
 });

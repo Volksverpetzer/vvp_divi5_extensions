@@ -1,3 +1,3 @@
 export const moduleClassnames = () => {
-    return 'instagram-slideshow';
+    return 'vvp-fact-check-search';
 };

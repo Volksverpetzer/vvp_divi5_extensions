@@ -2,7 +2,7 @@
 
 spl_autoload_register(
 	function ( $class ) {
-		$prefix   = 'VVP\\InstagramSlideshow\\';
+		$prefix   = 'VVP\\FactCheckSearch\\';
 		$base_dir = __DIR__ . '/';
 
 		$len = strlen( $prefix );

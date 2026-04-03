@@ -25,12 +25,25 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Create ZIP
-        run: npm run zip
-
       - name: Upload to FTP (dev)
         run: |
-          curl --ftp-create-dirs \
-            --user "${{ secrets.FTP_USER }}:${{ secrets.FTP_PASSWORD }}" \
-            --upload-file vvp-fact-check-search.zip \
-            "ftp://${{ secrets.FTP_HOST }}${{ secrets.FTP_DEV_PATH }}vvp-fact-check-search.zip"
+          # Upload only necessary production files
+          sudo apt-get update && sudo apt-get install -y lftp
+          lftp -e "
+            set ftp:ssl-allow no
+            open -u ${{ secrets.FTP_USER }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_HOST }}
+            mirror --reverse --delete --verbose \
+              --exclude=.git \
+              --exclude=node_modules \
+              --exclude=src \
+              --exclude=preview \
+              --exclude=reference \
+              --exclude=.* \
+              --exclude=webpack.config.js \
+              --exclude=gulpfile.js \
+              --exclude=tsconfig.json \
+              --exclude=package-lock.json \
+              --exclude=pnpm-lock.yaml \
+              ./ /public_html/wp-content/plugins/vvp-fact-check-search-dev/
+            bye
+          "

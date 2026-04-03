@@ -1,12 +1,12 @@
 <?php
 /**
- * InstagramSlideshow::module_styles()
+ * FactCheckSearch::module_styles()
  *
- * @package VVP\InstagramSlideshow\InstagramSlideshow
+ * @package VVP\FactCheckSearch\FactCheckSearch
  * @since 1.0.0
  */
 
-namespace VVP\InstagramSlideshow\InstagramSlideshow\InstagramSlideshowTrait;
+namespace VVP\FactCheckSearch\FactCheckSearch\FactCheckSearchTrait;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');
@@ -14,7 +14,6 @@ if (!defined('ABSPATH')) {
 
 trait ModuleStylesTrait
 {
-
     /**
      * Module styles generation.
      *
@@ -26,7 +25,6 @@ trait ModuleStylesTrait
      */
     public static function module_styles($args)
     {
-        // Custom inline styles can be added here if needed.
         return '';
     }
 }

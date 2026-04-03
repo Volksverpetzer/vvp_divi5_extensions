@@ -1,12 +1,12 @@
 <?php
 /**
- * InstagramSlideshow::module_classnames()
+ * FactCheckSearch::module_classnames()
  *
- * @package VVP\InstagramSlideshow\InstagramSlideshow
+ * @package VVP\FactCheckSearch\FactCheckSearch
  * @since 1.0.0
  */
 
-namespace VVP\InstagramSlideshow\InstagramSlideshow\InstagramSlideshowTrait;
+namespace VVP\FactCheckSearch\FactCheckSearch\FactCheckSearchTrait;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');
@@ -14,7 +14,6 @@ if (!defined('ABSPATH')) {
 
 trait ModuleClassnamesTrait
 {
-
     /**
      * Module classnames generation.
      *
@@ -26,6 +25,6 @@ trait ModuleClassnamesTrait
      */
     public static function module_classnames($args)
     {
-        return 'instagram-slideshow';
+        return 'vvp-fact-check-search';
     }
 }

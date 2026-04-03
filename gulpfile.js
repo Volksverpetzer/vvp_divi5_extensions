@@ -19,7 +19,7 @@ gulp.task('zip', function () {
         '!composer.json',
         '!composer.lock',
     ])
-        .pipe(zip('instagram-slideshow-extension.zip'))
+        .pipe(zip('vvp-fact-check-search.zip'))
         .pipe(gulp.dest('.'));
 });
 
