@@ -34,6 +34,7 @@ jobs:
         run: |
           mkdir -p /tmp/deploy
           cp vvp-fact-check-search.php /tmp/deploy/
+          sed -i 's/^Plugin Name: .*/Plugin Name: Faktencheck Suche für DIVI 5 (Beta)/' /tmp/deploy/vvp-fact-check-search.php
           cp -r modules /tmp/deploy/
           cp -r modules-json /tmp/deploy/
           cp -r scripts /tmp/deploy/

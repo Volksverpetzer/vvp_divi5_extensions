@@ -406,6 +406,13 @@ trait RenderCallbackTrait
         $search_api_url = $attrs['searchApiUrl']['desktop']['value'] ?? '';
         $import_api_url = $attrs['importApiUrl']['desktop']['value'] ?? '';
 
+        if ( '' === $search_api_url ) {
+            $search_api_url = 'https://ai.volksverpetzer-app.de/api/vector-search';
+        }
+        if ( '' === $import_api_url ) {
+            $import_api_url = 'https://ai.volksverpetzer-app.de/api/import-url/';
+        }
+
         $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
         $parent_attrs = $parent->attrs ?? [];
 
