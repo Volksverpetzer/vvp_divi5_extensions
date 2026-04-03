@@ -30,6 +30,15 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      - name: Prepare deploy directory
+        run: |
+          mkdir -p /tmp/deploy
+          cp vvp-fact-check-search.php /tmp/deploy/
+          cp -r modules /tmp/deploy/
+          cp -r modules-json /tmp/deploy/
+          cp -r scripts /tmp/deploy/
+          cp -r styles /tmp/deploy/
+
       - name: Upload to FTP (production)
         env:
           FTP_USER: ${{ secrets.FTP_USER }}
@@ -45,7 +54,7 @@ jobs:
           LFTP
           echo "open -u ${FTP_USER},${FTP_PASSWORD} ${FTP_HOST}" >> /tmp/lftp-script.txt
           cat >> /tmp/lftp-script.txt << 'LFTP'
-          mirror --reverse --delete --verbose --exclude-glob=.git --exclude-glob=node_modules --exclude-glob=src --exclude-glob=dist --exclude-glob=vite --exclude-glob=preview --exclude-glob=reference --exclude-glob=.* --exclude-glob=webpack.config.js --exclude-glob=gulpfile.js --exclude-glob=tsconfig.json --exclude-glob=package.json --exclude-glob=package-lock.json --exclude-glob=pnpm-lock.yaml --exclude-glob=composer.json --exclude-glob=composer.lock --exclude-glob=README.md --exclude-glob=search.tsx --exclude-glob=*.map ./ /public_html/wp-content/plugins/vvp-fact-check-search-prod/
+          mirror --reverse --delete --verbose /tmp/deploy/ /public_html/wp-content/plugins/vvp-fact-check-search-prod/
           bye
           LFTP
           lftp -f /tmp/lftp-script.txt
