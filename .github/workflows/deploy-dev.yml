@@ -35,7 +35,10 @@ jobs:
           # Upload only necessary production files
           sudo apt-get update && sudo apt-get install -y lftp
           lftp -e "
-            set ftp:ssl-allow no
+            set ftp:ssl-allow yes
+            set ftp:ssl-force yes
+            set ftp:ssl-protect-data yes
+            set ssl:verify-certificate no
             open -u ${{ secrets.FTP_USER }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_HOST }}
             mirror --reverse --delete --verbose \
               --exclude=.git \
