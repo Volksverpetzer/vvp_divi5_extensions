@@ -73,5 +73,7 @@
 .vvp-co__insta-slider-wrap .et_pb_slide{height:100%;padding:0}
 .vvp-co__insta-slider-wrap .et_pb_container{height:100%;display:flex}
 .vvp-co__insta-slider-wrap .et_pb_slider_container_inner{width:100%}
-.vvp-co__insta-slider-wrap .et_pb_slide_image{height:100%}
-.vvp-co__insta-slider-wrap .et_pb_slide_image img{width:100%;height:100%;object-fit:cover;display:block}
+.vvp-co__insta-slider-wrap .et_pb_slide_image{height:100%;position:relative}
+.vvp-co__insta-slider-wrap .et_pb_slide_image img{width:100%;height:100%;object-fit:cover;display:block;max-height:none}
+.vvp-co__insta-slider-wrap .et_pb_video_overlay{background-size:cover;background-position:center}
+.vvp-co__insta-slider-wrap video{width:100%;height:100%;object-fit:cover;display:block;max-height:none}

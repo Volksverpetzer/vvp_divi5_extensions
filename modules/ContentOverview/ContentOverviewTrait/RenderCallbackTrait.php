@@ -487,55 +487,87 @@ trait RenderCallbackTrait
         $caption    = self::truncate($post['caption'] ?? '', 100);
         $date       = esc_html(self::format_date($post['timestamp'] ?? ''));
 
-        // ── Collect all images for this post ──────────────────────────────────
-        $images = [];
+        // ── Collect all slides for this post ──────────────────────────────────
+        // Each entry: ['thumb' => url, 'video' => url|null]
+        $slides = [];
 
         if ('CAROUSEL_ALBUM' === $media_type && !empty($post['children']['data'])) {
             foreach ($post['children']['data'] as $child) {
                 if ('VIDEO' === ($child['media_type'] ?? '')) {
-                    $url = $child['thumbnail_url'] ?? $child['media_url'] ?? '';
+                    $thumb = $child['thumbnail_url'] ?? $child['media_url'] ?? '';
+                    $video = $child['media_url'] ?? '';
+                    if ($video === $thumb) {
+                        $video = ''; // media_url is the thumbnail, no separate video
+                    }
                 } else {
-                    $url = $child['media_url'] ?? '';
+                    $thumb = $child['media_url'] ?? '';
+                    $video = '';
                 }
-                if ($url) {
-                    $images[] = $url;
+                if ($thumb) {
+                    $slides[] = ['thumb' => $thumb, 'video' => $video];
                 }
             }
         }
 
         // Fallback to root-level image/thumbnail
-        if (empty($images)) {
-            $url = 'VIDEO' === $media_type
-                ? ($post['thumbnail_url'] ?? $post['media_url'] ?? '')
-                : ($post['media_url'] ?? '');
-            if ($url) {
-                $images[] = $url;
+        if (empty($slides)) {
+            if ('VIDEO' === $media_type) {
+                $thumb = $post['thumbnail_url'] ?? '';
+                $video = $post['media_url'] ?? '';
+                if (!$thumb && $video) {
+                    $thumb = $video;
+                    $video = '';
+                }
+            } else {
+                $thumb = $post['media_url'] ?? '';
+                $video = '';
+            }
+            if ($thumb) {
+                $slides[] = ['thumb' => $thumb, 'video' => $video];
             }
         }
 
-        if (empty($images)) {
+        if (empty($slides)) {
             return '';
         }
 
-        $is_carousel = count($images) > 1;
+        $is_carousel = count($slides) > 1;
 
         // ── Build Divi slider slides ──────────────────────────────────────────
         $slides_html = '';
         $is_first    = true;
 
-        foreach ($images as $img_url) {
+        foreach ($slides as $slide) {
             $slide_counter++;
             $slide_id     = 'vvp-insta-slide-' . $slide_counter;
             $active_class = $is_first ? ' et-pb-active-slide' : '';
             $loading      = $is_first ? 'eager' : 'lazy';
+            $is_video     = !empty($slide['video']);
+
+            if ($is_video) {
+                // Use Divi's et_pb_video_wrap pattern so script-library-video-overlay.js
+                // handles thumbnail → play on click natively (no custom JS needed).
+                $slide_image =
+                    '<div class="et_pb_slide_image et_pb_video_wrap">'
+                    .   '<video loop playsinline preload="none">'
+                    .     '<source type="video/mp4" src="' . esc_url($slide['video']) . '">'
+                    .   '</video>'
+                    .   '<div class="et_pb_video_overlay" style="background-image:url(\'' . esc_url($slide['thumb']) . '\')">'
+                    .     '<div class="et_pb_video_overlay_hover"><a href="#" class="et_pb_video_play"></a></div>'
+                    .   '</div>'
+                    . '</div>';
+            } else {
+                $slide_image =
+                    '<div class="et_pb_slide_image">'
+                    .   '<img src="' . esc_url($slide['thumb']) . '" alt="' . esc_attr($caption) . '" loading="' . $loading . '" decoding="async">'
+                    . '</div>';
+            }
 
             $slides_html .=
                 '<div class="et_pb_slide et_pb_slide_with_image' . $active_class . '" data-slide-id="' . esc_attr($slide_id) . '">'
                 .   '<div class="et_pb_container clearfix">'
                 .     '<div class="et_pb_slider_container_inner">'
-                .       '<div class="et_pb_slide_image">'
-                .         '<img src="' . esc_url($img_url) . '" alt="' . esc_attr($caption) . '" loading="' . $loading . '" decoding="async">'
-                .       '</div>'
+                .       $slide_image
                 .     '</div>'
                 .   '</div>'
                 . '</div>';
@@ -562,7 +594,7 @@ trait RenderCallbackTrait
 
         // Carousel indicator shown on the badge when post has multiple images
         $badge_label = $is_carousel
-            ? 'Instagram (' . count($images) . ' Bilder)'
+            ? 'Instagram (' . count($slides) . ' Bilder)'
             : 'Instagram';
 
         return '<div class="vvp-co__feed-card vvp-co__feed-card--insta">'
@@ -718,9 +750,10 @@ trait RenderCallbackTrait
      */
     public static function render_callback($attrs, $content, $block, $elements)
     {
-        // Ensure Divi's slider JS is enqueued when this module is on the page.
+        // Ensure Divi's slider + video overlay JS are enqueued when this module is on the page.
         if (class_exists('\ET\Builder\FrontEnd\Assets\DynamicAssetsUtils')) {
             \ET\Builder\FrontEnd\Assets\DynamicAssetsUtils::enqueue_slider_script();
+            \ET\Builder\FrontEnd\Assets\DynamicAssetsUtils::enqueue_video_overlay_script();
         }
 
         $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
