@@ -492,38 +492,29 @@ trait RenderCallbackTrait
         $slides = [];
 
         if ('CAROUSEL_ALBUM' === $media_type && !empty($post['children']['data'])) {
+            // Carousel children from the proxy only carry media_url (JPEG) and id — no media_type.
             foreach ($post['children']['data'] as $child) {
-                if ('VIDEO' === ($child['media_type'] ?? '')) {
-                    $thumb = $child['thumbnail_url'] ?? $child['media_url'] ?? '';
-                    $video = $child['media_url'] ?? '';
-                    if ($video === $thumb) {
-                        $video = ''; // media_url is the thumbnail, no separate video
-                    }
-                } else {
-                    $thumb = $child['media_url'] ?? '';
-                    $video = '';
-                }
+                $thumb = $child['media_url'] ?? '';
                 if ($thumb) {
-                    $slides[] = ['thumb' => $thumb, 'video' => $video];
+                    $slides[] = ['thumb' => $thumb, 'video' => ''];
                 }
             }
         }
 
-        // Fallback to root-level image/thumbnail
+        // Fallback to root-level image/video
         if (empty($slides)) {
             if ('VIDEO' === $media_type) {
-                $thumb = $post['thumbnail_url'] ?? '';
+                // The proxy returns media_url as the MP4; thumbnail_url is not relayed.
                 $video = $post['media_url'] ?? '';
-                if (!$thumb && $video) {
-                    $thumb = $video;
-                    $video = '';
+                $thumb = $post['thumbnail_url'] ?? ''; // present only if proxy adds it later
+                if ($video) {
+                    $slides[] = ['thumb' => $thumb, 'video' => $video];
                 }
             } else {
                 $thumb = $post['media_url'] ?? '';
-                $video = '';
-            }
-            if ($thumb) {
-                $slides[] = ['thumb' => $thumb, 'video' => $video];
+                if ($thumb) {
+                    $slides[] = ['thumb' => $thumb, 'video' => ''];
+                }
             }
         }
 
@@ -544,9 +535,9 @@ trait RenderCallbackTrait
             $loading      = $is_first ? 'eager' : 'lazy';
             $is_video     = !empty($slide['video']);
 
-            if ($is_video) {
-                // Use Divi's et_pb_video_wrap pattern so script-library-video-overlay.js
-                // handles thumbnail → play on click natively (no custom JS needed).
+            if ($is_video && !empty($slide['thumb'])) {
+                // Thumbnail available → use Divi's et_pb_video_wrap pattern so
+                // script-library-video-overlay.js handles thumbnail → play on click.
                 $slide_image =
                     '<div class="et_pb_slide_image et_pb_video_wrap">'
                     .   '<video loop playsinline preload="none">'
@@ -555,6 +546,15 @@ trait RenderCallbackTrait
                     .   '<div class="et_pb_video_overlay" style="background-image:url(\'' . esc_url($slide['thumb']) . '\')">'
                     .     '<div class="et_pb_video_overlay_hover"><a href="#" class="et_pb_video_play"></a></div>'
                     .   '</div>'
+                    . '</div>';
+            } elseif ($is_video) {
+                // No thumbnail (proxy doesn't relay thumbnail_url) → render the video
+                // directly; browser shows the first frame and native controls allow playback.
+                $slide_image =
+                    '<div class="et_pb_slide_image">'
+                    .   '<video loop playsinline preload="metadata" controls>'
+                    .     '<source type="video/mp4" src="' . esc_url($slide['video']) . '">'
+                    .   '</video>'
                     . '</div>';
             } else {
                 $slide_image =
