@@ -382,7 +382,7 @@ trait RenderCallbackTrait
 
         $image_html = '';
         if ($image_url) {
-            $image_html = '<div class="vvp-co__hero-image-wrap"><img src="' . $image_url . '" alt="' . $title . '" class="vvp-co__hero-image" loading="eager" decoding="async"></div>';
+            $image_html = '<div class="vvp-co__hero-image-wrap"><img style="max-height: none;" src="' . $image_url . '" alt="' . $title . '" class="vvp-co__hero-image" loading="eager" decoding="async"></div>';
         }
 
         $category_html = $category ? '<span class="vvp-co__category">' . $category . '</span>' : '';
