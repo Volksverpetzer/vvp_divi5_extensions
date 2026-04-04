@@ -13,10 +13,12 @@ if (!defined('ABSPATH')) {
 }
 
 use VVP\FactCheckSearch\FactCheckSearch\FactCheckSearch;
+use VVP\FactCheckSearch\ContentOverview\ContentOverview;
 
 add_action(
     'divi_module_library_modules_dependency_tree',
     function ($dependency_tree) {
         $dependency_tree->add_dependency(new FactCheckSearch());
+        $dependency_tree->add_dependency(new ContentOverview());
     }
 );

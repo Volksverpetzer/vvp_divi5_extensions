@@ -1,0 +1,49 @@
+{
+    "name": "vvp/content-overview",
+    "d4Shortcode": "",
+    "title": "Inhaltsübersicht",
+    "titles": "Inhaltsübersichten",
+    "moduleIcon": "vvp/content-overview-icon",
+    "moduleClassName": "content_overview",
+    "moduleOrderClassName": "content_overview",
+    "category": "module",
+    "attributes": {
+        "module": {
+            "type": "object",
+            "selector": "{{selector}}",
+            "settings": {
+                "meta": {
+                    "adminLabel": {}
+                },
+                "advanced": {
+                    "link": {},
+                    "text": {},
+                    "htmlAttributes": {}
+                },
+                "decoration": {
+                    "attributes": {},
+                    "background": {},
+                    "sizing": {},
+                    "spacing": {},
+                    "border": {},
+                    "boxShadow": {},
+                    "filters": {},
+                    "transform": {},
+                    "animation": {},
+                    "overflow": {},
+                    "disabledOn": {},
+                    "transition": {},
+                    "position": {},
+                    "zIndex": {},
+                    "scroll": {},
+                    "sticky": {}
+                }
+            }
+        }
+    },
+    "settings": {
+        "content": "auto",
+        "design": "auto",
+        "advanced": "auto"
+    }
+}
