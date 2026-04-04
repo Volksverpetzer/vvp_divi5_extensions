@@ -143,6 +143,21 @@ namespace {
         ? file_get_contents(__DIR__ . '/styles/main.css')
         : '';
 
+    // ── Serve static assets (slider JS) ──────────────────────────────────────
+    $req_path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+    if ($req_path === '/slider.js') {
+        $slider_file = __DIR__ . '/Divi/includes/builder-5/visual-builder/build/script-library-slider.js';
+        if (file_exists($slider_file)) {
+            header('Content-Type: application/javascript; charset=UTF-8');
+            header('Cache-Control: public, max-age=3600');
+            readfile($slider_file);
+        } else {
+            http_response_code(404);
+            echo '/* slider.js not found */';
+        }
+        exit;
+    }
+
     if (PHP_SAPI === 'cli') {
         // CLI: write static file
         $out = sys_get_temp_dir() . '/vvp_co_preview.html';
@@ -165,6 +180,8 @@ namespace {
           <meta name="viewport" content="width=device-width, initial-scale=1">
           <title>ContentOverview — Preview</title>
           <style>{$css}</style>
+          <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+          <script src="/slider.js" defer></script>
           <style>
             *, *::before, *::after { box-sizing: border-box; }
             body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9fafb; color: #111827; }

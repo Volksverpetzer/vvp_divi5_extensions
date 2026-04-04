@@ -467,51 +467,112 @@ trait RenderCallbackTrait
     }
 
     /**
-     * Render an Instagram card for the feed grid.
+     * Render an Instagram card for the feed grid using Divi's et_pb_slider structure.
      *
-     * @param array $post Instagram post data.
+     * CAROUSEL_ALBUM posts render all child images as individual Divi slides.
+     * Single IMAGE/VIDEO posts render as a one-slide slider.
+     * Divi's slider JS (divi-script-library-slider) auto-initialises any
+     * .et_pb_slider element it finds in the DOM on et_pb_init_modules.
+     *
+     * @param array $post Instagram post data from the proxy API.
      *
      * @return string HTML.
      */
     private static function render_insta_card($post)
     {
+        static $slide_counter = 0;
+
         $media_type = $post['media_type'] ?? '';
-        $media_url  = '';
+        $permalink  = esc_url($post['permalink'] ?? 'https://www.instagram.com/volksverpetzer/');
+        $caption    = self::truncate($post['caption'] ?? '', 100);
+        $date       = esc_html(self::format_date($post['timestamp'] ?? ''));
 
-        // For carousels, try the first child image
-        if ('CAROUSEL_ALBUM' === $media_type && !empty($post['children']['data'][0])) {
-            $child     = $post['children']['data'][0];
-            $media_url = esc_url($child['media_url'] ?? '');
-        }
+        // ── Collect all images for this post ──────────────────────────────────
+        $images = [];
 
-        if (empty($media_url)) {
-            // VIDEO: prefer thumbnail_url; IMAGE: use media_url
-            if ('VIDEO' === $media_type) {
-                $media_url = esc_url($post['thumbnail_url'] ?? $post['media_url'] ?? '');
-            } else {
-                $media_url = esc_url($post['media_url'] ?? '');
+        if ('CAROUSEL_ALBUM' === $media_type && !empty($post['children']['data'])) {
+            foreach ($post['children']['data'] as $child) {
+                if ('VIDEO' === ($child['media_type'] ?? '')) {
+                    $url = $child['thumbnail_url'] ?? $child['media_url'] ?? '';
+                } else {
+                    $url = $child['media_url'] ?? '';
+                }
+                if ($url) {
+                    $images[] = $url;
+                }
             }
         }
 
-        $permalink = esc_url($post['permalink'] ?? 'https://www.instagram.com/volksverpetzer/');
-        $caption   = esc_html(self::truncate($post['caption'] ?? '', 100));
-        $date      = esc_html(self::format_date($post['timestamp'] ?? ''));
-
-        $image_html = '';
-        if ($media_url) {
-            $image_html = '<div class="vvp-co__feed-image-wrap vvp-co__feed-image-wrap--square"><img src="' . $media_url . '" alt="' . esc_attr($caption) . '" class="vvp-co__feed-image vvp-co__feed-image--insta" loading="lazy" decoding="async"></div>';
+        // Fallback to root-level image/thumbnail
+        if (empty($images)) {
+            $url = 'VIDEO' === $media_type
+                ? ($post['thumbnail_url'] ?? $post['media_url'] ?? '')
+                : ($post['media_url'] ?? '');
+            if ($url) {
+                $images[] = $url;
+            }
         }
 
+        if (empty($images)) {
+            return '';
+        }
+
+        $is_carousel = count($images) > 1;
+
+        // ── Build Divi slider slides ──────────────────────────────────────────
+        $slides_html = '';
+        $is_first    = true;
+
+        foreach ($images as $img_url) {
+            $slide_counter++;
+            $slide_id     = 'vvp-insta-slide-' . $slide_counter;
+            $active_class = $is_first ? ' et-pb-active-slide' : '';
+            $loading      = $is_first ? 'eager' : 'lazy';
+
+            $slides_html .=
+                '<div class="et_pb_slide et_pb_slide_with_image' . $active_class . '" data-slide-id="' . esc_attr($slide_id) . '">'
+                .   '<div class="et_pb_container clearfix">'
+                .     '<div class="et_pb_slider_container_inner">'
+                .       '<div class="et_pb_slide_image">'
+                .         '<img src="' . esc_url($img_url) . '" alt="' . esc_attr($caption) . '" loading="' . $loading . '" decoding="async">'
+                .       '</div>'
+                .     '</div>'
+                .   '</div>'
+                . '</div>';
+
+            $is_first = false;
+        }
+
+        // ── Slider outer wrapper ──────────────────────────────────────────────
+        // Classes mirror what ET_Builder_Module_Slider outputs:
+        //   et_pb_slider_fullwidth_off  — always present for non-fullwidth sliders
+        //   et_pb_slider_no_arrows      — hide arrows for single-image posts
+        //   et_pb_slider_no_pagination  — hide dots for single-image posts
+        $slider_classes = 'et_pb_slider et_pb_slider_fullwidth_off';
+        if (!$is_carousel) {
+            $slider_classes .= ' et_pb_slider_no_arrows et_pb_slider_no_pagination';
+        }
+
+        $slider_html = '<div class="' . $slider_classes . '">'
+            . '<div class="et_pb_slides">' . $slides_html . '</div>'
+            . '</div>';
+
+        // ── Instagram badge ───────────────────────────────────────────────────
         $insta_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>';
 
-        return '<a href="' . $permalink . '" class="vvp-co__feed-card vvp-co__feed-card--insta" target="_blank" rel="noopener noreferrer">'
-            . $image_html
-            . '<div class="vvp-co__feed-body">'
-            .   '<div class="vvp-co__feed-meta"><span class="vvp-co__badge vvp-co__badge--insta">' . $insta_icon . 'Instagram</span></div>'
-            .   ($caption ? '<p class="vvp-co__feed-excerpt vvp-co__feed-excerpt--insta">' . $caption . '</p>' : '')
-            .   '<span class="vvp-co__feed-date">' . $date . '</span>'
-            . '</div>'
-            . '</a>';
+        // Carousel indicator shown on the badge when post has multiple images
+        $badge_label = $is_carousel
+            ? 'Instagram (' . count($images) . ' Bilder)'
+            : 'Instagram';
+
+        return '<div class="vvp-co__feed-card vvp-co__feed-card--insta">'
+            .   '<div class="vvp-co__insta-slider-wrap">' . $slider_html . '</div>'
+            .   '<a href="' . $permalink . '" class="vvp-co__feed-body vvp-co__feed-body--link" target="_blank" rel="noopener noreferrer">'
+            .     '<div class="vvp-co__feed-meta"><span class="vvp-co__badge vvp-co__badge--insta">' . $insta_icon . esc_html($badge_label) . '</span></div>'
+            .     ($caption ? '<p class="vvp-co__feed-excerpt vvp-co__feed-excerpt--insta">' . esc_html($caption) . '</p>' : '')
+            .     '<span class="vvp-co__feed-date">' . $date . '</span>'
+            .   '</a>'
+            . '</div>';
     }
 
     /**
@@ -657,6 +718,11 @@ trait RenderCallbackTrait
      */
     public static function render_callback($attrs, $content, $block, $elements)
     {
+        // Ensure Divi's slider JS is enqueued when this module is on the page.
+        if (class_exists('\ET\Builder\FrontEnd\Assets\DynamicAssetsUtils')) {
+            \ET\Builder\FrontEnd\Assets\DynamicAssetsUtils::enqueue_slider_script();
+        }
+
         $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
         $parent_attrs = $parent->attrs ?? [];
 
@@ -707,7 +773,7 @@ trait RenderCallbackTrait
 
         // Prüfpunkt posts (1 page of 10)
         $pp_posts = self::fetch_wp_posts(
-            'https://pruefpunkt.de/wp-json/wp/v2/posts?per_page=10&_embed=1',
+            'https://pruefpunkt.org/wp-json/wp/v2/posts?per_page=10&_embed=1',
             'vvp_co_pp_posts',
             1,
             'pruefpunkt'
@@ -736,15 +802,13 @@ trait RenderCallbackTrait
             return $tb - $ta;
         });
 
-        // --- 3. Extract hero + sidebar ---
-        $hero             = $all_articles[0] ?? null;
-        $sidebar_articles = array_slice($all_articles, 1, 6);
-        $remaining        = array_slice($all_articles, 7);
+        // --- 3. Skip only the newest post; everything else goes into the feed ---
+        $remaining = array_slice($all_articles, 1);
 
         // --- 4. Build feed items ---
         $YT_INTERLEAVE_DAYS    = 14;
         $PODCAST_BANNER_DAYS   = 7;
-        $TARGET_WEITERE_ITEMS  = 18;
+        $TARGET_WEITERE_ITEMS  = 30;
         $FEED_ROW_SIZE         = 3;
 
         $now = time();
@@ -843,48 +907,19 @@ trait RenderCallbackTrait
         }
 
         // --- 6. Render ---
-        return self::render_overview($hero, $sidebar_articles, $feed_with_podcast, $channel_image);
+        return self::render_overview($feed_with_podcast, $channel_image);
     }
 
     /**
      * Assemble the overview HTML from prepared data.
      *
-     * @param array|null $hero            Hero post or null.
-     * @param array      $sidebar_posts   Sidebar article posts.
-     * @param array      $feed_items      Flat list of feed items with kind/date/data.
-     * @param string     $channel_image   Podcast channel artwork URL.
+     * @param array  $feed_items    Flat list of feed items with kind/date/data.
+     * @param string $channel_image Podcast channel artwork URL.
      *
      * @return string HTML string.
      */
-    private static function render_overview($hero, $sidebar_posts, $feed_items, $channel_image)
+    private static function render_overview($feed_items, $channel_image)
     {
-        // Hero section
-        $hero_html = '';
-        if ($hero) {
-            $hero_html = self::render_hero_card($hero);
-        }
-
-        // Sidebar section
-        $sidebar_cards = '';
-        foreach ($sidebar_posts as $post) {
-            $sidebar_cards .= self::render_compact_card($post);
-        }
-
-        $sidebar_html = '<div class="vvp-co__sidebar">'
-            . '<div class="vvp-co__sidebar-header">'
-            .   '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2 2zm0 0a2 2 0 01-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/></svg>'
-            .   '<h2 class="vvp-co__sidebar-title">Neueste Artikel</h2>'
-            . '</div>'
-            . '<div class="vvp-co__sidebar-cards">' . $sidebar_cards . '</div>'
-            . '</div>';
-
-        // Top grid
-        $top_grid = '<div class="vvp-co__top-grid">'
-            . '<div class="vvp-co__hero-wrap">' . $hero_html . '</div>'
-            . $sidebar_html
-            . '</div>';
-
-        // Feed section
         $feed_html = '';
         foreach ($feed_items as $item) {
             $kind = $item['kind'];
@@ -919,13 +954,9 @@ trait RenderCallbackTrait
         }
 
         $feed_section = '<div class="vvp-co__feed-section">'
-            . '<div class="vvp-co__feed-header">'
-            .   '<h2 class="vvp-co__feed-heading">Weitere Beiträge</h2>'
-            .   '<div class="vvp-co__feed-divider"></div>'
-            . '</div>'
             . '<div class="vvp-co__feed-grid">' . $feed_html . '</div>'
             . '</div>';
 
-        return '<div class="vvp-co__wrapper">' . $top_grid . $feed_section . '</div>';
+        return '<div class="vvp-co__wrapper">' . $feed_section . '</div>';
     }
 }

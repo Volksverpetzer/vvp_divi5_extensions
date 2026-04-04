@@ -2,6 +2,7 @@
 node_modules/
 reference/
 vendor/
+Divi/
 
 # Build outputs
 scripts/bundle.js

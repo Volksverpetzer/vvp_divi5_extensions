@@ -54,5 +54,15 @@ class ContentOverview implements DependencyInterface
                 );
             }
         );
+
+        // Enqueue Divi's slider script in the VB app-window iframe (preview context).
+        add_action(
+            'divi_visual_builder_assets_before_enqueue_app_window_scripts',
+            function () {
+                if (class_exists('\ET\Builder\FrontEnd\Assets\DynamicAssetsUtils')) {
+                    \ET\Builder\FrontEnd\Assets\DynamicAssetsUtils::enqueue_slider_script();
+                }
+            }
+        );
     }
 }
