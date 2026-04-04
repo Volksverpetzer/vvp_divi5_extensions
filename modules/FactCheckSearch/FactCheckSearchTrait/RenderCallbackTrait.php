@@ -407,7 +407,7 @@ trait RenderCallbackTrait
         $import_api_url = $attrs['importApiUrl']['desktop']['value'] ?? '';
 
         if ( '' === $search_api_url ) {
-            $search_api_url = 'https://ai.volksverpetzer-app.de/api/vector-search';
+            $search_api_url = 'https://ai.volksverpetzer-app.de/api/vector-search/';
         }
         if ( '' === $import_api_url ) {
             $import_api_url = 'https://ai.volksverpetzer-app.de/api/import-url/';

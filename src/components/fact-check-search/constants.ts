@@ -4,7 +4,7 @@
  */
 export const DEFAULT_API_URLS = {
     // Default search API endpoint
-    searchApiUrl: 'https://ai.volksverpetzer-app.de/api/vector-search',
+    searchApiUrl: 'https://ai.volksverpetzer-app.de/api/vector-search/',
     
     // Default import API endpoint
     importApiUrl: 'https://ai.volksverpetzer-app.de/api/import-url/'
