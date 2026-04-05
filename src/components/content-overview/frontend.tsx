@@ -1,5 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import { render } from 'react-dom';
 import { InstagramSlideshow } from './InstagramSlideshow';
 
 const initInstagramSlideshows = () => {
@@ -11,7 +11,7 @@ const initInstagramSlideshows = () => {
             try {
                 const props = JSON.parse(propsRaw);
                 // ReactDOM corresponds to wp.element.render when loaded in frontend bundle
-                ReactDOM.render(<InstagramSlideshow {...props} />, mount);
+                render(<InstagramSlideshow {...props} />, mount);
             } catch (e) {
                 console.error("Failed to parse Instagram slideshow props", e);
             }

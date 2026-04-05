@@ -136,7 +136,7 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
                                                     </div>
                                                 ) : (
                                                     <video 
-                                                        loop playsInline preload="metadata" controls autoPlay 
+                                                        loop playsInline preload="metadata" controls autoPlay muted
                                                         style={{ width: '100%', display: 'block' }}
                                                         onPlay={(e) => {
                                                             const currentTarget = e.currentTarget;

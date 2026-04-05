@@ -5,9 +5,8 @@ vendor/
 Divi/
 
 # Build outputs
-scripts/bundle.js
-scripts/bundle.js.map
-styles/*.css
+scripts/
+styles/
 dist/
 *.zip
 

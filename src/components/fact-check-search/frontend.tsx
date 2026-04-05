@@ -1,5 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import { render } from 'react-dom';
 import { FactCheckSearchApp } from './App';
 
 const initAll = () => {
@@ -9,7 +9,7 @@ const initAll = () => {
         const searchApiUrl = mount.getAttribute('data-search-url') || '';
         const importApiUrl = mount.getAttribute('data-import-url') || '';
         
-        ReactDOM.render(
+        render(
             <FactCheckSearchApp searchApiUrl={searchApiUrl} importApiUrl={importApiUrl} />,
             mount
         );
