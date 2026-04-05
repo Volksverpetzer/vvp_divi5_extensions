@@ -100,19 +100,25 @@ function vvp_fact_check_enqueue_frontend_scripts() {
 		VVP_FACT_CHECK_VERSION
 	);
 
+	$fc_frontend_path = VVP_FACT_CHECK_PATH . 'scripts/fact-check-frontend.js';
+	$fc_frontend_ver  = file_exists( $fc_frontend_path ) ? filemtime( $fc_frontend_path ) : VVP_FACT_CHECK_VERSION;
+
 	wp_enqueue_script(
 		'vvp-fact-check-frontend',
 		VVP_FACT_CHECK_URL . 'scripts/fact-check-frontend.js',
 		array(),
-		VVP_FACT_CHECK_VERSION,
+		$fc_frontend_ver,
 		true
 	);
+
+	$co_frontend_path = VVP_FACT_CHECK_PATH . 'scripts/content-overview-frontend.js';
+	$co_frontend_ver  = file_exists( $co_frontend_path ) ? filemtime( $co_frontend_path ) : VVP_FACT_CHECK_VERSION;
 
 	wp_enqueue_script(
 		'vvp-content-overview-frontend',
 		VVP_FACT_CHECK_URL . 'scripts/content-overview-frontend.js',
 		array(),
-		VVP_FACT_CHECK_VERSION,
+		$co_frontend_ver,
 		true
 	);
 }
