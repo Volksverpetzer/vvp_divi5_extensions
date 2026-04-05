@@ -123,7 +123,7 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
                                 <div className="vvp-co-container clearfix">
                                     <div className="vvp-co-slider-container-inner">
                                         {isVideo ? (
-                                            <div className="vvp-co-slide-image" style={{ position: 'relative', aspectRatio: '4/3', overflow: 'hidden' }}>
+                                            <div className="vvp-co-slide-image" style={{ position: 'relative', aspectRatio: '3/4', overflow: 'hidden' }}>
                                                 {!isPlaying ? (
                                                     <div 
                                                         style={{ position: 'relative', cursor: 'pointer', width: '100%', height: '100%' }} 
@@ -155,7 +155,7 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
                                                 )}
                                             </div>
                                         ) : (
-                                            <div className="vvp-co-slide-image" style={{ aspectRatio: '4/3', overflow: 'hidden' }}>
+                                            <div className="vvp-co-slide-image" style={{ aspectRatio: '3/4', overflow: 'hidden' }}>
                                                 {isNearActive && <img src={slide.thumb} alt={caption} loading={index === 0 ? "eager" : "lazy"} decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}
                                             </div>
                                         )}
