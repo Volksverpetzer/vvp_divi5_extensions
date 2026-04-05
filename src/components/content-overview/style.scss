@@ -69,7 +69,7 @@
 
 /* ===== Instagram card — Divi slider wrapper ===== */
 .vvp-co__insta-slider-wrap .et_pb_slider{margin:0;border-radius:.5rem .5rem 0 0;overflow:hidden}
-.vvp-co__insta-slider-wrap .et_pb_slides{aspect-ratio:4/5}
+.vvp-co__insta-slider-wrap .et_pb_slides{aspect-ratio:3/4}
 .vvp-co__insta-slider-wrap .et_pb_slide{height:100%;padding:0}
 .vvp-co__insta-slider-wrap .et_pb_container{height:100%;display:flex}
 .vvp-co__insta-slider-wrap .et_pb_slider_container_inner{width:100%}
@@ -81,3 +81,6 @@
 /* Instagram slider arrows - move further to sides */
 .vvp-co__insta-slider-wrap .et-pb-arrow-prev{left:-20px !important}
 .vvp-co__insta-slider-wrap .et-pb-arrow-next{right:-20px !important}
+
+/* Instagram fullscreen caption - no line clamp */
+.vvp-co__insta-fullscreen-caption{white-space:pre-wrap !important;line-height:1.6 !important;font-size:15px !important;margin:0 !important;display:block !important;overflow:visible !important}

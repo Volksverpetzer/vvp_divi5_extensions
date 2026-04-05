@@ -267,7 +267,7 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({ permalin
                                     Auf Instagram ansehen ↗
                                 </a>
                             </div>
-                            <p style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6, fontSize: 15, margin: 0 }}>{caption}</p>
+                            <p className="vvp-co__insta-fullscreen-caption" style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6, fontSize: 15, margin: 0 }}>{caption}</p>
                             <div style={{ marginTop: 20, color: '#666', fontSize: 13 }}>{date}</div>
                         </div>
                     </div>
