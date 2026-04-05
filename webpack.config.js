@@ -95,10 +95,6 @@ module.exports = [
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.jsx'],
     },
-    externals: {
-      react: ['wp', 'element'],
-      'react-dom': ['wp', 'element'],
-    },
     module: {
       rules: [
         {
@@ -126,10 +122,6 @@ module.exports = [
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.jsx'],
-    },
-    externals: {
-      react: ['wp', 'element'],
-      'react-dom': ['wp', 'element'],
     },
     module: {
       rules: [

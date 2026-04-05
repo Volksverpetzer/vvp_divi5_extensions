@@ -198,7 +198,6 @@ namespace {
             window.wp = window.wp || {};
             window.wp.element = window.React;
             window.wp.element.render = window.ReactDOM.render;
-            window.wp.element.createRoot = window.ReactDOM.createRoot;
           </script>
           <script src="/slider.js" defer></script>
           <script src="/scripts/fact-check-frontend.js" defer></script>
