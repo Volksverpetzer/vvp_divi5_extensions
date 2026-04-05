@@ -77,3 +77,7 @@
 .vvp-co__insta-slider-wrap .et_pb_slide_image img{width:100%;height:100%;object-fit:cover;display:block;max-height:none !important}
 .vvp-co__insta-slider-wrap .et_pb_video_overlay{background-size:cover;background-position:center}
 .vvp-co__insta-slider-wrap video{width:100%;height:100%;object-fit:cover;display:block;max-height:none}
+
+/* Instagram slider arrows - move further to sides */
+.vvp-co__insta-slider-wrap .et-pb-arrow-prev{left:-20px !important}
+.vvp-co__insta-slider-wrap .et-pb-arrow-next{right:-20px !important}
