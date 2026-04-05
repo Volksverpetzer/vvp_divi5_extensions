@@ -103,7 +103,15 @@ function vvp_fact_check_enqueue_frontend_scripts() {
 	wp_enqueue_script(
 		'vvp-fact-check-frontend',
 		VVP_FACT_CHECK_URL . 'scripts/fact-check-frontend.js',
-		array(),
+		array( 'wp-element' ),
+		VVP_FACT_CHECK_VERSION,
+		true
+	);
+
+	wp_enqueue_script(
+		'vvp-content-overview-frontend',
+		VVP_FACT_CHECK_URL . 'scripts/content-overview-frontend.js',
+		array( 'wp-element' ),
 		VVP_FACT_CHECK_VERSION,
 		true
 	);

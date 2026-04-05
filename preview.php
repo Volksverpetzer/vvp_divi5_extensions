@@ -13,6 +13,10 @@ declare(strict_types=0);
 // ── Global namespace: WP stubs + rendering ───────────────────────────────────
 namespace {
 
+    if (PHP_SAPI === 'cli-server' && preg_match('/\.(?:png|jpg|jpeg|gif|css|js|map)$/', parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH) ?? '')) {
+        return false; // serve the requested resource as-is.
+    }
+
     define('ABSPATH', __DIR__ . '/');
 
     // ── Flush cache ───────────────────────────────────────────────────────────
@@ -134,9 +138,16 @@ namespace VVP\FactCheckSearch\ContentOverview {
 // ── Back to global: render + output ──────────────────────────────────────────
 namespace {
 
-    $t0      = microtime(true);
-    $body    = \VVP\FactCheckSearch\ContentOverview\ContentOverviewPreview::render();
-    $took    = round((microtime(true) - $t0) * 1000);
+    $t0       = microtime(true);
+    $overview = \VVP\FactCheckSearch\ContentOverview\ContentOverviewPreview::render();
+    
+    $body     = '<h2>Fact Check Search Module</h2>';
+    $body    .= '<div class="vvp-fc__mount" data-search-url="" data-import-url="" style="margin-bottom: 2rem;"></div>';
+    $body    .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #e5e7eb;">';
+    $body    .= $overview;
+    $body    .= '</div>';
+
+    $took     = round((microtime(true) - $t0) * 1000);
     $tmp_dir = sys_get_temp_dir();
 
     $css = file_exists(__DIR__ . '/styles/main.css')
@@ -181,7 +192,16 @@ namespace {
           <title>ContentOverview — Preview</title>
           <style>{$css}</style>
           <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+          <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+          <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+          <script>
+            window.wp = window.wp || {};
+            window.wp.element = window.React;
+            window.wp.element.render = window.ReactDOM.render;
+          </script>
           <script src="/slider.js" defer></script>
+          <script src="/scripts/fact-check-frontend.js" defer></script>
+          <script src="/scripts/content-overview-frontend.js" defer></script>
           <style>
             *, *::before, *::after { box-sizing: border-box; }
             body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9fafb; color: #111827; }

@@ -480,19 +480,15 @@ trait RenderCallbackTrait
      */
     private static function render_insta_card($post)
     {
-        static $slide_counter = 0;
-
         $media_type = $post['media_type'] ?? '';
         $permalink  = esc_url($post['permalink'] ?? 'https://www.instagram.com/volksverpetzer/');
         $caption    = self::truncate($post['caption'] ?? '', 100);
         $date       = esc_html(self::format_date($post['timestamp'] ?? ''));
 
         // ── Collect all slides for this post ──────────────────────────────────
-        // Each entry: ['thumb' => url, 'video' => url|null]
         $slides = [];
 
         if ('CAROUSEL_ALBUM' === $media_type && !empty($post['children']['data'])) {
-            // Carousel children from the proxy only carry media_url (JPEG) and id — no media_type.
             foreach ($post['children']['data'] as $child) {
                 $thumb = $child['media_url'] ?? '';
                 if ($thumb) {
@@ -501,12 +497,10 @@ trait RenderCallbackTrait
             }
         }
 
-        // Fallback to root-level image/video
         if (empty($slides)) {
             if ('VIDEO' === $media_type) {
-                // The proxy returns media_url as the MP4; thumbnail_url is not relayed.
                 $video = $post['media_url'] ?? '';
-                $thumb = $post['thumbnail_url'] ?? ''; // present only if proxy adds it later
+                $thumb = $post['thumbnail_url'] ?? ''; 
                 if ($video) {
                     $slides[] = ['thumb' => $thumb, 'video' => $video];
                 }
@@ -524,87 +518,20 @@ trait RenderCallbackTrait
 
         $is_carousel = count($slides) > 1;
 
-        // ── Build Divi slider slides ──────────────────────────────────────────
-        $slides_html = '';
-        $is_first    = true;
-
-        foreach ($slides as $slide) {
-            $slide_counter++;
-            $slide_id     = 'vvp-insta-slide-' . $slide_counter;
-            $active_class = $is_first ? ' et-pb-active-slide' : '';
-            $loading      = $is_first ? 'eager' : 'lazy';
-            $is_video     = !empty($slide['video']);
-
-            if ($is_video && !empty($slide['thumb'])) {
-                // Thumbnail available → use Divi's et_pb_video_wrap pattern so
-                // script-library-video-overlay.js handles thumbnail → play on click.
-                $slide_image =
-                    '<div class="et_pb_slide_image et_pb_video_wrap">'
-                    .   '<video loop playsinline preload="none">'
-                    .     '<source type="video/mp4" src="' . esc_url($slide['video']) . '">'
-                    .   '</video>'
-                    .   '<div class="et_pb_video_overlay" style="background-image:url(\'' . esc_url($slide['thumb']) . '\')">'
-                    .     '<div class="et_pb_video_overlay_hover"><a href="#" class="et_pb_video_play"></a></div>'
-                    .   '</div>'
-                    . '</div>';
-            } elseif ($is_video) {
-                // No thumbnail (proxy doesn't relay thumbnail_url) → render the video
-                // directly; browser shows the first frame and native controls allow playback.
-                $slide_image =
-                    '<div class="et_pb_slide_image">'
-                    .   '<video loop playsinline preload="metadata" controls>'
-                    .     '<source type="video/mp4" src="' . esc_url($slide['video']) . '">'
-                    .   '</video>'
-                    . '</div>';
-            } else {
-                $slide_image =
-                    '<div class="et_pb_slide_image">'
-                    .   '<img src="' . esc_url($slide['thumb']) . '" alt="' . esc_attr($caption) . '" loading="' . $loading . '" decoding="async">'
-                    . '</div>';
-            }
-
-            $slides_html .=
-                '<div class="et_pb_slide et_pb_slide_with_image' . $active_class . '" data-slide-id="' . esc_attr($slide_id) . '">'
-                .   '<div class="et_pb_container clearfix">'
-                .     '<div class="et_pb_slider_container_inner">'
-                .       $slide_image
-                .     '</div>'
-                .   '</div>'
-                . '</div>';
-
-            $is_first = false;
-        }
-
-        // ── Slider outer wrapper ──────────────────────────────────────────────
-        // Classes mirror what ET_Builder_Module_Slider outputs:
-        //   et_pb_slider_fullwidth_off  — always present for non-fullwidth sliders
-        //   et_pb_slider_no_arrows      — hide arrows for single-image posts
-        //   et_pb_slider_no_pagination  — hide dots for single-image posts
-        $slider_classes = 'et_pb_slider et_pb_slider_fullwidth_off';
-        if (!$is_carousel) {
-            $slider_classes .= ' et_pb_slider_no_arrows et_pb_slider_no_pagination';
-        }
-
-        $slider_html = '<div class="' . $slider_classes . '">'
-            . '<div class="et_pb_slides">' . $slides_html . '</div>'
-            . '</div>';
-
-        // ── Instagram badge ───────────────────────────────────────────────────
-        $insta_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>';
-
-        // Carousel indicator shown on the badge when post has multiple images
         $badge_label = $is_carousel
             ? 'Instagram (' . count($slides) . ' Bilder)'
             : 'Instagram';
 
-        return '<div class="vvp-co__feed-card vvp-co__feed-card--insta">'
-            .   '<div class="vvp-co__insta-slider-wrap">' . $slider_html . '</div>'
-            .   '<a href="' . $permalink . '" class="vvp-co__feed-body vvp-co__feed-body--link" target="_blank" rel="noopener noreferrer">'
-            .     '<div class="vvp-co__feed-meta"><span class="vvp-co__badge vvp-co__badge--insta">' . $insta_icon . esc_html($badge_label) . '</span></div>'
-            .     ($caption ? '<p class="vvp-co__feed-excerpt vvp-co__feed-excerpt--insta">' . esc_html($caption) . '</p>' : '')
-            .     '<span class="vvp-co__feed-date">' . $date . '</span>'
-            .   '</a>'
-            . '</div>';
+        $props = [
+            'permalink'  => $permalink,
+            'caption'    => $caption,
+            'date'       => $date,
+            'badgeLabel' => $badge_label,
+            'slides'     => $slides,
+            'isCarousel' => $is_carousel
+        ];
+
+        return '<div class="vvp-co-ig-mount" data-ig-props="' . esc_attr(json_encode($props)) . '"></div>';
     }
 
     /**

@@ -4,26 +4,32 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-module.exports = {
-  mode: isProduction ? 'production' : 'development',
-  entry: './src/index.ts',
-  output: {
-    path: path.resolve(__dirname, 'scripts'),
-    filename: 'bundle.js',
-  },
+const commonExternals = {
+  '@wordpress/hooks': ['vendor', 'wp', 'hooks'],
+  '@wordpress/i18n': ['vendor', 'wp', 'i18n'],
+  '@divi/module': ['divi', 'module'],
+  '@divi/module-library': ['divi', 'moduleLibrary'],
+  '@divi/types': ['divi', 'types'],
+  '@divi/icon-library': ['divi', 'iconLibrary'],
+};
+
+module.exports = [
+  // 1: DIVI 5 Visual Builder Bundle
+  {
+    mode: isProduction ? 'production' : 'development',
+    entry: './src/index.ts',
+    output: {
+      path: path.resolve(__dirname, 'scripts'),
+      filename: 'bundle.js',
+    },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
-  externals: {
-    react: ['vendor', 'React'],
-    'react-dom': ['vendor', 'ReactDOM'],
-    '@wordpress/hooks': ['vendor', 'wp', 'hooks'],
-    '@wordpress/i18n': ['vendor', 'wp', 'i18n'],
-    '@divi/module': ['divi', 'module'],
-    '@divi/module-library': ['divi', 'moduleLibrary'],
-    '@divi/types': ['divi', 'types'],
-    '@divi/icon-library': ['divi', 'iconLibrary'],
-  },
+    externals: {
+      ...commonExternals,
+      react: ['vendor', 'React'],
+      'react-dom': ['vendor', 'ReactDOM'],
+    },
   module: {
     rules: [
       {
@@ -76,5 +82,70 @@ module.exports = {
       ],
     }),
   ],
-  devtool: isProduction ? false : 'source-map',
-};
+    devtool: isProduction ? false : 'source-map',
+  },
+  // 2: Frontend Bundle Fact Check
+  {
+    mode: isProduction ? 'production' : 'development',
+    entry: './src/components/fact-check-search/frontend.tsx',
+    output: {
+      path: path.resolve(__dirname, 'scripts'),
+      filename: 'fact-check-frontend.js',
+    },
+    resolve: {
+      extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    },
+    externals: {
+      react: ['wp', 'element'],
+      'react-dom': ['wp', 'element'],
+    },
+    module: {
+      rules: [
+        {
+          test: /\.(ts|tsx)$/,
+          loader: 'ts-loader',
+          options: { transpileOnly: true },
+          exclude: /node_modules/,
+        },
+        {
+          test: /\.(js|jsx)$/,
+          use: 'babel-loader',
+          exclude: /node_modules/,
+        },
+      ],
+    },
+    devtool: isProduction ? false : 'source-map',
+  },
+  // 3: Frontend Bundle Content Overview (Instagram Slideshow)
+  {
+    mode: isProduction ? 'production' : 'development',
+    entry: './src/components/content-overview/frontend.tsx',
+    output: {
+      path: path.resolve(__dirname, 'scripts'),
+      filename: 'content-overview-frontend.js',
+    },
+    resolve: {
+      extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    },
+    externals: {
+      react: ['wp', 'element'],
+      'react-dom': ['wp', 'element'],
+    },
+    module: {
+      rules: [
+        {
+          test: /\.(ts|tsx)$/,
+          loader: 'ts-loader',
+          options: { transpileOnly: true },
+          exclude: /node_modules/,
+        },
+        {
+          test: /\.(js|jsx)$/,
+          use: 'babel-loader',
+          exclude: /node_modules/,
+        },
+      ],
+    },
+    devtool: isProduction ? false : 'source-map',
+  }
+];
