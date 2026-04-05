@@ -96,36 +96,41 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
         >
-            <div className={classnames('et_pb_slider et_pb_slider_fullwidth_off', {
-                'et_pb_slider_no_arrows': !isCarousel,
-                'et_pb_slider_no_pagination': !isCarousel
+            <div className={classnames('vvp-co-slider vvp-co-slider-fullwidth-off', {
+                'vvp-co-slider-no-arrows': !isCarousel,
+                'vvp-co-slider-no-pagination': !isCarousel
             })} style={{ background: '#000', paddingBottom: 0 }}>
-                <div className="et_pb_slides" style={{ position: 'relative', overflow: 'hidden' }}>
+                <div className="vvp-co-slides" style={{ position: 'relative', overflow: 'hidden' }}>
                     {slides.map((slide: Slide, index: number) => {
                         const isVideo = !!slide.video;
                         const isActive = index === activeIndex;
                         const isPlaying = !!playingVideos[index];
+                        
+                        const len = slides.length;
+                        const isNearActive = index === activeIndex 
+                            || index === (activeIndex + 1) % len 
+                            || index === (activeIndex - 1 + len) % len;
 
                         return (
                             <div 
-                                className={classnames('et_pb_slide et_pb_slide_with_image', { 'et-pb-active-slide': isActive })} 
+                                className={classnames('vvp-co-slide vvp-co-slide-with-image', { 'vvp-co-active-slide': isActive })} 
                                 key={index}
                                 style={{
                                     display: isActive ? 'block' : 'none',
                                     transition: 'all 0.4s ease-in-out'
                                 }}
                             >
-                                <div className="et_pb_container clearfix">
-                                    <div className="et_pb_slider_container_inner">
+                                <div className="vvp-co-container clearfix">
+                                    <div className="vvp-co-slider-container-inner">
                                         {isVideo ? (
-                                            <div className="et_pb_slide_image" style={{ position: 'relative' }}>
+                                            <div className="vvp-co-slide-image" style={{ position: 'relative', aspectRatio: '4/3', overflow: 'hidden' }}>
                                                 {!isPlaying ? (
                                                     <div 
-                                                        style={{ position: 'relative', cursor: 'pointer', width: '100%' }} 
+                                                        style={{ position: 'relative', cursor: 'pointer', width: '100%', height: '100%' }} 
                                                         onClick={() => setPlayingVideos({ [index]: true })}
                                                         onMouseEnter={() => setPlayingVideos({ [index]: true })}
                                                     >
-                                                        <img src={slide.thumb || 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='} alt={caption} style={{ width: '100%', display: 'block' }} loading={index === 0 ? "eager" : "lazy"} />
+                                                        {isNearActive && <img src={slide.thumb || 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='} alt={caption} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} loading={index === 0 ? "eager" : "lazy"} />}
                                                         <div style={{
                                                             position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
                                                             background: 'rgba(0,0,0,0.6)', borderRadius: '50%', width: 64, height: 64, 
@@ -137,7 +142,7 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
                                                 ) : (
                                                     <video 
                                                         loop playsInline preload="metadata" controls autoPlay muted
-                                                        style={{ width: '100%', display: 'block' }}
+                                                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                                                         onPlay={(e) => {
                                                             const currentTarget = e.currentTarget;
                                                             document.querySelectorAll('video').forEach(video => {
@@ -150,8 +155,8 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
                                                 )}
                                             </div>
                                         ) : (
-                                            <div className="et_pb_slide_image">
-                                                <img src={slide.thumb} alt={caption} loading={index === 0 ? "eager" : "lazy"} decoding="async" style={{ width: '100%', display: 'block' }} />
+                                            <div className="vvp-co-slide-image" style={{ aspectRatio: '4/3', overflow: 'hidden' }}>
+                                                {isNearActive && <img src={slide.thumb} alt={caption} loading={index === 0 ? "eager" : "lazy"} decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}
                                             </div>
                                         )}
                                     </div>
@@ -163,12 +168,12 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
                 {isCarousel && (
                     <>
                         {showArrows && (
-                            <div className="et-pb-slider-arrows">
+                            <div className="vvp-co-slider-arrows">
                                 <a style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.8)', color: '#000', borderRadius: '50%', width: 36, height: 36, position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', zIndex: 10, textDecoration: 'none' }} href="#" onClick={handlePrev}><ArrowLeftIcon /></a>
                                 <a style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.8)', color: '#000', borderRadius: '50%', width: 36, height: 36, position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', zIndex: 10, textDecoration: 'none' }} href="#" onClick={handleNext}><ArrowRightIcon /></a>
                             </div>
                         )}
-                        <div className="et-pb-controllers" style={{ position: 'relative', marginTop: 10, paddingBottom: 15, display: 'flex', justifyContent: 'center', gap: 6, zIndex: 10 }}>
+                        <div className="vvp-co-controllers" style={{ position: 'relative', marginTop: 10, paddingBottom: 15, display: 'flex', justifyContent: 'center', gap: 6, zIndex: 10 }}>
                             {slides.map((_: Slide, index: number) => (
                                 <a 
                                     key={index} 

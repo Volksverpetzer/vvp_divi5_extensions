@@ -806,10 +806,7 @@ trait RenderCallbackTrait
             if (!$dt) {
                 continue;
             }
-            $days_ago = ($now - $dt->getTimestamp()) / 86400;
-            if ($days_ago > $YT_INTERLEAVE_DAYS) {
-                continue;
-            }
+            // Removing the 14-day threshold so YouTube videos are always interspersed
             $yt_items[] = ['kind' => 'youtube', 'date' => $dt, 'data' => $video];
             if (count($yt_items) >= 4) {
                 break;
