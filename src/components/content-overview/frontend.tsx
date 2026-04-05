@@ -1,25 +1,34 @@
 import * as React from 'react';
 import { InstagramSlideshow } from './InstagramSlideshow';
 
+// @ts-ignore
+const wpEl = () => window.wp && window.wp.element;
+// @ts-ignore
+const rdOM = () => window.ReactDOM;
+
+const mountReact = (component: React.ReactElement, container: Element) => {
+    if (wpEl()?.createRoot) {
+        wpEl().createRoot(container).render(component);
+    } else if (rdOM()?.createRoot) {
+        rdOM().createRoot(container).render(component);
+    } else if (wpEl()?.render) {
+        wpEl().render(component, container);
+    } else if (rdOM()?.render) {
+        rdOM().render(component, container);
+    } else {
+        console.error("React render function not found globally.");
+    }
+};
+
 const initInstagramSlideshows = () => {
     const mounts = document.querySelectorAll('.vvp-co-ig-mount:not([data-ig-initialized="true"])');
     mounts.forEach((mount) => {
         mount.setAttribute('data-ig-initialized', 'true');
-                const rawProps = mount.getAttribute('data-ig-props');
+        const rawProps = mount.getAttribute('data-ig-props');
         if (rawProps) {
             try {
                 const props = JSON.parse(rawProps);
-                // Dynamically resolve render to bypass Webpack external function wrapper issues
-                // @ts-ignore
-                const renderFunc = (window.wp && window.wp.element && window.wp.element.render) 
-                    // @ts-ignore
-                    || (window.ReactDOM && window.ReactDOM.render);
-                    
-                if (renderFunc) {
-                    renderFunc(<InstagramSlideshow {...props} />, mount);
-                } else {
-                    console.error("React render function not found globally.");
-                }
+                mountReact(<InstagramSlideshow {...props} />, mount);
             } catch (e) {
                 console.error("Failed to parse Instagram slideshow props", e);
             }
