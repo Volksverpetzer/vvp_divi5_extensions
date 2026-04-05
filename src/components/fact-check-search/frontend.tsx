@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { render } from 'react-dom';
 import { FactCheckSearchApp } from './App';
 
 const initAll = () => {
@@ -9,10 +8,20 @@ const initAll = () => {
         const searchApiUrl = mount.getAttribute('data-search-url') || '';
         const importApiUrl = mount.getAttribute('data-import-url') || '';
         
-        render(
-            <FactCheckSearchApp searchApiUrl={searchApiUrl} importApiUrl={importApiUrl} />,
-            mount
-        );
+        // Dynamically resolve render to bypass Webpack external wrapper issues
+        // @ts-ignore
+        const renderFunc = (window.wp && window.wp.element && window.wp.element.render)
+            // @ts-ignore 
+            || (window.ReactDOM && window.ReactDOM.render);
+            
+        if (renderFunc) {
+            renderFunc(
+                <FactCheckSearchApp searchApiUrl={searchApiUrl} importApiUrl={importApiUrl} />,
+                mount
+            );
+        } else {
+            console.error("React render function not found globally.");
+        }
     });
 };
 

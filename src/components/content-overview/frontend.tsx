@@ -1,17 +1,25 @@
 import * as React from 'react';
-import { render } from 'react-dom';
 import { InstagramSlideshow } from './InstagramSlideshow';
 
 const initInstagramSlideshows = () => {
     const mounts = document.querySelectorAll('.vvp-co-ig-mount:not([data-ig-initialized="true"])');
     mounts.forEach((mount) => {
         mount.setAttribute('data-ig-initialized', 'true');
-        const propsRaw = mount.getAttribute('data-ig-props');
-        if (propsRaw) {
+                const rawProps = mount.getAttribute('data-ig-props');
+        if (rawProps) {
             try {
-                const props = JSON.parse(propsRaw);
-                // ReactDOM corresponds to wp.element.render when loaded in frontend bundle
-                render(<InstagramSlideshow {...props} />, mount);
+                const props = JSON.parse(rawProps);
+                // Dynamically resolve render to bypass Webpack external function wrapper issues
+                // @ts-ignore
+                const renderFunc = (window.wp && window.wp.element && window.wp.element.render) 
+                    // @ts-ignore
+                    || (window.ReactDOM && window.ReactDOM.render);
+                    
+                if (renderFunc) {
+                    renderFunc(<InstagramSlideshow {...props} />, mount);
+                } else {
+                    console.error("React render function not found globally.");
+                }
             } catch (e) {
                 console.error("Failed to parse Instagram slideshow props", e);
             }
