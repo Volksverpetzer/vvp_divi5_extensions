@@ -580,42 +580,19 @@ trait RenderCallbackTrait
      */
     private static function render_podcast_banner($episode, $channel_image)
     {
-        $title         = esc_html($episode['title'] ?? '');
-        $link          = esc_url($episode['link'] ?? '#');
-        $enclosure     = esc_url($episode['enclosure'] ?? '');
-        $date          = esc_html(self::format_date($episode['pubDate'] ?? ''));
-        $duration      = esc_html($episode['duration'] ?? '');
-        $summary       = esc_html(self::truncate($episode['summary'] ?? '', 180));
-        $channel_img   = esc_url($channel_image);
+        $props = [
+            'title'      => $episode['title'] ?? '',
+            'link'       => $episode['link'] ?? '#',
+            'enclosure'  => $episode['enclosure'] ?? '',
+            'date'       => self::format_date($episode['pubDate'] ?? ''),
+            'duration'   => $episode['duration'] ?? '',
+            'summary'    => self::truncate($episode['summary'] ?? '', 180),
+            'artworkUrl' => $channel_image,
+        ];
 
-        $artwork_html = '';
-        if ($channel_img) {
-            $artwork_html = '<img src="' . $channel_img . '" alt="Podcast" class="vvp-co__podcast-artwork" loading="lazy" decoding="async">';
-        }
+        $encoded = htmlspecialchars(json_encode($props, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8');
 
-        $duration_html = $duration
-            ? '<span class="vvp-co__podcast-duration"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' . $duration . '</span>'
-            : '';
-
-        $listen_html = $enclosure
-            ? '<a href="' . $enclosure . '" class="vvp-co__podcast-listen-btn" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Anhören</a>'
-            : '';
-
-        return '<div class="vvp-co__podcast-banner">'
-            . '<div class="vvp-co__podcast-inner">'
-            .   '<div class="vvp-co__podcast-artwork-wrap">' . $artwork_html . '</div>'
-            .   '<div class="vvp-co__podcast-content">'
-            .     '<div class="vvp-co__podcast-label"><span class="vvp-co__badge vvp-co__badge--podcast"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>Podcast</span></div>'
-            .     '<a href="' . $link . '" class="vvp-co__podcast-title" target="_blank" rel="noopener noreferrer">' . $title . '</a>'
-            .     ($summary ? '<p class="vvp-co__podcast-summary">' . $summary . '</p>' : '')
-            .     '<div class="vvp-co__podcast-footer">'
-            .       '<span class="vvp-co__podcast-date">' . $date . '</span>'
-            .       $duration_html
-            .       $listen_html
-            .     '</div>'
-            .   '</div>'
-            . '</div>'
-            . '</div>';
+        return '<div class="vvp-co-podcast-mount" data-podcast-props="' . $encoded . '"></div>';
     }
 
     /**

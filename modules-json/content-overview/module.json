@@ -39,6 +39,34 @@
                     "sticky": {}
                 }
             }
+        },
+        "descriptionFont": {
+            "type": "object",
+            "selector": "{{selector}} .vvp-co__feed-excerpt, {{selector}} .vvp-co__feed-title, {{selector}} .vvp-co__podcast-title, {{selector}} .vvp-co__podcast-summary",
+            "settings": {
+                "font": {
+                    "groupType": "group-item",
+                    "item": {
+                        "groupName": "design",
+                        "priority": 10,
+                        "attrName": "descriptionFont.font",
+                        "label": "Beschreibungsschrift",
+                        "description": "Schrift für Artikel-Excerpts, Podcast-Titel und Feed-Beschreibungen.",
+                        "features": {
+                            "sticky": false
+                        },
+                        "component": {
+                            "name": "divi/font",
+                            "type": "field"
+                        }
+                    }
+                }
+            },
+            "styleProps": {
+                "font": {
+                    "selector": "{{selector}} .vvp-co__feed-excerpt, {{selector}} .vvp-co__feed-title, {{selector}} .vvp-co__podcast-title, {{selector}} .vvp-co__podcast-summary"
+                }
+            }
         }
     },
     "settings": {
