@@ -482,7 +482,7 @@ trait RenderCallbackTrait
     {
         $media_type = $post['media_type'] ?? '';
         $permalink  = esc_url($post['permalink'] ?? 'https://www.instagram.com/volksverpetzer/');
-        $caption    = self::truncate($post['caption'] ?? '', 100);
+        $caption    = $post['caption'] ?? '';
         $date       = esc_html(self::format_date($post['timestamp'] ?? ''));
 
         // ── Collect all slides for this post ──────────────────────────────────

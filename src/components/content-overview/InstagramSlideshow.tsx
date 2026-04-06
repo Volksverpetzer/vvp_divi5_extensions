@@ -27,7 +27,7 @@ const ArrowRightIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
 );
 
-const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, caption, playingVideos, setPlayingVideos }) => {
+const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, caption, playingVideos, setPlayingVideos, onCenterClick }) => {
     const [showArrows, setShowArrows] = useState(false);
     const arrowTimeout = React.useRef<NodeJS.Timeout | null>(null);
 
@@ -35,29 +35,21 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
     const touchEndX = React.useRef<number>(0);
 
     const handleNext = (e?: React.MouseEvent) => {
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        setPlayingVideos({}); // Clear playing videos on slide change
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        setPlayingVideos({});
         setActiveIndex((prev: number) => (prev + 1) % slides.length);
     };
 
     const handlePrev = (e?: React.MouseEvent) => {
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        setPlayingVideos({}); // Clear playing videos on slide change
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        setPlayingVideos({});
         setActiveIndex((prev: number) => (prev - 1 + slides.length) % slides.length);
     };
 
     const handleMouseMove = () => {
         setShowArrows(true);
         if (arrowTimeout.current) clearTimeout(arrowTimeout.current);
-        arrowTimeout.current = setTimeout(() => {
-            setShowArrows(false);
-        }, 1500);
+        arrowTimeout.current = setTimeout(() => setShowArrows(false), 1500);
     };
 
     const handleMouseLeave = () => {
@@ -67,28 +59,19 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
 
     const handleTouchStart = (e: React.TouchEvent) => {
         touchStartX.current = e.targetTouches[0].clientX;
-        touchEndX.current = e.targetTouches[0].clientX; // Reset end x
-    };
-
-    const handleTouchMove = (e: React.TouchEvent) => {
         touchEndX.current = e.targetTouches[0].clientX;
     };
-
+    const handleTouchMove = (e: React.TouchEvent) => { touchEndX.current = e.targetTouches[0].clientX; };
     const handleTouchEnd = () => {
-        if (!touchStartX.current || !touchEndX.current) return;
         const distance = touchStartX.current - touchEndX.current;
-        if (Math.abs(distance) > 40) { // 40px swipe threshold
-            if (distance > 0) {
-                handleNext();
-            } else {
-                handlePrev();
-            }
+        if (Math.abs(distance) > 40) {
+            distance > 0 ? handleNext() : handlePrev();
         }
     };
 
     return (
-        <div 
-            className="vvp-co__insta-slider-wrap" 
+        <div
+            className="vvp-co__insta-slider-wrap"
             style={{ position: 'relative' }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -105,49 +88,38 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
                         const isVideo = !!slide.video;
                         const isActive = index === activeIndex;
                         const isPlaying = !!playingVideos[index];
-                        
                         const len = slides.length;
-                        const isNearActive = index === activeIndex 
-                            || index === (activeIndex + 1) % len 
+                        const isNearActive = index === activeIndex
+                            || index === (activeIndex + 1) % len
                             || index === (activeIndex - 1 + len) % len;
 
                         return (
-                            <div 
-                                className={classnames('vvp-co-slide vvp-co-slide-with-image', { 'vvp-co-active-slide': isActive })} 
+                            <div
+                                className={classnames('vvp-co-slide vvp-co-slide-with-image', { 'vvp-co-active-slide': isActive })}
                                 key={index}
-                                style={{
-                                    display: isActive ? 'block' : 'none',
-                                    transition: 'all 0.4s ease-in-out'
-                                }}
+                                style={{ display: isActive ? 'block' : 'none', transition: 'all 0.4s ease-in-out' }}
                             >
                                 <div className="vvp-co-container clearfix">
                                     <div className="vvp-co-slider-container-inner">
                                         {isVideo ? (
                                             <div className="vvp-co-slide-image" style={{ position: 'relative', aspectRatio: '3/4', overflow: 'hidden' }}>
                                                 {!isPlaying ? (
-                                                    <div 
-                                                        style={{ position: 'relative', cursor: 'pointer', width: '100%', height: '100%' }} 
+                                                    <div
+                                                        style={{ position: 'relative', cursor: 'pointer', width: '100%', height: '100%' }}
                                                         onClick={() => setPlayingVideos({ [index]: true })}
                                                         onMouseEnter={() => setPlayingVideos({ [index]: true })}
                                                     >
-                                                        {isNearActive && <img src={slide.thumb || 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='} alt={caption} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} loading={index === 0 ? "eager" : "lazy"} />}
-                                                        <div style={{
-                                                            position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                                                            background: 'rgba(0,0,0,0.6)', borderRadius: '50%', width: 64, height: 64, 
-                                                            display: 'flex', alignItems: 'center', justifyContent: 'center'
-                                                        }}>
+                                                        {isNearActive && <img src={slide.thumb || 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='} alt={caption} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} loading={index === 0 ? 'eager' : 'lazy'} />}
+                                                        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'rgba(0,0,0,0.6)', borderRadius: '50%', width: 64, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                                             <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
                                                         </div>
                                                     </div>
                                                 ) : (
-                                                    <video 
-                                                        loop playsInline preload="metadata" controls autoPlay muted
+                                                    <video loop playsInline preload="metadata" controls autoPlay muted
                                                         style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                                                         onPlay={(e) => {
-                                                            const currentTarget = e.currentTarget;
-                                                            document.querySelectorAll('video').forEach(video => {
-                                                                if (video !== currentTarget) video.pause();
-                                                            });
+                                                            const t = e.currentTarget;
+                                                            document.querySelectorAll('video').forEach(v => { if (v !== t) v.pause(); });
                                                         }}
                                                     >
                                                         <source type="video/mp4" src={slide.video} />
@@ -156,7 +128,7 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
                                             </div>
                                         ) : (
                                             <div className="vvp-co-slide-image" style={{ aspectRatio: '3/4', overflow: 'hidden' }}>
-                                                {isNearActive && <img src={slide.thumb} alt={caption} loading={index === 0 ? "eager" : "lazy"} decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}
+                                                {isNearActive && <img src={slide.thumb} alt={caption} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}
                                             </div>
                                         )}
                                     </div>
@@ -164,28 +136,90 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
                             </div>
                         );
                     })}
-                </div>
-                {isCarousel && (
-                    <>
-                        {showArrows && (
-                            <div className="vvp-co-slider-arrows">
-                                <a style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.8)', color: '#000', borderRadius: '50%', width: 36, height: 36, position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', zIndex: 10, textDecoration: 'none' }} href="#" onClick={handlePrev}><ArrowLeftIcon /></a>
-                                <a style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.8)', color: '#000', borderRadius: '50%', width: 36, height: 36, position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', zIndex: 10, textDecoration: 'none' }} href="#" onClick={handleNext}><ArrowRightIcon /></a>
-                            </div>
-                        )}
-                        <div className="vvp-co-controllers" style={{ position: 'relative', marginTop: 10, paddingBottom: 15, display: 'flex', justifyContent: 'center', gap: 6, zIndex: 10 }}>
-                            {slides.map((_: Slide, index: number) => (
-                                <a 
-                                    key={index} 
-                                    href="#" 
+
+                    {/* Always-present navigation zones — invisible but fully clickable */}
+                    {isCarousel && (
+                        <>
+                            {/* Left zone: prev */}
+                            <button
+                                type="button"
+                                onClick={handlePrev}
+                                aria-label="Vorheriges Bild"
+                                style={{
+                                    position: 'absolute', top: 0, left: 0,
+                                    width: '30%', height: '100%',
+                                    background: 'transparent', border: 'none',
+                                    cursor: 'pointer', zIndex: 9,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'flex-start', paddingLeft: 10,
+                                }}
+                            >
+                                <span style={{
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    background: 'rgba(255,255,255,0.8)', color: '#000',
+                                    borderRadius: '50%', width: 36, height: 36,
+                                    opacity: showArrows ? 1 : 0,
+                                    transition: 'opacity 0.2s',
+                                    pointerEvents: 'none',
+                                }}>
+                                    <ArrowLeftIcon />
+                                </span>
+                            </button>
+
+                            {/* Center zone: open fullscreen overlay */}
+                            {onCenterClick && (
+                                <button
+                                    type="button"
+                                    onClick={(e) => { e.stopPropagation(); onCenterClick(); }}
+                                    aria-label="Vollbild öffnen"
                                     style={{
-                                        width: 8, height: 8, borderRadius: '50%', background: index === activeIndex ? '#fff' : 'rgba(255,255,255,0.5)', textIndent: -9999, overflow: 'hidden', display: 'block'
+                                        position: 'absolute', top: 0, left: '30%',
+                                        width: '40%', height: '100%',
+                                        background: 'transparent', border: 'none',
+                                        cursor: 'zoom-in', zIndex: 9,
                                     }}
-                                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); setActiveIndex(index); }}
-                                >1</a>
-                            ))}
-                        </div>
-                    </>
+                                />
+                            )}
+
+                            {/* Right zone: next */}
+                            <button
+                                type="button"
+                                onClick={handleNext}
+                                aria-label="Nächstes Bild"
+                                style={{
+                                    position: 'absolute', top: 0, right: 0,
+                                    width: '30%', height: '100%',
+                                    background: 'transparent', border: 'none',
+                                    cursor: 'pointer', zIndex: 9,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 10,
+                                }}
+                            >
+                                <span style={{
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    background: 'rgba(255,255,255,0.8)', color: '#000',
+                                    borderRadius: '50%', width: 36, height: 36,
+                                    opacity: showArrows ? 1 : 0,
+                                    transition: 'opacity 0.2s',
+                                    pointerEvents: 'none',
+                                }}>
+                                    <ArrowRightIcon />
+                                </span>
+                            </button>
+                        </>
+                    )}
+                </div>
+
+                {isCarousel && (
+                    <div className="vvp-co-controllers" style={{ position: 'relative', marginTop: 10, paddingBottom: 15, display: 'flex', justifyContent: 'center', gap: 6, zIndex: 10 }}>
+                        {slides.map((_: Slide, index: number) => (
+                            <button
+                                key={index}
+                                type="button"
+                                aria-label={`Bild ${index + 1}`}
+                                style={{ width: 8, height: 8, borderRadius: '50%', background: index === activeIndex ? '#fff' : 'rgba(255,255,255,0.5)', border: 'none', padding: 0, cursor: 'pointer' }}
+                                onClick={(e) => { e.stopPropagation(); setActiveIndex(index); }}
+                            />
+                        ))}
+                    </div>
                 )}
             </div>
         </div>
@@ -212,7 +246,8 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({ permalin
                 <InternalSlider 
                     slides={slides} activeIndex={activeIndex} setActiveIndex={setActiveIndex} 
                     isCarousel={isCarousel} caption={caption} 
-                    playingVideos={playingVideos} setPlayingVideos={setPlayingVideos} 
+                    playingVideos={playingVideos} setPlayingVideos={setPlayingVideos}
+                    onCenterClick={() => setFullscreen(true)}
                 />
                 
                 <div 
@@ -248,12 +283,13 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({ permalin
 
                     <div 
                         onClick={(e) => e.stopPropagation()}
-                        style={{ margin: '60px auto 60px auto', width: '100%', maxWidth: 700, padding: '0 20px', display: 'flex', flexDirection: 'column', gap: 20 }}
+                        style={{ margin: '0 auto 60px auto', width: '100%', maxWidth: 700, padding: '80px 20px 0', display: 'flex', flexDirection: 'column', gap: 20 }}
                     >
                         <InternalSlider 
                             slides={slides} activeIndex={activeIndex} setActiveIndex={setActiveIndex} 
                             isCarousel={isCarousel} caption={caption} 
-                            playingVideos={playingVideos} setPlayingVideos={setPlayingVideos} 
+                            playingVideos={playingVideos} setPlayingVideos={setPlayingVideos}
+                            onCenterClick={null}
                         />
                         
                         <div style={{ background: '#111', padding: 20, borderRadius: 12, color: 'white' }}>

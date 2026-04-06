@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import classnames from 'classnames';
 
 import {
@@ -162,9 +163,6 @@ export const FactCheckSearchApp: React.FC<FactCheckSearchAppProps> = ({ searchAp
                         <IconShieldCheck size={22} />
                         <div>
                             <p className="vvp-fc__bar-title">Faktencheck-Archiv durchsuchen</p>
-                            <p className="vvp-fc__bar-desc">
-                                Text, Zitat oder URL eingeben. Wir zeigen passende Faktenchecks und bereits belegte Einordnungen.
-                            </p>
                         </div>
                     </div>
 
@@ -180,133 +178,135 @@ export const FactCheckSearchApp: React.FC<FactCheckSearchAppProps> = ({ searchAp
                 </div>
             </section>
 
-            <div
-                className="vvp-fc__overlay js-vvp-fc-overlay"
-                role="dialog"
-                aria-modal="true"
-                aria-label="Faktencheck-Suche"
-                hidden={!isOpen}
-            >
-                <div className="vvp-fc__backdrop js-vvp-fc-backdrop" onClick={closeOverlay}></div>
-                <div className="vvp-fc__panel">
-                    <div className="vvp-fc__panel-header">
-                        <div className="vvp-fc__panel-title">
-                            <IconSearch size={18} />
-                            <span>Faktencheck</span>
-                        </div>
-                        <button type="button" className="vvp-fc__close-btn js-vvp-fc-close" aria-label="Schließen" onClick={closeOverlay}>
-                            <IconX size={18} />
-                        </button>
-                    </div>
-
-                    <form className="vvp-fc__search-form js-vvp-fc-form" onSubmit={handleSubmit}>
-                        <div className="vvp-fc__input-row">
-                            <span className="vvp-fc__input-icon js-vvp-fc-input-icon">
-                                {isUrlQuery ? <IconLink size={16} /> : <IconFileText size={16} />}
-                            </span>
-                            <input
-                                ref={inputRef}
-                                type="text"
-                                className="vvp-fc__text-input js-vvp-fc-input"
-                                placeholder="URL oder Text zum Faktencheck eingeben..."
-                                autoComplete="off"
-                                value={query}
-                                onChange={(e) => setQuery(e.target.value)}
-                            />
-                            <button type="submit" className="vvp-fc__submit-btn js-vvp-fc-submit" disabled={disableSubmit}>
-                                <span className="vvp-fc__submit-icon">
-                                    <IconSearch size={14} />
-                                </span>
-                                <span>Prüfen</span>
+            {isOpen && createPortal(
+                <div
+                    className="vvp-fc__overlay js-vvp-fc-overlay"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Faktencheck-Suche"
+                >
+                    <div className="vvp-fc__backdrop js-vvp-fc-backdrop" onClick={closeOverlay}></div>
+                    <div className="vvp-fc__panel">
+                        <div className="vvp-fc__panel-header">
+                            <div className="vvp-fc__panel-title">
+                                <IconSearch size={18} />
+                                <span>Faktencheck</span>
+                            </div>
+                            <button type="button" className="vvp-fc__close-btn js-vvp-fc-close" aria-label="Schließen" onClick={closeOverlay}>
+                                <IconX size={18} />
                             </button>
                         </div>
-                        <p className="vvp-fc__url-hint js-vvp-fc-url-hint" hidden={!isUrlQuery}>
-                            <IconLink size={12} />
-                            <span>Der Artikel wird zuerst importiert und dann geprüft.</span>
-                        </p>
-                    </form>
 
-                    <div className="vvp-fc__content-area">
-                        <div className="vvp-fc__state js-vvp-fc-state-idle" hidden={phase !== 'idle'}>
-                            <p className="vvp-fc__examples-label">Beispiele</p>
-                            <div className="vvp-fc__examples-list">
-                                {EXAMPLE_QUERIES.map((q, i) => (
-                                    <button
-                                        key={i}
-                                        type="button"
-                                        className="vvp-fc__example-btn js-vvp-fc-example"
-                                        data-query={q}
-                                        onClick={() => handleExampleClick(q)}
-                                    >
-                                        <IconTrendingUp size={13} />
-                                        <span>{q}</span>
-                                    </button>
-                                ))}
+                        <form className="vvp-fc__search-form js-vvp-fc-form" onSubmit={handleSubmit}>
+                            <div className="vvp-fc__input-row">
+                                <span className="vvp-fc__input-icon js-vvp-fc-input-icon">
+                                    {isUrlQuery ? <IconLink size={16} /> : <IconFileText size={16} />}
+                                </span>
+                                <input
+                                    ref={inputRef}
+                                    type="text"
+                                    className="vvp-fc__text-input js-vvp-fc-input"
+                                    placeholder="URL oder Text zum Faktencheck eingeben..."
+                                    autoComplete="off"
+                                    value={query}
+                                    onChange={(e) => setQuery(e.target.value)}
+                                />
+                                <button type="submit" className="vvp-fc__submit-btn js-vvp-fc-submit" disabled={disableSubmit}>
+                                    <span className="vvp-fc__submit-icon">
+                                        <IconSearch size={14} />
+                                    </span>
+                                    <span>Prüfen</span>
+                                </button>
                             </div>
-                        </div>
-
-                        <div className="vvp-fc__state vvp-fc__state--loading js-vvp-fc-state-loading" hidden={phase !== 'importing' && phase !== 'searching'}>
-                            <div className="vvp-fc__spinner">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-                            </div>
-                            <p className="js-vvp-fc-loading-text">
-                                {phase === 'importing' ? 'Artikel wird importiert...' : 'Wird geprüft...'}
+                            <p className="vvp-fc__url-hint js-vvp-fc-url-hint" hidden={!isUrlQuery}>
+                                <IconLink size={12} />
+                                <span>Der Artikel wird zuerst importiert und dann geprüft.</span>
                             </p>
-                        </div>
+                        </form>
 
-                        <div className="vvp-fc__state vvp-fc__state--error js-vvp-fc-state-error" hidden={phase !== 'error'}>
-                            <IconAlertCircle size={18} />
-                            <p className="js-vvp-fc-error-text">{errorText}</p>
-                        </div>
-
-                        <div className="vvp-fc__state js-vvp-fc-state-done" hidden={phase !== 'done'}>
-                            <div className="vvp-fc__results-meta">
-                                <span className="js-vvp-fc-results-count">
-                                    {results.length === 0 ? 'Keine Treffer gefunden' : `${results.length} relevante Artikel gefunden`}
-                                </span>
-                                <span className="js-vvp-fc-results-time">
-                                    {tookTime != null ? `${tookTime} ms` : ''}
-                                </span>
+                        <div className="vvp-fc__content-area">
+                            <div className="vvp-fc__state js-vvp-fc-state-idle" hidden={phase !== 'idle'}>
+                                <p className="vvp-fc__examples-label">Beispiele</p>
+                                <div className="vvp-fc__examples-list">
+                                    {EXAMPLE_QUERIES.map((q, i) => (
+                                        <button
+                                            key={i}
+                                            type="button"
+                                            className="vvp-fc__example-btn js-vvp-fc-example"
+                                            data-query={q}
+                                            onClick={() => handleExampleClick(q)}
+                                        >
+                                            <IconTrendingUp size={13} />
+                                            <span>{q}</span>
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
-                            <div className="vvp-fc__results-list js-vvp-fc-results-list">
-                                {results.length === 0 ? (
-                                    <p className="vvp-fc__no-results">Zu dieser Aussage wurden keine passenden Artikel gefunden.</p>
-                                ) : (
-                                    results.map((r, i) => {
-                                        const score = r.rerank_score != null ? r.rerank_score : r.lexical_score;
-                                        const pct = Math.min(100, Math.round(score * 100));
-                                        const modClass = pct >= 70 ? '' : (pct >= 40 ? ' vvp-fc__score-fill--medium' : ' vvp-fc__score-fill--low');
-                                        const title = r.title || 'Ohne Titel';
-                                        const excerpt = r.excerpt || '';
-                                        const url = r.url || '#';
 
-                                        return (
-                                            <a key={i} className="vvp-fc__result-card" href={url} target="_blank" rel="noopener noreferrer">
-                                                <div className="vvp-fc__result-rank">{i + 1}</div>
-                                                <div className="vvp-fc__result-body">
-                                                    <div className="vvp-fc__result-header">
-                                                        <h3 className="vvp-fc__result-title">{title}</h3>
-                                                        <span className="vvp-fc__result-ext-icon"><IconExternalLink size={13} /></span>
-                                                    </div>
-                                                    <p className="vvp-fc__result-excerpt">{excerpt}</p>
-                                                    {score != null && (
-                                                        <div className="vvp-fc__score-bar">
-                                                            <div className="vvp-fc__score-track">
-                                                                <div className={`vvp-fc__score-fill${modClass}`} style={{ width: `${pct}%` }}></div>
-                                                            </div>
-                                                            <span className="vvp-fc__score-label">{pct}%</span>
+                            <div className="vvp-fc__state vvp-fc__state--loading js-vvp-fc-state-loading" hidden={phase !== 'importing' && phase !== 'searching'}>
+                                <div className="vvp-fc__spinner">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                                </div>
+                                <p className="js-vvp-fc-loading-text">
+                                    {phase === 'importing' ? 'Artikel wird importiert...' : 'Wird geprüft...'}
+                                </p>
+                            </div>
+
+                            <div className="vvp-fc__state vvp-fc__state--error js-vvp-fc-state-error" hidden={phase !== 'error'}>
+                                <IconAlertCircle size={18} />
+                                <p className="js-vvp-fc-error-text">{errorText}</p>
+                            </div>
+
+                            <div className="vvp-fc__state js-vvp-fc-state-done" hidden={phase !== 'done'}>
+                                <div className="vvp-fc__results-meta">
+                                    <span className="js-vvp-fc-results-count">
+                                        {results.length === 0 ? 'Keine Treffer gefunden' : `${results.length} relevante Artikel gefunden`}
+                                    </span>
+                                    <span className="js-vvp-fc-results-time">
+                                        {tookTime != null ? `${tookTime} ms` : ''}
+                                    </span>
+                                </div>
+                                <div className="vvp-fc__results-list js-vvp-fc-results-list">
+                                    {results.length === 0 ? (
+                                        <p className="vvp-fc__no-results">Zu dieser Aussage wurden keine passenden Artikel gefunden.</p>
+                                    ) : (
+                                        results.map((r, i) => {
+                                            const score = r.rerank_score != null ? r.rerank_score : r.lexical_score;
+                                            const pct = Math.min(100, Math.round(score * 100));
+                                            const modClass = pct >= 70 ? '' : (pct >= 40 ? ' vvp-fc__score-fill--medium' : ' vvp-fc__score-fill--low');
+                                            const title = r.title || 'Ohne Titel';
+                                            const excerpt = r.excerpt || '';
+                                            const url = r.url || '#';
+
+                                            return (
+                                                <a key={i} className="vvp-fc__result-card" href={url} target="_blank" rel="noopener noreferrer">
+                                                    <div className="vvp-fc__result-rank">{i + 1}</div>
+                                                    <div className="vvp-fc__result-body">
+                                                        <div className="vvp-fc__result-header">
+                                                            <h3 className="vvp-fc__result-title">{title}</h3>
+                                                            <span className="vvp-fc__result-ext-icon"><IconExternalLink size={13} /></span>
                                                         </div>
-                                                    )}
-                                                </div>
-                                            </a>
-                                        );
-                                    })
-                                )}
+                                                        <p className="vvp-fc__result-excerpt">{excerpt}</p>
+                                                        {score != null && (
+                                                            <div className="vvp-fc__score-bar">
+                                                                <div className="vvp-fc__score-track">
+                                                                    <div className={`vvp-fc__score-fill${modClass}`} style={{ width: `${pct}%` }}></div>
+                                                                </div>
+                                                                <span className="vvp-fc__score-label">{pct}%</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </a>
+                                            );
+                                        })
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </div>,
+                document.body
+            )}
         </div>
     );
 };
