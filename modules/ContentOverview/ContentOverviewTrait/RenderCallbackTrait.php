@@ -313,6 +313,12 @@ trait RenderCallbackTrait
                 continue;
             }
 
+            // Podcast banner is full-width; always give it its own row
+            if ('podcast_banner' === $item['kind']) {
+                $grouped[] = ['items' => [$item], 'date' => $item['date']];
+                continue;
+            }
+
             $mixed_queue[] = $item;
             $flush_chunk($mixed_queue, $row_size);
         }
@@ -769,31 +775,44 @@ trait RenderCallbackTrait
             $insta_items[] = ['kind' => 'insta', 'date' => $dt, 'data' => $post];
         }
 
-        // YouTube feed items — accept items, videos, or a root array
+        // YouTube feed items — data uses YouTube Data API v3 shape (fields under 'snippet')
         $yt_items = [];
         if (!empty($yt_videos)) {
             $added = 0;
             foreach ($yt_videos as $video) {
-                if (empty($video['publishedAt'])) {
+                $snippet  = $video['snippet'] ?? [];
+                $pub_date = $snippet['publishedAt'] ?? '';
+                if (empty($pub_date)) {
                     continue;
                 }
-                $dt = self::parse_datetime($video['publishedAt']);
+                $dt = self::parse_datetime($pub_date);
                 if (!$dt) {
                     continue;
                 }
 
-                // Filter out Shorts: duration <= 60s or '#shorts' in title/description
-                $duration_sec = (int) ($video['durationSeconds'] ?? $video['duration'] ?? 999);
-                $title_lower  = strtolower($video['title'] ?? '');
-                $desc_lower   = strtolower($video['description'] ?? '');
-                if ($duration_sec > 0 && $duration_sec <= 60) {
-                    continue;
-                }
+                // Filter out Shorts by title/description (duration not available in snippet)
+                $title_lower = strtolower($snippet['title'] ?? '');
+                $desc_lower  = strtolower($snippet['description'] ?? '');
                 if (str_contains($title_lower, '#shorts') || str_contains($desc_lower, '#shorts')) {
                     continue;
                 }
 
-                $yt_items[] = ['kind' => 'youtube', 'date' => $dt, 'data' => $video];
+                // Pick best available thumbnail
+                $thumbs    = $snippet['thumbnails'] ?? [];
+                $thumb_url = $thumbs['maxres']['url']
+                    ?? $thumbs['standard']['url']
+                    ?? $thumbs['high']['url']
+                    ?? $thumbs['medium']['url']
+                    ?? $thumbs['default']['url']
+                    ?? '';
+
+                $yt_items[] = ['kind' => 'youtube', 'date' => $dt, 'data' => [
+                    'id'          => $video['id'] ?? '',
+                    'title'       => $snippet['title'] ?? '',
+                    'description' => $snippet['description'] ?? '',
+                    'publishedAt' => $pub_date,
+                    'thumbnailUrl' => $thumb_url,
+                ]];
                 $added++;
                 if ($added >= 4) {
                     break;

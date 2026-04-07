@@ -24,7 +24,7 @@ const IG_PROPS = {
 const PODCAST_PROPS = {
     title: 'Volksverpetzer Podcast – Folge 42: Desinformation in der Praxis',
     link: 'https://volksverpetzer.de/podcast/',
-    enclosure: '',
+    enclosure: 'https://cdn.podigee.com/media/podcast_episode_example.mp3',
     date: '7. April 2026',
     duration: '42:00',
     summary: 'In dieser Folge sprechen wir über die häufigsten Desinformationsmuster und wie wir sie erkennen können.',
