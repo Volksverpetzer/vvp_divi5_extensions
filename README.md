@@ -1,15 +1,20 @@
-# VVP Fact-Check Search — DIVI 5 Plugin
+# Divi5Extensions
 
-A WordPress plugin that adds a custom **Faktencheck-Suche** (Fact-Check Search) module to the DIVI 5 Visual Builder. The module renders an interactive search bar that lets visitors query the Volksverpetzer fact-check archive via a vector-search API.
+A WordPress plugin that adds custom modules to the **DIVI 5 Visual Builder** for Volksverpetzer. Two modules are included:
+
+| Module | DIVI slug | Description |
+|--------|-----------|-------------|
+| **Faktencheck Suche** | `vvp/fact-check-search` | Interactive search bar for the fact-check archive |
+| **Inhaltsübersicht** | `vvp/content-overview` | Mixed feed of articles, Instagram posts, YouTube videos, and podcast episodes |
 
 ---
 
 ## Table of Contents
 
-1. [What this Plugin Does](#what-this-plugin-does)
+1. [Modules](#modules)
 2. [Project Structure](#project-structure)
 3. [Prerequisites](#prerequisites)
-4. [Local Development Setup](#local-development-setup)
+4. [Local Development](#local-development)
 5. [Build](#build)
 6. [Deployment](#deployment)
 7. [Plugin Configuration (in DIVI)](#plugin-configuration-in-divi)
@@ -19,16 +24,35 @@ A WordPress plugin that adds a custom **Faktencheck-Suche** (Fact-Check Search) 
 
 ---
 
-## What this Plugin Does
+## Modules
 
-When activated in WordPress (with DIVI 5 installed), the plugin registers a new module called **"Faktencheck Suche"** in the DIVI Visual Builder. Editors can place this module on any page. On the front end it renders:
+### Faktencheck Suche (`vvp/fact-check-search`)
 
-- A persistent blue search bar with a label and call-to-action button.
-- A full-screen overlay with an input field, example queries, and a results list.
-- Automatic URL detection: if a visitor pastes a URL, the plugin fetches content from an import API before running the search.
-- Color-coded relevance scores for each result (green ≥ 70%, yellow ≥ 40%, red < 40%).
+Renders a persistent blue search bar on the front end. Clicking it opens a full-screen overlay with:
 
-All interactivity is handled by a vanilla-JS file (`scripts/fact-check-frontend.js`) that is enqueued after the page loads. The DIVI Visual Builder shows a static React preview (`src/components/fact-check-search/edit.tsx`). The actual front-end HTML is server-rendered by PHP (`modules/FactCheckSearch/FactCheckSearchTrait/RenderCallbackTrait.php`).
+- A text/URL input field with example queries
+- Automatic URL detection: pastes a URL → content is imported via the Import API before searching
+- Results list with color-coded relevance scores (green ≥ 70%, yellow ≥ 40%, red < 40%)
+- Keyboard shortcut: Esc to close
+
+**Architecture:**
+- PHP server-renders the mount point (`modules/FactCheckSearch/FactCheckSearchTrait/RenderCallbackTrait.php`)
+- React app (`src/components/fact-check-search/App.tsx`) is mounted by `scripts/fact-check-frontend.js`
+- DIVI Visual Builder preview: `src/components/fact-check-search/edit.tsx`
+
+### Inhaltsübersicht (`vvp/content-overview`)
+
+Renders a mixed content feed fetched server-side from external APIs (RSS, Instagram Graph API, YouTube). The feed contains:
+
+- A hero article + sidebar of recent articles (PHP-rendered)
+- An Instagram slideshow carousel (`src/components/content-overview/InstagramSlideshow.tsx`)
+- A podcast episode banner with inline audio player (`src/components/content-overview/PodcastBanner.tsx`)
+- YouTube video cards (PHP-rendered)
+
+**Architecture:**
+- PHP fetches all data and renders the article/video sections (`modules/ContentOverview/ContentOverviewTrait/RenderCallbackTrait.php`)
+- React components for Instagram and Podcast are mounted by `scripts/content-overview-frontend.js`
+- DIVI Visual Builder preview: `src/components/content-overview/edit.tsx` (skeleton + example cards)
 
 ---
 
@@ -37,53 +61,77 @@ All interactivity is handled by a vanilla-JS file (`scripts/fact-check-frontend.
 ```
 .
 ├── .github/workflows/
-│   ├── deploy-dev.yml             # CI/CD: dev branch → staging FTP path
-│   └── deploy-prod.yml            # CI/CD: main branch → production FTP path
+│   ├── deploy-dev.yml             # CI/CD: dev branch → staging FTP
+│   └── deploy-prod.yml            # CI/CD: main branch → production FTP
 ├── modules/                       # PHP backend
 │   ├── autoload.php               # PSR-4 class loader
 │   ├── Modules.php                # DIVI module registration
-│   └── FactCheckSearch/
-│       ├── FactCheckSearch.php               # Main module class
-│       └── FactCheckSearchTrait/
-│           ├── RenderCallbackTrait.php        # Server-side HTML output
+│   ├── FactCheckSearch/
+│   │   ├── FactCheckSearch.php
+│   │   └── FactCheckSearchTrait/
+│   │       ├── RenderCallbackTrait.php    # Server-side HTML (mount point only)
+│   │       ├── ModuleClassnamesTrait.php
+│   │       ├── ModuleStylesTrait.php
+│   │       └── ModuleScriptDataTrait.php
+│   └── ContentOverview/
+│       ├── ContentOverview.php
+│       └── ContentOverviewTrait/
+│           ├── RenderCallbackTrait.php    # Server-side HTML (full feed render)
 │           ├── ModuleClassnamesTrait.php
 │           ├── ModuleStylesTrait.php
 │           └── ModuleScriptDataTrait.php
-├── modules-json/                  # Auto-generated — do not edit manually
-│   └── fact-check-search/
-│       └── module.json            # Copied from src during build
-├── scripts/
-│   ├── bundle.js                  # Compiled DIVI VB module JS (webpack output)
-│   ├── bundle.js.map
-│   └── fact-check-frontend.js     # Vanilla JS for front-end interactivity
-├── styles/
-│   ├── main.css                   # Compiled CSS (webpack output)
-│   └── bundle.css
-├── src/                           # TypeScript/React source (DIVI VB only)
-│   ├── index.ts                   # Module registration entry point
+├── modules-json/                  # Auto-generated — do not edit
+│   ├── fact-check-search/module.json
+│   └── content-overview/module.json
+├── scripts/                       # Compiled JS (webpack output)
+│   ├── bundle.js                  # DIVI Visual Builder module
+│   ├── fact-check-frontend.js     # Mounts FactCheckSearchApp
+│   └── content-overview-frontend.js  # Mounts InstagramSlideshow + PodcastBanner
+├── styles/                        # Compiled CSS (webpack output)
+│   └── main.css
+├── src/                           # TypeScript/React source
+│   ├── index.ts                   # Registers both modules with DIVI
 │   ├── module-icons.ts            # Icon registration
-│   └── components/fact-check-search/
-│       ├── edit.tsx               # Visual Builder preview component
-│       ├── index.ts               # Module export definition
-│       ├── module.json            # DIVI module attribute schema
-│       ├── types.ts               # TypeScript interfaces
-│       ├── constants.ts           # Default API URLs
-│       ├── module-classnames.ts
-│       ├── module-script-data.tsx
-│       ├── styles.tsx
-│       ├── placeholder-content.ts
-│       ├── style.scss             # Component styles
-│       └── module.scss            # Visual Builder styles
-├── src/icons/fact-check-search/
-│   └── index.tsx                  # Module icon SVG
-├── preview/
-│   └── vite.config.ts             # Vite dev server for isolated preview
+│   ├── components/
+│   │   ├── fact-check-search/
+│   │   │   ├── module.json        # DIVI attribute schema
+│   │   │   ├── App.tsx            # Standalone React search UI
+│   │   │   ├── edit.tsx           # DIVI VB preview component
+│   │   │   ├── frontend.tsx       # Webpack entry: mounts App.tsx
+│   │   │   ├── icons.tsx          # Inline SVG icons
+│   │   │   ├── types.ts
+│   │   │   ├── constants.ts       # Default API URLs
+│   │   │   ├── styles.tsx
+│   │   │   ├── module-classnames.ts
+│   │   │   ├── module-script-data.tsx
+│   │   │   ├── style.scss         # Frontend styles
+│   │   │   └── module.scss        # VB editor styles
+│   │   └── content-overview/
+│   │       ├── module.json
+│   │       ├── edit.tsx           # DIVI VB preview (skeleton + example cards)
+│   │       ├── frontend.tsx       # Webpack entry: mounts IG + Podcast
+│   │       ├── InstagramSlideshow.tsx  # Carousel with fullscreen overlay
+│   │       ├── PodcastBanner.tsx       # Audio player banner
+│   │       ├── types.ts
+│   │       ├── styles.tsx
+│   │       ├── module-classnames.ts
+│   │       ├── module-script-data.tsx
+│   │       ├── style.scss
+│   │       └── module.scss
+│   └── icons/
+│       ├── fact-check-search/index.tsx
+│       └── content-overview/index.tsx
+├── preview/                       # Vite component preview (no WordPress needed)
+│   ├── index.html
+│   └── main.tsx                   # Renders all standalone React components
+├── vite.config.ts                 # Vite config for pnpm preview (port 8899)
 ├── vvp-fact-check-search.php      # WordPress plugin entry point
-├── composer.json                  # PHP autoloading config
-├── package.json                   # Node scripts and dependencies
-├── webpack.config.js              # Webpack build configuration
-├── tsconfig.json                  # TypeScript configuration
-└── gulpfile.js                    # ZIP packaging task
+├── preview.php                    # PHP preview server (ContentOverview, no WP needed)
+├── composer.json
+├── package.json
+├── webpack.config.js              # Three webpack bundles (VB + 2 frontends)
+├── tsconfig.json
+└── gulpfile.js                    # ZIP packaging
 ```
 
 ---
@@ -93,15 +141,14 @@ All interactivity is handled by a vanilla-JS file (`scripts/fact-check-frontend.
 | Tool | Minimum version |
 |------|----------------|
 | Node.js | 18.x |
-| npm | 10.x |
-| pnpm | 9.x (used in CI) |
+| pnpm | 9.x |
 | PHP | 7.4+ |
 | Composer | 2.x |
 | WordPress | 6.x with DIVI 5 active |
 
 ---
 
-## Local Development Setup
+## Local Development
 
 ### 1. Install PHP dependencies
 
@@ -109,75 +156,83 @@ All interactivity is handled by a vanilla-JS file (`scripts/fact-check-frontend.
 composer install
 ```
 
-This sets up the PSR-4 autoloader for the `VVP\FactCheckSearch\` namespace.
+Sets up the PSR-4 autoloader for `VVP\FactCheckSearch\`.
 
 ### 2. Install Node dependencies
 
 ```bash
-npm install
-# or with pnpm (matches CI exactly):
 pnpm install --frozen-lockfile
 ```
 
-### 3. Start the Webpack watcher
+### 3. Start the webpack watcher
 
 ```bash
-npm run start
+pnpm start
 ```
 
-Webpack watches `src/index.ts` and recompiles to `scripts/bundle.js` and `styles/main.css` on every save. Reload WordPress to see updates in the DIVI builder.
+Watches `src/` and recompiles `scripts/bundle.js`, `scripts/fact-check-frontend.js`, `scripts/content-overview-frontend.js`, and `styles/main.css` on every save.
 
-### 4. (Optional) Run the isolated preview server
+### 4. Vite component preview (no WordPress needed)
 
 ```bash
-npm run preview
+pnpm preview
 ```
 
-Starts a Vite dev server for the component in isolation (no WordPress needed). Useful for rapid UI iteration on the Visual Builder preview component.
+Starts a Vite dev server at **http://localhost:8899** that renders:
 
-### 5. Symlink or copy the plugin into WordPress
+- **FactCheckSearch** — fully interactive (live API calls to the configured endpoints)
+- **InstagramSlideshow** — carousel with fullscreen overlay, sample placeholder images
+- **PodcastBanner** — audio player banner
+
+This is the fast iteration loop for the standalone React components. Vite provides HMR — edits to `App.tsx`, `InstagramSlideshow.tsx`, `PodcastBanner.tsx`, and the SCSS files reflect instantly without a full reload.
+
+### 5. PHP preview server (ContentOverview full render)
 
 ```bash
-ln -s /path/to/Divi5Search /path/to/wordpress/wp-content/plugins/vvp-fact-check-search
+php -S localhost:8787 preview.php
 ```
 
-Then activate the plugin in the WordPress admin. DIVI 5 must be active for the module to appear in the builder.
+Renders the full `ContentOverview` HTML output as PHP would on the front end, including live API calls for articles, Instagram, YouTube, and podcast data. Cache is stored in `/tmp/vvp_co_preview_*.cache` and can be flushed via `?flush=1`.
+
+### 6. Symlink into WordPress
+
+```bash
+ln -s /path/to/Divi5Extensions /path/to/wordpress/wp-content/plugins/vvp-fact-check-search
+```
+
+Then activate the plugin in the WordPress admin.
 
 ---
 
 ## Build
 
-Run a clean production build:
-
 ```bash
-npm run build
+pnpm build
 ```
 
 Webpack in production mode outputs:
 
-| Output file | Description |
-|-------------|-------------|
-| `scripts/bundle.js` | Compiled DIVI Visual Builder module |
-| `scripts/bundle.js.map` | Source map |
-| `styles/main.css` | Compiled component CSS |
-| `styles/bundle.css` | Additional compiled CSS |
-| `modules-json/fact-check-search/module.json` | Copied module definition |
+| File | Description |
+|------|-------------|
+| `scripts/bundle.js` | DIVI Visual Builder module (externals: React, DIVI globals) |
+| `scripts/fact-check-frontend.js` | FactCheckSearch frontend bundle (standalone) |
+| `scripts/content-overview-frontend.js` | ContentOverview frontend bundle (standalone) |
+| `styles/main.css` | All component CSS |
+| `modules-json/*/module.json` | Copied module schemas |
 
-To create a distributable ZIP for manual WordPress upload:
+To produce a distributable ZIP:
 
 ```bash
-npm run zip
+pnpm zip
 ```
 
 ---
 
 ## Deployment
 
-Deployment is automated via GitHub Actions and FTP. Push to the relevant branch and the workflow handles the rest.
+Deployment is automated via GitHub Actions and FTP. Push to the relevant branch.
 
-### Required GitHub repository secrets
-
-Go to **Settings → Secrets and variables → Actions** and add:
+### Required GitHub secrets
 
 | Secret | Description |
 |--------|-------------|
@@ -185,35 +240,27 @@ Go to **Settings → Secrets and variables → Actions** and add:
 | `FTP_USER` | FTP username |
 | `FTP_PASSWORD` | FTP password |
 
-### Branch → environment mapping
+### Branch → environment
 
-| Branch | Workflow | Target path on server |
-|--------|----------|-----------------------|
-| `dev` | `deploy-dev.yml` | `.../wp-content/plugins/vvp-fact-check-search-dev/` |
-| `main` | `deploy-prod.yml` | `.../wp-content/plugins/vvp-fact-check-search-prod/` |
+| Branch | Target path |
+|--------|-------------|
+| `dev` | `.../wp-content/plugins/vvp-fact-check-search-dev/` |
+| `main` | `.../wp-content/plugins/vvp-fact-check-search-prod/` |
 
-### What each workflow does
+Each workflow: checks out → installs pnpm deps → builds → mirrors to FTP (excluding `node_modules`, `src/`, dev configs). The `dev` workflow patches the plugin display name to append `(Beta)`.
 
-1. Checks out the repository.
-2. Sets up Node 20 with pnpm.
-3. Runs `pnpm install --frozen-lockfile`.
-4. Runs `npm run build`.
-5. Copies the built plugin (excluding `node_modules`, `src/`, dev config files) to `/tmp/deploy`.
-6. Mirrors `/tmp/deploy` to the FTP target using `lftp` (remote files not in source are deleted).
-
-The dev workflow also patches the plugin display name to append `(Beta)` before uploading.
-
-### Manual deployment (without CI)
+### Manual deployment
 
 ```bash
-npm run build
+pnpm build
 
 rsync -av \
   --exclude='node_modules' \
   --exclude='src' \
-  --exclude='.github' \
   --exclude='preview' \
+  --exclude='.github' \
   --exclude='reference' \
+  --exclude='vite.config.ts' \
   --exclude='*.config.js' \
   --exclude='gulpfile.js' \
   ./ user@host:/path/to/wp-content/plugins/vvp-fact-check-search/
@@ -223,14 +270,18 @@ rsync -av \
 
 ## Plugin Configuration (in DIVI)
 
-After activating the plugin, add the **"Faktencheck Suche"** module to any page in the DIVI Visual Builder. The module settings panel exposes:
+### Faktencheck Suche
 
-| Setting | Default value | Description |
-|---------|---------------|-------------|
-| Such-API URL | `https://ai.volksverpetzer-app.de/api/vector-search/` | POST endpoint for text/vector search queries |
+| Setting | Default | Description |
+|---------|---------|-------------|
+| Such-API URL | `https://ai.volksverpetzer-app.de/api/vector-search/` | POST endpoint for search queries |
 | Import-API URL | `https://ai.volksverpetzer-app.de/api/import-url/` | GET endpoint for URL content import |
 
-These values are injected by PHP into a `<script id="vvp-fact-check-search-config">` tag as JSON and consumed by `fact-check-frontend.js` at runtime. Leaving the fields empty falls back to the defaults defined in `src/components/fact-check-search/constants.ts`.
+Values are injected by PHP as JSON into a `<script id="vvp-fact-check-search-config">` tag and consumed by the frontend bundle.
+
+### Inhaltsübersicht
+
+Configured via `modules/ContentOverview/ContentOverviewTrait/RenderCallbackTrait.php` (API endpoints, feed sizes, cache TTL). No DIVI settings panel fields — all configuration is in PHP constants.
 
 ---
 
@@ -245,22 +296,24 @@ Content-Type: application/json
 { "query": "string" }
 ```
 
-Expected response:
+Response:
 
 ```json
 {
   "results": [
     {
       "title": "Artikel-Titel",
-      "excerpt": "Kurzbeschreibung des Artikels...",
+      "excerpt": "Kurzbeschreibung...",
       "url": "https://example.com/artikel",
-      "score": 0.82
+      "score": 0.82,
+      "rerank_score": 0.91
     }
-  ]
+  ],
+  "took": 120
 }
 ```
 
-`score` is a float from 0 to 1. The UI renders it as a percentage bar (green ≥ 70%, yellow ≥ 40%, red < 40%).
+`score` / `rerank_score`: float 0–1, rendered as percentage bar. `took`: milliseconds.
 
 ### Import endpoint (GET)
 
@@ -268,207 +321,83 @@ Expected response:
 GET {importApiUrl}?url=<url-encoded-value>
 ```
 
-Called automatically when the user pastes a URL into the search field. Expected response follows the same shape as the search endpoint.
+Called when the user pastes a URL. Returns an object with a `snippet` field (extracted text) that is then passed to the search endpoint.
 
 ---
 
 ## Adapting This for a New DIVI 5 Module
 
-This plugin is a production-ready scaffold for any custom DIVI 5 module. Follow these steps to repurpose it for a different React component.
+This plugin is a production-ready scaffold. To add a new module:
 
-### Step 1 — Fork / copy the repository
+### Step 1 — Create the PHP module
 
-Start with a fresh copy of this repository and give it a new name matching your plugin slug (e.g. `my-org-my-module`).
+Copy `modules/FactCheckSearch/` to `modules/YourModule/`. Rename all files, class names, and namespace segments. Register it in `modules/Modules.php`.
 
-### Step 2 — Rename the WordPress plugin
+`RenderCallbackTrait.php` controls the front-end HTML. Access attribute values via `$this->props['attributeKey']` and pass config to JS via `data-*` attributes on the wrapper element.
 
-Edit **`vvp-fact-check-search.php`** (rename the file too):
+### Step 2 — Create the TypeScript component
 
-```php
-/**
- * Plugin Name: My Custom Module
- * Description: A custom DIVI 5 module for ...
- * Text Domain: my-custom-module
- * Version: 1.0.0
- */
-
-require_once __DIR__ . '/modules/autoload.php';
-\MyOrg\MyModule\Modules::init();
-```
-
-### Step 3 — Update the PHP namespace
-
-**`composer.json`**:
-
-```json
-{
-  "autoload": {
-    "psr-4": {
-      "MyOrg\\MyModule\\": "modules/"
-    }
-  }
-}
-```
-
-Run `composer dump-autoload` to regenerate the autoloader.
-
-Rename all PHP files and directories under `modules/` from `FactCheckSearch` to your module name (e.g. `MyModule`). Update the `namespace` and `class` declarations inside each file to match.
-
-**`modules/Modules.php`** — update the `use` statement and the class instantiation to reference your renamed class.
-
-### Step 4 — Create your module component
-
-Copy `src/components/fact-check-search/` to a new folder named after your module slug, e.g. `src/components/my-module/`. Then edit each file:
-
-#### `module.json` — module metadata and settings schema
-
-Change `slug`, `title`, and `icon`. Each key under `attrs` becomes a settings field visible to the editor in the DIVI VB panel:
-
-```json
-{
-  "title": "My Module",
-  "slug": "my-org-my-module",
-  "attrs": {
-    "myApiUrl": {
-      "innerContent": {
-        "label": "API URL",
-        "description": "The endpoint this module calls.",
-        "component": "divi/text"
-      }
-    }
-  }
-}
-```
-
-Available DIVI attribute components include `divi/text`, `divi/select`, `divi/toggle`, `divi/color-picker`, and others from the DIVI 5 module API.
-
-#### `types.ts` — TypeScript attribute interface
-
-```ts
-export interface MyModuleAttrs {
-  myApiUrl?: { value: string };
-}
-```
-
-#### `constants.ts` — default values
-
-```ts
-export const DEFAULT_API_URL = 'https://your-api.example.com/endpoint';
-```
-
-#### `edit.tsx` — Visual Builder preview
-
-This is the React component shown on the DIVI canvas while editing. Keep it lightweight — use static/mock data, no live API calls:
-
-```tsx
-export const MyModuleEdit = ({ attrs }: MyModuleEditProps) => {
-  return (
-    <ModuleContainer attrs={attrs} ...>
-      {/* Your static preview UI */}
-    </ModuleContainer>
-  );
-};
-```
-
-#### `style.scss` — component styles
-
-Write the styles for your module here. They are compiled to `styles/main.css` during build.
-
-### Step 5 — Register the new component
-
-**`src/index.ts`** — import and register your module:
-
-```ts
-import myModule from './components/my-module';
-
-// Replace the factCheckSearch registration with myModule
-```
-
-**`src/module-icons.ts`** — register an icon for your module (reuse the existing one or create a new SVG in `src/icons/my-module/index.tsx`).
-
-### Step 6 — Replace the PHP renderer
-
-`modules/MyModule/MyModuleTrait/RenderCallbackTrait.php` controls the actual HTML delivered to site visitors. Key points:
-
-- Access module attribute values via `$this->props['myAttributeKey']`.
-- Add `data-*` attributes to the wrapper element to pass configuration to front-end JS:
-
-```php
-$wrapper_attrs = [
-    'data-api-url' => esc_attr($myApiUrl),
-];
-```
-
-- Call `Module::render()` with the DIVI framework at the end of `render_callback()`.
-
-### Step 7 — Replace the front-end JavaScript
-
-`scripts/fact-check-frontend.js` is plain JavaScript (not compiled by Webpack). It is enqueued separately and handles all user interaction after the page loads. Rewrite it for your component's behaviour:
-
-```js
-document.querySelectorAll('.my-module-wrapper').forEach(function(wrapper) {
-  var apiUrl = wrapper.dataset.apiUrl;
-  // your event handlers and API calls here
-});
-```
-
-This file is not processed by Webpack, so avoid npm imports — keep it self-contained or bundle it separately if needed.
-
-### Step 8 — Update the build and packaging config
-
-**`webpack.config.js`** — the `CopyWebpackPlugin` block automatically copies all `src/components/*/module.json` files to `modules-json/`. No changes needed as long as your component folder is under `src/components/`.
-
-**`gulpfile.js`** — update the ZIP filename if you want `npm run zip` to produce a differently named archive.
-
-### Step 9 — Update the deployment workflows
-
-In `.github/workflows/deploy-dev.yml` and `deploy-prod.yml`, change:
-
-- The FTP target paths to your new plugin directory name.
-- The plugin PHP filename references (e.g. `vvp-fact-check-search.php` → `my-custom-module.php`).
-- The `sed` command that patches the plugin name for the dev environment.
-
-### Summary: files to change for a new module
+Copy `src/components/fact-check-search/` to `src/components/your-module/`. Update:
 
 | File | What to change |
 |------|---------------|
-| `vvp-fact-check-search.php` (rename) | Plugin header, namespace call, plugin slug |
-| `composer.json` | PSR-4 namespace mapping |
-| `modules/` (all PHP, rename dirs) | Namespace, class names, HTML rendering logic |
-| `src/index.ts` | Import and register new component |
-| `src/module-icons.ts` | Register module icon |
-| `src/components/<slug>/module.json` | Module slug, title, settings attributes |
-| `src/components/<slug>/index.ts` | Export definition |
-| `src/components/<slug>/edit.tsx` | Visual Builder preview React component |
-| `src/components/<slug>/types.ts` | Attribute TypeScript interfaces |
-| `src/components/<slug>/constants.ts` | Default values |
-| `src/components/<slug>/style.scss` | Component styles |
-| `scripts/fact-check-frontend.js` | Front-end interactivity (rewrite) |
-| `.github/workflows/deploy-*.yml` | FTP paths, plugin filename, name patch |
+| `module.json` | `slug`, `title`, `attrs` (settings schema) |
+| `types.ts` | Attribute interface |
+| `constants.ts` | Default values |
+| `edit.tsx` | DIVI VB preview React component (static, no API calls) |
+| `frontend.tsx` | Webpack entry: mounts your React app |
+| `style.scss` | Component CSS |
+
+Available DIVI attribute components: `divi/text`, `divi/select`, `divi/toggle`, `divi/color-picker`.
+
+### Step 3 — Register the module
+
+**`src/index.ts`** — import and register with `addAction` / `registerModule`.
+
+**`src/module-icons.ts`** — register the module icon.
+
+### Step 4 — Add a webpack bundle
+
+In `webpack.config.js`, add a third config entry for your frontend bundle (following the `fact-check-frontend` pattern).
+
+### Step 5 — Enqueue in WordPress
+
+In `vvp-fact-check-search.php`, add `wp_enqueue_script` / `wp_enqueue_style` calls for your new frontend bundle.
+
+### Step 6 — Add to the Vite preview
+
+In `preview/main.tsx`, import your standalone React component and add a `<Section>` for it.
+
+### Step 7 — Update CI/CD
+
+Update the `sed` patch in `.github/workflows/deploy-dev.yml` if needed.
 
 ---
 
 ## Troubleshooting
 
 **Module does not appear in the DIVI VB module list**
-- Ensure DIVI 5 (not DIVI 4) is active — this plugin uses the DIVI 5 module API, which is not backwards-compatible.
-- Run `npm run build` — the `modules-json/` folder must exist and contain the compiled `module.json`.
-- Check the PHP error log; a namespace mismatch or autoloader misconfiguration silently prevents registration.
+- DIVI 5 (not DIVI 4) must be active — the APIs are not backwards-compatible.
+- Run `pnpm build` — `modules-json/` must exist with compiled `module.json` files.
+- Check the PHP error log for namespace or autoloader errors.
 
-**Styles not loading on the front end**
+**Styles not loading**
 - Confirm `styles/main.css` was generated by the build.
-- Check that the PHP `wp_enqueue_style` calls in `FactCheckSearch.php` reference the correct relative file paths.
+- Check `wp_enqueue_style` paths in `vvp-fact-check-search.php`.
 
-**Front-end JS not executing**
-- Open the browser console for errors.
-- Confirm `scripts/fact-check-frontend.js` is enqueued (check the Network tab).
-- Verify the wrapper element has the expected `data-*` attributes in the rendered page source.
+**Front-end JS not running**
+- Check the browser console for errors.
+- Confirm the script is enqueued (Network tab).
+- Verify the wrapper element has the expected `data-*` attributes in the page source.
 
-**CI deployment fails with FTP errors**
-- Confirm all three secrets (`FTP_HOST`, `FTP_USER`, `FTP_PASSWORD`) are set in the GitHub repository settings.
-- `lftp` uses `--parallel=5` by default; some hosts block multiple simultaneous FTP connections. Reduce this value in the workflow if you see connection refusals.
+**pnpm preview fails to start**
+- Run `pnpm install` first — `vite` and `@vitejs/plugin-react` must be installed.
+- Port 8899 must be free.
 
-**Visual Builder preview is blank**
-- Check the browser console inside the DIVI editor for React errors.
-- Ensure `edit.tsx` does not make network requests (the VB sandbox may block them).
-- Confirm `scripts/bundle.js` was built and is being loaded by the plugin.
+**PHP preview shows no data**
+- `curl` extension must be available: `php -r "echo extension_loaded('curl') ? 'ok' : 'missing';"`.
+- Run `php -S localhost:8787 preview.php?flush=1` to clear the transient cache.
+
+**CI deployment FTP errors**
+- Confirm all three secrets are set in GitHub repository settings.
+- Reduce `--parallel` in the `lftp` call if the host blocks multiple simultaneous connections.

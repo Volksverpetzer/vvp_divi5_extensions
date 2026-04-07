@@ -11,6 +11,7 @@
     "scripts": {
         "start": "NODE_ENV=development webpack -w --config webpack.config.js --progress",
         "build": "NODE_ENV=production webpack --config webpack.config.js --progress",
+        "preview": "vite",
         "zip": "gulp zip"
     },
     "devDependencies": {
@@ -49,6 +50,7 @@
         "@types/divi__style-library": "npm:divi-types-style-library@^1.0.10",
         "@types/react": "17.0.44",
         "@types/react-dom": "17.0.14",
+        "@vitejs/plugin-react": "^4.7.0",
         "@wordpress/hooks": "^3.58.0",
         "@wordpress/i18n": "^4.58.0",
         "autoprefixer": "^10.4.27",
@@ -68,6 +70,7 @@
         "tailwindcss": "^4.2.2",
         "ts-loader": "^9.5.7",
         "typescript": "^5.9.3",
+        "vite": "^6.4.2",
         "webpack": "^5.105.4",
         "webpack-cli": "^5.1.4"
     },
@@ -122,6 +125,9 @@
             "serialize-javascript@<7.0.5": ">=7.0.5",
             "lodash@>=4.0.0 <=4.17.23": ">=4.18.0",
             "lodash@<=4.17.23": ">=4.18.0"
-        }
+        },
+        "ignoredBuiltDependencies": [
+            "esbuild"
+        ]
     }
 }
