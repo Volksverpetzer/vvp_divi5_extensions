@@ -44,12 +44,18 @@ namespace {
 
     function is_wp_error(mixed $thing): bool { return $thing instanceof WP_Error; }
 
-    function wp_remote_get(string $url, array $args = []): array|WP_Error
+    function _vvp_curl_request(string $url, array $args, bool $head_only): array|WP_Error
     {
         if (!extension_loaded('curl')) {
             return new WP_Error('curl extension not available');
         }
         $follow = ((int)($args['redirection'] ?? 5)) > 0;
+
+        $http_headers = ['Accept: application/json, text/xml, */*'];
+        foreach (($args['headers'] ?? []) as $k => $v) {
+            $http_headers[] = "{$k}: {$v}";
+        }
+
         $ch = curl_init($url);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
@@ -57,17 +63,28 @@ namespace {
             CURLOPT_USERAGENT      => $args['user-agent'] ?? 'VVP-Preview/1.0',
             CURLOPT_FOLLOWLOCATION => $follow,
             CURLOPT_ENCODING       => '',
-            CURLOPT_HTTPHEADER     => ['Accept: application/json, text/xml, */*'],
+            CURLOPT_HTTPHEADER     => $http_headers,
+            CURLOPT_NOBODY         => $head_only,
         ]);
         $body = curl_exec($ch);
         $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $err  = curl_error($ch);
-        @curl_close($ch); // deprecated no-op in PHP 8.5+
+        @curl_close($ch);
 
         if ($err || $body === false) {
             return new WP_Error($err ?: "cURL failed for {$url}");
         }
-        return ['body' => $body, 'response' => ['code' => $code]];
+        return ['body' => $head_only ? '' : $body, 'response' => ['code' => $code]];
+    }
+
+    function wp_remote_get(string $url, array $args = []): array|WP_Error
+    {
+        return _vvp_curl_request($url, $args, false);
+    }
+
+    function wp_remote_head(string $url, array $args = []): array|WP_Error
+    {
+        return _vvp_curl_request($url, $args, true);
     }
 
     function wp_remote_retrieve_response_code(array $r): int { return (int)($r['response']['code'] ?? 0); }

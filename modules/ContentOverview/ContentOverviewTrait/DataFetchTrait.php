@@ -1,0 +1,345 @@
+<?php
+/**
+ * HTTP fetching, WP post helpers, podcast parser, and date utilities.
+ *
+ * @package VVP\FactCheckSearch\ContentOverview
+ * @since 1.0.0
+ */
+
+namespace VVP\FactCheckSearch\ContentOverview\ContentOverviewTrait;
+
+trait DataFetchTrait
+{
+    /**
+     * Fetch a remote URL via wp_remote_get with transient caching.
+     *
+     * @param string $url       Remote URL to fetch.
+     * @param string $cache_key Transient key.
+     * @param int    $ttl       Cache lifetime in seconds.
+     *
+     * @return mixed|null Decoded JSON body or null on failure.
+     */
+    private static function fetch_json($url, $cache_key, $ttl = 1800)
+    {
+        $cached = get_transient($cache_key);
+        if (false !== $cached) {
+            return $cached;
+        }
+
+        $response = wp_remote_get($url, [
+            'timeout'    => 10,
+            'user-agent' => 'VVP-ContentOverview/1.0',
+        ]);
+
+        if (is_wp_error($response)) {
+            return null;
+        }
+
+        $code = wp_remote_retrieve_response_code($response);
+        if (200 !== (int) $code) {
+            return null;
+        }
+
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        if (null === $data) {
+            return null;
+        }
+
+        set_transient($cache_key, $data, $ttl);
+        return $data;
+    }
+
+    /**
+     * Fetch a remote URL and return the raw body string, with transient caching.
+     *
+     * @param string $url       Remote URL.
+     * @param string $cache_key Transient key.
+     * @param int    $ttl       Cache lifetime in seconds.
+     *
+     * @return string|null Raw body or null on failure.
+     */
+    private static function fetch_raw($url, $cache_key, $ttl = 3600)
+    {
+        $cached = get_transient($cache_key);
+        if (false !== $cached) {
+            return $cached;
+        }
+
+        $response = wp_remote_get($url, [
+            'timeout'    => 10,
+            'user-agent' => 'VVP-ContentOverview/1.0',
+        ]);
+
+        if (is_wp_error($response)) {
+            return null;
+        }
+
+        $code = wp_remote_retrieve_response_code($response);
+        if (200 !== (int) $code) {
+            return null;
+        }
+
+        $body = wp_remote_retrieve_body($response);
+
+        if ('' === $body) {
+            return null;
+        }
+
+        set_transient($cache_key, $body, $ttl);
+        return $body;
+    }
+
+    /**
+     * Probe the YouTube /shorts/ endpoint to determine whether a video is a Short.
+     *
+     * A 200 response means the video lives at the /shorts/ URL → it is a Short.
+     * A redirect (3xx) means YouTube sends the browser to the regular watch page → regular video.
+     *
+     * Result is cached for 7 days per video ID (a video's type never changes).
+     *
+     * @param string $video_id YouTube video ID.
+     *
+     * @return bool True if the video is a Short (should be filtered out).
+     */
+    private static function is_youtube_short(string $video_id): bool
+    {
+        if (empty($video_id)) {
+            return false;
+        }
+
+        $cache_key = 'vvp_co_yt_short_' . $video_id;
+        $cached    = get_transient($cache_key);
+        if (false !== $cached) {
+            return (bool) $cached;
+        }
+
+        $url      = 'https://www.youtube.com/shorts/' . rawurlencode($video_id);
+        $response = wp_remote_head($url, [
+            'timeout'     => 5,
+            'redirection' => 0,
+            'user-agent'  => 'Mozilla/5.0',
+            'headers'     => [
+                // Bypass the EU/GDPR consent redirect (consent.youtube.com) that
+                // YouTube sends to all server-side requests from EU IP addresses.
+                // Without this cookie every request gets a 302 → consent.youtube.com
+                // instead of 200 (Short) or 302 → /watch (regular video).
+                'Cookie' => 'SOCS=CAI',
+            ],
+        ]);
+
+        if (is_wp_error($response)) {
+            // On network error assume not a Short so we don't silently drop videos.
+            return false;
+        }
+
+        $code     = (int) wp_remote_retrieve_response_code($response);
+        $is_short = (200 === $code);
+
+        set_transient($cache_key, $is_short ? 1 : 0, 604800); // 7 days
+        return $is_short;
+    }
+
+    /**
+     * Fetch WordPress posts from a REST API endpoint (one or more pages merged).
+     *
+     * @param string $base_url  Base REST URL including per_page and _embed params.
+     * @param string $cache_key Transient key prefix.
+     * @param int    $pages     Number of pages to fetch.
+     * @param string $source    Source label ('volksverpetzer' or 'pruefpunkt').
+     *
+     * @return array Normalised post array.
+     */
+    private static function fetch_wp_posts($base_url, $cache_key, $pages = 2, $source = 'volksverpetzer')
+    {
+        $all_posts = [];
+
+        for ($page = 1; $page <= $pages; $page++) {
+            $key  = $cache_key . '_p' . $page;
+            $url  = $base_url . '&page=' . $page;
+            $data = self::fetch_json($url, $key, 1800);
+
+            if (!is_array($data)) {
+                break;
+            }
+
+            foreach ($data as &$post) {
+                $post['_vvp_source'] = $source;
+            }
+            unset($post);
+
+            $all_posts = array_merge($all_posts, $data);
+        }
+
+        return $all_posts;
+    }
+
+    /**
+     * Extract the featured image URL from a WP REST post array.
+     *
+     * @param array  $post      WP post array with _embedded data.
+     * @param string $size_hint Preferred size key to look for in media_details.
+     *
+     * @return string Image URL or empty string.
+     */
+    private static function get_post_image($post, $size_hint = 'medium_large')
+    {
+        $media = $post['_embedded']['wp:featuredmedia'][0] ?? null;
+
+        if (!$media) {
+            return '';
+        }
+
+        $sizes = $media['media_details']['sizes'] ?? [];
+        if (!empty($sizes[$size_hint]['source_url'])) {
+            return $sizes[$size_hint]['source_url'];
+        }
+
+        if (!empty($sizes['full']['source_url'])) {
+            return $sizes['full']['source_url'];
+        }
+
+        return $media['source_url'] ?? '';
+    }
+
+    /**
+     * Extract the category name from a WP REST post array.
+     *
+     * @param array $post WP post array with _embedded data.
+     *
+     * @return string Category name or empty string.
+     */
+    private static function get_post_category($post)
+    {
+        return $post['_embedded']['wp:term'][0][0]['name'] ?? '';
+    }
+
+    /**
+     * Strip HTML and truncate a string to a given character limit.
+     *
+     * @param string $text  Input HTML.
+     * @param int    $limit Character limit.
+     *
+     * @return string Truncated plain text.
+     */
+    private static function truncate($text, $limit = 120)
+    {
+        $plain = wp_strip_all_tags($text);
+        $plain = html_entity_decode($plain, ENT_QUOTES, 'UTF-8');
+        $plain = trim($plain);
+
+        if (mb_strlen($plain) <= $limit) {
+            return $plain;
+        }
+
+        return mb_substr($plain, 0, $limit) . '…';
+    }
+
+    /**
+     * Parse an RSS 2.0 feed XML string and return structured data.
+     *
+     * @param string $xml_string Raw XML.
+     *
+     * @return array|null Associative array with 'channel_image' and 'items', or null on failure.
+     */
+    private static function parse_podcast_feed($xml_string)
+    {
+        if (empty($xml_string)) {
+            return null;
+        }
+
+        libxml_use_internal_errors(true);
+        $xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
+        libxml_clear_errors();
+
+        if (!$xml) {
+            return null;
+        }
+
+        $channel = $xml->channel ?? null;
+        if (!$channel) {
+            return null;
+        }
+
+        $namespaces = $xml->getNamespaces(true);
+        $itunes_ns  = $namespaces['itunes'] ?? 'http://www.itunes.com/dtds/podcast-1.0.dtd';
+
+        $channel_image  = '';
+        $itunes_channel = $channel->children($itunes_ns);
+        if (!empty($itunes_channel->image)) {
+            $attrs = $itunes_channel->image->attributes();
+            if (!empty($attrs['href'])) {
+                $channel_image = (string) $attrs['href'];
+            }
+        }
+        if (empty($channel_image) && !empty($channel->image->url)) {
+            $channel_image = (string) $channel->image->url;
+        }
+
+        $items = [];
+        foreach ($channel->item as $item) {
+            $itunes_item   = $item->children($itunes_ns);
+            $enclosure_url = '';
+            if ($item->enclosure) {
+                $enc_attrs     = $item->enclosure->attributes();
+                $enclosure_url = (string) ($enc_attrs['url'] ?? '');
+            }
+
+            $items[] = [
+                'title'     => (string) ($item->title ?? ''),
+                'pubDate'   => (string) ($item->pubDate ?? ''),
+                'link'      => (string) ($item->link ?? ''),
+                'enclosure' => $enclosure_url,
+                'duration'  => (string) ($itunes_item->duration ?? ''),
+                'summary'   => (string) ($itunes_item->summary ?? $item->description ?? ''),
+            ];
+        }
+
+        return [
+            'channel_image' => $channel_image,
+            'items'         => $items,
+        ];
+    }
+
+    /**
+     * Format an ISO 8601 or RFC 2822 date string to German format (d.m.Y).
+     *
+     * @param string $date_string Raw date string.
+     *
+     * @return string Formatted date or empty string.
+     */
+    private static function format_date($date_string)
+    {
+        if (empty($date_string)) {
+            return '';
+        }
+
+        try {
+            $dt = new \DateTime($date_string);
+            return $dt->format('d.m.Y');
+        } catch (\Exception $e) {
+            return '';
+        }
+    }
+
+    /**
+     * Parse a date string into a DateTime object. Returns null on failure.
+     *
+     * @param string $date_string Raw date string.
+     *
+     * @return \DateTime|null
+     */
+    private static function parse_datetime($date_string)
+    {
+        if (empty($date_string)) {
+            return null;
+        }
+
+        try {
+            return new \DateTime($date_string);
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+}
