@@ -743,12 +743,8 @@ trait RenderCallbackTrait
         $remaining = array_slice($all_articles, 1);
 
         // --- 4. Build feed items ---
-        $YT_INTERLEAVE_DAYS    = 14;
-        $PODCAST_BANNER_DAYS   = 7;
         $TARGET_WEITERE_ITEMS  = 30;
         $FEED_ROW_SIZE         = 3;
-
-        $now = time();
 
         // Article feed items
         $article_items = [];
@@ -773,75 +769,55 @@ trait RenderCallbackTrait
             $insta_items[] = ['kind' => 'insta', 'date' => $dt, 'data' => $post];
         }
 
-        // YouTube feed items (only last 14 days, max 4)
+        // YouTube feed items — accept items, videos, or a root array
         $yt_items = [];
-        foreach ($yt_videos as $video) {
-            if (empty($video['publishedAt'])) {
-                continue;
-            }
-            $dt = self::parse_datetime($video['publishedAt']);
-            if (!$dt) {
-                continue;
-            }
-            // Removing the 14-day threshold so YouTube videos are always interspersed
-            $yt_items[] = ['kind' => 'youtube', 'date' => $dt, 'data' => $video];
-            if (count($yt_items) >= 4) {
-                break;
+        if (!empty($yt_videos)) {
+            $added = 0;
+            foreach ($yt_videos as $video) {
+                if (empty($video['publishedAt'])) {
+                    continue;
+                }
+                $dt = self::parse_datetime($video['publishedAt']);
+                if (!$dt) {
+                    continue;
+                }
+
+                // Filter out Shorts: duration <= 60s or '#shorts' in title/description
+                $duration_sec = (int) ($video['durationSeconds'] ?? $video['duration'] ?? 999);
+                $title_lower  = strtolower($video['title'] ?? '');
+                $desc_lower   = strtolower($video['description'] ?? '');
+                if ($duration_sec > 0 && $duration_sec <= 60) {
+                    continue;
+                }
+                if (str_contains($title_lower, '#shorts') || str_contains($desc_lower, '#shorts')) {
+                    continue;
+                }
+
+                $yt_items[] = ['kind' => 'youtube', 'date' => $dt, 'data' => $video];
+                $added++;
+                if ($added >= 4) {
+                    break;
+                }
             }
         }
 
-        // Merge and sort
-        $merged = array_merge($article_items, $insta_items, $yt_items);
+        // Podcast item with its real date — participates in the merged sort
+        $podcast_items_feed = [];
+        $latest_episode     = $podcast_items[0] ?? null;
+        $latest_episode_dt  = $latest_episode ? self::parse_datetime($latest_episode['pubDate'] ?? '') : null;
+        if ($latest_episode && $latest_episode_dt) {
+            $podcast_items_feed[] = ['kind' => 'podcast_banner', 'date' => $latest_episode_dt, 'data' => $latest_episode];
+        }
+
+        // Merge and sort chronologically
+        $merged = array_merge($article_items, $insta_items, $yt_items, $podcast_items_feed);
         usort($merged, function ($a, $b) {
             return $b['date']->getTimestamp() - $a['date']->getTimestamp();
         });
         $merged = array_slice($merged, 0, $TARGET_WEITERE_ITEMS);
 
-        // Group into rows
-        $grouped_rows = self::group_feed_rows($merged, $FEED_ROW_SIZE);
-
-        // Flatten rows back to a sequential item list (preserving row grouping for rendering)
-        $feed_with_podcast = [];
-        foreach ($grouped_rows as $row) {
-            foreach ($row['items'] as $item) {
-                $feed_with_podcast[] = $item;
-            }
-        }
-
-        // --- 5. Insert podcast ---
-        $latest_episode      = $podcast_items[0] ?? null;
-        $latest_episode_dt   = $latest_episode ? self::parse_datetime($latest_episode['pubDate'] ?? '') : null;
-
-        if ($latest_episode && $latest_episode_dt && !is_nan($latest_episode_dt->getTimestamp())) {
-            $podcast_item = [
-                'kind' => 'podcast_banner',
-                'date' => $latest_episode_dt,
-                'data' => $latest_episode,
-            ];
-
-            $podcast_days_ago = ($now - $latest_episode_dt->getTimestamp()) / 86400;
-
-            if ($podcast_days_ago <= $PODCAST_BANNER_DAYS) {
-                // Insert at correct chronological position
-                $insert_idx = -1;
-                foreach ($feed_with_podcast as $idx => $item) {
-                    if ($item['date']->getTimestamp() < $latest_episode_dt->getTimestamp()) {
-                        $insert_idx = $idx;
-                        break;
-                    }
-                }
-                if ($insert_idx === -1) {
-                    $feed_with_podcast[] = $podcast_item;
-                } else {
-                    array_splice($feed_with_podcast, $insert_idx, 0, [$podcast_item]);
-                }
-            } else {
-                $feed_with_podcast[] = $podcast_item;
-            }
-        }
-
-        // --- 6. Render ---
-        return self::render_overview($feed_with_podcast, $channel_image);
+        // --- 5. Render ---
+        return self::render_overview($merged, $channel_image);
     }
 
     /**
