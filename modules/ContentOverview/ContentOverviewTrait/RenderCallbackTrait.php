@@ -830,36 +830,40 @@ trait RenderCallbackTrait
      */
     private static function render_overview($feed_items, $channel_image)
     {
+        $rows      = self::group_feed_rows($feed_items, 3);
         $feed_html = '';
-        foreach ($feed_items as $item) {
-            $kind = $item['kind'];
 
-            if ('podcast_banner' === $kind) {
-                $feed_html .= '<div class="vvp-co__feed-item vvp-co__feed-item--podcast">'
-                    . self::render_podcast_banner($item['data'], $channel_image)
-                    . '</div>';
-                continue;
-            }
+        foreach ($rows as $row) {
+            foreach ($row['items'] as $item) {
+                $kind = $item['kind'];
 
-            if ('article' === $kind) {
-                $feed_html .= '<div class="vvp-co__feed-item">'
-                    . self::render_featured_card($item['data'])
-                    . '</div>';
-                continue;
-            }
+                if ('podcast_banner' === $kind) {
+                    $feed_html .= '<div class="vvp-co__feed-item vvp-co__feed-item--podcast">'
+                        . self::render_podcast_banner($item['data'], $channel_image)
+                        . '</div>';
+                    continue;
+                }
 
-            if ('insta' === $kind) {
-                $feed_html .= '<div class="vvp-co__feed-item">'
-                    . self::render_insta_card($item['data'])
-                    . '</div>';
-                continue;
-            }
+                if ('article' === $kind) {
+                    $feed_html .= '<div class="vvp-co__feed-item">'
+                        . self::render_featured_card($item['data'])
+                        . '</div>';
+                    continue;
+                }
 
-            if ('youtube' === $kind) {
-                $feed_html .= '<div class="vvp-co__feed-item">'
-                    . self::render_youtube_card($item['data'])
-                    . '</div>';
-                continue;
+                if ('insta' === $kind) {
+                    $feed_html .= '<div class="vvp-co__feed-item">'
+                        . self::render_insta_card($item['data'])
+                        . '</div>';
+                    continue;
+                }
+
+                if ('youtube' === $kind) {
+                    $feed_html .= '<div class="vvp-co__feed-item">'
+                        . self::render_youtube_card($item['data'])
+                        . '</div>';
+                    continue;
+                }
             }
         }
 
