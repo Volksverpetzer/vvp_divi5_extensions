@@ -49,12 +49,13 @@ namespace {
         if (!extension_loaded('curl')) {
             return new WP_Error('curl extension not available');
         }
+        $follow = ((int)($args['redirection'] ?? 5)) > 0;
         $ch = curl_init($url);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT        => (int)($args['timeout'] ?? 15),
             CURLOPT_USERAGENT      => $args['user-agent'] ?? 'VVP-Preview/1.0',
-            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_FOLLOWLOCATION => $follow,
             CURLOPT_ENCODING       => '',
             CURLOPT_HTTPHEADER     => ['Accept: application/json, text/xml, */*'],
         ]);

@@ -106,6 +106,49 @@ trait RenderCallbackTrait
     }
 
     /**
+     * Probe the YouTube /shorts/ endpoint to determine whether a video is a Short.
+     *
+     * A 200 response means the video lives at the /shorts/ URL → it is a Short.
+     * A redirect (3xx) means YouTube sends the browser to the regular watch page → regular video.
+     *
+     * Result is cached for 7 days per video ID (a video's type never changes).
+     *
+     * @param string $video_id YouTube video ID.
+     *
+     * @return bool True if the video is a Short (should be filtered out).
+     */
+    private static function is_youtube_short(string $video_id): bool
+    {
+        if (empty($video_id)) {
+            return false;
+        }
+
+        $cache_key = 'vvp_co_yt_short_' . $video_id;
+        $cached    = get_transient($cache_key);
+        if (false !== $cached) {
+            return (bool) $cached;
+        }
+
+        $url      = 'https://www.youtube.com/shorts/' . rawurlencode($video_id);
+        $response = wp_remote_get($url, [
+            'timeout'     => 5,
+            'redirection' => 0,
+            'user-agent'  => 'Mozilla/5.0 (compatible; VVP-ContentOverview/1.0)',
+        ]);
+
+        if (is_wp_error($response)) {
+            // On network error assume not a Short so we don't silently drop videos.
+            return false;
+        }
+
+        $code     = (int) wp_remote_retrieve_response_code($response);
+        $is_short = (200 === $code);
+
+        set_transient($cache_key, $is_short ? 1 : 0, 604800); // 7 days
+        return $is_short;
+    }
+
+    /**
      * Fetch WordPress posts from a REST API endpoint (two pages merged).
      *
      * @param string $base_url  Base REST URL including per_page and _embed params.
@@ -790,10 +833,8 @@ trait RenderCallbackTrait
                     continue;
                 }
 
-                // Filter out Shorts by title/description (duration not available in snippet)
-                $title_lower = strtolower($snippet['title'] ?? '');
-                $desc_lower  = strtolower($snippet['description'] ?? '');
-                if (str_contains($title_lower, '#shorts') || str_contains($desc_lower, '#shorts')) {
+                // Filter out Shorts via YouTube endpoint probe
+                if (self::is_youtube_short($video['id'] ?? '')) {
                     continue;
                 }
 
