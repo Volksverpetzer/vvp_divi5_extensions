@@ -82,7 +82,7 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
             <div className={classnames('vvp-co-slider vvp-co-slider-fullwidth-off', {
                 'vvp-co-slider-no-arrows': !isCarousel,
                 'vvp-co-slider-no-pagination': !isCarousel
-            })} style={{ background: '#000', paddingBottom: 0 }}>
+            })} style={{ paddingBottom: 0 }}>
                 <div className="vvp-co-slides" style={{ position: 'relative', overflow: 'hidden' }}>
                     {slides.map((slide: Slide, index: number) => {
                         const isVideo = !!slide.video;
@@ -209,7 +209,7 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
                 </div>
 
                 {isCarousel && (
-                    <div className="vvp-co-controllers" style={{ position: 'relative', marginTop: 10, paddingBottom: 15, display: 'flex', justifyContent: 'center', gap: 6, zIndex: 10 }}>
+                    <div className="vvp-co-controllers" style={{ position: 'relative', marginTop: 10, paddingBottom: 0, display: 'flex', justifyContent: 'center', gap: 6, zIndex: 10 }}>
                         {slides.map((_: Slide, index: number) => (
                             <button
                                 key={index}
