@@ -40,18 +40,18 @@
                 }
             }
         },
-        "descriptionFont": {
+        "titleFont": {
             "type": "object",
-            "selector": "{{selector}} .vvp-co__feed-excerpt, {{selector}} .vvp-co__feed-title, {{selector}} .vvp-co__podcast-title, {{selector}} .vvp-co__podcast-summary",
+            "selector": "{{selector}} .vvp-co__feed-title, {{selector}} .vvp-co__podcast-title",
             "settings": {
                 "font": {
                     "groupType": "group-item",
                     "item": {
                         "groupName": "design",
                         "priority": 10,
-                        "attrName": "descriptionFont.font",
-                        "label": "Beschreibungsschrift",
-                        "description": "Schrift für Artikel-Excerpts, Podcast-Titel und Feed-Beschreibungen.",
+                        "attrName": "titleFont.font",
+                        "label": "Überschriften-Schrift",
+                        "description": "Schrift für Artikel-Titel und Podcast-Titel.",
                         "features": {
                             "sticky": false
                         },
@@ -64,7 +64,63 @@
             },
             "styleProps": {
                 "font": {
-                    "selector": "{{selector}} .vvp-co__feed-excerpt, {{selector}} .vvp-co__feed-title, {{selector}} .vvp-co__podcast-title, {{selector}} .vvp-co__podcast-summary"
+                    "selector": "{{selector}} .vvp-co__feed-title, {{selector}} .vvp-co__podcast-title"
+                }
+            }
+        },
+        "bodyFont": {
+            "type": "object",
+            "selector": "{{selector}} .vvp-co__feed-excerpt, {{selector}} .vvp-co__podcast-summary",
+            "settings": {
+                "font": {
+                    "groupType": "group-item",
+                    "item": {
+                        "groupName": "design",
+                        "priority": 20,
+                        "attrName": "bodyFont.font",
+                        "label": "Fließtext-Schrift",
+                        "description": "Schrift für Artikel-Excerpts und Podcast-Zusammenfassungen.",
+                        "features": {
+                            "sticky": false
+                        },
+                        "component": {
+                            "name": "divi/font",
+                            "type": "field"
+                        }
+                    }
+                }
+            },
+            "styleProps": {
+                "font": {
+                    "selector": "{{selector}} .vvp-co__feed-excerpt, {{selector}} .vvp-co__podcast-summary"
+                }
+            }
+        },
+        "metaFont": {
+            "type": "object",
+            "selector": "{{selector}} .vvp-co__feed-date, {{selector}} .vvp-co__category, {{selector}} .vvp-co__feed-heading, {{selector}} .vvp-co__podcast-date, {{selector}} .vvp-co__podcast-duration, {{selector}} .vvp-co__badge",
+            "settings": {
+                "font": {
+                    "groupType": "group-item",
+                    "item": {
+                        "groupName": "design",
+                        "priority": 30,
+                        "attrName": "metaFont.font",
+                        "label": "Meta-Schrift",
+                        "description": "Schrift für Datum, Kategorie, Badges und andere Metaangaben.",
+                        "features": {
+                            "sticky": false
+                        },
+                        "component": {
+                            "name": "divi/font",
+                            "type": "field"
+                        }
+                    }
+                }
+            },
+            "styleProps": {
+                "font": {
+                    "selector": "{{selector}} .vvp-co__feed-date, {{selector}} .vvp-co__category, {{selector}} .vvp-co__feed-heading, {{selector}} .vvp-co__podcast-date, {{selector}} .vvp-co__podcast-duration, {{selector}} .vvp-co__badge"
                 }
             }
         }
