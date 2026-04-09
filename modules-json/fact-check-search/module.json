@@ -92,6 +92,90 @@
                     }
                 }
             }
+        },
+        "titleFont": {
+            "type": "object",
+            "selector": "{{selector}} .vvp-fc__result-title, {{selector}} .vvp-fc__bar-title",
+            "settings": {
+                "font": {
+                    "groupType": "group-item",
+                    "item": {
+                        "groupName": "design",
+                        "priority": 10,
+                        "attrName": "titleFont.font",
+                        "label": "Überschriften-Schrift",
+                        "description": "Schrift für Ergebnis-Titel und den Modul-Titel im blauen Balken.",
+                        "features": {
+                            "sticky": false
+                        },
+                        "component": {
+                            "name": "divi/font",
+                            "type": "field"
+                        }
+                    }
+                }
+            },
+            "styleProps": {
+                "font": {
+                    "selector": "{{selector}} .vvp-fc__result-title, {{selector}} .vvp-fc__bar-title"
+                }
+            }
+        },
+        "bodyFont": {
+            "type": "object",
+            "selector": "{{selector}} .vvp-fc__result-excerpt, {{selector}} .vvp-fc__bar-desc, {{selector}} .vvp-fc__no-results",
+            "settings": {
+                "font": {
+                    "groupType": "group-item",
+                    "item": {
+                        "groupName": "design",
+                        "priority": 20,
+                        "attrName": "bodyFont.font",
+                        "label": "Fließtext-Schrift",
+                        "description": "Schrift für Ergebnis-Excerpts, Modul-Beschreibung und Meldungen.",
+                        "features": {
+                            "sticky": false
+                        },
+                        "component": {
+                            "name": "divi/font",
+                            "type": "field"
+                        }
+                    }
+                }
+            },
+            "styleProps": {
+                "font": {
+                    "selector": "{{selector}} .vvp-fc__result-excerpt, {{selector}} .vvp-fc__bar-desc, {{selector}} .vvp-fc__no-results"
+                }
+            }
+        },
+        "metaFont": {
+            "type": "object",
+            "selector": "{{selector}} .vvp-fc__results-meta, {{selector}} .vvp-fc__score-label, {{selector}} .vvp-fc__url-hint, {{selector}} .vvp-fc__examples-label",
+            "settings": {
+                "font": {
+                    "groupType": "group-item",
+                    "item": {
+                        "groupName": "design",
+                        "priority": 30,
+                        "attrName": "metaFont.font",
+                        "label": "Meta-Schrift",
+                        "description": "Schrift für Ergebnis-Anzahl, Score-Label, URL-Hinweise und Beispiel-Labels.",
+                        "features": {
+                            "sticky": false
+                        },
+                        "component": {
+                            "name": "divi/font",
+                            "type": "field"
+                        }
+                    }
+                }
+            },
+            "styleProps": {
+                "font": {
+                    "selector": "{{selector}} .vvp-fc__results-meta, {{selector}} .vvp-fc__score-label, {{selector}} .vvp-fc__url-hint, {{selector}} .vvp-fc__examples-label"
+                }
+            }
         }
     },
     "settings": {
