@@ -215,7 +215,7 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
                                 key={index}
                                 type="button"
                                 aria-label={`Bild ${index + 1}`}
-                                style={{ width: 8, height: 8, borderRadius: '50%', background: index === activeIndex ? '#fff' : 'rgba(255,255,255,0.5)', border: 'none', padding: 0, cursor: 'pointer' }}
+                                style={{ width: 8, height: 8, borderRadius: '50%', background: index === activeIndex ? '#808080' : 'rgba(128, 128, 128, 0.5)', border: 'none', padding: 0, cursor: 'pointer' }}
                                 onClick={(e) => { e.stopPropagation(); setActiveIndex(index); }}
                             />
                         ))}
