@@ -218,24 +218,25 @@ trait RenderCallbackTrait
 
         foreach ($rows as $row) {
             foreach ($row['items'] as $item) {
+                $kind = esc_attr($item['kind']);
                 switch ($item['kind']) {
                     case 'podcast_banner':
-                        $feed_html .= '<div class="vvp-co__feed-item vvp-co__feed-item--podcast">'
+                        $feed_html .= '<div class="vvp-co__feed-item vvp-co__feed-item--podcast" data-co-kind="' . $kind . '">'
                             . self::render_podcast_banner($item['data'], $channel_image)
                             . '</div>';
                         break;
                     case 'article':
-                        $feed_html .= '<div class="vvp-co__feed-item">'
+                        $feed_html .= '<div class="vvp-co__feed-item" data-co-kind="' . $kind . '">'
                             . self::render_featured_card($item['data'])
                             . '</div>';
                         break;
                     case 'insta':
-                        $feed_html .= '<div class="vvp-co__feed-item">'
+                        $feed_html .= '<div class="vvp-co__feed-item" data-co-kind="' . $kind . '">'
                             . self::render_insta_card($item['data'])
                             . '</div>';
                         break;
                     case 'youtube':
-                        $feed_html .= '<div class="vvp-co__feed-item">'
+                        $feed_html .= '<div class="vvp-co__feed-item" data-co-kind="' . $kind . '">'
                             . self::render_youtube_card($item['data'])
                             . '</div>';
                         break;
@@ -243,8 +244,20 @@ trait RenderCallbackTrait
             }
         }
 
+        $section_header = '<div class="vvp-co__section-header">'
+            . '<h2 class="vvp-co__section-title">Das Neuste</h2>'
+            . '<label class="vvp-co__filter-toggle" for="vvp-co-filter-articles">'
+            .   '<span class="vvp-co__filter-toggle-label">Nur Artikel</span>'
+            .   '<span class="vvp-co__toggle-track">'
+            .     '<input type="checkbox" class="vvp-co__toggle-input" id="vvp-co-filter-articles">'
+            .     '<span class="vvp-co__toggle-thumb"></span>'
+            .   '</span>'
+            . '</label>'
+            . '</div>';
+
         return '<div class="vvp-co__wrapper">'
             . '<div class="vvp-co__feed-section">'
+            .   $section_header
             .   '<div class="vvp-co__feed-grid">' . $feed_html . '</div>'
             . '</div>'
             . '</div>';

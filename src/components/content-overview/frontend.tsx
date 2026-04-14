@@ -35,9 +35,38 @@ const initPodcastBanners = () => {
     });
 };
 
+const LS_KEY = 'vvp_co_articles_only';
+
+const applyArticlesFilter = (grid: Element, checked: boolean) => {
+    grid.classList.toggle('vvp-co__feed-grid--articles-only', checked);
+};
+
+const initArticlesToggle = (wrapper: Element) => {
+    const toggle = wrapper.querySelector<HTMLInputElement>('.vvp-co__toggle-input');
+    const grid   = wrapper.querySelector<HTMLElement>('.vvp-co__feed-grid');
+    if (!toggle || !grid) return;
+
+    const stored = localStorage.getItem(LS_KEY) === 'true';
+    toggle.checked = stored;
+    applyArticlesFilter(grid, stored);
+
+    toggle.addEventListener('change', () => {
+        localStorage.setItem(LS_KEY, String(toggle.checked));
+        applyArticlesFilter(grid, toggle.checked);
+    });
+};
+
+const initToggles = () => {
+    document.querySelectorAll<HTMLElement>('.vvp-co__wrapper:not([data-toggle-initialized])').forEach((wrapper) => {
+        wrapper.setAttribute('data-toggle-initialized', 'true');
+        initArticlesToggle(wrapper);
+    });
+};
+
 const initAll = () => {
     initInstagramSlideshows();
     initPodcastBanners();
+    initToggles();
 };
 
 if (document.readyState === 'loading') {

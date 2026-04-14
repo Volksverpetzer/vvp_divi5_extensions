@@ -78,6 +78,16 @@ trait FeedGroupTrait
             return $b['date']->getTimestamp() - $a['date']->getTimestamp();
         });
 
+        // Ensure the first row is never Instagram-only content.
+        if (!empty($grouped) && isset($grouped[0]['items'][0]['kind']) && 'insta' === $grouped[0]['items'][0]['kind']) {
+            foreach ($grouped as $i => $row) {
+                if ('insta' !== $row['items'][0]['kind']) {
+                    array_unshift($grouped, array_splice($grouped, $i, 1)[0]);
+                    break;
+                }
+            }
+        }
+
         return $grouped;
     }
 }
