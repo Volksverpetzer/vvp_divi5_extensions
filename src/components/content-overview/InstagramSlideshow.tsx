@@ -283,9 +283,9 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({ permalin
                         &times;
                     </button>
 
-                    <div 
+                    <div
                         onClick={(e) => e.stopPropagation()}
-                        style={{ margin: '0 auto 60px auto', width: '100%', maxWidth: 700, padding: '80px 20px 0', display: 'flex', flexDirection: 'column', gap: 20 }}
+                        style={{ margin: '0 auto', width: '100%', maxWidth: 700, padding: '20px', display: 'flex', flexDirection: 'column', gap: 20, maxHeight: '100vh', overflowY: 'auto' }}
                     >
                         <InternalSlider 
                             slides={slides} activeIndex={activeIndex} setActiveIndex={setActiveIndex} 
