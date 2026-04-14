@@ -137,11 +137,15 @@ trait RenderCallbackTrait
             }
         }
 
-        $insta_items = [];
+        $insta_items  = [];
+        $insta_added  = 0;
         foreach ($insta_posts as $post) {
             $dt = self::parse_datetime($post['timestamp'] ?? '');
             if ($dt) {
                 $insta_items[] = ['kind' => 'insta', 'date' => $dt, 'data' => $post];
+                if (++$insta_added >= 12) {
+                    break;
+                }
             }
         }
 
@@ -174,7 +178,7 @@ trait RenderCallbackTrait
                 'thumbnailUrl' => $thumb_url,
             ]];
 
-            if (++$yt_added >= 4) {
+            if (++$yt_added >= 12) {
                 break;
             }
         }
@@ -192,7 +196,7 @@ trait RenderCallbackTrait
         usort($merged, function ($a, $b) {
             return $b['date']->getTimestamp() - $a['date']->getTimestamp();
         });
-        $merged = array_slice($merged, 0, 30);
+        $merged = array_slice($merged, 0, 36);
 
         // 5. Render ----------------------------------------------------------
 
