@@ -16,15 +16,15 @@ interface InstagramSlideshowProps {
 }
 
 const InstaIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" /></svg>
 );
 
 const ArrowLeftIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
 );
 
 const ArrowRightIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6" /></svg>
 );
 
 const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, caption, playingVideos, setPlayingVideos, onCenterClick }) => {
@@ -82,8 +82,8 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
             <div className={classnames('vvp-co-slider vvp-co-slider-fullwidth-off', {
                 'vvp-co-slider-no-arrows': !isCarousel,
                 'vvp-co-slider-no-pagination': !isCarousel
-            })} style={{ paddingBottom: 0, maxHeight: '70vh' }}>
-                <div className="vvp-co-slides" style={{ position: 'relative', overflow: 'hidden', maxHeight: '75vh', alignSelf: 'center', width: 'auto' }}>
+            })} style={{ paddingBottom: 0 }}>
+                <div className="vvp-co-slides" style={{ position: 'relative', overflow: 'visible', minHeight: '70vh', alignSelf: 'center', width: 'auto' }}>
                     {slides.map((slide: Slide, index: number) => {
                         const isVideo = !!slide.video;
                         const isActive = index === activeIndex;
@@ -102,33 +102,39 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
                                 <div className="vvp-co-container clearfix">
                                     <div className="vvp-co-slider-container-inner">
                                         {isVideo ? (
-                                            <div className="vvp-co-slide-image" style={{ position: 'relative', aspectRatio: '3/4', overflow: 'hidden' }}>
-                                                {!isPlaying ? (
-                                                    <div
-                                                        style={{ position: 'relative', cursor: 'pointer', width: '100%', height: '100%' }}
-                                                        onClick={() => setPlayingVideos({ [index]: true })}
-                                                        onMouseEnter={() => setPlayingVideos({ [index]: true })}
-                                                    >
-                                                        {isNearActive && <img src={slide.thumb || 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='} alt={caption} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} loading={index === 0 ? 'eager' : 'lazy'} />}
-                                                        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'rgba(0,0,0,0.6)', borderRadius: '50%', width: 64, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                            <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                                            <div className="vvp-co-slide-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                                <div className="vvp-co-slide-image" style={{ position: 'relative', width: 'auto', overflow: 'hidden', }}>
+                                                    {!isPlaying ? (
+                                                        <div
+                                                            style={{ position: 'relative', cursor: 'pointer', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                                            onClick={() => setPlayingVideos({ [index]: true })}
+                                                            onMouseEnter={() => setPlayingVideos({ [index]: true })}
+                                                        >
+                                                            {isNearActive && <img src={slide.thumb || 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='} alt={caption} style={{ width: 'auto', objectFit: 'contain', display: 'block', maxWidth: '100%', maxHeight: '100%' }} loading={index === 0 ? 'eager' : 'lazy'} />}
+                                                            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'rgba(0,0,0,0.6)', borderRadius: '50%', width: 64, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                                <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z" /></svg>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                ) : (
-                                                    <video loop playsInline preload="metadata" controls autoPlay muted
-                                                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                                                        onPlay={(e) => {
-                                                            const t = e.currentTarget;
-                                                            document.querySelectorAll('video').forEach(v => { if (v !== t) v.pause(); });
-                                                        }}
-                                                    >
-                                                        <source type="video/mp4" src={slide.video} />
-                                                    </video>
-                                                )}
+                                                    ) : (
+                                                        <video loop playsInline preload="metadata" controls autoPlay muted
+                                                            style={{ height: '70vh', width: 'auto', objectFit: 'contain', display: 'block', maxWidth: '100%', maxHeight: '100%' }}
+                                                            onPlay={(e) => {
+                                                                const t = e.currentTarget;
+                                                                document.querySelectorAll('video').forEach(v => { if (v !== t) v.pause(); });
+                                                            }}
+                                                        >
+                                                            <source type="video/mp4" src={slide.video} />
+                                                        </video>
+                                                    )}
+                                                </div>
+                                                {caption && <p className="vvp-co__feed-excerpt vvp-co__feed-excerpt--insta" style={{ marginTop: '15px', textAlign: 'center', maxWidth: '100%', pointerEvents: 'none' }}>{caption}</p>}
                                             </div>
                                         ) : (
-                                            <div className="vvp-co-slide-image" style={{ aspectRatio: '3/4', overflow: 'hidden' }}>
-                                                {isNearActive && <img src={slide.thumb} alt={caption} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}
+                                            <div className="vvp-co-slide-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                                <div className="vvp-co-slide-image" style={{ height: '70vh', width: 'auto', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                    {isNearActive && <img src={slide.thumb} alt={caption} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" style={{ height: '70vh', width: 'auto', objectFit: 'contain', display: 'block', maxWidth: '100%', maxHeight: '100%' }} />}
+                                                </div>
+                                                {caption && <p className="vvp-co__feed-excerpt vvp-co__feed-excerpt--insta" style={{ marginTop: '15px', textAlign: 'center', maxWidth: '100%', pointerEvents: 'none' }}>{caption}</p>}
                                             </div>
                                         )}
                                     </div>
@@ -243,19 +249,18 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({ permalin
     return (
         <>
             <div className="vvp-co__feed-card vvp-co__feed-card--insta">
-                <InternalSlider 
-                    slides={slides} activeIndex={activeIndex} setActiveIndex={setActiveIndex} 
-                    isCarousel={isCarousel} caption={caption} 
+                <InternalSlider
+                    slides={slides} activeIndex={activeIndex} setActiveIndex={setActiveIndex}
+                    isCarousel={isCarousel} caption={caption}
                     playingVideos={playingVideos} setPlayingVideos={setPlayingVideos}
                     onCenterClick={() => setFullscreen(true)}
                 />
-                
+
                 <div
                     className="vvp-co__feed-body vvp-co__feed-body--link"
                     onClick={() => setFullscreen(true)}
                     style={{ cursor: 'pointer' }}
                 >
-                    {caption && <p className="vvp-co__feed-excerpt vvp-co__feed-excerpt--insta" style={{ pointerEvents: 'none' }}>{caption}</p>}
                     <div className="vvp-co__feed-meta-date-row">
                         <span className="vvp-co__feed-date" style={{ pointerEvents: 'none' }}>{date}</span>
                         <div className="vvp-co__feed-meta">
@@ -269,15 +274,15 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({ permalin
             </div>
 
             {isFullscreen && (
-                <div 
+                <div
                     onClick={() => setFullscreen(false)}
                     style={{
-                        position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', 
+                        position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
                         background: 'rgba(0,0,0,0.95)', zIndex: 99999, overflowY: 'auto', display: 'block'
                     }}
                 >
-                    <button 
-                        onClick={() => setFullscreen(false)} 
+                    <button
+                        onClick={() => setFullscreen(false)}
                         style={{ position: 'fixed', top: 20, right: 30, background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', fontSize: 32, cursor: 'pointer', zIndex: 100000, width: 48, height: 48, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                     >
                         &times;
@@ -285,9 +290,9 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({ permalin
 
                     <div
                         onClick={(e) => e.stopPropagation()}
-                        style={{ margin: '0 auto', width: '100%', maxWidth: 700, padding: '20px', display: 'flex', flexDirection: 'column', gap: 20, maxHeight: '90vh', overflowY: 'auto' }}
+                        style={{ margin: '0 auto', width: '100%', maxWidth: 700, padding: '20px', display: 'flex', flexDirection: 'column', gap: 20, maxHeight: '100vh', overflowY: 'auto' }}
                     >
-                        <div style={{ maxHeight: 'calc(90vh - 350px)', overflow: 'hidden' }}>
+                        <div style={{ overflow: 'hidden' }}>
                             <InternalSlider
                                 slides={slides} activeIndex={activeIndex} setActiveIndex={setActiveIndex}
                                 isCarousel={isCarousel} caption={caption}
@@ -295,14 +300,14 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({ permalin
                                 onCenterClick={null}
                             />
                         </div>
-                        
+
                         <div style={{ background: '#111', padding: '25px 20px', borderRadius: 12, color: 'white', marginTop: 25, marginBottom: 25 }}>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 15 }}>
                                 <span className="vvp-co__badge vvp-co__badge--insta">
                                     <InstaIcon />
                                     {badgeLabel}
                                 </span>
-                                
+
                                 <a href={permalink} target="_blank" rel="noopener noreferrer" style={{ color: '#3893C0', textDecoration: 'none', fontSize: 13, fontWeight: 'bold' }}>
                                     Auf Instagram ansehen ↗
                                 </a>
