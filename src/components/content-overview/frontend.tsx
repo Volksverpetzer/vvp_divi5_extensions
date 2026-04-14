@@ -43,16 +43,23 @@ const applyArticlesFilter = (grid: Element, checked: boolean) => {
 
 const initArticlesToggle = (wrapper: Element) => {
     const toggle = wrapper.querySelector<HTMLInputElement>('.vvp-co__toggle-input');
+    const track  = wrapper.querySelector<HTMLElement>('.vvp-co__toggle-track');
     const grid   = wrapper.querySelector<HTMLElement>('.vvp-co__feed-grid');
-    if (!toggle || !grid) return;
+    if (!toggle || !track || !grid) return;
 
-    const stored = localStorage.getItem(LS_KEY) === 'true';
-    toggle.checked = stored;
-    applyArticlesFilter(grid, stored);
+    const apply = (checked: boolean) => {
+        toggle.checked = checked;
+        track.classList.toggle('is-on', checked);
+        applyArticlesFilter(grid, checked);
+    };
+
+    let stored = false;
+    try { stored = localStorage.getItem(LS_KEY) === 'true'; } catch (_) {}
+    apply(stored);
 
     toggle.addEventListener('change', () => {
-        localStorage.setItem(LS_KEY, String(toggle.checked));
-        applyArticlesFilter(grid, toggle.checked);
+        try { localStorage.setItem(LS_KEY, String(toggle.checked)); } catch (_) {}
+        apply(toggle.checked);
     });
 };
 
