@@ -46,12 +46,13 @@ const initArticlesToggle = (wrapper: Element) => {
     const grid   = wrapper.querySelector<HTMLElement>('.vvp-co__feed-grid');
     if (!toggle || !grid) return;
 
-    const stored = localStorage.getItem(LS_KEY) === 'true';
+    let stored = false;
+    try { stored = localStorage.getItem(LS_KEY) === 'true'; } catch (_) {}
     toggle.checked = stored;
     applyArticlesFilter(grid, stored);
 
     toggle.addEventListener('change', () => {
-        localStorage.setItem(LS_KEY, String(toggle.checked));
+        try { localStorage.setItem(LS_KEY, String(toggle.checked)); } catch (_) {}
         applyArticlesFilter(grid, toggle.checked);
     });
 };

@@ -36,7 +36,7 @@ trait CardRenderTrait
     {
         $image_url = esc_url(self::get_post_image($post, 'large'));
         $title     = esc_html(wp_strip_all_tags($post['title']['rendered'] ?? ''));
-        $excerpt   = esc_html(self::truncate($post['description'] ?? '', 160));
+        $excerpt   = esc_html($post['yoast_head_json']['description'] ?? '');
         $link      = esc_url($post['link'] ?? '');
         $date      = esc_html(self::format_date($post['date'] ?? ''));
         $category  = esc_html(self::get_post_category($post));
@@ -99,7 +99,7 @@ trait CardRenderTrait
     {
         $image_url = esc_url(self::get_post_image($post, 'medium_large'));
         $title     = esc_html(wp_strip_all_tags($post['title']['rendered'] ?? ''));
-        $excerpt   = esc_html(self::truncate($post['description'] ?? '', 100));
+        $excerpt   = esc_html($post['yoast_head_json']['description'] ?? '');
         $link      = esc_url($post['link'] ?? '');
         $date      = esc_html(self::format_date($post['date'] ?? ''));
         $category  = esc_html(self::get_post_category($post));
