@@ -1,7 +1,7 @@
 /* ============================================================
    ContentOverview module — vvp-co__* classes
    ============================================================ */
-.vvp-co__wrapper{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,sans-serif;color:#111827}
+.vvp-co__wrapper{font-family:'Source Sans Pro',sans-serif;color:#111827}
 
 /* Badges */
 .vvp-co__badge{display:inline-flex;align-items:center;gap:.25rem;padding:.2rem .55rem;border-radius:9999px;font-size:.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;line-height:1.4;white-space:nowrap}
@@ -25,12 +25,12 @@
 .vvp-co__section-title{margin:0;font-size:1.375rem;font-weight:700;color:#111827;line-height:1.2}
 .vvp-co__filter-toggle{display:inline-flex;align-items:center;gap:.5rem;cursor:pointer;user-select:none}
 .vvp-co__filter-toggle-label{font-size:.8125rem;font-weight:500;color:#6b7280}
-.vvp-co__toggle-track{position:relative;display:inline-block;width:2.75rem;height:1.5rem;flex-shrink:0}
-.vvp-co__toggle-input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
-.vvp-co__toggle-thumb{position:absolute;inset:0;background:#d1d5db;border-radius:9999px;transition:background .2s ease}
+.vvp-co__toggle-track{position:relative;display:inline-block;width:2.75rem;height:1.5rem;flex-shrink:0;cursor:pointer}
+.vvp-co__toggle-input{position:absolute;opacity:0;width:0;height:0;pointer-events:none;appearance:none}
+.vvp-co__toggle-thumb{position:absolute;top:0;left:0;right:0;bottom:0;background:#d1d5db;border-radius:9999px;transition:background .2s ease}
 .vvp-co__toggle-thumb::after{content:'';position:absolute;top:.1875rem;left:.1875rem;width:1.125rem;height:1.125rem;background:#fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s ease}
-.vvp-co__toggle-input:checked~.vvp-co__toggle-thumb{background:var(--vvp-blue-main,#1e40af)}
-.vvp-co__toggle-input:checked~.vvp-co__toggle-thumb::after{transform:translateX(1.25rem)}
+.vvp-co__toggle-track.is-on .vvp-co__toggle-thumb{background:var(--vvp-blue-main,#1e40af)}
+.vvp-co__toggle-track.is-on .vvp-co__toggle-thumb::after{transform:translateX(1.25rem)}
 .vvp-co__feed-grid--articles-only [data-co-kind]:not([data-co-kind="article"]){display:none}
 
 /* ---- Feed grid ---- */
