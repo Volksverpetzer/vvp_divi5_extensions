@@ -41,7 +41,7 @@
 .vvp-co__feed-item--podcast{grid-column:1/-1}
 
 /* Feed card base */
-.vvp-co__feed-card{display:flex;flex-direction:column;text-decoration:none;color:inherit;border:1px solid #e5e7eb;border-radius:.625rem;overflow:hidden;height:100%;transition:box-shadow .2s ease,border-color .2s ease}
+.vvp-co__feed-card{display:flex;flex-direction:column;text-decoration:none;color:inherit;border:1px solid #e5e7eb;border-radius:.625rem;overflow:hidden;height:auto;transition:box-shadow .2s ease,border-color .2s ease}
 .vvp-co__feed-card:hover{box-shadow:0 3px 12px rgba(0,0,0,.08);border-color:#d1d5db}
 .vvp-co__feed-card:hover .vvp-co__feed-title{color:var(--vvp-blue-main,#1e40af)}
 .vvp-co__feed-image-wrap{overflow:hidden;aspect-ratio:16/9;background:#f3f4f6;position:relative}
