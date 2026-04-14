@@ -287,14 +287,16 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({ permalin
                         onClick={(e) => e.stopPropagation()}
                         style={{ margin: '0 auto', width: '100%', maxWidth: 700, padding: '20px', display: 'flex', flexDirection: 'column', gap: 20, maxHeight: '90vh', overflowY: 'auto' }}
                     >
-                        <InternalSlider 
-                            slides={slides} activeIndex={activeIndex} setActiveIndex={setActiveIndex} 
-                            isCarousel={isCarousel} caption={caption} 
-                            playingVideos={playingVideos} setPlayingVideos={setPlayingVideos}
-                            onCenterClick={null}
-                        />
+                        <div style={{ maxHeight: 'calc(90vh - 350px)', overflow: 'hidden' }}>
+                            <InternalSlider
+                                slides={slides} activeIndex={activeIndex} setActiveIndex={setActiveIndex}
+                                isCarousel={isCarousel} caption={caption}
+                                playingVideos={playingVideos} setPlayingVideos={setPlayingVideos}
+                                onCenterClick={null}
+                            />
+                        </div>
                         
-                        <div style={{ background: '#111', padding: 20, borderRadius: 12, color: 'white' }}>
+                        <div style={{ background: '#111', padding: '25px 20px', borderRadius: 12, color: 'white', marginTop: 25, marginBottom: 25 }}>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 15 }}>
                                 <span className="vvp-co__badge vvp-co__badge--insta">
                                     <InstaIcon />
