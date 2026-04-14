@@ -104,5 +104,5 @@
 /* Instagram feed meta and date row */
 .vvp-co__feed-meta-date-row{display:flex;align-items:center;justify-content:flex-start;gap:.75rem;flex-wrap:wrap;margin-bottom:.5rem}
 .vvp-co__feed-meta-date-row .vvp-co__feed-meta{display:flex;align-items:center;font-size:18px;margin:0}
-.vvp-co__feed-meta-date-row .vvp-co__feed-date{font-size:18px;margin:0;padding:0}
-@media(max-width:640px){.vvp-co__feed-meta-date-row .vvp-co__feed-meta,.vvp-co__feed-meta-date-row .vvp-co__feed-date{font-size:16px}}
+.vvp-co__feed-meta-date-row .vvp-co__feed-date{font-size:14px;margin:0;padding:0}
+@media(max-width:640px){.vvp-co__feed-meta-date-row .vvp-co__feed-meta{font-size:16px}.vvp-co__feed-meta-date-row .vvp-co__feed-date{font-size:12px}}
