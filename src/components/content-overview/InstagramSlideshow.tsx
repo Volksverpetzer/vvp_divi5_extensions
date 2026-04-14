@@ -82,7 +82,7 @@ const InternalSlider = ({ slides, activeIndex, setActiveIndex, isCarousel, capti
             <div className={classnames('vvp-co-slider vvp-co-slider-fullwidth-off', {
                 'vvp-co-slider-no-arrows': !isCarousel,
                 'vvp-co-slider-no-pagination': !isCarousel
-            })} style={{ paddingBottom: 0 }}>
+            })} style={{ paddingBottom: 0, maxHeight: '70vh' }}>
                 <div className="vvp-co-slides" style={{ position: 'relative', overflow: 'hidden' }}>
                     {slides.map((slide: Slide, index: number) => {
                         const isVideo = !!slide.video;
