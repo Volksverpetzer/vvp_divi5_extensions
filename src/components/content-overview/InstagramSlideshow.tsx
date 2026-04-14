@@ -250,19 +250,21 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({ permalin
                     onCenterClick={() => setFullscreen(true)}
                 />
                 
-                <div 
-                    className="vvp-co__feed-body vvp-co__feed-body--link" 
+                <div
+                    className="vvp-co__feed-body vvp-co__feed-body--link"
                     onClick={() => setFullscreen(true)}
                     style={{ cursor: 'pointer' }}
                 >
-                    <div className="vvp-co__feed-meta">
-                        <span className="vvp-co__badge vvp-co__badge--insta">
-                            <InstaIcon />
-                            {badgeLabel}
-                        </span>
-                    </div>
                     {caption && <p className="vvp-co__feed-excerpt vvp-co__feed-excerpt--insta" style={{ pointerEvents: 'none' }}>{caption}</p>}
-                    <span className="vvp-co__feed-date" style={{ pointerEvents: 'none' }}>{date}</span>
+                    <div className="vvp-co__feed-meta-date-row">
+                        <div className="vvp-co__feed-meta">
+                            <span className="vvp-co__badge vvp-co__badge--insta">
+                                <InstaIcon />
+                                {badgeLabel}
+                            </span>
+                        </div>
+                        <span className="vvp-co__feed-date" style={{ pointerEvents: 'none' }}>{date}</span>
+                    </div>
                 </div>
             </div>
 

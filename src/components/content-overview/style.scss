@@ -100,3 +100,9 @@
 
 /* Instagram card styling */
 .vvp-co__feed-card--insta{background-color:rgba(252, 252, 252, 1);box-shadow:0 1px 4px 0 rgba(0, 0, 0, 0.1);opacity:1;font-size:24px}
+
+/* Instagram feed meta and date row */
+.vvp-co__feed-meta-date-row{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.vvp-co__feed-meta-date-row .vvp-co__feed-meta{font-size:18px}
+.vvp-co__feed-meta-date-row .vvp-co__feed-date{font-size:18px}
+@media(max-width:640px){.vvp-co__feed-meta-date-row .vvp-co__feed-meta,.vvp-co__feed-meta-date-row .vvp-co__feed-date{font-size:16px}}
