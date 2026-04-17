@@ -10,6 +10,11 @@ import { ModuleStyles } from './styles';
 import { moduleClassnames } from './module-classnames';
 import { ModuleScriptData } from './module-script-data';
 
+// Real components
+import { ArticleCard } from './ArticleCard';
+import { InstagramSlideshow } from './InstagramSlideshow';
+import { PodcastBanner } from './PodcastBanner';
+
 // ── Tiny icon set ────────────────────────────────────────────────────────────
 
 const IconNewspaper = ({ size = 18 }: { size?: number }) => (
@@ -40,70 +45,60 @@ const IconInsta = ({ size = 13 }: { size?: number }) => (
     </svg>
 );
 
-// ── Example card components ───────────────────────────────────────────────────
+// ── Example data ─────────────────────────────────────────────────────────────
 
-const ExArticleCard = ({ title, excerpt, badge }: { title: string; excerpt: string; badge: string }) => (
-    <div className="vvp-co__feed-card" style={{ background: '#fff', borderRadius: 8, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,.08)' }}>
-        <div style={{ background: '#e5e7eb', aspectRatio: '16/9' }} />
-        <div className="vvp-co__feed-body" style={{ padding: '12px 14px 14px' }}>
-            <div className="vvp-co__feed-meta" style={{ marginBottom: 6 }}>
-                <span className="vvp-co__badge" style={{ background: '#f3f4f6', color: '#374151', fontSize: 11, padding: '2px 7px', borderRadius: 4 }}>
-                    <IconNewspaper size={11} /> {badge}
-                </span>
-            </div>
-            <div className="vvp-co__feed-title" style={{ fontWeight: 700, fontSize: 14, lineHeight: 1.35, marginBottom: 6, color: '#111' }}>{title}</div>
-            <p className="vvp-co__feed-excerpt" style={{ fontSize: 13, color: '#6b7280', margin: 0 }}>{excerpt}</p>
-        </div>
-    </div>
-);
+const MOCK_ARTICLE = {
+    title: 'Warum Fakten mehr zählen als Gefühle',
+    excerpt: 'Eine Analyse der häufigsten Desinformationsmuster in sozialen Netzwerken.',
+    link: '#',
+    date: '17. April 2026',
+    category: 'Analyse',
+    category_link: '#',
+    source: 'volksverpetzer' as const,
+    image_url: 'https://via.placeholder.com/640x360/e5e7eb/a3a3a3?text=Beispiel-Bild'
+};
 
-const ExIgCard = () => (
-    <div className="vvp-co__feed-card vvp-co__feed-card--insta" style={{ background: '#000', borderRadius: 8, overflow: 'hidden' }}>
-        <div style={{ background: '#1a1a2e', aspectRatio: '4/3', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ color: '#555', fontSize: 12 }}>Vorschau-Bild</span>
-            <div style={{ position: 'absolute', bottom: 10, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 5 }}>
-                {[0,1,2].map(i => <div key={i} style={{ width: 6, height: 6, borderRadius: '50%', background: i === 0 ? '#fff' : 'rgba(255,255,255,.4)' }} />)}
-            </div>
-        </div>
-        <div className="vvp-co__feed-body" style={{ padding: '10px 14px 12px', background: '#111' }}>
-            <span className="vvp-co__badge vvp-co__badge--insta" style={{ fontSize: 11 }}><IconInsta /> Instagram (3 Bilder)</span>
-            <p className="vvp-co__feed-excerpt" style={{ color: '#d1d5db', fontSize: 13, marginTop: 6 }}>
-                Beispiel-Caption für einen Instagram-Beitrag …
-            </p>
-        </div>
-    </div>
-);
+const MOCK_PRUEFPUNKT = {
+    title: 'Klimaschutz: Was stimmt wirklich?',
+    excerpt: 'Der Faktencheck zur aktuellen politischen Debatte über Emissionsziele.',
+    link: '#',
+    date: '15. April 2026',
+    category: 'Faktencheck',
+    source: 'pruefpunkt' as const,
+    image_url: 'https://via.placeholder.com/640x360/e5e7eb/a3a3a3?text=Faktencheck'
+};
 
-const ExYtCard = () => (
-    <div className="vvp-co__feed-card vvp-co__feed-card--youtube" style={{ borderRadius: 8, overflow: 'hidden', background: '#fff', boxShadow: '0 1px 4px rgba(0,0,0,.08)' }}>
-        <div style={{ background: '#1a1a2e', aspectRatio: '16/9', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ background: 'rgba(255,0,0,.85)', borderRadius: 8, padding: '8px 14px' }}>
-                <svg width="22" height="16" viewBox="0 0 461 461" fill="#fff"><path d="M365 67H96C43 67 0 110 0 163v135c0 53 43 96 96 96h269c53 0 96-43 96-96V163c0-53-43-96-96-96zm-65 170l-126 60c-3 2-7-1-7-5V169c0-4 4-6 7-5l126 64c4 2 4 7 0 9z"/></svg>
-            </div>
-        </div>
-        <div className="vvp-co__feed-body" style={{ padding: '10px 14px 12px' }}>
-            <span className="vvp-co__badge vvp-co__badge--youtube" style={{ fontSize: 11 }}><IconYoutube /> YouTube</span>
-            <div className="vvp-co__feed-title" style={{ fontWeight: 700, fontSize: 14, marginTop: 6, color: '#111' }}>Beispiel-Video: Faktencheck aktuell</div>
-        </div>
-    </div>
-);
+const MOCK_IG = {
+    permalink: '#',
+    caption: 'Beispiel-Caption für einen Instagram-Beitrag …',
+    date: 'Gestern',
+    badgeLabel: 'Instagram',
+    mediaCategory: 'Karussell',
+    isCarousel: true,
+    slides: [
+        { thumb: 'https://via.placeholder.com/600x800/1a1a2e/ffffff?text=Slide+1', video: '' },
+        { thumb: 'https://via.placeholder.com/600x800/2a2a3e/ffffff?text=Slide+2', video: '' },
+        { thumb: 'https://via.placeholder.com/600x800/3a3a4e/ffffff?text=Slide+3', video: '' }
+    ]
+};
 
-const ExPodcastCard = () => (
-    <div className="vvp-co__podcast-banner" style={{ background: 'linear-gradient(135deg,#1e3a5f,#0f1f3a)', borderRadius: 8, padding: 16, color: '#fff', display: 'flex', gap: 14, alignItems: 'center' }}>
-        <div style={{ width: 72, height: 72, borderRadius: 8, background: '#2d4a6e', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <IconPodcast size={28} />
-        </div>
-        <div>
-            <span className="vvp-co__badge vvp-co__badge--podcast" style={{ fontSize: 11, marginBottom: 6, display: 'inline-flex' }}><IconPodcast /> Podcast</span>
-            <div className="vvp-co__podcast-title" style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Volksverpetzer Podcast – Folge 42</div>
-            <p className="vvp-co__podcast-summary" style={{ fontSize: 13, color: '#9ca3af', margin: '0 0 8px' }}>In dieser Folge sprechen wir über Desinformation und Medienkompetenz …</p>
-            <button type="button" className="vvp-co__podcast-listen-btn" style={{ cursor: 'default' }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                Anhören
-            </button>
-        </div>
-    </div>
-);
+const MOCK_YT = {
+    type: 'youtube' as const,
+    title: 'Beispiel-Video: Faktencheck aktuell',
+    link: '#',
+    date: 'Vor 2 Tagen',
+    image_url: 'https://via.placeholder.com/640x360/1a1a2e/ffffff?text=YouTube+Vorschau'
+};
+
+const MOCK_PODCAST = {
+    title: 'Volksverpetzer Podcast – Folge 42',
+    link: '#',
+    enclosure: '',
+    date: '12. April 2026',
+    duration: '45 Min.',
+    summary: 'In dieser Folge sprechen wir über Desinformation und Medienkompetenz …',
+    artworkUrl: 'https://via.placeholder.com/100x100/2d4a6e/ffffff?text=Podcast'
+};
 
 // ── Main edit component ───────────────────────────────────────────────────────
 
@@ -177,21 +172,21 @@ export const ContentOverviewEdit = (props: ContentOverviewEditProps): ReactEleme
                     <div className="vvp-co__feed-grid">
                         {/* Row 1: three article cards */}
                         <div className="vvp-co__feed-item">
-                            <ExArticleCard badge="Volksverpetzer" title="Warum Fakten mehr zählen als Gefühle" excerpt="Eine Analyse der häufigsten Desinformationsmuster in sozialen Netzwerken." />
+                            <ArticleCard {...MOCK_ARTICLE} />
                         </div>
                         <div className="vvp-co__feed-item">
-                            <ExIgCard />
+                            <InstagramSlideshow {...MOCK_IG} />
                         </div>
                         <div className="vvp-co__feed-item">
-                            <ExArticleCard badge="Prüfpunkt" title="Klimaschutz: Was stimmt wirklich?" excerpt="Der Faktencheck zur aktuellen politischen Debatte über Emissionsziele." />
+                            <ArticleCard {...MOCK_PRUEFPUNKT} />
                         </div>
 
                         {/* Row 2: YouTube + podcast (full width) + article */}
                         <div className="vvp-co__feed-item">
-                            <ExYtCard />
+                            <ArticleCard {...MOCK_YT} />
                         </div>
                         <div className="vvp-co__feed-item vvp-co__feed-item--podcast" style={{ gridColumn: 'span 2' }}>
-                            <ExPodcastCard />
+                            <PodcastBanner {...MOCK_PODCAST} />
                         </div>
 
                         {/* Row 3: more article skeletons */}

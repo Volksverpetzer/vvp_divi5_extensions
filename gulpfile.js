@@ -1,5 +1,5 @@
 const gulp = require('gulp');
-const zip = require('gulp-zip');
+const zip = require('gulp-zip').default;
 
 /**
  * Create distribution ZIP file.
