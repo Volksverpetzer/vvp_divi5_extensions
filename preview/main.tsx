@@ -51,7 +51,7 @@ const App = () => (
             <span>Vite dev server · port 8899</span>
         </div>
 
-        <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '2rem 1.5rem' }}>
+        <div style={{ width: '100%', padding: '2rem 0' }}>
 
             <Section title="FactCheckSearch Module">
                 <FactCheckSearchApp

@@ -213,7 +213,7 @@ namespace {
             .pv-bar code { background: #1f2937; padding: 1px 5px; border-radius: 3px; font-size: 10px; }
             .pv-flush { position: fixed; top: 10px; right: 12px; z-index: 9999; padding: 5px 13px; background: #1e40af; color: #fff; border-radius: 6px; font: 600 11px/1 sans-serif; text-decoration: none; }
             .pv-flush:hover { background: #1d4ed8; }
-            .pv-wrap { max-width: 80rem; margin: 0 auto; padding: 2rem 1.5rem; }
+            .pv-wrap { width: 100%; margin: 0; padding: 2rem 0; }
           </style>
         </head>
         <body>
