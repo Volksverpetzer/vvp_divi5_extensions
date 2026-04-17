@@ -178,7 +178,7 @@ trait RenderCallbackTrait
                 'thumbnailUrl' => $thumb_url,
             ]];
 
-            if (++$yt_added >= 12) {
+            if (++$yt_added >= 20) {
                 break;
             }
         }
@@ -191,12 +191,19 @@ trait RenderCallbackTrait
         }
 
         // 4. Merge, sort, cap ------------------------------------------------
+        // Articles + YouTube share a combined cap of 12 (newest first).
+        // Instagram gets its own 12. Podcast banner is always included.
 
-        $merged = array_merge($article_items, $insta_items, $yt_items, $podcast_feed);
+        $other_items = array_merge($article_items, $yt_items);
+        usort($other_items, function ($a, $b) {
+            return $b['date']->getTimestamp() - $a['date']->getTimestamp();
+        });
+        $other_items = array_slice($other_items, 0, 12);
+
+        $merged = array_merge($insta_items, $other_items, $podcast_feed);
         usort($merged, function ($a, $b) {
             return $b['date']->getTimestamp() - $a['date']->getTimestamp();
         });
-        $merged = array_slice($merged, 0, 36);
 
         // 5. Render ----------------------------------------------------------
 

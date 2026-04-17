@@ -216,6 +216,29 @@ trait DataFetchTrait
     }
 
     /**
+     * Extract the category URL from a WP REST post array.
+     *
+     * Uses the embedded link field if present, otherwise constructs the URL
+     * from the category slug following the /category/{slug} pattern.
+     *
+     * @param array $post WP post array with _embedded data.
+     *
+     * @return string Category URL or empty string.
+     */
+    private static function get_post_category_link($post)
+    {
+        if (!empty($post['_embedded']['wp:term'][0][0]['link'])) {
+            return $post['_embedded']['wp:term'][0][0]['link'];
+        }
+
+        $slug   = $post['_embedded']['wp:term'][0][0]['slug'] ?? '';
+        $source = $post['_vvp_source'] ?? 'volksverpetzer';
+        $domain = 'pruefpunkt' === $source ? 'https://pruefpunkt.org' : 'https://volksverpetzer.de';
+
+        return $slug ? $domain . '/category/' . $slug : '';
+    }
+
+    /**
      * Strip HTML and truncate a string to a given character limit.
      *
      * @param string $text  Input HTML.

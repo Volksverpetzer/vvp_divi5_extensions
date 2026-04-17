@@ -35,7 +35,7 @@ trait CardRenderTrait
     private static function render_hero_card($post)
     {
         $image_url = esc_url(self::get_post_image($post, 'large'));
-        $title     = esc_html(wp_strip_all_tags($post['title']['rendered'] ?? ''));
+        $title     = esc_html(html_entity_decode(wp_strip_all_tags($post['title']['rendered'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
         $excerpt   = esc_html($post['yoast_head_json']['description'] ?? '');
         $link      = esc_url($post['link'] ?? '');
         $date      = esc_html(self::format_date($post['date'] ?? ''));
@@ -69,7 +69,7 @@ trait CardRenderTrait
     private static function render_compact_card($post)
     {
         $image_url = esc_url(self::get_post_image($post, 'thumbnail'));
-        $title     = esc_html(wp_strip_all_tags($post['title']['rendered'] ?? ''));
+        $title     = esc_html(html_entity_decode(wp_strip_all_tags($post['title']['rendered'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
         $link      = esc_url($post['link'] ?? '');
         $date      = esc_html(self::format_date($post['date'] ?? ''));
         $source    = $post['_vvp_source'] ?? 'volksverpetzer';
@@ -97,27 +97,41 @@ trait CardRenderTrait
      */
     private static function render_featured_card($post)
     {
-        $image_url = esc_url(self::get_post_image($post, 'medium_large'));
-        $title     = esc_html(wp_strip_all_tags($post['title']['rendered'] ?? ''));
-        $excerpt   = esc_html($post['yoast_head_json']['description'] ?? '');
-        $link      = esc_url($post['link'] ?? '');
-        $date      = esc_html(self::format_date($post['date'] ?? ''));
-        $category  = esc_html(self::get_post_category($post));
-        $source    = $post['_vvp_source'] ?? 'volksverpetzer';
-        $badge     = self::render_source_badge($source);
+        $image_url     = esc_url(self::get_post_image($post, 'medium_large'));
+        $title         = esc_html(html_entity_decode(wp_strip_all_tags($post['title']['rendered'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        $excerpt       = esc_html($post['yoast_head_json']['description'] ?? '');
+        $link          = esc_url($post['link'] ?? '');
+        $date          = esc_html(self::format_date($post['date'] ?? ''));
+        $category      = esc_html(self::get_post_category($post));
+        $category_link = esc_url(self::get_post_category_link($post));
+        $source        = $post['_vvp_source'] ?? 'volksverpetzer';
+        $badge         = self::render_source_badge($source);
 
-        $image_html    = $image_url
+        $image_html = $image_url
             ? '<div class="vvp-co__feed-image-wrap"><img src="' . $image_url . '" alt="' . $title . '" class="vvp-co__feed-image" loading="lazy" decoding="async"></div>'
             : '';
-        $category_html = $category ? '<span class="vvp-co__category">' . $category . '</span>' : '';
+
+        $category_html = '';
+        if ($category) {
+            if ($category_link) {
+                $category_html = '<button type="button" class="vvp-co__category vvp-co__category--btn"'
+                    . ' onclick="event.stopPropagation();window.open(\'' . $category_link . '\',\'_blank\')">'
+                    . $category . '</button>';
+            } else {
+                $category_html = '<span class="vvp-co__category">' . $category . '</span>';
+            }
+        }
 
         return '<a href="' . $link . '" class="vvp-co__feed-card vvp-co__feed-card--article" target="_blank" rel="noopener noreferrer">'
             . $image_html
             . '<div class="vvp-co__feed-body">'
-            .   '<div class="vvp-co__feed-meta">' . $category_html . $badge . '</div>'
             .   '<h3 class="vvp-co__feed-title">' . $title . '</h3>'
             .   ($excerpt ? '<p class="vvp-co__feed-excerpt">' . $excerpt . '</p>' : '')
-            .   '<span class="vvp-co__feed-date">' . $date . '</span>'
+            .   '<div class="vvp-co__feed-footer">'
+            .     $badge
+            .     $category_html
+            .     '<span class="vvp-co__feed-date">' . $date . '</span>'
+            .   '</div>'
             . '</div>'
             . '</a>';
     }
@@ -171,18 +185,17 @@ trait CardRenderTrait
             return '';
         }
 
-        $is_carousel = count($slides) > 1;
-        $badge_label = $is_carousel
-            ? 'Instagram (' . count($slides) . ' Bilder)'
-            : 'Instagram';
+        $is_carousel   = count($slides) > 1;
+        $media_category = 'VIDEO' === $media_type ? 'Video' : ($is_carousel ? 'Karussell' : 'Foto');
 
         $props = [
-            'permalink'  => $permalink,
-            'caption'    => $caption,
-            'date'       => $date,
-            'badgeLabel' => $badge_label,
-            'slides'     => $slides,
-            'isCarousel' => $is_carousel,
+            'permalink'     => $permalink,
+            'caption'       => $caption,
+            'date'          => $date,
+            'badgeLabel'    => 'Instagram',
+            'mediaCategory' => $media_category,
+            'slides'        => $slides,
+            'isCarousel'    => $is_carousel,
         ];
 
         return '<div class="vvp-co-ig-mount" data-ig-props="' . esc_attr(json_encode($props)) . '"></div>';
@@ -218,10 +231,12 @@ trait CardRenderTrait
         return '<a href="' . $yt_url . '" class="vvp-co__feed-card vvp-co__feed-card--youtube" target="_blank" rel="noopener noreferrer">'
             . $image_html
             . '<div class="vvp-co__feed-body">'
-            .   '<div class="vvp-co__feed-meta">' . $yt_badge . '</div>'
             .   '<h3 class="vvp-co__feed-title">' . $title . '</h3>'
             .   ($description ? '<p class="vvp-co__feed-excerpt">' . $description . '</p>' : '')
-            .   '<span class="vvp-co__feed-date">' . $date . '</span>'
+            .   '<div class="vvp-co__feed-footer">'
+            .     $yt_badge
+            .     '<span class="vvp-co__feed-date">' . $date . '</span>'
+            .   '</div>'
             . '</div>'
             . '</a>';
     }

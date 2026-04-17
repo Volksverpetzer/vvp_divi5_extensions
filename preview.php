@@ -172,20 +172,6 @@ namespace {
         ? file_get_contents(__DIR__ . '/styles/main.css')
         : '';
 
-    // ── Serve static assets (slider JS) ──────────────────────────────────────
-    $req_path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
-    if ($req_path === '/slider.js') {
-        $slider_file = __DIR__ . '/Divi/includes/builder-5/visual-builder/build/script-library-slider.js';
-        if (file_exists($slider_file)) {
-            header('Content-Type: application/javascript; charset=UTF-8');
-            header('Cache-Control: public, max-age=3600');
-            readfile($slider_file);
-        } else {
-            http_response_code(404);
-            echo '/* slider.js not found */';
-        }
-        exit;
-    }
 
     if (PHP_SAPI === 'cli') {
         // CLI: write static file
@@ -217,7 +203,6 @@ namespace {
             window.wp.element = window.React;
             window.wp.element.render = window.ReactDOM.render;
           </script>
-          <script src="/slider.js" defer></script>
           <script src="/scripts/fact-check-frontend.js" defer></script>
           <script src="/scripts/content-overview-frontend.js" defer></script>
           <style>
