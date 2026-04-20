@@ -25,6 +25,6 @@ trait ModuleClassnamesTrait
      */
     public static function module_classnames($args)
     {
-        return 'vvp-author-profile';
+        $args['classnamesInstance']->add('vvp-author-profile');
     }
 }

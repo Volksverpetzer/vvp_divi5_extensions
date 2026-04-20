@@ -25,6 +25,6 @@ trait ModuleClassnamesTrait
      */
     public static function module_classnames($args)
     {
-        return 'vvp-content-overview';
+        $args['classnamesInstance']->add('vvp-content-overview');
     }
 }

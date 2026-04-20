@@ -25,6 +25,6 @@ trait ModuleClassnamesTrait
      */
     public static function module_classnames($args)
     {
-        return 'vvp-fact-check-search';
+        $args['classnamesInstance']->add('vvp-fact-check-search');
     }
 }
