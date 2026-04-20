@@ -40,9 +40,7 @@ trait RenderCallbackTrait
         $layout      = $attrs['layout']['desktop']['value'] ?? 'vertical';
         $avatar_size = max(16, (int) preg_replace('/[^0-9]/', '', $attrs['avatarSize']['desktop']['value'] ?? '80') ?: 80);
 
-        $post_id = isset($block->context['postId'])
-            ? (int) $block->context['postId']
-            : get_the_ID();
+        $post_id = self::resolve_post_id($block);
 
         $authors_data = self::get_authors_data($post_id);
 
@@ -88,6 +86,45 @@ trait RenderCallbackTrait
                 ]),
             ],
         ]);
+    }
+
+    /**
+     * Resolve the post ID for the current render context.
+     *
+     * Priority chain (mirrors Divi's own PostTitle module pattern):
+     *   1. Block context `postId` — set when `usesContext` is declared and a parent block
+     *      (e.g. Divi Blog loop) provides this value.
+     *   2. `get_queried_object_id()` — the WP queried object, reliable on singular views.
+     *   3. `et_core_get_main_post_id()` — Divi's ET_Post_Stack which tracks the WP query post
+     *      across nested render calls.
+     *   4. `get_the_ID()` — bare global $post fallback.
+     *
+     * @param WP_Block $block Current block object.
+     * @return int Resolved post ID, or 0 if none found.
+     */
+    private static function resolve_post_id($block): int
+    {
+        // 1. Block context (populated when module declares usesContext and a loop provides it).
+        if (!empty($block->context['postId'])) {
+            return (int) $block->context['postId'];
+        }
+
+        // 2. WordPress queried object — the most reliable signal on singular pages/posts.
+        $queried_id = (int) get_queried_object_id();
+        if ($queried_id > 0) {
+            return $queried_id;
+        }
+
+        // 3. Divi's ET_Post_Stack — tracks the current post through nested Divi rendering.
+        if (function_exists('et_core_get_main_post_id')) {
+            $divi_id = (int) et_core_get_main_post_id();
+            if ($divi_id > 0) {
+                return $divi_id;
+            }
+        }
+
+        // 4. Bare global $post fallback.
+        return (int) get_the_ID();
     }
 
     /**
@@ -173,7 +210,7 @@ trait RenderCallbackTrait
         $bio = preg_replace('/<\/(p|div|blockquote|li)>/i', "\n", $bio);
         $bio = preg_replace('/<br\s*\/?>/i', "\n", $bio);
         $bio = wp_strip_all_tags($bio);
-        $bio = trim(preg_replace('/\n{3,}/', "\n\n", $bio)); // collapse 3+ newlines to 2
+        $bio = trim(preg_replace('/\n{2,}/', "\n", $bio)); // collapse consecutive newlines to one
         // Entity-escape plain text first, then convert \n → <br>.
         return nl2br(esc_html($bio));
     }

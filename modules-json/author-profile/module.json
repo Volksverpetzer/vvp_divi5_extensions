@@ -229,6 +229,7 @@
             }
         }
     },
+    "usesContext": ["postId", "postType"],
     "settings": {
         "content": "auto",
         "design": "auto",
