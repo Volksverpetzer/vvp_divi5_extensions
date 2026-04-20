@@ -19,7 +19,7 @@ const initAll = () => {
         const showBio    = mount.getAttribute('data-show-bio') !== 'false';
         const showLink   = mount.getAttribute('data-show-link') !== 'false';
         const layout     = (mount.getAttribute('data-layout') || 'vertical') as Layout;
-        const avatarSize = parseInt(mount.getAttribute('data-avatar-size') || '80', 10) || 80;
+        const avatarSize = parseInt(mount.getAttribute('data-avatar-size') || '200', 10) || 200;
 
         createRoot(mount).render(
             <AuthorProfileApp

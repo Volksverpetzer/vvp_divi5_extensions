@@ -33,7 +33,7 @@ trait RenderCallbackTrait
         $show_bio    = ($attrs['showBio']['desktop']['value'] ?? 'on') !== 'off';
         $show_link   = ($attrs['showLink']['desktop']['value'] ?? 'on') !== 'off';
         $layout      = $attrs['layout']['desktop']['value'] ?? 'vertical';
-        $avatar_size = max(16, (int) preg_replace('/[^0-9]/', '', $attrs['avatarSize']['desktop']['value'] ?? '80') ?: 80);
+        $avatar_size = max(16, (int) preg_replace('/[^0-9]/', '', $attrs['avatarSize']['desktop']['value'] ?? '200') ?: 200);
 
         $authors_data = self::get_authors_for_context();
 

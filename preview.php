@@ -182,7 +182,7 @@ namespace VVP\FactCheckSearch\AuthorProfile {
                 . ' data-show-bio="true"'
                 . ' data-show-link="true"'
                 . ' data-layout="vertical"'
-                . ' data-avatar-size="80">'
+                . ' data-avatar-size="200">'
                 . '</div></div>',
                 $attrs
             );

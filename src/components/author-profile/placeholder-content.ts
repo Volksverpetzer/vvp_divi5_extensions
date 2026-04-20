@@ -3,5 +3,5 @@ export const placeholderContent = {
     showBio:    { desktop: { value: 'on' } },
     showLink:   { desktop: { value: 'on' } },
     layout:     { desktop: { value: 'vertical' } },
-    avatarSize: { desktop: { value: '80' } },
+    avatarSize: { desktop: { value: '200' } },
 };

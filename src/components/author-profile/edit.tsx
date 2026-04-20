@@ -22,7 +22,7 @@ export const AuthorProfileEdit = (props: AuthorProfileEditProps): ReactElement =
     const showBio    = (attrs as any).showBio?.desktop?.value !== 'off';
     const showLink   = (attrs as any).showLink?.desktop?.value !== 'off';
     const layout     = ((attrs as any).layout?.desktop?.value ?? 'vertical') as Layout;
-    const avatarSize = parseInt((attrs as any).avatarSize?.desktop?.value ?? '80', 10) || 80;
+    const avatarSize = parseInt((attrs as any).avatarSize?.desktop?.value ?? '200', 10) || 200;
 
     return (
         <ModuleContainer
