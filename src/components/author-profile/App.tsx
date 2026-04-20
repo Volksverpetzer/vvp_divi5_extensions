@@ -47,7 +47,7 @@ const AuthorCard = ({
                 )}
             </div>
             {showBio && author.bio && (
-                <p className="vvp-ap__bio">{author.bio}</p>
+                <p className="vvp-ap__bio" dangerouslySetInnerHTML={{ __html: author.bio }} />
             )}
         </div>
     </div>

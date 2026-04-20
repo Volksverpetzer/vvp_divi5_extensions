@@ -158,8 +158,8 @@
                         "priority": 5,
                         "render": true,
                         "attrName": "avatarSize.innerContent",
-                        "label": "Bildgröße (px)",
-                        "description": "Breite und Höhe des Profilbilds in Pixeln (z.B. 80).",
+                        "label": "Bildbreite (px)",
+                        "description": "Breite des Profilbilds in Pixeln – die Höhe passt sich dem Seitenverhältnis an (z.B. 80).",
                         "features": {
                             "sticky": false,
                             "dynamicContent": false

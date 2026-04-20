@@ -13,7 +13,7 @@ import { AuthorProfileApp } from '../src/components/author-profile/App';
 const AUTHOR_SINGLE = [
     {
         name: 'Max Mustermann',
-        bio: 'Journalist und Faktenchecker bei Volksverpetzer. Schreibt über Desinformation, Medien und Demokratie.',
+        bio: 'Journalist und Faktenchecker bei Volksverpetzer.<br />\nSchreibt über Desinformation, Medien und Demokratie.<br />\n<br />\nSeit 2018 bei Volksverpetzer.',
         avatarUrl: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=150',
         profileUrl: '#',
     },

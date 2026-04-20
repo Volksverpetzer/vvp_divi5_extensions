@@ -119,7 +119,7 @@ trait RenderCallbackTrait
         return [
             [
                 'name'       => get_the_author_meta('display_name', $author_id),
-                'bio'        => get_the_author_meta('description', $author_id),
+                'bio'        => self::format_bio(get_the_author_meta('description', $author_id)),
                 'avatarUrl'  => get_avatar_url($author_id, ['size' => 150]),
                 'profileUrl' => get_author_posts_url($author_id),
             ],
@@ -153,9 +153,28 @@ trait RenderCallbackTrait
 
         return [
             'name'       => $author->display_name ?? '',
-            'bio'        => wp_strip_all_tags($author->description ?? ''),
+            'bio'        => self::format_bio($author->description ?? ''),
             'avatarUrl'  => $avatar_url,
             'profileUrl' => $profile_url,
         ];
+    }
+
+    /**
+     * Convert a bio string (plain text or HTML) to safe HTML with <br> line breaks.
+     *
+     * Preserves intentional newlines entered in PublishPress / WordPress user bio fields.
+     *
+     * @param string $bio Raw bio content (may be plain text or HTML).
+     * @return string HTML string containing only <br /> tags and entity-escaped text.
+     */
+    private static function format_bio(string $bio): string
+    {
+        // Convert block-level closing tags to newlines before stripping HTML.
+        $bio = preg_replace('/<\/(p|div|blockquote|li)>/i', "\n", $bio);
+        $bio = preg_replace('/<br\s*\/?>/i', "\n", $bio);
+        $bio = wp_strip_all_tags($bio);
+        $bio = trim(preg_replace('/\n{3,}/', "\n\n", $bio)); // collapse 3+ newlines to 2
+        // Entity-escape plain text first, then convert \n → <br>.
+        return nl2br(esc_html($bio));
     }
 }
