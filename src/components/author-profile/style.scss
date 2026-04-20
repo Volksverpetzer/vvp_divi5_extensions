@@ -16,13 +16,10 @@
     }
 
     .vvp-ap__author {
-        display: flex;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-
-    .vvp-ap__avatar-wrap {
-        flex-shrink: 0;
+        display: grid;
+        grid-template-columns: auto 70%;
+        gap: 1.5rem;
+        align-items: start;
     }
 
     .vvp-ap__avatar {
@@ -33,7 +30,6 @@
     }
 
     .vvp-ap__info {
-        flex: 1;
         min-width: 0;
     }
 
