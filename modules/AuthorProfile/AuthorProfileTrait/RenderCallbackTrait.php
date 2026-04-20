@@ -40,15 +40,10 @@ trait RenderCallbackTrait
         $layout      = $attrs['layout']['desktop']['value'] ?? 'vertical';
         $avatar_size = max(16, (int) preg_replace('/[^0-9]/', '', $attrs['avatarSize']['desktop']['value'] ?? '80') ?: 80);
 
-        // Author archive pages: read the queried author directly — no post lookup.
-        // is_author() covers standard WP + PublishPress-linked real users (/author/slug/).
-        // is_tax('author') covers PublishPress guest-author taxonomy archives.
-        if (is_author() || (function_exists('is_tax') && is_tax('author'))) {
-            $authors_data = self::get_author_from_archive();
-        } else {
-            $post_id      = self::resolve_post_id($block);
-            $authors_data = self::get_authors_data($post_id);
-        }
+        // Detect context via queried object type — more reliable than is_author()/is_tax()
+        // because Divi may invoke render_callback from a REST request where those flags
+        // are not set, even when serving the actual frontend author-archive page.
+        $authors_data = self::get_authors_for_context($block);
 
         $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
         $parent_attrs = $parent->attrs ?? [];
@@ -94,15 +89,94 @@ trait RenderCallbackTrait
         ]);
     }
 
-    // ── Author-archive source ──────────────────────────────────────────────────
+    // ── Context-aware author resolution ───────────────────────────────────────
 
     /**
-     * Get author data for the current author archive page.
+     * Central dispatcher: pick the right strategy based on what WP tells us
+     * about the current request.
      *
-     * Reads directly from the queried object — no post lookup needed.
-     * Handles two cases:
-     *   - WP_User  → standard WP author archive, optionally enriched via PublishPress.
-     *   - WP_Term  → PublishPress guest-author taxonomy archive (taxonomy = 'author').
+     * Priority order:
+     *  1. Queried object is a WP_User  → standard WP author archive.
+     *  2. Queried object is a WP_Term with taxonomy 'author' → PP guest-author archive.
+     *  3. is_author() / is_tax('author') safety net (catches edge cases where
+     *     get_queried_object() returns null but the flags are still set).
+     *  4. REQUEST_URI slug fallback — works even when Divi renders via REST API
+     *     and the WP query flags are not set at all.
+     *  5. Post-based lookup (non-archive context: single posts, loops, etc.).
+     *
+     * @param object $block Current block object.
+     * @return array<int, array{name:string, bio:string, avatarUrl:string, profileUrl:string}>
+     */
+    private static function get_authors_for_context($block): array
+    {
+        // 1 & 2 — queried object type (most reliable, works in normal frontend requests).
+        $queried = get_queried_object();
+
+        if ($queried instanceof \WP_User) {
+            return [self::get_author_data_from_wp_user($queried)];
+        }
+
+        if ($queried instanceof \WP_Term && $queried->taxonomy === 'author') {
+            return [self::get_author_data_from_pp_term($queried)];
+        }
+
+        // 3 — conditional tag safety net.
+        if (is_author()) {
+            $queried = get_queried_object();   // re-fetch just in case
+            if ($queried instanceof \WP_User) {
+                return [self::get_author_data_from_wp_user($queried)];
+            }
+        }
+
+        if (function_exists('is_tax') && is_tax('author')) {
+            $queried = get_queried_object();
+            if ($queried instanceof \WP_Term) {
+                return [self::get_author_data_from_pp_term($queried)];
+            }
+        }
+
+        // 4 — REQUEST_URI slug fallback.
+        //     Handles Divi REST-API rendering where WP query flags are absent.
+        $uri = isset($_SERVER['REQUEST_URI']) ? (string) $_SERVER['REQUEST_URI'] : '';
+        if (preg_match('#/author/([^/?#]+)#', $uri, $m)) {
+            $slug = sanitize_title($m[1]);
+            $data = self::get_author_by_slug($slug);
+            if (!empty($data)) {
+                return [$data];
+            }
+        }
+
+        // 5 — post-based lookup (single posts, loops, non-archive pages).
+        $post_id = self::resolve_post_id($block);
+        return self::get_authors_data($post_id);
+    }
+
+    /**
+     * Resolve an author by slug, trying PublishPress term first, then WP user.
+     *
+     * @param string $slug Author slug.
+     * @return array{name:string, bio:string, avatarUrl:string, profileUrl:string}|null
+     */
+    private static function get_author_by_slug(string $slug): ?array
+    {
+        // PublishPress: look up by term slug under the 'author' taxonomy.
+        $term = get_term_by('slug', $slug, 'author');
+        if ($term instanceof \WP_Term) {
+            return self::get_author_data_from_pp_term($term);
+        }
+
+        // Standard WP user fallback.
+        $user = get_user_by('slug', $slug);
+        if ($user instanceof \WP_User) {
+            return self::get_author_data_from_wp_user($user);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get author data for the current author archive page (legacy helper, kept
+     * for back-compat but no longer called from render_callback directly).
      *
      * @return array<int, array{name:string, bio:string, avatarUrl:string, profileUrl:string}>
      */
@@ -114,7 +188,6 @@ trait RenderCallbackTrait
             return [self::get_author_data_from_wp_user($queried)];
         }
 
-        // PublishPress guest-author taxonomy term.
         if ($queried instanceof \WP_Term && $queried->taxonomy === 'author') {
             return [self::get_author_data_from_pp_term($queried)];
         }
@@ -132,8 +205,11 @@ trait RenderCallbackTrait
     private static function get_author_data_from_wp_user(\WP_User $user): array
     {
         // PublishPress Authors: try to get the linked author object for richer data.
-        if (class_exists('\MA_Author')) {
-            $pp_author = \MA_Author::get_by_user_id($user->ID);
+        // The canonical class is MultipleAuthors\Classes\Objects\Author; MA_Author is
+        // an older alias that may or may not be registered.
+        $pp_class = self::pp_author_class();
+        if ($pp_class) {
+            $pp_author = $pp_class::get_by_user_id($user->ID);
             if ($pp_author && !is_wp_error($pp_author)) {
                 return self::map_pp_author($pp_author);
             }
@@ -157,8 +233,9 @@ trait RenderCallbackTrait
     private static function get_author_data_from_pp_term(\WP_Term $term): array
     {
         // PublishPress Authors: get the full author object from the term.
-        if (class_exists('\MA_Author')) {
-            $pp_author = \MA_Author::get_by_term_id($term->term_id);
+        $pp_class = self::pp_author_class();
+        if ($pp_class) {
+            $pp_author = $pp_class::get_by_term_id($term->term_id);
             if ($pp_author && !is_wp_error($pp_author)) {
                 return self::map_pp_author($pp_author);
             }
@@ -253,6 +330,32 @@ trait RenderCallbackTrait
                 'profileUrl' => get_author_posts_url($author_id),
             ],
         ];
+    }
+
+    /**
+     * Return the available PublishPress Author class name, or null if PP is absent.
+     *
+     * Tries the canonical class first, then the legacy MA_Author alias.
+     *
+     * @return class-string|null
+     */
+    private static function pp_author_class(): ?string
+    {
+        static $cache = false;
+        if ($cache !== false) {
+            return $cache === '' ? null : $cache;
+        }
+        foreach ([
+            'MultipleAuthors\\Classes\\Objects\\Author',
+            'MA_Author',
+        ] as $class) {
+            if (class_exists($class)) {
+                $cache = $class;
+                return $class;
+            }
+        }
+        $cache = '';
+        return null;
     }
 
     /**
