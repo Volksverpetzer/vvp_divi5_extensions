@@ -31,8 +31,7 @@ const AuthorCard = ({
                     alt={author.name}
                     className="vvp-ap__avatar"
                     width={avatarSize}
-                    height={avatarSize}
-                    style={{ width: avatarSize, height: avatarSize }}
+                    style={{ width: avatarSize, height: 'auto' }}
                     loading="lazy"
                 />
             </div>

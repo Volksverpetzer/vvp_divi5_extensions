@@ -27,11 +27,9 @@
 
     .vvp-ap__avatar {
         width: 80px;   /* fallback — overridden by inline style from avatarSize attr */
-        height: 80px;
-        border-radius: 50%;
-        object-fit: cover;
+        height: auto;
         display: block;
-        flex-shrink: 0;
+        border-radius: 4px;
     }
 
     .vvp-ap__info {

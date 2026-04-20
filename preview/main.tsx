@@ -87,19 +87,19 @@ const App = () => (
             </Section>
 
             <Section title="AuthorProfile · Vertikal (1 Autor)">
-                <div style={{ maxWidth: 640, padding: '1.5rem', background: '#fff', borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,.08)' }}>
+                <div className="vvp-author-profile" style={{ maxWidth: 640, padding: '1.5rem', background: '#fff', borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,.08)' }}>
                     <AuthorProfileApp authors={AUTHOR_SINGLE} showAvatar showBio showLink layout="vertical" avatarSize={80} />
                 </div>
             </Section>
 
             <Section title="AuthorProfile · Horizontal (2 Autoren / Co-Autoren) · avatarSize=120">
-                <div style={{ maxWidth: 760, padding: '1.5rem', background: '#fff', borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,.08)' }}>
+                <div className="vvp-author-profile" style={{ maxWidth: 760, padding: '1.5rem', background: '#fff', borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,.08)' }}>
                     <AuthorProfileApp authors={AUTHOR_MULTI} showAvatar showBio showLink layout="horizontal" avatarSize={120} />
                 </div>
             </Section>
 
             <Section title="AuthorProfile · Kein Avatar, kein Link">
-                <div style={{ maxWidth: 640, padding: '1.5rem', background: '#fff', borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,.08)' }}>
+                <div className="vvp-author-profile" style={{ maxWidth: 640, padding: '1.5rem', background: '#fff', borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,.08)' }}>
                     <AuthorProfileApp authors={AUTHOR_SINGLE} showAvatar={false} showBio showLink={false} layout="vertical" avatarSize={80} />
                 </div>
             </Section>
