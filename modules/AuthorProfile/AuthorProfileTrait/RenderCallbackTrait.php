@@ -135,14 +135,23 @@ trait RenderCallbackTrait
             }
         }
 
-        // 4 — REQUEST_URI slug fallback.
-        //     Handles Divi REST-API rendering where WP query flags are absent.
-        $uri = isset($_SERVER['REQUEST_URI']) ? (string) $_SERVER['REQUEST_URI'] : '';
-        if (preg_match('#/author/([^/?#]+)#', $uri, $m)) {
-            $slug = sanitize_title($m[1]);
-            $data = self::get_author_by_slug($slug);
-            if (!empty($data)) {
-                return [$data];
+        // 4 — URL slug fallback.
+        //     When Divi renders via REST API, REQUEST_URI is the REST endpoint
+        //     (e.g. /wp-json/divi/v1/…), not the author archive URL.
+        //     The browser still sends the page URL in the Referer header, so we
+        //     check both sources — REQUEST_URI first (direct frontend requests),
+        //     then HTTP_REFERER (Divi REST / VB renders).
+        foreach ([
+            $_SERVER['REQUEST_URI']  ?? '',
+            $_SERVER['HTTP_REFERER'] ?? '',
+        ] as $uri) {
+            if ($uri !== '' && preg_match('#/author/([^/?#]+)#', (string) $uri, $m)) {
+                $slug = sanitize_title($m[1]);
+                $data = self::get_author_by_slug($slug);
+                if (!empty($data)) {
+                    return [$data];
+                }
+                break; // slug found in URL but no author matched — don't try Referer
             }
         }
 
