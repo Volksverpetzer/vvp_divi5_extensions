@@ -2,11 +2,37 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import '../src/components/fact-check-search/style.scss';
 import '../src/components/content-overview/style.scss';
+import '../src/components/author-profile/style.scss';
 import { FactCheckSearchApp } from '../src/components/fact-check-search/App';
 import { InstagramSlideshow } from '../src/components/content-overview/InstagramSlideshow';
 import { PodcastBanner } from '../src/components/content-overview/PodcastBanner';
+import { AuthorProfileApp } from '../src/components/author-profile/App';
 
 // ── Sample data ───────────────────────────────────────────────────────────────
+
+const AUTHOR_SINGLE = [
+    {
+        name: 'Max Mustermann',
+        bio: 'Journalist und Faktenchecker bei Volksverpetzer. Schreibt über Desinformation, Medien und Demokratie.',
+        avatarUrl: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=150',
+        profileUrl: '#',
+    },
+];
+
+const AUTHOR_MULTI = [
+    {
+        name: 'Max Mustermann',
+        bio: 'Journalist und Faktenchecker. Spezialisiert auf politische Desinformation.',
+        avatarUrl: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=150',
+        profileUrl: '#',
+    },
+    {
+        name: 'Erika Musterfrau',
+        bio: 'Redakteurin und Faktencheckerin. Fokus auf Social-Media-Manipulation.',
+        avatarUrl: 'https://www.gravatar.com/avatar/11111111111111111111111111111111?d=mp&s=150',
+        profileUrl: '#',
+    },
+];
 
 const IG_PROPS = {
     permalink: 'https://www.instagram.com/volksverpetzer/',
@@ -58,6 +84,24 @@ const App = () => (
                     searchApiUrl="https://ai.volksverpetzer-app.de/api/vector-search/"
                     importApiUrl="https://ai.volksverpetzer-app.de/api/import-url/"
                 />
+            </Section>
+
+            <Section title="AuthorProfile · Vertikal (1 Autor)">
+                <div style={{ maxWidth: 640, padding: '1.5rem', background: '#fff', borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,.08)' }}>
+                    <AuthorProfileApp authors={AUTHOR_SINGLE} showAvatar showBio showLink layout="vertical" avatarSize={80} />
+                </div>
+            </Section>
+
+            <Section title="AuthorProfile · Horizontal (2 Autoren / Co-Autoren) · avatarSize=120">
+                <div style={{ maxWidth: 760, padding: '1.5rem', background: '#fff', borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,.08)' }}>
+                    <AuthorProfileApp authors={AUTHOR_MULTI} showAvatar showBio showLink layout="horizontal" avatarSize={120} />
+                </div>
+            </Section>
+
+            <Section title="AuthorProfile · Kein Avatar, kein Link">
+                <div style={{ maxWidth: 640, padding: '1.5rem', background: '#fff', borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,.08)' }}>
+                    <AuthorProfileApp authors={AUTHOR_SINGLE} showAvatar={false} showBio showLink={false} layout="vertical" avatarSize={80} />
+                </div>
             </Section>
 
             <Section title="ContentOverview · InstagramSlideshow">

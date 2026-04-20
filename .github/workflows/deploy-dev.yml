@@ -37,6 +37,9 @@ jobs:
           sed -i 's/^Plugin Name: .*/Plugin Name: Faktencheck Suche für DIVI 5 (Beta)/' /tmp/deploy/vvp-fact-check-search.php
           cp -r modules /tmp/deploy/
           cp -r modules-json /tmp/deploy/
+          for f in /tmp/deploy/modules-json/*/module.json; do
+            jq '.title += " (Beta)" | .titles += " (Beta)"' "$f" > /tmp/module_tmp.json && mv /tmp/module_tmp.json "$f"
+          done
           cp -r scripts /tmp/deploy/
           cp -r styles /tmp/deploy/
 

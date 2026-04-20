@@ -96,6 +96,19 @@ function vvp_fact_check_enqueue_vb_scripts() {
 				],
 			]
 		);
+
+		\ET\Builder\VisualBuilder\Assets\PackageBuildManager::register_package_build(
+			[
+				'name'    => 'vvp-author-profile-frontend-vb',
+				'version' => VVP_FACT_CHECK_VERSION,
+				'script'  => [
+					'src'                => VVP_FACT_CHECK_URL . 'scripts/author-profile-frontend.js',
+					'deps'               => [],
+					'enqueue_top_window' => false,
+					'enqueue_app_window' => true,
+				],
+			]
+		);
 	}
 }
 add_action( 'divi_visual_builder_assets_before_enqueue_scripts', 'vvp_fact_check_enqueue_vb_scripts' );
@@ -132,6 +145,17 @@ function vvp_fact_check_enqueue_frontend_scripts() {
 		VVP_FACT_CHECK_URL . 'scripts/content-overview-frontend.js',
 		array(),
 		$co_frontend_ver,
+		true
+	);
+
+	$ap_frontend_path = VVP_FACT_CHECK_PATH . 'scripts/author-profile-frontend.js';
+	$ap_frontend_ver  = file_exists( $ap_frontend_path ) ? filemtime( $ap_frontend_path ) : VVP_FACT_CHECK_VERSION;
+
+	wp_enqueue_script(
+		'vvp-author-profile-frontend',
+		VVP_FACT_CHECK_URL . 'scripts/author-profile-frontend.js',
+		array(),
+		$ap_frontend_ver,
 		true
 	);
 }

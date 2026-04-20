@@ -5,6 +5,7 @@ import { registerModule } from '@divi/module-library';
 // Import modules.
 import { factCheckSearch } from './components/fact-check-search';
 import { contentOverview } from './components/content-overview';
+import { authorProfile } from './components/author-profile';
 
 // Import icons.
 import './module-icons';
@@ -17,4 +18,9 @@ addAction('divi.moduleLibrary.registerModuleLibraryStore.after', 'vvp/factCheckS
 // Register Content Overview module with DIVI.
 addAction('divi.moduleLibrary.registerModuleLibraryStore.after', 'vvp/contentOverview', () => {
     registerModule(contentOverview.metadata, omit(contentOverview, 'metadata'));
+});
+
+// Register Author Profile module with DIVI.
+addAction('divi.moduleLibrary.registerModuleLibraryStore.after', 'vvp/authorProfile', () => {
+    registerModule(authorProfile.metadata, omit(authorProfile, 'metadata'));
 });

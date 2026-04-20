@@ -127,7 +127,69 @@ namespace {
         return htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 
+    function wp_json_encode(mixed $data): string|false { return json_encode($data); }
+
+    function get_avatar_url(mixed $id_or_email, array $args = []): string
+    {
+        $size = (int)($args['size'] ?? 96);
+        return "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s={$size}";
+    }
+
+    function get_author_posts_url(int $author_id): string { return '#'; }
+    function get_post_field(string $field, int $post_id): mixed { return 1; }
+    function get_the_ID(): int { return 1; }
+
+    function get_the_author_meta(string $meta, int $author_id): string
+    {
+        return match ($meta) {
+            'display_name' => 'Max Mustermann',
+            'description'  => 'Journalist und Faktenchecker bei Volksverpetzer. Schreibt über Desinformation, Medien und Demokratie.',
+            default        => '',
+        };
+    }
+
 } // end namespace {}
+
+// ── AuthorProfile namespace: stub + preview wrapper ──────────────────────────
+namespace VVP\FactCheckSearch\AuthorProfile {
+
+    class AuthorProfile {}
+
+    require __DIR__ . '/modules/AuthorProfile/AuthorProfileTrait/RenderCallbackTrait.php';
+
+    class AuthorProfilePreview
+    {
+        use AuthorProfileTrait\RenderCallbackTrait;
+
+        public static function render_with_mock(): string
+        {
+            $authors = [
+                [
+                    'name'       => 'Max Mustermann',
+                    'bio'        => 'Journalist und Faktenchecker bei Volksverpetzer. Schreibt über Desinformation, Medien und Demokratie.',
+                    'avatarUrl'  => get_avatar_url(1, ['size' => 150]),
+                    'profileUrl' => get_author_posts_url(1),
+                ],
+            ];
+
+            $attrs = esc_attr(wp_json_encode($authors));
+
+            return sprintf(
+                '<div class="vvp-author-profile">'
+                . '<div class="vvp-ap__mount"'
+                . ' data-authors="%s"'
+                . ' data-show-avatar="true"'
+                . ' data-show-bio="true"'
+                . ' data-show-link="true"'
+                . ' data-layout="vertical"'
+                . ' data-avatar-size="80">'
+                . '</div></div>',
+                $attrs
+            );
+        }
+    }
+
+} // end namespace VVP\FactCheckSearch\AuthorProfile
 
 // ── ContentOverview namespace: stub + preview wrapper ────────────────────────
 namespace VVP\FactCheckSearch\ContentOverview {
@@ -156,14 +218,24 @@ namespace VVP\FactCheckSearch\ContentOverview {
 // ── Back to global: render + output ──────────────────────────────────────────
 namespace {
 
-    $t0       = microtime(true);
-    $overview = \VVP\FactCheckSearch\ContentOverview\ContentOverviewPreview::render();
-    
-    $body     = '<h2>Fact Check Search Module</h2>';
-    $body    .= '<div class="vvp-fc__mount" data-search-url="" data-import-url="" style="margin-bottom: 2rem;"></div>';
-    $body    .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #e5e7eb;">';
-    $body    .= $overview;
-    $body    .= '</div>';
+    $t0          = microtime(true);
+    $overview    = \VVP\FactCheckSearch\ContentOverview\ContentOverviewPreview::render();
+    $author_html = \VVP\FactCheckSearch\AuthorProfile\AuthorProfilePreview::render_with_mock();
+
+    $section_label = '<h2 style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6b7280;margin-bottom:1.5rem;">';
+
+    $body  = $section_label . 'Fact Check Search Module</h2>';
+    $body .= '<div class="vvp-fc__mount" data-search-url="" data-import-url="" style="margin-bottom: 2rem;"></div>';
+
+    $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #e5e7eb;">';
+    $body .= $section_label . 'Author Profile Module</h2>';
+    $body .= '<div style="max-width:640px;padding:1.5rem;background:#fff;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08)">';
+    $body .= $author_html;
+    $body .= '</div></div>';
+
+    $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #e5e7eb;">';
+    $body .= $overview;
+    $body .= '</div>';
 
     $took     = round((microtime(true) - $t0) * 1000);
     $tmp_dir = sys_get_temp_dir();
@@ -193,7 +265,7 @@ namespace {
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1">
-          <title>ContentOverview — Preview</title>
+          <title>VVP Divi Extensions — Preview</title>
           <style>{$css}</style>
           <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
           <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
@@ -205,6 +277,7 @@ namespace {
           </script>
           <script src="/scripts/fact-check-frontend.js" defer></script>
           <script src="/scripts/content-overview-frontend.js" defer></script>
+          <script src="/scripts/author-profile-frontend.js" defer></script>
           <style>
             *, *::before, *::after { box-sizing: border-box; }
             body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9fafb; color: #111827; }
@@ -218,7 +291,7 @@ namespace {
         </head>
         <body>
           <div class="pv-bar">
-            <strong>ContentOverview Preview</strong>
+            <strong>VVP Divi Extensions Preview</strong>
             <span>rendered in {$took} ms</span>
             <span>·</span>
             <span>cache: <code>{$tmp_dir}/vvp_co_preview_*.cache</code></span>
