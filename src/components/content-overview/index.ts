@@ -1,24 +1,22 @@
 // Divi dependencies.
-import {
-    type Metadata,
-    type ModuleLibrary,
-} from '@divi/types';
+import { type Metadata, type ModuleLibrary } from "@divi/types";
 
 // Local dependencies.
-import metadata from './module.json';
-import { ContentOverviewEdit } from './edit';
-import { ContentOverviewAttrs } from './types';
-import { placeholderContent } from './placeholder-content';
+import metadata from "./module.json";
+import { ContentOverviewEdit } from "./edit";
+import { ContentOverviewAttrs } from "./types";
+import { placeholderContent } from "./placeholder-content";
 
 // Styles.
-import './style.scss';
-import './module.scss';
+import "./style.scss";
+import "./module.scss";
 
-export const contentOverview: ModuleLibrary.Module.RegisterDefinition<ContentOverviewAttrs> = {
+export const contentOverview: ModuleLibrary.Module.RegisterDefinition<ContentOverviewAttrs> =
+  {
     // Imported json has no inferred type hence type-cast is necessary.
     metadata: metadata as Metadata.Values<ContentOverviewAttrs>,
     placeholderContent,
     renderers: {
-        edit: ContentOverviewEdit,
+      edit: ContentOverviewEdit,
     },
-};
+  };

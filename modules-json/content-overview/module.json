@@ -1,133 +1,133 @@
 {
-    "name": "vvp/content-overview",
-    "d4Shortcode": "",
-    "title": "Inhaltsübersicht",
-    "titles": "Inhaltsübersichten",
-    "moduleIcon": "vvp/content-overview-icon",
-    "moduleClassName": "content_overview",
-    "moduleOrderClassName": "content_overview",
-    "category": "module",
-    "attributes": {
-        "module": {
-            "type": "object",
-            "selector": "{{selector}}",
-            "settings": {
-                "meta": {
-                    "adminLabel": {}
-                },
-                "advanced": {
-                    "link": {},
-                    "text": {},
-                    "htmlAttributes": {}
-                },
-                "decoration": {
-                    "attributes": {},
-                    "background": {},
-                    "sizing": {},
-                    "spacing": {},
-                    "border": {},
-                    "boxShadow": {},
-                    "filters": {},
-                    "transform": {},
-                    "animation": {},
-                    "overflow": {},
-                    "disabledOn": {},
-                    "transition": {},
-                    "position": {},
-                    "zIndex": {},
-                    "scroll": {},
-                    "sticky": {}
-                }
-            }
+  "name": "vvp/content-overview",
+  "d4Shortcode": "",
+  "title": "Inhaltsübersicht",
+  "titles": "Inhaltsübersichten",
+  "moduleIcon": "vvp/content-overview-icon",
+  "moduleClassName": "content_overview",
+  "moduleOrderClassName": "content_overview",
+  "category": "module",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "settings": {
+        "meta": {
+          "adminLabel": {}
         },
-        "titleFont": {
-            "type": "object",
-            "selector": "{{selector}} .vvp-co__feed-title, {{selector}} .vvp-co__podcast-title",
-            "settings": {
-                "font": {
-                    "groupType": "group-item",
-                    "item": {
-                        "groupName": "design",
-                        "priority": 10,
-                        "attrName": "titleFont.font",
-                        "label": "Überschriften-Schrift",
-                        "description": "Schrift für Artikel-Titel und Podcast-Titel.",
-                        "features": {
-                            "sticky": false
-                        },
-                        "component": {
-                            "name": "divi/font",
-                            "type": "field"
-                        }
-                    }
-                }
-            },
-            "styleProps": {
-                "font": {
-                    "selector": "{{selector}} .vvp-co__feed-title, {{selector}} .vvp-co__podcast-title"
-                }
-            }
+        "advanced": {
+          "link": {},
+          "text": {},
+          "htmlAttributes": {}
         },
-        "bodyFont": {
-            "type": "object",
-            "selector": "{{selector}} .vvp-co__feed-excerpt, {{selector}} .vvp-co__podcast-summary",
-            "settings": {
-                "font": {
-                    "groupType": "group-item",
-                    "item": {
-                        "groupName": "design",
-                        "priority": 20,
-                        "attrName": "bodyFont.font",
-                        "label": "Fließtext-Schrift",
-                        "description": "Schrift für Artikel-Excerpts und Podcast-Zusammenfassungen.",
-                        "features": {
-                            "sticky": false
-                        },
-                        "component": {
-                            "name": "divi/font",
-                            "type": "field"
-                        }
-                    }
-                }
-            },
-            "styleProps": {
-                "font": {
-                    "selector": "{{selector}} .vvp-co__feed-excerpt, {{selector}} .vvp-co__podcast-summary"
-                }
-            }
-        },
-        "metaFont": {
-            "type": "object",
-            "selector": "{{selector}} .vvp-co__feed-date, {{selector}} .vvp-co__category, {{selector}} .vvp-co__feed-heading, {{selector}} .vvp-co__podcast-date, {{selector}} .vvp-co__podcast-duration, {{selector}} .vvp-co__badge",
-            "settings": {
-                "font": {
-                    "groupType": "group-item",
-                    "item": {
-                        "groupName": "design",
-                        "priority": 30,
-                        "attrName": "metaFont.font",
-                        "label": "Meta-Schrift",
-                        "description": "Schrift für Datum, Kategorie, Badges und andere Metaangaben.",
-                        "features": {
-                            "sticky": false
-                        },
-                        "component": {
-                            "name": "divi/font",
-                            "type": "field"
-                        }
-                    }
-                }
-            },
-            "styleProps": {
-                "font": {
-                    "selector": "{{selector}} .vvp-co__feed-date, {{selector}} .vvp-co__category, {{selector}} .vvp-co__feed-heading, {{selector}} .vvp-co__podcast-date, {{selector}} .vvp-co__podcast-duration, {{selector}} .vvp-co__badge"
-                }
-            }
+        "decoration": {
+          "attributes": {},
+          "background": {},
+          "sizing": {},
+          "spacing": {},
+          "border": {},
+          "boxShadow": {},
+          "filters": {},
+          "transform": {},
+          "animation": {},
+          "overflow": {},
+          "disabledOn": {},
+          "transition": {},
+          "position": {},
+          "zIndex": {},
+          "scroll": {},
+          "sticky": {}
         }
+      }
     },
-    "settings": {
-        "content": "auto",
-        "design": "auto",
-        "advanced": "auto"
+    "titleFont": {
+      "type": "object",
+      "selector": "{{selector}} .vvp-co__feed-title, {{selector}} .vvp-co__podcast-title",
+      "settings": {
+        "font": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "design",
+            "priority": 10,
+            "attrName": "titleFont.font",
+            "label": "Überschriften-Schrift",
+            "description": "Schrift für Artikel-Titel und Podcast-Titel.",
+            "features": {
+              "sticky": false
+            },
+            "component": {
+              "name": "divi/font",
+              "type": "field"
+            }
+          }
+        }
+      },
+      "styleProps": {
+        "font": {
+          "selector": "{{selector}} .vvp-co__feed-title, {{selector}} .vvp-co__podcast-title"
+        }
+      }
+    },
+    "bodyFont": {
+      "type": "object",
+      "selector": "{{selector}} .vvp-co__feed-excerpt, {{selector}} .vvp-co__podcast-summary",
+      "settings": {
+        "font": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "design",
+            "priority": 20,
+            "attrName": "bodyFont.font",
+            "label": "Fließtext-Schrift",
+            "description": "Schrift für Artikel-Excerpts und Podcast-Zusammenfassungen.",
+            "features": {
+              "sticky": false
+            },
+            "component": {
+              "name": "divi/font",
+              "type": "field"
+            }
+          }
+        }
+      },
+      "styleProps": {
+        "font": {
+          "selector": "{{selector}} .vvp-co__feed-excerpt, {{selector}} .vvp-co__podcast-summary"
+        }
+      }
+    },
+    "metaFont": {
+      "type": "object",
+      "selector": "{{selector}} .vvp-co__feed-date, {{selector}} .vvp-co__category, {{selector}} .vvp-co__feed-heading, {{selector}} .vvp-co__podcast-date, {{selector}} .vvp-co__podcast-duration, {{selector}} .vvp-co__badge",
+      "settings": {
+        "font": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "design",
+            "priority": 30,
+            "attrName": "metaFont.font",
+            "label": "Meta-Schrift",
+            "description": "Schrift für Datum, Kategorie, Badges und andere Metaangaben.",
+            "features": {
+              "sticky": false
+            },
+            "component": {
+              "name": "divi/font",
+              "type": "field"
+            }
+          }
+        }
+      },
+      "styleProps": {
+        "font": {
+          "selector": "{{selector}} .vvp-co__feed-date, {{selector}} .vvp-co__category, {{selector}} .vvp-co__feed-heading, {{selector}} .vvp-co__podcast-date, {{selector}} .vvp-co__podcast-duration, {{selector}} .vvp-co__badge"
+        }
+      }
     }
+  },
+  "settings": {
+    "content": "auto",
+    "design": "auto",
+    "advanced": "auto"
+  }
 }

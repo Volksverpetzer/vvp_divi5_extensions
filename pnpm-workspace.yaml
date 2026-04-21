@@ -1,0 +1,5 @@
+overrides:
+  "@types/codemirror": "5.60.17"
+
+packages:
+  - "."

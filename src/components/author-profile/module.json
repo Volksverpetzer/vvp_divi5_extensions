@@ -1,238 +1,241 @@
 {
-    "name": "vvp/author-profile",
-    "d4Shortcode": "",
-    "title": "Autorenprofil",
-    "titles": "Autorenprofile",
-    "moduleIcon": "vvp/author-profile-icon",
-    "moduleClassName": "author_profile",
-    "moduleOrderClassName": "author_profile",
-    "category": "module",
-    "attributes": {
-        "module": {
-            "type": "object",
-            "selector": "{{selector}}",
-            "styleProps": {
-                "border": {
-                    "important": true
-                }
-            },
-            "settings": {
-                "meta": {
-                    "adminLabel": {}
-                },
-                "advanced": {
-                    "link": {},
-                    "text": {},
-                    "htmlAttributes": {}
-                },
-                "decoration": {
-                    "attributes": {},
-                    "background": {},
-                    "sizing": {},
-                    "spacing": {},
-                    "border": {},
-                    "boxShadow": {},
-                    "filters": {},
-                    "transform": {},
-                    "animation": {},
-                    "overflow": {},
-                    "disabledOn": {},
-                    "transition": {},
-                    "position": {},
-                    "zIndex": {},
-                    "scroll": {},
-                    "sticky": {}
-                }
-            }
-        },
-        "showAvatar": {
-            "type": "object",
-            "settings": {
-                "innerContent": {
-                    "groupType": "group-item",
-                    "item": {
-                        "groupName": "mainContent",
-                        "priority": 10,
-                        "render": true,
-                        "attrName": "showAvatar.innerContent",
-                        "label": "Profilbild anzeigen",
-                        "description": "Das Autoren-Profilbild (Avatar) einblenden.",
-                        "features": {
-                            "sticky": false,
-                            "dynamicContent": false
-                        },
-                        "component": {
-                            "name": "divi/toggle",
-                            "type": "field"
-                        }
-                    }
-                }
-            }
-        },
-        "showBio": {
-            "type": "object",
-            "settings": {
-                "innerContent": {
-                    "groupType": "group-item",
-                    "item": {
-                        "groupName": "mainContent",
-                        "priority": 20,
-                        "render": true,
-                        "attrName": "showBio.innerContent",
-                        "label": "Biografie anzeigen",
-                        "description": "Die Kurzbiografie des Autors einblenden.",
-                        "features": {
-                            "sticky": false,
-                            "dynamicContent": false
-                        },
-                        "component": {
-                            "name": "divi/toggle",
-                            "type": "field"
-                        }
-                    }
-                }
-            }
-        },
-        "showLink": {
-            "type": "object",
-            "settings": {
-                "innerContent": {
-                    "groupType": "group-item",
-                    "item": {
-                        "groupName": "mainContent",
-                        "priority": 30,
-                        "render": true,
-                        "attrName": "showLink.innerContent",
-                        "label": "Link zur Autorenseite",
-                        "description": "Den Namen als Link zur Autorenseite darstellen.",
-                        "features": {
-                            "sticky": false,
-                            "dynamicContent": false
-                        },
-                        "component": {
-                            "name": "divi/toggle",
-                            "type": "field"
-                        }
-                    }
-                }
-            }
-        },
-        "layout": {
-            "type": "object",
-            "settings": {
-                "innerContent": {
-                    "groupType": "group-item",
-                    "item": {
-                        "groupName": "mainContent",
-                        "priority": 40,
-                        "render": true,
-                        "attrName": "layout.innerContent",
-                        "label": "Layout",
-                        "description": "Anordnung von Avatar und Text.",
-                        "features": {
-                            "sticky": false,
-                            "dynamicContent": false
-                        },
-                        "component": {
-                            "name": "divi/select",
-                            "type": "field",
-                            "props": {
-                                "options": [
-                                    { "value": "vertical", "label": "Vertikal (übereinander)" },
-                                    { "value": "horizontal", "label": "Horizontal (nebeneinander)" }
-                                ]
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "avatarSize": {
-            "type": "object",
-            "selector": "{{selector}} .vvp-ap__avatar",
-            "settings": {
-                "innerContent": {
-                    "groupType": "group-item",
-                    "item": {
-                        "groupName": "design",
-                        "priority": 5,
-                        "render": true,
-                        "attrName": "avatarSize.innerContent",
-                        "label": "Bildbreite (px)",
-                        "description": "Breite des Profilbilds in Pixeln – die Höhe passt sich dem Seitenverhältnis an (z.B. 200).",
-                        "features": {
-                            "sticky": false,
-                            "dynamicContent": false
-                        },
-                        "component": {
-                            "name": "divi/text",
-                            "type": "field"
-                        }
-                    }
-                }
-            }
-        },
-        "nameFont": {
-            "type": "object",
-            "selector": "{{selector}} .vvp-ap__name, {{selector}} .vvp-ap__name-link",
-            "settings": {
-                "font": {
-                    "groupType": "group-item",
-                    "item": {
-                        "groupName": "design",
-                        "priority": 10,
-                        "attrName": "nameFont.font",
-                        "label": "Namen-Schrift",
-                        "description": "Schrift für den Autorennamen.",
-                        "features": {
-                            "sticky": false
-                        },
-                        "component": {
-                            "name": "divi/font",
-                            "type": "field"
-                        }
-                    }
-                }
-            },
-            "styleProps": {
-                "font": {
-                    "selector": "{{selector}} .vvp-ap__name, {{selector}} .vvp-ap__name-link"
-                }
-            }
-        },
-        "bioFont": {
-            "type": "object",
-            "selector": "{{selector}} .vvp-ap__bio",
-            "settings": {
-                "font": {
-                    "groupType": "group-item",
-                    "item": {
-                        "groupName": "design",
-                        "priority": 20,
-                        "attrName": "bioFont.font",
-                        "label": "Biografie-Schrift",
-                        "description": "Schrift für den Biografie-Text.",
-                        "features": {
-                            "sticky": false
-                        },
-                        "component": {
-                            "name": "divi/font",
-                            "type": "field"
-                        }
-                    }
-                }
-            },
-            "styleProps": {
-                "font": {
-                    "selector": "{{selector}} .vvp-ap__bio"
-                }
-            }
+  "name": "vvp/author-profile",
+  "d4Shortcode": "",
+  "title": "Autorenprofil",
+  "titles": "Autorenprofile",
+  "moduleIcon": "vvp/author-profile-icon",
+  "moduleClassName": "author_profile",
+  "moduleOrderClassName": "author_profile",
+  "category": "module",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "styleProps": {
+        "border": {
+          "important": true
         }
+      },
+      "settings": {
+        "meta": {
+          "adminLabel": {}
+        },
+        "advanced": {
+          "link": {},
+          "text": {},
+          "htmlAttributes": {}
+        },
+        "decoration": {
+          "attributes": {},
+          "background": {},
+          "sizing": {},
+          "spacing": {},
+          "border": {},
+          "boxShadow": {},
+          "filters": {},
+          "transform": {},
+          "animation": {},
+          "overflow": {},
+          "disabledOn": {},
+          "transition": {},
+          "position": {},
+          "zIndex": {},
+          "scroll": {},
+          "sticky": {}
+        }
+      }
     },
-    "usesContext": ["postId", "postType"],
-    "settings": {
-        "content": "auto",
-        "design": "auto",
-        "advanced": "auto"
+    "showAvatar": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 10,
+            "render": true,
+            "attrName": "showAvatar.innerContent",
+            "label": "Profilbild anzeigen",
+            "description": "Das Autoren-Profilbild (Avatar) einblenden.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/toggle",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "showBio": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 20,
+            "render": true,
+            "attrName": "showBio.innerContent",
+            "label": "Biografie anzeigen",
+            "description": "Die Kurzbiografie des Autors einblenden.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/toggle",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "showLink": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 30,
+            "render": true,
+            "attrName": "showLink.innerContent",
+            "label": "Link zur Autorenseite",
+            "description": "Den Namen als Link zur Autorenseite darstellen.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/toggle",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 40,
+            "render": true,
+            "attrName": "layout.innerContent",
+            "label": "Layout",
+            "description": "Anordnung von Avatar und Text.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/select",
+              "type": "field",
+              "props": {
+                "options": [
+                  { "value": "vertical", "label": "Vertikal (übereinander)" },
+                  {
+                    "value": "horizontal",
+                    "label": "Horizontal (nebeneinander)"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "avatarSize": {
+      "type": "object",
+      "selector": "{{selector}} .vvp-ap__avatar",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "design",
+            "priority": 5,
+            "render": true,
+            "attrName": "avatarSize.innerContent",
+            "label": "Bildbreite (px)",
+            "description": "Breite des Profilbilds in Pixeln – die Höhe passt sich dem Seitenverhältnis an (z.B. 200).",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "nameFont": {
+      "type": "object",
+      "selector": "{{selector}} .vvp-ap__name, {{selector}} .vvp-ap__name-link",
+      "settings": {
+        "font": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "design",
+            "priority": 10,
+            "attrName": "nameFont.font",
+            "label": "Namen-Schrift",
+            "description": "Schrift für den Autorennamen.",
+            "features": {
+              "sticky": false
+            },
+            "component": {
+              "name": "divi/font",
+              "type": "field"
+            }
+          }
+        }
+      },
+      "styleProps": {
+        "font": {
+          "selector": "{{selector}} .vvp-ap__name, {{selector}} .vvp-ap__name-link"
+        }
+      }
+    },
+    "bioFont": {
+      "type": "object",
+      "selector": "{{selector}} .vvp-ap__bio",
+      "settings": {
+        "font": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "design",
+            "priority": 20,
+            "attrName": "bioFont.font",
+            "label": "Biografie-Schrift",
+            "description": "Schrift für den Biografie-Text.",
+            "features": {
+              "sticky": false
+            },
+            "component": {
+              "name": "divi/font",
+              "type": "field"
+            }
+          }
+        }
+      },
+      "styleProps": {
+        "font": {
+          "selector": "{{selector}} .vvp-ap__bio"
+        }
+      }
     }
+  },
+  "usesContext": ["postId", "postType"],
+  "settings": {
+    "content": "auto",
+    "design": "auto",
+    "advanced": "auto"
+  }
 }

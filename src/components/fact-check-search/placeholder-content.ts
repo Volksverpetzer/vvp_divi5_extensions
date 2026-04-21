@@ -1,12 +1,12 @@
 export const placeholderContent = {
-    searchApiUrl: {
-        desktop: {
-            value: '',
-        },
+  searchApiUrl: {
+    desktop: {
+      value: "",
     },
-    importApiUrl: {
-        desktop: {
-            value: '',
-        },
+  },
+  importApiUrl: {
+    desktop: {
+      value: "",
     },
+  },
 };
