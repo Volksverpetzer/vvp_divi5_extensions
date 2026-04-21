@@ -1,6 +1,8 @@
 import React, { type ReactElement } from "react";
 
+// Icon data for Divi icon library — person silhouette icon representing an author.
 export const name = "vvp/author-profile-icon";
+export const viewBox = "0 0 24 24";
 export const component = (): ReactElement => (
   <>
     {/* Person silhouette */}

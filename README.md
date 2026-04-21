@@ -182,8 +182,8 @@ Renders the current post author(s) with optional avatar, bio, and a link to the 
 ## Prerequisites
 
 | Tool      | Minimum version        |
-| --------- | ---------------------- |
-| Node.js   | 18.x                   |
+| --------- |------------------------|
+| Node.js   | 20.x                   |
 | pnpm      | 9.x                    |
 | PHP       | 7.4+                   |
 | Composer  | 2.x                    |
