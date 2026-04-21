@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import classnames from "classnames";
 
 import {
   IconSearch,
@@ -95,7 +94,7 @@ export const FactCheckSearchApp: React.FC<FactCheckSearchAppProps> = ({
       setResults(data.results || []);
       setTookTime(data.took != null ? data.took : null);
       setPhase("done");
-    } catch (err) {
+    } catch {
       setPhase("error");
       setErrorText("Die Suche ist fehlgeschlagen. Bitte versuche es erneut.");
     }
@@ -122,7 +121,7 @@ export const FactCheckSearchApp: React.FC<FactCheckSearchAppProps> = ({
         if (!res.ok) throw new Error("HTTP " + res.status);
         const data = await res.json();
         runSearch(data.snippet || trimmed);
-      } catch (err) {
+      } catch {
         setPhase("error");
         setErrorText(
           "Der Artikel konnte nicht geladen werden. Bitte versuche es mit einem anderen Link.",

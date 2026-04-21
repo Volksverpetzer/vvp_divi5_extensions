@@ -93,7 +93,6 @@ export const PodcastBanner: React.FC<PodcastBannerProps> = ({
 
           {isPlaying && enclosure ? (
             <div className="vvp-co__podcast-player">
-              {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
               <audio
                 controls
                 autoPlay
