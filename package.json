@@ -1,7 +1,7 @@
 {
-    "name": "vvp-fact-check-search",
+    "name": "vvp-divi-5-extensions",
     "version": "1.0.0",
-    "description": "DIVI 5 Faktencheck Search Extension",
+    "description": "DIVI 5 extension for the vvp wordpress site",
     "private": true,
     "author": "Volksverpetzer",
     "engines": {
