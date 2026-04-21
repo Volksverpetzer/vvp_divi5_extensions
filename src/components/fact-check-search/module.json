@@ -1,186 +1,186 @@
 {
-    "name": "vvp/fact-check-search",
-    "d4Shortcode": "",
-    "title": "Faktencheck Suche",
-    "titles": "Faktencheck Suchen",
-    "moduleIcon": "vvp/fact-check-search-icon",
-    "moduleClassName": "fact_check_search",
-    "moduleOrderClassName": "fact_check_search",
-    "category": "module",
-    "attributes": {
-        "module": {
-            "type": "object",
-            "selector": "{{selector}}",
-            "styleProps": {
-                "border": {
-                    "important": true
-                }
-            },
-            "settings": {
-                "meta": {
-                    "adminLabel": {}
-                },
-                "advanced": {
-                    "link": {},
-                    "text": {},
-                    "htmlAttributes": {}
-                },
-                "decoration": {
-                    "attributes": {},
-                    "background": {},
-                    "sizing": {},
-                    "spacing": {},
-                    "border": {},
-                    "boxShadow": {},
-                    "filters": {},
-                    "transform": {},
-                    "animation": {},
-                    "overflow": {},
-                    "disabledOn": {},
-                    "transition": {},
-                    "position": {},
-                    "zIndex": {},
-                    "scroll": {},
-                    "sticky": {}
-                }
-            }
-        },
-        "searchApiUrl": {
-            "type": "object",
-            "settings": {
-                "innerContent": {
-                    "groupType": "group-item",
-                    "item": {
-                        "groupName": "mainContent",
-                        "priority": 10,
-                        "render": true,
-                        "attrName": "searchApiUrl.innerContent",
-                        "label": "Such-API URL",
-                        "description": "POST-Endpunkt für die Volltextsuche. Erwartet { query: string }, gibt { results: [], took: number } zurück.",
-                        "features": {
-                            "sticky": false,
-                            "dynamicContent": false
-                        },
-                        "component": {
-                            "name": "divi/text",
-                            "type": "field"
-                        }
-                    }
-                }
-            }
-        },
-        "importApiUrl": {
-            "type": "object",
-            "settings": {
-                "innerContent": {
-                    "groupType": "group-item",
-                    "item": {
-                        "groupName": "mainContent",
-                        "priority": 20,
-                        "render": true,
-                        "attrName": "importApiUrl.innerContent",
-                        "label": "Import-API URL",
-                        "description": "GET-Endpunkt zum Importieren einer URL. Wird mit ?url=<encoded> aufgerufen und gibt { snippet: string } zurück.",
-                        "features": {
-                            "sticky": false,
-                            "dynamicContent": false
-                        },
-                        "component": {
-                            "name": "divi/text",
-                            "type": "field"
-                        }
-                    }
-                }
-            }
-        },
-        "titleFont": {
-            "type": "object",
-            "selector": "{{selector}} .vvp-fc__result-title, {{selector}} .vvp-fc__bar-title",
-            "settings": {
-                "font": {
-                    "groupType": "group-item",
-                    "item": {
-                        "groupName": "design",
-                        "priority": 10,
-                        "attrName": "titleFont.font",
-                        "label": "Überschriften-Schrift",
-                        "description": "Schrift für Ergebnis-Titel und den Modul-Titel im blauen Balken.",
-                        "features": {
-                            "sticky": false
-                        },
-                        "component": {
-                            "name": "divi/font",
-                            "type": "field"
-                        }
-                    }
-                }
-            },
-            "styleProps": {
-                "font": {
-                    "selector": "{{selector}} .vvp-fc__result-title, {{selector}} .vvp-fc__bar-title"
-                }
-            }
-        },
-        "bodyFont": {
-            "type": "object",
-            "selector": "{{selector}} .vvp-fc__result-excerpt, {{selector}} .vvp-fc__bar-desc, {{selector}} .vvp-fc__no-results",
-            "settings": {
-                "font": {
-                    "groupType": "group-item",
-                    "item": {
-                        "groupName": "design",
-                        "priority": 20,
-                        "attrName": "bodyFont.font",
-                        "label": "Fließtext-Schrift",
-                        "description": "Schrift für Ergebnis-Excerpts, Modul-Beschreibung und Meldungen.",
-                        "features": {
-                            "sticky": false
-                        },
-                        "component": {
-                            "name": "divi/font",
-                            "type": "field"
-                        }
-                    }
-                }
-            },
-            "styleProps": {
-                "font": {
-                    "selector": "{{selector}} .vvp-fc__result-excerpt, {{selector}} .vvp-fc__bar-desc, {{selector}} .vvp-fc__no-results"
-                }
-            }
-        },
-        "metaFont": {
-            "type": "object",
-            "selector": "{{selector}} .vvp-fc__results-meta, {{selector}} .vvp-fc__score-label, {{selector}} .vvp-fc__url-hint, {{selector}} .vvp-fc__examples-label",
-            "settings": {
-                "font": {
-                    "groupType": "group-item",
-                    "item": {
-                        "groupName": "design",
-                        "priority": 30,
-                        "attrName": "metaFont.font",
-                        "label": "Meta-Schrift",
-                        "description": "Schrift für Ergebnis-Anzahl, Score-Label, URL-Hinweise und Beispiel-Labels.",
-                        "features": {
-                            "sticky": false
-                        },
-                        "component": {
-                            "name": "divi/font",
-                            "type": "field"
-                        }
-                    }
-                }
-            },
-            "styleProps": {
-                "font": {
-                    "selector": "{{selector}} .vvp-fc__results-meta, {{selector}} .vvp-fc__score-label, {{selector}} .vvp-fc__url-hint, {{selector}} .vvp-fc__examples-label"
-                }
-            }
+  "name": "vvp/fact-check-search",
+  "d4Shortcode": "",
+  "title": "Faktencheck Suche",
+  "titles": "Faktencheck Suchen",
+  "moduleIcon": "vvp/fact-check-search-icon",
+  "moduleClassName": "fact_check_search",
+  "moduleOrderClassName": "fact_check_search",
+  "category": "module",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "styleProps": {
+        "border": {
+          "important": true
         }
+      },
+      "settings": {
+        "meta": {
+          "adminLabel": {}
+        },
+        "advanced": {
+          "link": {},
+          "text": {},
+          "htmlAttributes": {}
+        },
+        "decoration": {
+          "attributes": {},
+          "background": {},
+          "sizing": {},
+          "spacing": {},
+          "border": {},
+          "boxShadow": {},
+          "filters": {},
+          "transform": {},
+          "animation": {},
+          "overflow": {},
+          "disabledOn": {},
+          "transition": {},
+          "position": {},
+          "zIndex": {},
+          "scroll": {},
+          "sticky": {}
+        }
+      }
     },
-    "settings": {
-        "content": "auto",
-        "design": "auto",
-        "advanced": "auto"
+    "searchApiUrl": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 10,
+            "render": true,
+            "attrName": "searchApiUrl.innerContent",
+            "label": "Such-API URL",
+            "description": "POST-Endpunkt für die Volltextsuche. Erwartet { query: string }, gibt { results: [], took: number } zurück.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "importApiUrl": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 20,
+            "render": true,
+            "attrName": "importApiUrl.innerContent",
+            "label": "Import-API URL",
+            "description": "GET-Endpunkt zum Importieren einer URL. Wird mit ?url=<encoded> aufgerufen und gibt { snippet: string } zurück.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "titleFont": {
+      "type": "object",
+      "selector": "{{selector}} .vvp-fc__result-title, {{selector}} .vvp-fc__bar-title",
+      "settings": {
+        "font": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "design",
+            "priority": 10,
+            "attrName": "titleFont.font",
+            "label": "Überschriften-Schrift",
+            "description": "Schrift für Ergebnis-Titel und den Modul-Titel im blauen Balken.",
+            "features": {
+              "sticky": false
+            },
+            "component": {
+              "name": "divi/font",
+              "type": "field"
+            }
+          }
+        }
+      },
+      "styleProps": {
+        "font": {
+          "selector": "{{selector}} .vvp-fc__result-title, {{selector}} .vvp-fc__bar-title"
+        }
+      }
+    },
+    "bodyFont": {
+      "type": "object",
+      "selector": "{{selector}} .vvp-fc__result-excerpt, {{selector}} .vvp-fc__bar-desc, {{selector}} .vvp-fc__no-results",
+      "settings": {
+        "font": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "design",
+            "priority": 20,
+            "attrName": "bodyFont.font",
+            "label": "Fließtext-Schrift",
+            "description": "Schrift für Ergebnis-Excerpts, Modul-Beschreibung und Meldungen.",
+            "features": {
+              "sticky": false
+            },
+            "component": {
+              "name": "divi/font",
+              "type": "field"
+            }
+          }
+        }
+      },
+      "styleProps": {
+        "font": {
+          "selector": "{{selector}} .vvp-fc__result-excerpt, {{selector}} .vvp-fc__bar-desc, {{selector}} .vvp-fc__no-results"
+        }
+      }
+    },
+    "metaFont": {
+      "type": "object",
+      "selector": "{{selector}} .vvp-fc__results-meta, {{selector}} .vvp-fc__score-label, {{selector}} .vvp-fc__url-hint, {{selector}} .vvp-fc__examples-label",
+      "settings": {
+        "font": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "design",
+            "priority": 30,
+            "attrName": "metaFont.font",
+            "label": "Meta-Schrift",
+            "description": "Schrift für Ergebnis-Anzahl, Score-Label, URL-Hinweise und Beispiel-Labels.",
+            "features": {
+              "sticky": false
+            },
+            "component": {
+              "name": "divi/font",
+              "type": "field"
+            }
+          }
+        }
+      },
+      "styleProps": {
+        "font": {
+          "selector": "{{selector}} .vvp-fc__results-meta, {{selector}} .vvp-fc__score-label, {{selector}} .vvp-fc__url-hint, {{selector}} .vvp-fc__examples-label"
+        }
+      }
     }
+  },
+  "settings": {
+    "content": "auto",
+    "design": "auto",
+    "advanced": "auto"
+  }
 }

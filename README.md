@@ -2,11 +2,11 @@
 
 A WordPress plugin that adds custom modules to the **DIVI 5 Visual Builder** for Volksverpetzer. Three modules are included:
 
-| Module | DIVI slug | Description |
-|--------|-----------|-------------|
-| **Faktencheck Suche** | `vvp/fact-check-search` | Interactive search bar for the fact-check archive |
-| **Inhaltsübersicht** | `vvp/content-overview` | Mixed feed of articles, Instagram posts, YouTube videos, and podcast episodes |
-| **Autorenprofil** | `vvp/author-profile` | Displays the current post author(s) with avatar, name link, and bio |
+| Module                | DIVI slug               | Description                                                                   |
+| --------------------- | ----------------------- | ----------------------------------------------------------------------------- |
+| **Faktencheck Suche** | `vvp/fact-check-search` | Interactive search bar for the fact-check archive                             |
+| **Inhaltsübersicht**  | `vvp/content-overview`  | Mixed feed of articles, Instagram posts, YouTube videos, and podcast episodes |
+| **Autorenprofil**     | `vvp/author-profile`    | Displays the current post author(s) with avatar, name link, and bio           |
 
 ---
 
@@ -37,6 +37,7 @@ Renders a persistent blue search bar on the front end. Clicking it opens a full-
 - Keyboard shortcut: Esc to close
 
 **Architecture:**
+
 - PHP server-renders the mount point (`modules/FactCheckSearch/FactCheckSearchTrait/RenderCallbackTrait.php`)
 - React app (`src/components/fact-check-search/App.tsx`) is mounted by `scripts/fact-check-frontend.js`
 - DIVI Visual Builder preview: `src/components/fact-check-search/edit.tsx`
@@ -51,6 +52,7 @@ Renders a mixed content feed fetched server-side from external APIs (RSS, Instag
 - YouTube video cards (PHP-rendered)
 
 **Architecture:**
+
 - PHP fetches all data and renders the article/video sections (`modules/ContentOverview/ContentOverviewTrait/RenderCallbackTrait.php`)
 - React components for Instagram and Podcast are mounted by `scripts/content-overview-frontend.js`
 - DIVI Visual Builder preview: `src/components/content-overview/edit.tsx` (skeleton + example cards)
@@ -60,6 +62,7 @@ Renders a mixed content feed fetched server-side from external APIs (RSS, Instag
 Renders the current post author(s) with optional avatar, bio, and a link to the author page. Author data is read from **PublishPress Authors** (if available) and falls back to WordPress core.
 
 **Settings (DIVI):**
+
 - Profilbild anzeigen (toggle)
 - Biografie anzeigen (toggle)
 - Link zur Autorenseite (toggle)
@@ -68,6 +71,7 @@ Renders the current post author(s) with optional avatar, bio, and a link to the 
 - Name/Bio font controls (DIVI font fields)
 
 **Architecture:**
+
 - PHP server-renders the mount point and injects author data + settings via `data-*` attributes (`modules/AuthorProfile/AuthorProfileTrait/RenderCallbackTrait.php`)
 - React app (`src/components/author-profile/App.tsx`) is mounted by `scripts/author-profile-frontend.js`
 - DIVI Visual Builder preview: `src/components/author-profile/edit.tsx` (placeholder author data)
@@ -177,12 +181,12 @@ Renders the current post author(s) with optional avatar, bio, and a link to the 
 
 ## Prerequisites
 
-| Tool | Minimum version |
-|------|----------------|
-| Node.js | 18.x |
-| pnpm | 9.x |
-| PHP | 7.4+ |
-| Composer | 2.x |
+| Tool      | Minimum version        |
+| --------- | ---------------------- |
+| Node.js   | 18.x                   |
+| pnpm      | 9.x                    |
+| PHP       | 7.4+                   |
+| Composer  | 2.x                    |
 | WordPress | 6.x with DIVI 5 active |
 
 ---
@@ -252,14 +256,14 @@ pnpm build
 
 Webpack in production mode outputs:
 
-| File | Description |
-|------|-------------|
-| `scripts/bundle.js` | DIVI Visual Builder module (externals: React, DIVI globals) |
-| `scripts/fact-check-frontend.js` | FactCheckSearch frontend bundle (standalone) |
-| `scripts/content-overview-frontend.js` | ContentOverview frontend bundle (standalone) |
-| `scripts/author-profile-frontend.js` | AuthorProfile frontend bundle (standalone) |
-| `styles/main.css` | All component CSS |
-| `modules-json/*/module.json` | Copied module schemas |
+| File                                   | Description                                                 |
+| -------------------------------------- | ----------------------------------------------------------- |
+| `scripts/bundle.js`                    | DIVI Visual Builder module (externals: React, DIVI globals) |
+| `scripts/fact-check-frontend.js`       | FactCheckSearch frontend bundle (standalone)                |
+| `scripts/content-overview-frontend.js` | ContentOverview frontend bundle (standalone)                |
+| `scripts/author-profile-frontend.js`   | AuthorProfile frontend bundle (standalone)                  |
+| `styles/main.css`                      | All component CSS                                           |
+| `modules-json/*/module.json`           | Copied module schemas                                       |
 
 To produce a distributable ZIP:
 
@@ -275,17 +279,17 @@ Deployment is automated via GitHub Actions and FTP. Push to the relevant branch.
 
 ### Required GitHub secrets
 
-| Secret | Description |
-|--------|-------------|
-| `FTP_HOST` | FTP server hostname |
-| `FTP_USER` | FTP username |
-| `FTP_PASSWORD` | FTP password |
+| Secret         | Description         |
+| -------------- | ------------------- |
+| `FTP_HOST`     | FTP server hostname |
+| `FTP_USER`     | FTP username        |
+| `FTP_PASSWORD` | FTP password        |
 
 ### Branch → environment
 
-| Branch | Target path |
-|--------|-------------|
-| `dev` | `.../wp-content/plugins/vvp-fact-check-search-dev/` |
+| Branch | Target path                                          |
+| ------ | ---------------------------------------------------- |
+| `dev`  | `.../wp-content/plugins/vvp-fact-check-search-dev/`  |
 | `main` | `.../wp-content/plugins/vvp-fact-check-search-prod/` |
 
 Each workflow: checks out → installs pnpm deps → builds → mirrors to FTP (excluding `node_modules`, `src/`, dev configs). The `dev` workflow patches the plugin display name to append `(Beta)`.
@@ -313,10 +317,10 @@ rsync -av \
 
 ### Faktencheck Suche
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| Such-API URL | `https://ai.volksverpetzer-app.de/api/vector-search/` | POST endpoint for search queries |
-| Import-API URL | `https://ai.volksverpetzer-app.de/api/import-url/` | GET endpoint for URL content import |
+| Setting        | Default                                               | Description                         |
+| -------------- | ----------------------------------------------------- | ----------------------------------- |
+| Such-API URL   | `https://ai.volksverpetzer-app.de/api/vector-search/` | POST endpoint for search queries    |
+| Import-API URL | `https://ai.volksverpetzer-app.de/api/import-url/`    | GET endpoint for URL content import |
 
 Values are injected by PHP as JSON into a `<script id="vvp-fact-check-search-config">` tag and consumed by the frontend bundle.
 
@@ -384,14 +388,14 @@ Copy `modules/FactCheckSearch/` to `modules/YourModule/`. Rename all files, clas
 
 Copy `src/components/fact-check-search/` to `src/components/your-module/`. Update:
 
-| File | What to change |
-|------|---------------|
-| `module.json` | `slug`, `title`, `attrs` (settings schema) |
-| `types.ts` | Attribute interface |
-| `constants.ts` | Default values |
-| `edit.tsx` | DIVI VB preview React component (static, no API calls) |
-| `frontend.tsx` | Webpack entry: mounts your React app |
-| `style.scss` | Component CSS |
+| File           | What to change                                         |
+| -------------- | ------------------------------------------------------ |
+| `module.json`  | `slug`, `title`, `attrs` (settings schema)             |
+| `types.ts`     | Attribute interface                                    |
+| `constants.ts` | Default values                                         |
+| `edit.tsx`     | DIVI VB preview React component (static, no API calls) |
+| `frontend.tsx` | Webpack entry: mounts your React app                   |
+| `style.scss`   | Component CSS                                          |
 
 Available DIVI attribute components: `divi/text`, `divi/select`, `divi/toggle`, `divi/color-picker`.
 
@@ -422,27 +426,33 @@ Update the `sed` patch in `.github/workflows/deploy-dev.yml` if needed.
 ## Troubleshooting
 
 **Module does not appear in the DIVI VB module list**
+
 - DIVI 5 (not DIVI 4) must be active — the APIs are not backwards-compatible.
 - Run `pnpm build` — `modules-json/` must exist with compiled `module.json` files.
 - Check the PHP error log for namespace or autoloader errors.
 
 **Styles not loading**
+
 - Confirm `styles/main.css` was generated by the build.
 - Check `wp_enqueue_style` paths in `vvp-fact-check-search.php`.
 
 **Front-end JS not running**
+
 - Check the browser console for errors.
 - Confirm the script is enqueued (Network tab).
 - Verify the wrapper element has the expected `data-*` attributes in the page source.
 
 **pnpm preview fails to start**
+
 - Run `pnpm install` first — `vite` and `@vitejs/plugin-react` must be installed.
 - Port 8899 must be free.
 
 **PHP preview shows no data**
+
 - `curl` extension must be available: `php -r "echo extension_loaded('curl') ? 'ok' : 'missing';"`.
 - Run `php -S localhost:8787 preview.php?flush=1` to clear the transient cache.
 
 **CI deployment FTP errors**
+
 - Confirm all three secrets are set in GitHub repository settings.
 - Reduce `--parallel` in the `lftp` call if the host blocks multiple simultaneous connections.

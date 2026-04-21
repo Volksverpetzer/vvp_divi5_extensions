@@ -1,3 +1,3 @@
 export const moduleClassnames = () => {
-    return 'vvp-author-profile';
+  return "vvp-author-profile";
 };

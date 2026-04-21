@@ -1,92 +1,106 @@
-import * as React from 'react';
-import { createRoot } from 'react-dom/client';
-import { InstagramSlideshow } from './InstagramSlideshow';
-import { PodcastBanner } from './PodcastBanner';
+import * as React from "react";
+import { createRoot } from "react-dom/client";
+import { InstagramSlideshow } from "./InstagramSlideshow";
+import { PodcastBanner } from "./PodcastBanner";
 
 const initInstagramSlideshows = () => {
-    const mounts = document.querySelectorAll('.vvp-co-ig-mount:not([data-ig-initialized="true"])');
-    mounts.forEach((mount) => {
-        mount.setAttribute('data-ig-initialized', 'true');
-        const rawProps = mount.getAttribute('data-ig-props');
-        if (rawProps) {
-            try {
-                const props = JSON.parse(rawProps);
-                createRoot(mount).render(<InstagramSlideshow {...props} />);
-            } catch (e) {
-                console.error("Failed to parse Instagram slideshow props", e);
-            }
-        }
-    });
+  const mounts = document.querySelectorAll(
+    '.vvp-co-ig-mount:not([data-ig-initialized="true"])',
+  );
+  mounts.forEach((mount) => {
+    mount.setAttribute("data-ig-initialized", "true");
+    const rawProps = mount.getAttribute("data-ig-props");
+    if (rawProps) {
+      try {
+        const props = JSON.parse(rawProps);
+        createRoot(mount).render(<InstagramSlideshow {...props} />);
+      } catch (e) {
+        console.error("Failed to parse Instagram slideshow props", e);
+      }
+    }
+  });
 };
 
 const initPodcastBanners = () => {
-    const mounts = document.querySelectorAll('.vvp-co-podcast-mount:not([data-podcast-initialized="true"])');
-    mounts.forEach((mount) => {
-        mount.setAttribute('data-podcast-initialized', 'true');
-        const rawProps = mount.getAttribute('data-podcast-props');
-        if (rawProps) {
-            try {
-                const props = JSON.parse(rawProps);
-                createRoot(mount).render(<PodcastBanner {...props} />);
-            } catch (e) {
-                console.error("Failed to parse podcast banner props", e);
-            }
-        }
-    });
+  const mounts = document.querySelectorAll(
+    '.vvp-co-podcast-mount:not([data-podcast-initialized="true"])',
+  );
+  mounts.forEach((mount) => {
+    mount.setAttribute("data-podcast-initialized", "true");
+    const rawProps = mount.getAttribute("data-podcast-props");
+    if (rawProps) {
+      try {
+        const props = JSON.parse(rawProps);
+        createRoot(mount).render(<PodcastBanner {...props} />);
+      } catch (e) {
+        console.error("Failed to parse podcast banner props", e);
+      }
+    }
+  });
 };
 
-const LS_KEY = 'vvp_co_articles_only';
+const LS_KEY = "vvp_co_articles_only";
 
 const applyArticlesFilter = (grid: Element, checked: boolean) => {
-    grid.classList.toggle('vvp-co__feed-grid--articles-only', checked);
+  grid.classList.toggle("vvp-co__feed-grid--articles-only", checked);
 };
 
 const initArticlesToggle = (wrapper: Element) => {
-    const toggle = wrapper.querySelector<HTMLInputElement>('.vvp-co__toggle-input');
-    const track  = wrapper.querySelector<HTMLElement>('.vvp-co__toggle-track');
-    const grid   = wrapper.querySelector<HTMLElement>('.vvp-co__feed-grid');
-    if (!toggle || !track || !grid) return;
+  const toggle = wrapper.querySelector<HTMLInputElement>(
+    ".vvp-co__toggle-input",
+  );
+  const track = wrapper.querySelector<HTMLElement>(".vvp-co__toggle-track");
+  const grid = wrapper.querySelector<HTMLElement>(".vvp-co__feed-grid");
+  if (!toggle || !track || !grid) return;
 
-    const apply = (checked: boolean) => {
-        toggle.checked = checked;
-        track.classList.toggle('is-on', checked);
-        applyArticlesFilter(grid, checked);
-    };
+  const apply = (checked: boolean) => {
+    toggle.checked = checked;
+    track.classList.toggle("is-on", checked);
+    applyArticlesFilter(grid, checked);
+  };
 
-    let stored = false;
-    try { stored = localStorage.getItem(LS_KEY) === 'true'; } catch (_) {}
-    apply(stored);
+  let stored = false;
+  try {
+    stored = localStorage.getItem(LS_KEY) === "true";
+  } catch (_) {}
+  apply(stored);
 
-    toggle.addEventListener('change', () => {
-        try { localStorage.setItem(LS_KEY, String(toggle.checked)); } catch (_) {}
-        apply(toggle.checked);
-    });
+  toggle.addEventListener("change", () => {
+    try {
+      localStorage.setItem(LS_KEY, String(toggle.checked));
+    } catch (_) {}
+    apply(toggle.checked);
+  });
 };
 
 const initToggles = () => {
-    document.querySelectorAll<HTMLElement>('.vvp-co__wrapper:not([data-toggle-initialized])').forEach((wrapper) => {
-        wrapper.setAttribute('data-toggle-initialized', 'true');
-        initArticlesToggle(wrapper);
+  document
+    .querySelectorAll<HTMLElement>(
+      ".vvp-co__wrapper:not([data-toggle-initialized])",
+    )
+    .forEach((wrapper) => {
+      wrapper.setAttribute("data-toggle-initialized", "true");
+      initArticlesToggle(wrapper);
     });
 };
 
 const initAll = () => {
-    initInstagramSlideshows();
-    initPodcastBanners();
-    initToggles();
+  initInstagramSlideshows();
+  initPodcastBanners();
+  initToggles();
 };
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAll);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initAll);
 } else {
-    initAll();
+  initAll();
 }
 
 // Re-init hooks for Divi Builder and AJAX
-document.addEventListener('et_pb_reinit_modules', initAll);
-document.addEventListener('ajaxComplete', initAll);
+document.addEventListener("et_pb_reinit_modules", initAll);
+document.addEventListener("ajaxComplete", initAll);
 
-if (document.body && 'MutationObserver' in window) {
-    const observer = new MutationObserver(initAll);
-    observer.observe(document.body, { childList: true, subtree: true });
+if (document.body && "MutationObserver" in window) {
+  const observer = new MutationObserver(initAll);
+  observer.observe(document.body, { childList: true, subtree: true });
 }
