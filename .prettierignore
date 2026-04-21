@@ -1,0 +1,12 @@
+node_modules
+vendor
+modules-json
+scripts
+styles
+pnpm-lock.yaml
+composer.lock
+dist
+build
+.cache
+coverage
+.next
