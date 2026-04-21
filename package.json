@@ -80,54 +80,5 @@
     "resolutions": {
         "@types/react": "17.0.44",
         "@types/react-dom": "17.0.14"
-    },
-    "pnpm": {
-        "allowedDeprecatedVersions": {
-            "divi-types": "1.0.10",
-            "divi-types-app-preferences": "1.0.10",
-            "divi-types-app-ui": "1.0.10",
-            "divi-types-conversion": "1.0.10",
-            "divi-types-data": "1.0.10",
-            "divi-types-draggable": "1.0.10",
-            "divi-types-edit-post": "1.0.10",
-            "divi-types-error-boundary": "1.0.10",
-            "divi-types-events": "1.0.10",
-            "divi-types-external": "1.0.10",
-            "divi-types-field-library": "1.0.10",
-            "divi-types-fonts": "1.0.10",
-            "divi-types-help": "1.0.10",
-            "divi-types-history": "1.0.10",
-            "divi-types-icon-library": "1.0.10",
-            "divi-types-keyboard-shortcuts": "1.0.10",
-            "divi-types-modal": "1.0.10",
-            "divi-types-modal-library": "1.0.10",
-            "divi-types-module": "1.0.10",
-            "divi-types-module-library": "1.0.10",
-            "divi-types-module-utils": "1.0.10",
-            "divi-types-rest": "1.0.10",
-            "divi-types-right-click-options": "1.0.10",
-            "divi-types-script-library": "1.0.10",
-            "divi-types-serialized-post": "1.0.10",
-            "divi-types-settings": "1.0.10",
-            "divi-types-shortcode-module": "1.0.10",
-            "divi-types-style-library": "1.0.10",
-            "@babel/plugin-proposal-class-properties": "*",
-            "@types/wordpress__i18n": "*",
-            "airbnb-prop-types": "*"
-        },
-        "overrides": {
-            "tinymce@<6.8.1": ">=6.8.1",
-            "tinymce@<7.0.0": ">=7.0.0",
-            "tinymce@<5.11.0": ">=5.11.0",
-            "esbuild@<=0.24.2": ">=0.25.0",
-            "lodash@>=4.0.0 <=4.17.22": ">=4.17.23",
-            "serialize-javascript@<=7.0.2": ">=7.0.3",
-            "serialize-javascript@<7.0.5": ">=7.0.5",
-            "lodash@>=4.0.0 <=4.17.23": ">=4.18.0",
-            "lodash@<=4.17.23": ">=4.18.0"
-        },
-        "ignoredBuiltDependencies": [
-            "esbuild"
-        ]
     }
 }
