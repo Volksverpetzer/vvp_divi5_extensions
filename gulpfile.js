@@ -20,7 +20,7 @@ gulp.task("zip", function () {
       "!composer.json",
       "!composer.lock",
     ])
-    .pipe(zip("vvp-fact-check-search.zip"))
+    .pipe(zip("vvp-divi5-extensions.zip"))
     .pipe(gulp.dest("."));
 });
 
