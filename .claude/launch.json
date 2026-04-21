@@ -4,7 +4,7 @@
     {
       "name": "preview",
       "runtimeExecutable": "php",
-      "runtimeArgs": ["-S", "localhost:8787", "preview.php"],
+      "runtimeArgs": ["-S", "localhost:8787", "dev-preview.php"],
       "port": 8787
     },
     {

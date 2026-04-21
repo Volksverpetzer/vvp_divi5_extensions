@@ -8,7 +8,7 @@ Author:      Volksverpetzer
 Author URI:  https://volksverpetzer.de
 License:     GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: vvp-fact-check-search
+Text Domain: vvp-divi5-extensions
 Domain Path: /languages
 
 Faktencheck Suche für DIVI 5 is free software: you can redistribute it and/or modify
