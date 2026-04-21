@@ -1,8 +1,8 @@
-import { type ModuleLibrary } from "@divi/types";
+import { type Module } from "@divi/types";
 import { type ContentOverviewAttrs } from "./types";
 
 export const ModuleStyles = (
-  _props: ModuleLibrary.Module.Style.CustomStylesProps<ContentOverviewAttrs>,
+  _props: Module.StylesProps<ContentOverviewAttrs>,
 ) => {
   return null;
 };

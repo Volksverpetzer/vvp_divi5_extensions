@@ -1,8 +1,8 @@
-import { type ModuleLibrary } from "@divi/types";
+import { type Module } from "@divi/types";
 import { type ContentOverviewAttrs } from "./types";
 
 export const ModuleScriptData = (
-  _props: ModuleLibrary.Module.ScriptData.CustomScriptDataProps<ContentOverviewAttrs>,
+  _props: Module.ScriptData.Component.Props<ContentOverviewAttrs>,
 ) => {
   return null;
 };

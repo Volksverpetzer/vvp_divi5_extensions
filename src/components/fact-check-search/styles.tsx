@@ -1,8 +1,8 @@
-import { type ModuleLibrary } from "@divi/types";
+import { type Module } from "@divi/types";
 import { type FactCheckSearchAttrs } from "./types";
 
 export const ModuleStyles = (
-  _props: ModuleLibrary.Module.Style.CustomStylesProps<FactCheckSearchAttrs>,
+  _props: Module.StylesProps<FactCheckSearchAttrs>,
 ) => {
   return null;
 };

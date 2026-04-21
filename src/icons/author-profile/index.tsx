@@ -1,7 +1,6 @@
 import React, { type ReactElement } from "react";
 
 export const name = "vvp/author-profile-icon";
-export const viewBox = "0 0 24 24";
 export const component = (): ReactElement => (
   <>
     {/* Person silhouette */}
