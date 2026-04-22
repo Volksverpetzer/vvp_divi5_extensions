@@ -3,12 +3,28 @@ import { createRoot } from "react-dom/client";
 import "../src/components/fact-check-search/style.scss";
 import "../src/components/content-overview/style.scss";
 import "../src/components/author-profile/style.scss";
+import "../src/components/trending-items/style.scss";
 import { FactCheckSearchApp } from "../src/components/fact-check-search/App";
 import { InstagramSlideshow } from "../src/components/content-overview/InstagramSlideshow";
 import { PodcastBanner } from "../src/components/content-overview/PodcastBanner";
 import { AuthorProfileApp } from "../src/components/author-profile/App";
+import { TrendingItemsApp } from "../src/components/trending-items/App";
 
 // ── Sample data ───────────────────────────────────────────────────────────────
+
+const TRENDING_ALL = [
+  { title: "Faktencheck: Behauptung über Migranten widerlegt",        url: "/faktencheck/behauptung-migranten/",   thumbnailUrl: "https://picsum.photos/seed/101/320/240", type: "post", pageviews: 12450 },
+  { title: "5 Mythen über Impfstoffe — und was wirklich stimmt",      url: "/faktencheck/mythen-impfstoffe/",      thumbnailUrl: "https://picsum.photos/seed/102/320/240", type: "post", pageviews:  9830 },
+  { title: "Warum dieser Viral-Post kompletter Unsinn ist",            url: "/desinformation/viral-post-unsinn/",  thumbnailUrl: "https://picsum.photos/seed/103/320/240", type: "post", pageviews:  7612 },
+  { title: "Klimaschutz: Was die Zahlen wirklich sagen",              url: "/faktencheck/klimaschutz-zahlen/",     thumbnailUrl: "",                                       type: "post", pageviews:  6201 },
+  { title: "Desinformation im Wahlkampf: Das steckt dahinter",        url: "/desinformation/wahlkampf/",           thumbnailUrl: "",                                       type: "post", pageviews:  5443 },
+];
+
+const TRENDING_PODCAST = [
+  { title: "Podcast: Medienmanipulation im Netz erklärt",             url: "/podcast/medienmanipulation/",         thumbnailUrl: "https://picsum.photos/seed/107/320/240", type: "post", pageviews:  3870 },
+];
+
+const TRENDING_EMPTY: never[] = [];
 
 const AUTHOR_SINGLE = [
   {
@@ -184,6 +200,30 @@ const App = () => (
             layout="vertical"
             avatarSize={80}
           />
+        </div>
+      </Section>
+
+      <Section title="TrendingItems · Alle (mit Vorschaubildern)">
+        <div className="vvp-trending-items" style={{ maxWidth: 480, padding: "1.5rem", background: "#fff", borderRadius: 8, boxShadow: "0 1px 4px rgba(0,0,0,.08)" }}>
+          <TrendingItemsApp items={TRENDING_ALL} showThumbnail />
+        </div>
+      </Section>
+
+      <Section title="TrendingItems · Alle (ohne Vorschaubilder)">
+        <div className="vvp-trending-items" style={{ maxWidth: 480, padding: "1.5rem", background: "#fff", borderRadius: 8, boxShadow: "0 1px 4px rgba(0,0,0,.08)" }}>
+          <TrendingItemsApp items={TRENDING_ALL} showThumbnail={false} />
+        </div>
+      </Section>
+
+      <Section title="TrendingItems · Podcast (1 Treffer nach URL-Filter)">
+        <div className="vvp-trending-items" style={{ maxWidth: 480, padding: "1.5rem", background: "#fff", borderRadius: 8, boxShadow: "0 1px 4px rgba(0,0,0,.08)" }}>
+          <TrendingItemsApp items={TRENDING_PODCAST} showThumbnail />
+        </div>
+      </Section>
+
+      <Section title="TrendingItems · Leerer Zustand">
+        <div className="vvp-trending-items" style={{ maxWidth: 480, padding: "1.5rem", background: "#fff", borderRadius: 8, boxShadow: "0 1px 4px rgba(0,0,0,.08)" }}>
+          <TrendingItemsApp items={TRENDING_EMPTY} showThumbnail />
         </div>
       </Section>
 
