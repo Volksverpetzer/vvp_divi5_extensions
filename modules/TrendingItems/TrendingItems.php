@@ -34,8 +34,8 @@ class TrendingItems implements DependencyInterface
      */
     public function load()
     {
-        $module_json_folder_path = VVP_FACT_CHECK_JSON_PATH . 'trending-items/';
-        $source_module_json_path = VVP_FACT_CHECK_PATH . 'src/components/trending-items/module.json';
+        $module_json_folder_path = VVP_DIVI5_JSON_PATH . 'trending-items/';
+        $source_module_json_path = VVP_DIVI5_PATH . 'src/components/trending-items/module.json';
 
         if (!file_exists($module_json_folder_path . 'module.json') && file_exists($source_module_json_path)) {
             $module_json_folder_path = dirname($source_module_json_path) . '/';
