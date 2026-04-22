@@ -450,7 +450,7 @@ Update the `sed` patch in `.github/workflows/deploy-dev.yml` if needed.
 **PHP preview shows no data**
 
 - `curl` extension must be available: `php -r "echo extension_loaded('curl') ? 'ok' : 'missing';"`.
-- Run `php -S localhost:8787 dev-preview.php?flush=1` to clear the transient cache.
+- Clear the transient cache: visit `http://localhost:8787/?flush=1` in the browser, or run `php dev-preview.php --flush` from the CLI.
 
 **CI deployment FTP errors**
 
