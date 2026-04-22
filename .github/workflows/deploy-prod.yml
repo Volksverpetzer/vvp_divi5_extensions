@@ -33,7 +33,7 @@ jobs:
       - name: Prepare deploy directory
         run: |
           mkdir -p /tmp/deploy
-          cp vvp-fact-check-search.php /tmp/deploy/
+          cp vvp-divi5-extensions.php /tmp/deploy/
           cp -r modules /tmp/deploy/
           cp -r modules-json /tmp/deploy/
           cp -r scripts /tmp/deploy/
