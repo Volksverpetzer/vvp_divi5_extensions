@@ -58,7 +58,7 @@ jobs:
           LFTP
           echo "open -u ${FTP_USER},${FTP_PASSWORD} ${FTP_HOST}" >> /tmp/lftp-script.txt
           cat >> /tmp/lftp-script.txt << 'LFTP'
-          mirror --reverse --delete --verbose /tmp/deploy/ /public_html/wp-content/plugins/vvp-fact-check-search-dev/
+          mirror --reverse --delete --verbose /tmp/deploy/ /public_html/wp-content/plugins/vvp-divi5-extensions-dev/
           bye
           LFTP
           lftp -f /tmp/lftp-script.txt
