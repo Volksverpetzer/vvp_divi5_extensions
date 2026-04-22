@@ -35,7 +35,7 @@ export const TrendingItemsEdit = (
 
       <div className="vvp-ti__editor-preview">
         <div className="vvp-ti__editor-notice">
-          Vorschau — im Frontend werden echte Plausible-Daten verwendet.
+          Vorschau — im Frontend werden echte Trending-Daten geladen.
         </div>
         <TrendingItemsApp
           items={PLACEHOLDER_ITEMS}

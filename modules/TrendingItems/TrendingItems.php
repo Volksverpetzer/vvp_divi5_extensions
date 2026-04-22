@@ -16,9 +16,7 @@ use ET\Builder\Framework\DependencyManagement\Interfaces\DependencyInterface;
 use ET\Builder\Packages\ModuleLibrary\ModuleRegistration;
 
 /**
- * `TrendingItems` module — displays most-read content sourced from Plausible Analytics.
- *
- * Requires `define('VVP_PLAUSIBLE_TOKEN', '...')` in wp-config.php.
+ * `TrendingItems` module — displays most-read content via WordPress Popular Posts.
  *
  * @since 1.0.0
  */

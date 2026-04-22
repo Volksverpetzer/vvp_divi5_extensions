@@ -32,9 +32,6 @@ if (document.readyState === "loading") {
   initAll();
 }
 
-document.addEventListener("et_pb_reinit_modules", initAll);
-document.addEventListener("ajaxComplete", initAll);
-
 if (document.body && "MutationObserver" in window) {
   const observer = new MutationObserver(initAll);
   observer.observe(document.body, { childList: true, subtree: true });
