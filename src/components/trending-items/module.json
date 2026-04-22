@@ -1,0 +1,168 @@
+{
+  "name": "vvp/trendingItems",
+  "d4Shortcode": "",
+  "title": "Trending Beiträge",
+  "titles": "Trending Beiträge",
+  "moduleIcon": "vvp/trending-items-icon",
+  "moduleClassName": "trending_items",
+  "moduleOrderClassName": "trending_items",
+  "category": "module",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "styleProps": {
+        "border": {
+          "important": true
+        }
+      },
+      "settings": {
+        "meta": {
+          "adminLabel": {}
+        },
+        "advanced": {
+          "link": {},
+          "text": {},
+          "htmlAttributes": {}
+        },
+        "decoration": {
+          "attributes": {},
+          "background": {},
+          "sizing": {},
+          "spacing": {},
+          "border": {},
+          "boxShadow": {},
+          "filters": {},
+          "transform": {},
+          "animation": {},
+          "overflow": {},
+          "disabledOn": {},
+          "transition": {},
+          "position": {},
+          "zIndex": {},
+          "scroll": {},
+          "sticky": {}
+        }
+      }
+    },
+    "contentType": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 10,
+            "render": true,
+            "attrName": "contentType.innerContent",
+            "label": "Inhaltstyp",
+            "description": "Welche Art von Beiträgen soll angezeigt werden?",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/select",
+              "type": "field",
+              "props": {
+                "options": [
+                  { "value": "all", "label": "Alle Beiträge" },
+                  { "value": "article", "label": "Artikel" },
+                  { "value": "podcast", "label": "Podcast" },
+                  { "value": "youtube", "label": "YouTube / Video" },
+                  { "value": "instagram", "label": "Instagram" }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "itemCount": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 20,
+            "render": true,
+            "attrName": "itemCount.innerContent",
+            "label": "Anzahl der Beiträge",
+            "description": "Wie viele Trending-Beiträge sollen angezeigt werden? (1–20)",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "range": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 30,
+            "render": true,
+            "attrName": "range.innerContent",
+            "label": "Zeitraum",
+            "description": "Über welchen Zeitraum werden die meistgelesenen Beiträge ermittelt?",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/select",
+              "type": "field",
+              "props": {
+                "options": [
+                  { "value": "daily", "label": "Letzte 24 Stunden" },
+                  { "value": "weekly", "label": "Letzte 7 Tage" },
+                  { "value": "monthly", "label": "Letzte 30 Tage" },
+                  { "value": "all-time", "label": "Gesamt" }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "showThumbnail": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 40,
+            "render": true,
+            "attrName": "showThumbnail.innerContent",
+            "label": "Vorschaubild anzeigen",
+            "description": "Das Beitragsbild neben dem Titel einblenden.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/toggle",
+              "type": "field"
+            }
+          }
+        }
+      }
+    }
+  },
+  "usesContext": [],
+  "settings": {
+    "content": "auto",
+    "design": "auto",
+    "advanced": "auto"
+  }
+}
