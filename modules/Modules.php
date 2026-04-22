@@ -15,6 +15,7 @@ if (!defined('ABSPATH')) {
 use VVP\FactCheckSearch\FactCheckSearch\FactCheckSearch;
 use VVP\FactCheckSearch\ContentOverview\ContentOverview;
 use VVP\FactCheckSearch\AuthorProfile\AuthorProfile;
+use VVP\FactCheckSearch\TrendingItems\TrendingItems;
 
 add_action(
     'divi_module_library_modules_dependency_tree',
@@ -22,5 +23,6 @@ add_action(
         $dependency_tree->add_dependency(new FactCheckSearch());
         $dependency_tree->add_dependency(new ContentOverview());
         $dependency_tree->add_dependency(new AuthorProfile());
+        $dependency_tree->add_dependency(new TrendingItems());
     }
 );
