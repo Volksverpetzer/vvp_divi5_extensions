@@ -2,11 +2,11 @@
 /**
  * Module: TrendingItems class.
  *
- * @package VVP\FactCheckSearch\TrendingItems
+ * @package VVP\Divi5\TrendingItems
  * @since 1.0.0
  */
 
-namespace VVP\FactCheckSearch\TrendingItems;
+namespace VVP\Divi5\TrendingItems;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');
@@ -34,8 +34,8 @@ class TrendingItems implements DependencyInterface
      */
     public function load()
     {
-        $module_json_folder_path = VVP_FACT_CHECK_JSON_PATH . 'trending-items/';
-        $source_module_json_path = VVP_FACT_CHECK_PATH . 'src/components/trending-items/module.json';
+        $module_json_folder_path = VVP_DIVI5_JSON_PATH . 'trending-items/';
+        $source_module_json_path = VVP_DIVI5_PATH . 'src/components/trending-items/module.json';
 
         if (!file_exists($module_json_folder_path . 'module.json') && file_exists($source_module_json_path)) {
             $module_json_folder_path = dirname($source_module_json_path) . '/';

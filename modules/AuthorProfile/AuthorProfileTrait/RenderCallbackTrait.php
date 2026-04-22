@@ -2,11 +2,11 @@
 /**
  * AuthorProfile::render_callback()
  *
- * @package VVP\FactCheckSearch\AuthorProfile
+ * @package VVP\Divi5\AuthorProfile
  * @since 1.0.0
  */
 
-namespace VVP\FactCheckSearch\AuthorProfile\AuthorProfileTrait;
+namespace VVP\Divi5\AuthorProfile\AuthorProfileTrait;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');
@@ -16,7 +16,7 @@ use ET\Builder\Packages\Module\Module;
 use ET\Builder\Framework\Utility\HTMLUtility;
 use ET\Builder\FrontEnd\BlockParser\BlockParserStore;
 use ET\Builder\Packages\Module\Options\Element\ElementComponents;
-use VVP\FactCheckSearch\AuthorProfile\AuthorProfile;
+use VVP\Divi5\AuthorProfile\AuthorProfile;
 
 trait RenderCallbackTrait
 {

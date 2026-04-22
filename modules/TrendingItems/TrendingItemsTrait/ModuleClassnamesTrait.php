@@ -2,11 +2,11 @@
 /**
  * TrendingItems::module_classnames()
  *
- * @package VVP\FactCheckSearch\TrendingItems
+ * @package VVP\Divi5\TrendingItems
  * @since 1.0.0
  */
 
-namespace VVP\FactCheckSearch\TrendingItems\TrendingItemsTrait;
+namespace VVP\Divi5\TrendingItems\TrendingItemsTrait;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');

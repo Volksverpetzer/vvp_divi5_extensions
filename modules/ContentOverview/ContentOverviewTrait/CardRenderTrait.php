@@ -2,11 +2,11 @@
 /**
  * HTML card rendering helpers for each content kind.
  *
- * @package VVP\FactCheckSearch\ContentOverview
+ * @package VVP\Divi5\ContentOverview
  * @since 1.0.0
  */
 
-namespace VVP\FactCheckSearch\ContentOverview\ContentOverviewTrait;
+namespace VVP\Divi5\ContentOverview\ContentOverviewTrait;
 
 trait CardRenderTrait
 {

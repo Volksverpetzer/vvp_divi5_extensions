@@ -2,20 +2,20 @@
 /**
  * Register all modules with dependency tree.
  *
- * @package VVP\FactCheckSearch
+ * @package VVP\Divi5
  * @since 1.0.0
  */
 
-namespace VVP\FactCheckSearch;
+namespace VVP\Divi5;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');
 }
 
-use VVP\FactCheckSearch\FactCheckSearch\FactCheckSearch;
-use VVP\FactCheckSearch\ContentOverview\ContentOverview;
-use VVP\FactCheckSearch\AuthorProfile\AuthorProfile;
-use VVP\FactCheckSearch\TrendingItems\TrendingItems;
+use VVP\Divi5\FactCheckSearch\FactCheckSearch;
+use VVP\Divi5\ContentOverview\ContentOverview;
+use VVP\Divi5\AuthorProfile\AuthorProfile;
+use VVP\Divi5\TrendingItems\TrendingItems;
 
 add_action(
     'divi_module_library_modules_dependency_tree',

@@ -2,11 +2,11 @@
 /**
  * AuthorProfile::module_styles()
  *
- * @package VVP\FactCheckSearch\AuthorProfile
+ * @package VVP\Divi5\AuthorProfile
  * @since 1.0.0
  */
 
-namespace VVP\FactCheckSearch\AuthorProfile\AuthorProfileTrait;
+namespace VVP\Divi5\AuthorProfile\AuthorProfileTrait;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');

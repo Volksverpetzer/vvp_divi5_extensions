@@ -199,7 +199,7 @@ Renders the current post author(s) with optional avatar, bio, and a link to the 
 composer install
 ```
 
-Sets up the PSR-4 autoloader for `VVP\FactCheckSearch\`.
+Sets up the PSR-4 autoloader for `VVP\Divi5\`.
 
 ### 2. Install Node dependencies
 

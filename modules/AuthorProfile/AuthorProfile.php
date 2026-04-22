@@ -2,11 +2,11 @@
 /**
  * Module: AuthorProfile class.
  *
- * @package VVP\FactCheckSearch\AuthorProfile
+ * @package VVP\Divi5\AuthorProfile
  * @since 1.0.0
  */
 
-namespace VVP\FactCheckSearch\AuthorProfile;
+namespace VVP\Divi5\AuthorProfile;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');
@@ -37,8 +37,8 @@ class AuthorProfile implements DependencyInterface
      */
     public function load()
     {
-        $module_json_folder_path = VVP_FACT_CHECK_JSON_PATH . 'author-profile/';
-        $source_module_json_path = VVP_FACT_CHECK_PATH . 'src/components/author-profile/module.json';
+        $module_json_folder_path = VVP_DIVI5_JSON_PATH . 'author-profile/';
+        $source_module_json_path = VVP_DIVI5_PATH . 'src/components/author-profile/module.json';
 
         if ( ! file_exists( $module_json_folder_path . 'module.json' ) && file_exists( $source_module_json_path ) ) {
             $module_json_folder_path = dirname( $source_module_json_path ) . '/';
