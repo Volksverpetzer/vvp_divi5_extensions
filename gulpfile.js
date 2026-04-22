@@ -19,6 +19,8 @@ gulp.task("zip", function () {
       "!package-lock.json",
       "!composer.json",
       "!composer.lock",
+      "!dev-preview.php",
+      "!.claude/**",
     ])
     .pipe(zip("vvp-divi5-extensions.zip"))
     .pipe(gulp.dest("."));
