@@ -30,13 +30,20 @@ class TrendingItems implements DependencyInterface
     /**
      * @since 1.0.0
      */
+    /**
+     * Loads `TrendingItems` and registers Front-End render callback.
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
     public function load()
     {
         $module_json_folder_path = VVP_DIVI5_JSON_PATH . 'trending-items/';
         $source_module_json_path = VVP_DIVI5_PATH . 'src/components/trending-items/module.json';
 
-        if (!file_exists($module_json_folder_path . 'module.json') && file_exists($source_module_json_path)) {
-            $module_json_folder_path = dirname($source_module_json_path) . '/';
+        if ( ! file_exists( $module_json_folder_path . 'module.json' ) && file_exists( $source_module_json_path ) ) {
+            $module_json_folder_path = dirname( $source_module_json_path ) . '/';
         }
 
         add_action(

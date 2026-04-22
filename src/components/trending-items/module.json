@@ -1,5 +1,6 @@
 {
   "name": "vvp/trendingItems",
+  "d4Shortcode": "",
   "title": "Trending Beiträge",
   "titles": "Trending Beiträge",
   "moduleIcon": "vvp/trending-items-icon",
@@ -158,7 +159,6 @@
       }
     }
   },
-  "usesContext": [],
   "settings": {
     "content": "auto",
     "design": "auto",
