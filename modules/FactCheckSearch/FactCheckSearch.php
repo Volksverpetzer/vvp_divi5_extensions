@@ -2,11 +2,11 @@
 /**
  * Module: FactCheckSearch class.
  *
- * @package VVP\FactCheckSearch\FactCheckSearch
+ * @package VVP\Divi5\FactCheckSearch
  * @since 1.0.0
  */
 
-namespace VVP\FactCheckSearch\FactCheckSearch;
+namespace VVP\Divi5\FactCheckSearch;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');

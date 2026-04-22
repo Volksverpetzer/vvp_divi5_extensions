@@ -2,11 +2,11 @@
 /**
  * Module: TrendingItems class.
  *
- * @package VVP\FactCheckSearch\TrendingItems
+ * @package VVP\Divi5\TrendingItems
  * @since 1.0.0
  */
 
-namespace VVP\FactCheckSearch\TrendingItems;
+namespace VVP\Divi5\TrendingItems;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');

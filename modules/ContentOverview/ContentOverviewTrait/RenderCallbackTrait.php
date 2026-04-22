@@ -2,11 +2,11 @@
 /**
  * ContentOverview::render_callback() — orchestrates data fetching, grouping, and rendering.
  *
- * @package VVP\FactCheckSearch\ContentOverview
+ * @package VVP\Divi5\ContentOverview
  * @since 1.0.0
  */
 
-namespace VVP\FactCheckSearch\ContentOverview\ContentOverviewTrait;
+namespace VVP\Divi5\ContentOverview\ContentOverviewTrait;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
 use ET\Builder\Packages\Module\Module;
 use ET\Builder\FrontEnd\BlockParser\BlockParserStore;
 use ET\Builder\Packages\Module\Options\Element\ElementComponents;
-use VVP\FactCheckSearch\ContentOverview\ContentOverview;
+use VVP\Divi5\ContentOverview\ContentOverview;
 
 require_once __DIR__ . '/DataFetchTrait.php';
 require_once __DIR__ . '/FeedGroupTrait.php';

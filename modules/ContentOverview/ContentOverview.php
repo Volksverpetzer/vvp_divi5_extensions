@@ -2,11 +2,11 @@
 /**
  * Module: ContentOverview class.
  *
- * @package VVP\FactCheckSearch\ContentOverview
+ * @package VVP\Divi5\ContentOverview
  * @since 1.0.0
  */
 
-namespace VVP\FactCheckSearch\ContentOverview;
+namespace VVP\Divi5\ContentOverview;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');

@@ -2,7 +2,7 @@
 
 spl_autoload_register(
 	function ( $class ) {
-		$prefix   = 'VVP\\FactCheckSearch\\';
+		$prefix   = 'VVP\\Divi5\\';
 		$base_dir = __DIR__ . '/';
 
 		$len = strlen( $prefix );

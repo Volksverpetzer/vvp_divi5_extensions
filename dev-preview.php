@@ -216,7 +216,7 @@ namespace {
 } // end namespace {}
 
 // ── AuthorProfile namespace: stub + preview wrapper ──────────────────────────
-namespace VVP\FactCheckSearch\AuthorProfile {
+namespace VVP\Divi5\AuthorProfile {
 
     class AuthorProfile {}
 
@@ -254,15 +254,15 @@ namespace VVP\FactCheckSearch\AuthorProfile {
         }
     }
 
-} // end namespace VVP\FactCheckSearch\AuthorProfile
+} // end namespace VVP\Divi5\AuthorProfile
 
 // ── ContentOverview namespace: stub + preview wrapper ────────────────────────
-namespace VVP\FactCheckSearch\ContentOverview {
+namespace VVP\Divi5\ContentOverview {
 
     // Stub the self-reference used in render_callback() (not called in preview)
     class ContentOverview {}
 
-    // Load the real trait (defines VVP\FactCheckSearch\ContentOverview\ContentOverviewTrait\RenderCallbackTrait)
+    // Load the real trait (defines VVP\Divi5\ContentOverview\ContentOverviewTrait\RenderCallbackTrait)
     require __DIR__ . '/modules/ContentOverview/ContentOverviewTrait/RenderCallbackTrait.php';
 
     /**
@@ -278,10 +278,10 @@ namespace VVP\FactCheckSearch\ContentOverview {
         }
     }
 
-} // end namespace VVP\FactCheckSearch\ContentOverview
+} // end namespace VVP\Divi5\ContentOverview
 
 // ── TrendingItems namespace: stub + preview wrapper ──────────────────────────
-namespace VVP\FactCheckSearch\TrendingItems {
+namespace VVP\Divi5\TrendingItems {
 
     class TrendingItems {}
 
@@ -317,18 +317,18 @@ namespace VVP\FactCheckSearch\TrendingItems {
         }
     }
 
-} // end namespace VVP\FactCheckSearch\TrendingItems
+} // end namespace VVP\Divi5\TrendingItems
 
 // ── Back to global: render + output ──────────────────────────────────────────
 namespace {
 
     $t0            = microtime(true);
-    $overview      = \VVP\FactCheckSearch\ContentOverview\ContentOverviewPreview::render();
-    $author_html   = \VVP\FactCheckSearch\AuthorProfile\AuthorProfilePreview::render_with_mock();
-    $trending_all  = \VVP\FactCheckSearch\TrendingItems\TrendingItemsPreview::render('all', 5);
-    $trending_art  = \VVP\FactCheckSearch\TrendingItems\TrendingItemsPreview::render('article', 5);
-    $trending_pod  = \VVP\FactCheckSearch\TrendingItems\TrendingItemsPreview::render('podcast', 3);
-    $trending_yt   = \VVP\FactCheckSearch\TrendingItems\TrendingItemsPreview::render('youtube', 3);
+    $overview      = \VVP\Divi5\ContentOverview\ContentOverviewPreview::render();
+    $author_html   = \VVP\Divi5\AuthorProfile\AuthorProfilePreview::render_with_mock();
+    $trending_all  = \VVP\Divi5\TrendingItems\TrendingItemsPreview::render('all', 5);
+    $trending_art  = \VVP\Divi5\TrendingItems\TrendingItemsPreview::render('article', 5);
+    $trending_pod  = \VVP\Divi5\TrendingItems\TrendingItemsPreview::render('podcast', 3);
+    $trending_yt   = \VVP\Divi5\TrendingItems\TrendingItemsPreview::render('youtube', 3);
 
     $section_label = '<h2 style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6b7280;margin-bottom:1.5rem;">';
 
