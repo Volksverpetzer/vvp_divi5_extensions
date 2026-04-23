@@ -122,6 +122,15 @@ trait RenderCallbackTrait
         // 2. Sort articles, skip hero ----------------------------------------
 
         $all_articles = array_merge($vp_posts, $pp_posts);
+        $seen_ids     = [];
+        $all_articles = array_values(array_filter($all_articles, function ($post) use (&$seen_ids) {
+            $id = $post['id'] ?? null;
+            if ($id === null || isset($seen_ids[$id])) {
+                return false;
+            }
+            $seen_ids[$id] = true;
+            return true;
+        }));
         usort($all_articles, function ($a, $b) {
             return strtotime($b['date'] ?? 0) - strtotime($a['date'] ?? 0);
         });

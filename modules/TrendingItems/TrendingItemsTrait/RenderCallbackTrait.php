@@ -29,12 +29,10 @@ trait RenderCallbackTrait
      */
     public static function render_callback($attrs, $content, $block, $elements)
     {
-        $content_type = $attrs['contentType']['desktop']['value'] ?? 'all';
-        $item_count   = max(1, min(20, (int) ($attrs['itemCount']['desktop']['value'] ?? 5)));
-        $range        = $attrs['range']['desktop']['value'] ?? 'weekly';
-        $show_thumb   = ($attrs['showThumbnail']['desktop']['value'] ?? 'on') !== 'off';
+        $show_thumb = ($attrs['showThumbnail']['desktop']['value'] ?? 'on') !== 'off';
+        $range      = $attrs['range']['desktop']['value'] ?? 'last7days';
 
-        $items = self::get_trending_items($content_type, $item_count, $range);
+        $items = self::get_trending_items('article', 5, $range);
 
         $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
         $parent_attrs = $parent->attrs ?? [];

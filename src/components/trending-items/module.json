@@ -45,7 +45,7 @@
         }
       }
     },
-    "contentType": {
+    "range": {
       "type": "object",
       "settings": {
         "innerContent": {
@@ -54,66 +54,9 @@
             "groupName": "mainContent",
             "priority": 10,
             "render": true,
-            "attrName": "contentType.innerContent",
-            "label": "Inhaltstyp",
-            "description": "Welche Art von Beiträgen soll angezeigt werden?",
-            "features": {
-              "sticky": false,
-              "dynamicContent": false
-            },
-            "component": {
-              "name": "divi/select",
-              "type": "field",
-              "props": {
-                "options": [
-                  { "value": "all", "label": "Alle Beiträge" },
-                  { "value": "article", "label": "Artikel" },
-                  { "value": "podcast", "label": "Podcast" },
-                  { "value": "youtube", "label": "YouTube / Video" },
-                  { "value": "instagram", "label": "Instagram" }
-                ]
-              }
-            }
-          }
-        }
-      }
-    },
-    "itemCount": {
-      "type": "object",
-      "settings": {
-        "innerContent": {
-          "groupType": "group-item",
-          "item": {
-            "groupName": "mainContent",
-            "priority": 20,
-            "render": true,
-            "attrName": "itemCount.innerContent",
-            "label": "Anzahl der Beiträge",
-            "description": "Wie viele Trending-Beiträge sollen angezeigt werden? (1–20)",
-            "features": {
-              "sticky": false,
-              "dynamicContent": false
-            },
-            "component": {
-              "name": "divi/text",
-              "type": "field"
-            }
-          }
-        }
-      }
-    },
-    "range": {
-      "type": "object",
-      "settings": {
-        "innerContent": {
-          "groupType": "group-item",
-          "item": {
-            "groupName": "mainContent",
-            "priority": 30,
-            "render": true,
             "attrName": "range.innerContent",
             "label": "Zeitraum",
-            "description": "Über welchen Zeitraum werden die meistgelesenen Beiträge ermittelt?",
+            "description": "Über welchen Zeitraum werden die meistgelesenen Artikel ermittelt?",
             "features": {
               "sticky": false,
               "dynamicContent": false
@@ -123,10 +66,10 @@
               "type": "field",
               "props": {
                 "options": [
-                  { "value": "daily", "label": "Letzte 24 Stunden" },
-                  { "value": "weekly", "label": "Letzte 7 Tage" },
-                  { "value": "monthly", "label": "Letzte 30 Tage" },
-                  { "value": "all-time", "label": "Gesamt" }
+                  { "value": "last24hours", "label": "Letzte 24 Stunden" },
+                  { "value": "last7days",   "label": "Letzte 7 Tage" },
+                  { "value": "last30days",  "label": "Letzte 30 Tage" },
+                  { "value": "all",         "label": "Gesamt" }
                 ]
               }
             }

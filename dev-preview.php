@@ -291,9 +291,9 @@ namespace VVP\Divi5\TrendingItems {
     {
         use TrendingItemsTrait\RenderCallbackTrait;
 
-        public static function render(string $content_type = 'all', int $count = 5): string
+        public static function render(string $range = 'last7days'): string
         {
-            $items = self::get_trending_items($content_type, $count, 'weekly');
+            $items = self::get_trending_items('article', 5, $range);
 
             if (empty($items)) {
                 return '<div class="vvp-ti__empty">Keine Trending-Beiträge gefunden.</div>';
@@ -325,10 +325,7 @@ namespace {
     $t0            = microtime(true);
     $overview      = \VVP\Divi5\ContentOverview\ContentOverviewPreview::render();
     $author_html   = \VVP\Divi5\AuthorProfile\AuthorProfilePreview::render_with_mock();
-    $trending_all  = \VVP\Divi5\TrendingItems\TrendingItemsPreview::render('all', 5);
-    $trending_art  = \VVP\Divi5\TrendingItems\TrendingItemsPreview::render('article', 5);
-    $trending_pod  = \VVP\Divi5\TrendingItems\TrendingItemsPreview::render('podcast', 3);
-    $trending_yt   = \VVP\Divi5\TrendingItems\TrendingItemsPreview::render('youtube', 3);
+    $trending_top  = \VVP\Divi5\TrendingItems\TrendingItemsPreview::render();
 
     $section_label = '<h2 style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6b7280;margin-bottom:1.5rem;">';
 
@@ -343,17 +340,9 @@ namespace {
 
     $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #e5e7eb;">';
     $body .= $section_label . 'Trending Items Module</h2>';
-    $body .= '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;">';
-
-    $card = static fn(string $label, string $html): string =>
-        '<div style="padding:1.25rem;background:#fff;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);">'
-        . '<p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin:0 0 .75rem;">' . $label . '</p>'
-        . $html . '</div>';
-
-    $body .= $card('Alle Beiträge',  $trending_all);
-    $body .= $card('Artikel',        $trending_art);
-    $body .= $card('Podcast (3)',    $trending_pod);
-    $body .= $card('YouTube (3)',    $trending_yt);
+    $body .= '<div style="max-width:480px;padding:1.25rem;background:#fff;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);">';
+    $body .= '<p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin:0 0 .75rem;">Meistgelesener Artikel (letzte 7 Tage)</p>';
+    $body .= $trending_top;
     $body .= '</div></div>';
 
     $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #e5e7eb;">';
