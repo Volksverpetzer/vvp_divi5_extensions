@@ -49,6 +49,14 @@ if ( file_exists( VVP_DIVI5_PATH . 'vendor/autoload.php' ) ) {
 require VVP_DIVI5_PATH . 'modules/Modules.php';
 
 /**
+ * Register cache-warming cron job for ContentOverview external API feeds.
+ */
+require_once VVP_DIVI5_PATH . 'modules/CronManager.php';
+
+add_action( 'plugins_loaded', [ 'VVP\Divi5\CronManager', 'register' ] );
+register_deactivation_hook( __FILE__, [ 'VVP\Divi5\CronManager', 'deactivate' ] );
+
+/**
  * Enqueue Visual Builder assets for DIVI 5.
  *
  * @since 1.0.0

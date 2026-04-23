@@ -19,11 +19,13 @@ trait DataFetchTrait
      *
      * @return mixed|null Decoded JSON body or null on failure.
      */
-    private static function fetch_json($url, $cache_key, $ttl = 1800)
+    private static function fetch_json($url, $cache_key, $ttl = 1800, bool $force = false)
     {
-        $cached = get_transient($cache_key);
-        if (false !== $cached) {
-            return $cached;
+        if (!$force) {
+            $cached = get_transient($cache_key);
+            if (false !== $cached) {
+                return $cached;
+            }
         }
 
         $response = wp_remote_get($url, [
@@ -60,11 +62,13 @@ trait DataFetchTrait
      *
      * @return string|null Raw body or null on failure.
      */
-    private static function fetch_raw($url, $cache_key, $ttl = 3600)
+    private static function fetch_raw($url, $cache_key, $ttl = 3600, bool $force = false)
     {
-        $cached = get_transient($cache_key);
-        if (false !== $cached) {
-            return $cached;
+        if (!$force) {
+            $cached = get_transient($cache_key);
+            if (false !== $cached) {
+                return $cached;
+            }
         }
 
         $response = wp_remote_get($url, [
@@ -151,14 +155,14 @@ trait DataFetchTrait
      *
      * @return array Normalised post array.
      */
-    private static function fetch_wp_posts($base_url, $cache_key, $pages = 2, $source = 'volksverpetzer')
+    private static function fetch_wp_posts($base_url, $cache_key, $pages = 2, $source = 'volksverpetzer', bool $force = false)
     {
         $all_posts = [];
 
         for ($page = 1; $page <= $pages; $page++) {
             $key  = $cache_key . '_p' . $page;
             $url  = $base_url . '&page=' . $page;
-            $data = self::fetch_json($url, $key, 1800);
+            $data = self::fetch_json($url, $key, 1800, $force);
 
             if (!is_array($data)) {
                 break;
@@ -390,5 +394,35 @@ trait DataFetchTrait
         } catch (\Exception $e) {
             return null;
         }
+    }
+
+    /**
+     * Force-refresh all external API transients used by ContentOverview.
+     *
+     * Fetches fresh data regardless of whether a valid transient already exists,
+     * then overwrites it — so the old cached value stays readable until new data
+     * arrives (stale-while-revalidate, no empty-cache window).
+     *
+     * Called by WP-Cron every 25 minutes via CronManager.
+     */
+    public static function warm_caches(): void
+    {
+        self::fetch_wp_posts(
+            'https://volksverpetzer.de/wp-json/wp/v2/posts?per_page=12&_embed=1',
+            'vvp_co_vp_posts',
+            2,
+            'volksverpetzer',
+            true
+        );
+        self::fetch_wp_posts(
+            'https://pruefpunkt.org/wp-json/wp/v2/posts?per_page=10&_embed=1',
+            'vvp_co_pp_posts',
+            1,
+            'pruefpunkt',
+            true
+        );
+        self::fetch_json('https://volksverpetzer-app.de/proxy/instaFeed', 'vvp_co_insta',   3600, true);
+        self::fetch_json('https://volksverpetzer-app.de/proxy/ytAPI',     'vvp_co_yt',      3600, true);
+        self::fetch_raw('https://volksverpetzer.podigee.io/feed/mp3',     'vvp_co_podcast', 3600, true);
     }
 }
