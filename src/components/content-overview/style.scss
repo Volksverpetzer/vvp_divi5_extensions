@@ -1,6 +1,3 @@
-   ContentOverview module — vvp-co__* classes
-   ============================================================ */
-=======
 /* Shimmer animation for loading placeholders */
 @keyframes vvp-co-shimmer {
   0%   { background-position: -600px 0; }
@@ -9,12 +6,10 @@
 
 /* Instagram slideshow loading placeholder */
 .vvp-co__ig-loading-placeholder {
-  animation: vvp-co-shimmer 1.4s ease infinite !important;
+  animation: vvp-co-shimmer 1.4s ease infinite;
 }
 
 /* ============================================================
-   ContentOverview module — vvp-co__* classes
-   ============================================================ */============================================================
    ContentOverview module — vvp-co__* classes
    ============================================================ */
 .vvp-co__wrapper {

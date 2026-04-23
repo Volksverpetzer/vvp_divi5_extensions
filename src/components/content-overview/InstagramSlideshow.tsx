@@ -48,6 +48,19 @@ const InstaIcon = () => (
   </svg>
 );
 
+const LoadingPlaceholder = () => (
+  <div
+    className="vvp-co__ig-loading-placeholder"
+    style={{
+      width: "100%",
+      height: "100%",
+      background: "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%)",
+      backgroundSize: "600px 100%",
+      borderRadius: "0.25rem",
+    }}
+  />
+);
+
 const ArrowLeftIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -80,19 +93,6 @@ const ArrowRightIcon = () => (
   >
     <polyline points="9 18 15 12 9 6" />
   </svg>
-);
-
-const LoadingPlaceholder = () => (
-  <div
-    className="vvp-co__ig-loading-placeholder"
-    style={{
-      width: "100%",
-      height: "100%",
-      background: "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%)",
-      backgroundSize: "600px 100%",
-      borderRadius: "0.25rem",
-    }}
-  />
 );
 
 const InternalSlider = ({
@@ -379,7 +379,7 @@ const InternalSlider = ({
                           }
                     }
                   >
-                    {isNearActive && (
+                    {loadedImages.has(index) ? (
                       <img
                         src={slide.thumb}
                         alt={caption}
@@ -393,15 +393,26 @@ const InternalSlider = ({
                                 maxWidth: "100%",
                                 objectFit: "contain",
                                 display: "block",
+                                opacity: 0,
+                                transition: "opacity 0.3s ease",
                               }
                             : {
                                 width: "100%",
                                 height: "100%",
                                 objectFit: "cover",
                                 display: "block",
+                                opacity: 0,
+                                transition: "opacity 0.3s ease",
                               }
                         }
+                        onLoad={(e) => {
+                          // Mark image as loaded
+                          setLoadedImages((prev) => new Set(prev).add(index));
+                          e.currentTarget.style.opacity = "1";
+                        }}
                       />
+                    ) : (
+                      <LoadingPlaceholder />
                     )}
                   </div>
                 )}
