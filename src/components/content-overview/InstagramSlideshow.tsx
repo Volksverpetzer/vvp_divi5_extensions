@@ -495,12 +495,14 @@ const InternalSlider = ({
         {caption && (
           <p
             className="vvp-co__feed-excerpt vvp-co__feed-excerpt--insta"
+            onClick={() => onCenterClick && onCenterClick()}
             style={{
               marginTop: "10px",
               textAlign: "left",
               maxWidth: "100%",
               padding: "0 .875rem",
-              pointerEvents: "none",
+              pointerEvents: onCenterClick ? "auto" : "none",
+              cursor: onCenterClick ? "zoom-in" : "default",
               WebkitLineClamp: isCarousel ? 3 : 4,
             }}
           >
@@ -627,12 +629,10 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
               margin: "0 auto",
               width: "100%",
               maxWidth: 700,
-              padding: "20px",
+              padding: "100px 20px 40px",
               display: "flex",
               flexDirection: "column",
               gap: 20,
-              maxHeight: "100vh",
-              overflowY: "auto",
             }}
           >
             <InternalSlider
