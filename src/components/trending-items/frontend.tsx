@@ -1,7 +1,6 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
-import { TrendingItemsApp } from "./App";
-import { type TrendingItem } from "./types";
+import { ArticleCard, type ArticleCardProps } from "../shared/ArticleCard";
 
 const initAll = () => {
   const mounts = document.querySelectorAll<HTMLElement>(
@@ -10,18 +9,28 @@ const initAll = () => {
   mounts.forEach((mount) => {
     mount.setAttribute("data-ti-initialized", "true");
 
-    let items: TrendingItem[] = [];
+    let articles: ArticleCardProps[] = [];
     try {
-      items = JSON.parse(mount.getAttribute("data-items") || "[]");
+      articles = JSON.parse(mount.getAttribute("data-articles") || "[]");
     } catch {
-      items = [];
+      articles = [];
     }
 
-    const showThumbnail =
-      mount.getAttribute("data-show-thumbnail") !== "false";
+    if (!articles.length) {
+      createRoot(mount).render(
+        <div className="vvp-ti__empty">Keine Trending-Beiträge gefunden.</div>,
+      );
+      return;
+    }
 
     createRoot(mount).render(
-      <TrendingItemsApp items={items} showThumbnail={showThumbnail} />,
+      <div className="vvp-ti__list">
+        {articles.map((props) => (
+          <div key={props.link} className="vvp-ti__item">
+            <ArticleCard {...props} />
+          </div>
+        ))}
+      </div>,
     );
   });
 };

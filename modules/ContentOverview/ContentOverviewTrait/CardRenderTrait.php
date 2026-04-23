@@ -90,6 +90,7 @@ trait CardRenderTrait
 
     /**
      * Render a featured article card for the feed grid.
+     * Emits a React mount point hydrated by content-overview-frontend.js.
      *
      * @param array $post WP post array.
      *
@@ -97,43 +98,21 @@ trait CardRenderTrait
      */
     private static function render_featured_card($post)
     {
-        $image_url     = esc_url(self::get_post_image($post, 'medium_large'));
-        $title         = esc_html(html_entity_decode(wp_strip_all_tags($post['title']['rendered'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-        $excerpt       = esc_html($post['yoast_head_json']['description'] ?? '');
-        $link          = esc_url($post['link'] ?? '');
-        $date          = esc_html(self::format_date($post['date'] ?? ''));
-        $category      = esc_html(self::get_post_category($post));
-        $category_link = esc_url(self::get_post_category_link($post));
-        $source        = $post['_vvp_source'] ?? 'volksverpetzer';
-        $badge         = self::render_source_badge($source);
+        $props = [
+            'type'          => 'article',
+            'title'         => html_entity_decode(wp_strip_all_tags($post['title']['rendered'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            'link'          => $post['link'] ?? '',
+            'date'          => self::format_date($post['date'] ?? ''),
+            'image_url'     => self::get_post_image($post, 'medium_large'),
+            'excerpt'       => $post['yoast_head_json']['description'] ?? '',
+            'category'      => self::get_post_category($post),
+            'category_link' => self::get_post_category_link($post),
+            'source'        => $post['_vvp_source'] ?? 'volksverpetzer',
+        ];
 
-        $image_html = $image_url
-            ? '<div class="vvp-co__feed-image-wrap"><img src="' . $image_url . '" alt="' . $title . '" class="vvp-co__feed-image" loading="lazy" decoding="async"></div>'
-            : '';
-
-        $category_html = '';
-        if ($category) {
-            if ($category_link) {
-                $category_html = '<button type="button" class="vvp-co__category vvp-co__category--btn"'
-                    . ' onclick="event.stopPropagation();window.open(\'' . $category_link . '\',\'_blank\')">'
-                    . $category . '</button>';
-            } else {
-                $category_html = '<span class="vvp-co__category">' . $category . '</span>';
-            }
-        }
-
-        return '<a href="' . $link . '" class="vvp-co__feed-card vvp-co__feed-card--article" target="_blank" rel="noopener noreferrer">'
-            . $image_html
-            . '<div class="vvp-co__feed-body">'
-            .   '<h3 class="vvp-co__feed-title">' . $title . '</h3>'
-            .   ($excerpt ? '<p class="vvp-co__feed-excerpt">' . $excerpt . '</p>' : '')
-            .   '<div class="vvp-co__feed-footer">'
-            .     $badge
-            .     $category_html
-            .     '<span class="vvp-co__feed-date">' . $date . '</span>'
-            .   '</div>'
-            . '</div>'
-            . '</a>';
+        return '<div class="vvp-co-article-mount" data-article-props="'
+            . esc_attr(wp_json_encode($props))
+            . '"></div>';
     }
 
     /**

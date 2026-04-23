@@ -2,39 +2,17 @@
 
 .vvp-trending-items {
   .vvp-ti__list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
   }
 
   .vvp-ti__item {
-    margin-bottom: 0.5rem;
-  }
-
-  .vvp-ti__link {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .vvp-ti__thumb {
-    width: 64px;
-    height: 48px;
-    object-fit: cover;
-    flex-shrink: 0;
-    border-radius: 3px;
-  }
-
-  .vvp-ti__rank {
-    font-weight: 700;
-    min-width: 1.5rem;
-    flex-shrink: 0;
-  }
-
-  .vvp-ti__title {
-    flex: 1;
+    min-width: 0;
   }
 
   .vvp-ti__empty {

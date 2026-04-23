@@ -2,6 +2,25 @@ import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { InstagramSlideshow } from "./InstagramSlideshow";
 import { PodcastBanner } from "./PodcastBanner";
+import { ArticleCard, type ArticleCardProps } from "../shared/ArticleCard";
+
+const initArticleCards = () => {
+  const mounts = document.querySelectorAll(
+    '.vvp-co-article-mount:not([data-article-initialized="true"])',
+  );
+  mounts.forEach((mount) => {
+    mount.setAttribute("data-article-initialized", "true");
+    const rawProps = mount.getAttribute("data-article-props");
+    if (rawProps) {
+      try {
+        const props: ArticleCardProps = JSON.parse(rawProps);
+        createRoot(mount).render(<ArticleCard {...props} />);
+      } catch (e) {
+        console.error("Failed to parse article card props", e);
+      }
+    }
+  });
+};
 
 const initInstagramSlideshows = () => {
   const mounts = document.querySelectorAll(
@@ -85,6 +104,7 @@ const initToggles = () => {
 };
 
 const initAll = () => {
+  initArticleCards();
   initInstagramSlideshows();
   initPodcastBanners();
   initToggles();
@@ -96,7 +116,6 @@ if (document.readyState === "loading") {
   initAll();
 }
 
-// Re-init hooks for Divi Builder and AJAX
 document.addEventListener("et_pb_reinit_modules", initAll);
 document.addEventListener("ajaxComplete", initAll);
 

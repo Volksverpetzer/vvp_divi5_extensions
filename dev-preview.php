@@ -151,21 +151,10 @@ namespace {
 
     // ── WordPress Popular Posts stubs ─────────────────────────────────────────
 
-    function wpp_get_mostpopular(array $args = []): array
+    function wpp_get_ids(array $args = []): array
     {
-        $mock = [
-            (object)['id' => 101, 'pageviews' => 12450],
-            (object)['id' => 102, 'pageviews' =>  9830],
-            (object)['id' => 103, 'pageviews' =>  7612],
-            (object)['id' => 104, 'pageviews' =>  6201],
-            (object)['id' => 105, 'pageviews' =>  5443],
-            (object)['id' => 106, 'pageviews' =>  4100],
-            (object)['id' => 107, 'pageviews' =>  3870],
-            (object)['id' => 108, 'pageviews' =>  2950],
-            (object)['id' => 109, 'pageviews' =>  2100],
-            (object)['id' => 110, 'pageviews' =>  1890],
-        ];
-        return array_slice($mock, 0, (int)($args['limit'] ?? 10));
+        $mock_ids = [101, 102, 103, 104, 105, 106, 107, 108, 109, 110];
+        return array_slice($mock_ids, 0, (int)($args['limit'] ?? 10));
     }
 
     function get_post(int $post_id): ?object
@@ -212,6 +201,65 @@ namespace {
     }
 
     function get_post_type(int $post_id): string { return 'post'; }
+
+    function get_the_date(string $format, int $post_id): string
+    {
+        static $dates = [
+            101 => '2026-04-20', 102 => '2026-04-18', 103 => '2026-04-15',
+            104 => '2026-04-12', 105 => '2026-04-10', 106 => '2026-04-08',
+            107 => '2026-04-06', 108 => '2026-04-04', 109 => '2026-04-02',
+            110 => '2026-03-30',
+        ];
+        $raw = $dates[$post_id] ?? '2026-01-01';
+        try {
+            return (new \DateTime($raw))->format($format);
+        } catch (\Exception $e) {
+            return $raw;
+        }
+    }
+
+    function get_the_category(int $post_id): array
+    {
+        static $cats = [
+            101 => ['Faktencheck', 'faktencheck'],
+            102 => ['Faktencheck', 'faktencheck'],
+            103 => ['Desinformation', 'desinformation'],
+            104 => ['Faktencheck', 'faktencheck'],
+            105 => ['Desinformation', 'desinformation'],
+            106 => ['Interview', 'interview'],
+            107 => ['Podcast', 'podcast'],
+            108 => ['Desinformation', 'desinformation'],
+            109 => ['YouTube', 'youtube'],
+            110 => ['Hintergrund', 'hintergrund'],
+        ];
+        if (!isset($cats[$post_id])) return [];
+        return [(object)['term_id' => $post_id, 'name' => $cats[$post_id][0], 'slug' => $cats[$post_id][1]]];
+    }
+
+    function get_category_link(int $term_id): string
+    {
+        $post = get_post($term_id);
+        $slug = $post->_slug ?? '';
+        $parts = explode('/', trim($slug, '/'));
+        return 'https://volksverpetzer.de/category/' . ($parts[0] ?? '');
+    }
+
+    function get_the_excerpt(int $post_id): string
+    {
+        static $excerpts = [
+            101 => 'Eine weit verbreitete Behauptung über Migranten wurde von Faktencheckern widerlegt.',
+            102 => 'Fünf hartnäckige Mythen über Impfstoffe – und was die Wissenschaft wirklich sagt.',
+            103 => 'Dieser Viral-Post kursiert millionenfach, dabei ist er komplett erfunden.',
+            104 => 'Was steckt wirklich hinter den Klimaschutz-Zahlen? Eine Einordnung.',
+            105 => 'Wie Desinformation im Wahlkampf gezielt eingesetzt wird.',
+            106 => 'Experten erklären, woran man Fake News auf den ersten Blick erkennt.',
+            107 => 'Im Podcast: Wie Medienmanipulation im Netz funktioniert.',
+            108 => 'Die größten Falschmeldungen des Monats im Überblick.',
+            109 => 'YouTube-Faktencheck: Werden wir wirklich systematisch belogen?',
+            110 => 'Hintergrund: Wie algorithmische Desinformation verbreitet wird.',
+        ];
+        return $excerpts[$post_id] ?? '';
+    }
 
 } // end namespace {}
 
@@ -293,27 +341,13 @@ namespace VVP\Divi5\TrendingItems {
 
         public static function render(string $range = 'last7days'): string
         {
-            $items = self::get_trending_items('article', 5, $range);
+            $items = self::get_trending_items(3, $range);
 
             if (empty($items)) {
                 return '<div class="vvp-ti__empty">Keine Trending-Beiträge gefunden.</div>';
             }
 
-            $html = '<ol class="vvp-ti__list" style="list-style:none;margin:0;padding:0;">';
-            foreach ($items as $i => $item) {
-                $thumb = $item['thumbnailUrl']
-                    ? '<img src="' . esc_attr($item['thumbnailUrl']) . '" loading="lazy" alt=""'
-                      . ' style="width:64px;height:48px;object-fit:cover;border-radius:3px;flex-shrink:0;">'
-                    : '';
-                $html .= '<li style="display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;">';
-                $html .= $thumb;
-                $html .= '<span style="font-weight:700;min-width:1.5rem;color:#6b7280;">' . ($i + 1) . '</span>';
-                $html .= '<a href="' . esc_url($item['url']) . '" style="text-decoration:none;color:inherit;">'
-                       . esc_html($item['title']) . '</a>';
-                $html .= '</li>';
-            }
-            $html .= '</ol>';
-            return $html;
+            return '<div class="vvp-ti__mount" data-articles="' . esc_attr(wp_json_encode($items)) . '"></div>';
         }
     }
 
@@ -340,10 +374,9 @@ namespace {
 
     $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #e5e7eb;">';
     $body .= $section_label . 'Trending Items Module</h2>';
-    $body .= '<div style="max-width:480px;padding:1.25rem;background:#fff;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);">';
-    $body .= '<p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin:0 0 .75rem;">Meistgelesener Artikel (letzte 7 Tage)</p>';
-    $body .= $trending_top;
-    $body .= '</div></div>';
+    $body .= '<p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin:0 0 .75rem;">Meistgelesene Artikel (letzte 7 Tage)</p>';
+    $body .= '<div class="vvp-trending-items">' . $trending_top . '</div>';
+    $body .= '</div>';
 
     $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #e5e7eb;">';
     $body .= $overview;

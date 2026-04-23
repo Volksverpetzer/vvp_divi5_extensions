@@ -1,25 +1,21 @@
 import React, { type ReactElement } from "react";
 import { ModuleContainer } from "@divi/module";
-import { type TrendingItemsEditProps, type TrendingItem } from "./types";
+import { type TrendingItemsEditProps } from "./types";
 import { ModuleStyles } from "./styles";
 import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";
-import { TrendingItemsApp } from "./App";
+import { ArticleCard, type ArticleCardProps } from "../shared/ArticleCard";
 
-const PLACEHOLDER_ITEMS: TrendingItem[] = [
-  { title: "Faktencheck: Beispielartikel 1", url: "#", thumbnailUrl: "", type: "post", pageviews: 4200 },
-  { title: "Faktencheck: Beispielartikel 2", url: "#", thumbnailUrl: "", type: "post", pageviews: 3800 },
-  { title: "Faktencheck: Beispielartikel 3", url: "#", thumbnailUrl: "", type: "post", pageviews: 2900 },
-  { title: "Faktencheck: Beispielartikel 4", url: "#", thumbnailUrl: "", type: "post", pageviews: 2100 },
-  { title: "Faktencheck: Beispielartikel 5", url: "#", thumbnailUrl: "", type: "post", pageviews: 1750 },
+const PLACEHOLDER_ARTICLES: ArticleCardProps[] = [
+  { title: "Faktencheck: Beispielartikel 1", link: "#", date: "23.04.2026", source: "volksverpetzer" },
+  { title: "Faktencheck: Beispielartikel 2", link: "#", date: "22.04.2026", source: "volksverpetzer" },
+  { title: "Faktencheck: Beispielartikel 3", link: "#", date: "21.04.2026", source: "volksverpetzer" },
 ];
 
 export const TrendingItemsEdit = (
   props: TrendingItemsEditProps,
 ): ReactElement => {
   const { attrs, elements, id, name } = props;
-
-  const showThumbnail = (attrs as any).showThumbnail?.desktop?.value !== "off";
 
   return (
     <ModuleContainer
@@ -37,10 +33,13 @@ export const TrendingItemsEdit = (
         <div className="vvp-ti__editor-notice">
           Vorschau — im Frontend werden echte Trending-Daten geladen.
         </div>
-        <TrendingItemsApp
-          items={PLACEHOLDER_ITEMS}
-          showThumbnail={showThumbnail}
-        />
+        <div className="vvp-ti__list">
+          {PLACEHOLDER_ARTICLES.map((article) => (
+            <div key={article.link + article.title} className="vvp-ti__item">
+              <ArticleCard {...article} />
+            </div>
+          ))}
+        </div>
       </div>
     </ModuleContainer>
   );
