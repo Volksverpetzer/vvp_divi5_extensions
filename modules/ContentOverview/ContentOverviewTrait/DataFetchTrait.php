@@ -203,6 +203,32 @@ trait DataFetchTrait
         return $media['source_url'] ?? '';
     }
 
+    private static function get_post_image_srcset($post)
+    {
+        $media = $post['_embedded']['wp:featuredmedia'][0] ?? null;
+        if (!$media) {
+            return '';
+        }
+
+        $sizes = $media['media_details']['sizes'] ?? [];
+        $parts = [];
+        $seen_widths = [];
+
+        foreach (['medium', 'medium_large', 'large', 'full'] as $key) {
+            if (empty($sizes[$key]['source_url']) || empty($sizes[$key]['width'])) {
+                continue;
+            }
+            $w = intval($sizes[$key]['width']);
+            if (isset($seen_widths[$w])) {
+                continue;
+            }
+            $seen_widths[$w] = true;
+            $parts[] = esc_url($sizes[$key]['source_url']) . ' ' . $w . 'w';
+        }
+
+        return implode(', ', $parts);
+    }
+
     /**
      * Extract the category name from a WP REST post array.
      *

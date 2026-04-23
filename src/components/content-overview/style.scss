@@ -196,6 +196,25 @@
   grid-column: 1/-1;
 }
 
+/* CLS prevention: mount points hold space before JS hydration */
+.vvp-co-article-mount,
+.vvp-co-ig-mount {
+  border-radius: 0.625rem;
+  border: 1px solid #e5e7eb;
+  background: #f3f4f6;
+  overflow: hidden;
+}
+
+.vvp-co-article-mount {
+  aspect-ratio: 16/9;
+  min-height: 260px;
+}
+
+.vvp-co-ig-mount {
+  aspect-ratio: 3/5;
+  min-height: 320px;
+}
+
 /* Feed card base */
 .vvp-co__feed-card {
   display: flex;
@@ -578,4 +597,18 @@ button.vvp-co__category--btn:hover {
   .vvp-co__feed-meta-date-row .vvp-co__feed-date {
     font-size: 12px;
   }
+}
+
+/* Hero image — reserve space while lazy image loads to prevent CLS */
+.vvp-co__hero-image-wrap {
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.vvp-co__hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }

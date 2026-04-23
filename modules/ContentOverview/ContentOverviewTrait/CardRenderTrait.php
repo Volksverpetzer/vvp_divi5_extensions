@@ -43,8 +43,10 @@ trait CardRenderTrait
         $source    = $post['_vvp_source'] ?? 'volksverpetzer';
         $badge     = self::render_source_badge($source);
 
+        $srcset        = self::get_post_image_srcset($post);
+        $srcset_attr   = $srcset ? ' srcset="' . $srcset . '" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 66vw, 800px"' : '';
         $image_html    = $image_url
-            ? '<div class="vvp-co__hero-image-wrap"><img style="max-height: none;" src="' . $image_url . '" alt="' . $title . '" class="vvp-co__hero-image" loading="eager" decoding="async"></div>'
+            ? '<div class="vvp-co__hero-image-wrap"><img style="max-height: none;" src="' . $image_url . '"' . $srcset_attr . ' alt="' . $title . '" class="vvp-co__hero-image" loading="lazy" decoding="async"></div>'
             : '';
         $category_html = $category ? '<span class="vvp-co__category">' . $category . '</span>' : '';
 

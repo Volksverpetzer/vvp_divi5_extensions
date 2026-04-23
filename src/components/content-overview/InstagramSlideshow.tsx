@@ -474,10 +474,9 @@ const InternalSlider = ({
             }}
           >
             {slides.map((_: Slide, index: number) => (
-              <button
+              <span
                 key={index}
-                type="button"
-                aria-label={`Bild ${index + 1}`}
+                aria-hidden="true"
                 style={{
                   width: 8,
                   height: 8,
@@ -486,13 +485,8 @@ const InternalSlider = ({
                     index === activeIndex
                       ? "#808080"
                       : "rgba(128, 128, 128, 0.5)",
-                  border: "none",
-                  padding: 0,
-                  cursor: "pointer",
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActiveIndex(index);
+                  display: "inline-block",
+                  flexShrink: 0,
                 }}
               />
             ))}
