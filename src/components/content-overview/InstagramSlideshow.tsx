@@ -82,6 +82,19 @@ const ArrowRightIcon = () => (
   </svg>
 );
 
+const LoadingPlaceholder = () => (
+  <div
+    className="vvp-co__ig-loading-placeholder"
+    style={{
+      width: "100%",
+      height: "100%",
+      background: "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%)",
+      backgroundSize: "600px 100%",
+      borderRadius: "0.25rem",
+    }}
+  />
+);
+
 const InternalSlider = ({
   slides,
   activeIndex,
@@ -94,10 +107,44 @@ const InternalSlider = ({
   fullscreen = false,
 }) => {
   const [showArrows, setShowArrows] = useState(false);
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
   const arrowTimeout = React.useRef<NodeJS.Timeout | null>(null);
 
   const touchStartX = React.useRef<number>(0);
   const touchEndX = React.useRef<number>(0);
+
+  // Preload images for current slide and nearby slides
+  useEffect(() => {
+    const preloadImages = () => {
+      const imagesToPreload = [activeIndex];
+      // Preload previous and next slides
+      if (activeIndex > 0) imagesToPreload.push(activeIndex - 1);
+      if (activeIndex < slides.length - 1) imagesToPreload.push(activeIndex + 1);
+      
+      imagesToPreload.forEach((index) => {
+        if (!loadedImages.has(index) && slides[index]?.thumb) {
+          const img = new Image();
+          img.src = slides[index].thumb;
+          img.onload = () => {
+            setLoadedImages((prev) => new Set(prev).add(index));
+          };
+        }
+      });
+    };
+    
+    preloadImages();
+  }, [activeIndex, loadedImages, slides]);
+
+  // Preload first slide immediately on mount
+  useEffect(() => {
+    if (slides[0]?.thumb && !loadedImages.has(0)) {
+      const img = new Image();
+      img.src = slides[0].thumb;
+      img.onload = () => {
+        setLoadedImages((prev) => new Set(prev).add(0));
+      };
+    }
+  }, [slides, loadedImages]);
 
   const handleNext = (e?: React.MouseEvent) => {
     if (e) {
@@ -217,7 +264,7 @@ const InternalSlider = ({
                         onClick={() => setPlayingVideos({ [index]: true })}
                         onMouseEnter={() => setPlayingVideos({ [index]: true })}
                       >
-                        {isNearActive && (
+                        {loadedImages.has(index) ? (
                           <img
                             src={
                               slide.thumb ||
@@ -232,16 +279,27 @@ const InternalSlider = ({
                                     maxWidth: "100%",
                                     objectFit: "contain",
                                     display: "block",
+                                    opacity: 0,
+                                    transition: "opacity 0.3s ease",
                                   }
                                 : {
                                     width: "100%",
                                     height: "100%",
                                     objectFit: "cover",
                                     display: "block",
+                                    opacity: 0,
+                                    transition: "opacity 0.3s ease",
                                   }
                             }
                             loading={index === 0 ? "eager" : "lazy"}
+                            onLoad={(e) => {
+                              // Mark image as loaded
+                              setLoadedImages((prev) => new Set(prev).add(index));
+                              e.currentTarget.style.opacity = "1";
+                            }}
                           />
+                        ) : (
+                          <LoadingPlaceholder />
                         )}
                         <div
                           style={{
