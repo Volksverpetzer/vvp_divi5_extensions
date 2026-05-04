@@ -34,6 +34,7 @@ jobs:
         run: |
           mkdir -p /tmp/deploy
           cp vvp-divi5-extensions.php /tmp/deploy/
+          sed -i "s/define( 'VVP_DIVI5_VERSION', '1.0.0' )/define( 'VVP_DIVI5_VERSION', '${GITHUB_SHA::7}' )/" /tmp/deploy/vvp-divi5-extensions.php
           cp -r modules /tmp/deploy/
           cp -r modules-json /tmp/deploy/
           cp -r scripts /tmp/deploy/
