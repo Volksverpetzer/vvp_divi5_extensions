@@ -225,6 +225,16 @@
   min-height: 320px;
 }
 
+/* Reset placeholder styles after React hydration */
+.vvp-co-article-mount[data-article-initialized="true"],
+.vvp-co-ig-mount[data-ig-initialized="true"] {
+  aspect-ratio: unset;
+  min-height: unset;
+  border: none;
+  background: none;
+  border-radius: 0;
+}
+
 /* Feed card base */
 .vvp-co__feed-card {
   display: flex;
