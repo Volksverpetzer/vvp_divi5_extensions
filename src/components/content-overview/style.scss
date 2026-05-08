@@ -559,6 +559,16 @@ button.vvp-co__category--btn:hover {
   max-height: none;
 }
 
+/* Native fullscreen: show portrait videos in their natural orientation */
+.vvp-co__insta-slider-wrap video:fullscreen,
+.vvp-co__insta-slider-wrap video:-webkit-full-screen,
+.vvp-co__insta-slider-wrap video:-moz-full-screen {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
 /* Instagram slider arrows - move further to sides */
 .vvp-co__insta-slider-wrap .et-pb-arrow-prev {
   left: -20px !important;
