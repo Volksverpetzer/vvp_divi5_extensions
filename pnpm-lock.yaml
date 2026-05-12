@@ -4716,7 +4716,7 @@ snapshots:
       '@divi/draggable': 1.0.1
       '@divi/icon-library': 1.0.1
       '@divi/script-library': 1.0.5
-      '@divi/style-library': 1.0.4
+      '@divi/style-library': 1.0.4(codemirror@5.65.16)(moment@2.30.1)
       '@divi/types': 1.0.5
       '@divi/types-external': 1.0.0
       '@types/codemirror': 5.60.17
@@ -4770,21 +4770,6 @@ snapshots:
       '@types/seamless-immutable': 7.1.19
       react: 18.2.0
 
-  '@divi/module@1.0.6':
-    dependencies:
-      '@divi/context-library': 1.0.2
-      '@divi/conversion': 1.0.2(react@18.2.0)
-      '@divi/field-library': 1.0.5(codemirror@5.65.16)(moment@2.30.1)
-      '@divi/modal': 1.0.2
-      '@divi/module-utils': 1.0.6
-      '@divi/right-click-options': 1.0.4
-      '@divi/script-library': 1.0.5
-      '@divi/style-library': 1.0.4
-      '@divi/types': 1.0.5
-      '@divi/types-external': 1.0.0
-      '@types/seamless-immutable': 7.1.19
-      react: 18.2.0
-
   '@divi/module@1.0.6(codemirror@5.65.16)(moment@2.30.1)':
     dependencies:
       '@divi/context-library': 1.0.2
@@ -4814,11 +4799,6 @@ snapshots:
     dependencies:
       '@divi/types': 1.0.5
       react: 18.2.0
-
-  '@divi/style-library@1.0.4':
-    dependencies:
-      '@divi/module': 1.0.6
-      '@divi/types': 1.0.5
 
   '@divi/style-library@1.0.4(codemirror@5.65.16)(moment@2.30.1)':
     dependencies:
