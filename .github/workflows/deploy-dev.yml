@@ -44,22 +44,17 @@ jobs:
           cp -r scripts /tmp/deploy/
           cp -r styles /tmp/deploy/
 
-      - name: Upload to FTP (dev)
-        env:
-          FTP_USER: ${{ secrets.FTP_USER }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          FTP_HOST: ${{ secrets.FTP_HOST }}
+      - name: Set up SSH key
         run: |
-          sudo apt-get update && sudo apt-get install -y lftp
-          cat > /tmp/lftp-script.txt << 'LFTP'
-          set ftp:ssl-allow yes
-          set ftp:ssl-force yes
-          set ftp:ssl-protect-data yes
-          set ssl:verify-certificate no
-          LFTP
-          echo "open -u ${FTP_USER},${FTP_PASSWORD} ${FTP_HOST}" >> /tmp/lftp-script.txt
-          cat >> /tmp/lftp-script.txt << 'LFTP'
-          mirror --reverse --delete --verbose /tmp/deploy/ /public_html/wp-content/plugins/vvp-divi5-extensions-dev/
-          bye
-          LFTP
-          lftp -f /tmp/lftp-script.txt
+          install -m 700 -d ~/.ssh
+          echo "${{ secrets.SSH_DEPLOY_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "${{ secrets.SSH_HOST_KEY }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy via rsync
+        run: |
+          rsync -avz --delete \
+            --exclude='.DS_Store' \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
+            /tmp/deploy/ \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:plugins/vvp-divi5-extensions-dev/
