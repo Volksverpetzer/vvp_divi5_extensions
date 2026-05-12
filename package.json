@@ -21,6 +21,9 @@
   "dependencies": {
     "classnames": "^2.5.1"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": ["@parcel/watcher", "esbuild"]
+  },
   "devDependencies": {
     "@babel/core": "^7.29.0",
     "@babel/plugin-transform-class-properties": "^7.28.6",
