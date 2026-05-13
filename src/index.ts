@@ -7,6 +7,7 @@ import { factCheckSearch } from "./components/fact-check-search";
 import { contentOverview } from "./components/content-overview";
 import { authorProfile } from "./components/author-profile";
 import { trendingItems } from "./components/trending-items";
+import { trendingList } from "./components/trending-list";
 
 // Import icons.
 import "./module-icons";
@@ -44,5 +45,14 @@ addAction(
   "vvp/trendingItems",
   () => {
     registerModule(trendingItems.metadata, omit(trendingItems, "metadata"));
+  },
+);
+
+// Register Trending List module with DIVI.
+addAction(
+  "divi.moduleLibrary.registerModuleLibraryStore.after",
+  "vvp/trendingList",
+  () => {
+    registerModule(trendingList.metadata, omit(trendingList, "metadata"));
   },
 );

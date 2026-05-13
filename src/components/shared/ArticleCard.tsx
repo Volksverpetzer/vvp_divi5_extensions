@@ -4,6 +4,7 @@ export interface ArticleCardProps {
   type?: "article" | "youtube";
   title: string;
   excerpt?: string;
+  author?: string;
   link: string;
   date: string;
   image_url?: string;
@@ -46,6 +47,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   type = "article",
   title,
   excerpt,
+  author,
   link,
   date,
   image_url,
@@ -101,7 +103,12 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
       )}
       <div className="vvp-co__feed-body">
         <h3 className="vvp-co__feed-title">{title}</h3>
-        {excerpt && <p className="vvp-co__feed-excerpt">{excerpt}</p>}
+        {excerpt && (
+          <p className="vvp-co__feed-excerpt">
+            {excerpt}
+            {author && <em className="vvp-co__feed-author"> – {author}</em>}
+          </p>
+        )}
         <div className="vvp-co__feed-footer">
           {isYoutube ? <YoutubeBadge /> : <SourceBadge source={source} />}
           {category &&

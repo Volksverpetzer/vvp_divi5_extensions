@@ -16,6 +16,7 @@ use VVP\Divi5\FactCheckSearch\FactCheckSearch;
 use VVP\Divi5\ContentOverview\ContentOverview;
 use VVP\Divi5\AuthorProfile\AuthorProfile;
 use VVP\Divi5\TrendingItems\TrendingItems;
+use VVP\Divi5\TrendingList\TrendingList;
 
 add_action(
     'divi_module_library_modules_dependency_tree',
@@ -24,5 +25,6 @@ add_action(
         $dependency_tree->add_dependency(new ContentOverview());
         $dependency_tree->add_dependency(new AuthorProfile());
         $dependency_tree->add_dependency(new TrendingItems());
+        $dependency_tree->add_dependency(new TrendingList());
     }
 );

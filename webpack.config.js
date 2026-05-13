@@ -192,4 +192,32 @@ module.exports = [
     },
     devtool: isProduction ? false : "source-map",
   },
+  // 6: Frontend Bundle Trending List
+  {
+    mode: isProduction ? "production" : "development",
+    entry: "./src/components/trending-list/frontend.tsx",
+    output: {
+      path: path.resolve(__dirname, "scripts"),
+      filename: "trending-list-frontend.js",
+    },
+    resolve: {
+      extensions: [".ts", ".tsx", ".js", ".jsx"],
+    },
+    module: {
+      rules: [
+        {
+          test: /\.(ts|tsx)$/,
+          loader: "ts-loader",
+          options: { transpileOnly: true },
+          exclude: /node_modules/,
+        },
+        {
+          test: /\.(js|jsx)$/,
+          use: "babel-loader",
+          exclude: /node_modules/,
+        },
+      ],
+    },
+    devtool: isProduction ? false : "source-map",
+  },
 ];

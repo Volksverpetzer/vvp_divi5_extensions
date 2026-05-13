@@ -107,6 +107,7 @@ trait CardRenderTrait
             'date'          => self::format_date($post['date'] ?? ''),
             'image_url'     => self::get_post_image($post, 'medium_large'),
             'excerpt'       => $post['yoast_head_json']['description'] ?? '',
+            'author'        => $post['_embedded']['author'][0]['name'] ?? '',
             'category'      => self::get_post_category($post),
             'category_link' => self::get_post_category_link($post),
             'source'        => $post['_vvp_source'] ?? 'volksverpetzer',

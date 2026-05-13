@@ -265,7 +265,7 @@ trait RenderCallbackTrait
         }
 
         $section_header = '<div class="vvp-co__section-header">'
-            . '<h2 class="vvp-co__section-title">Das Neuste</h2>'
+            . '<h2 class="vvp-co__section-title">Das Neueste</h2>'
             . '<label class="vvp-co__filter-toggle" for="vvp-co-filter-articles">'
             .   '<span class="vvp-co__filter-toggle-label">Nur Artikel</span>'
             .   '<span class="vvp-co__toggle-track">'

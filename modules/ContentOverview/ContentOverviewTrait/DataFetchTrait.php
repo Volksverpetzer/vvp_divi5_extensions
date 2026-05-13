@@ -161,7 +161,7 @@ trait DataFetchTrait
 
         for ($page = 1; $page <= $pages; $page++) {
             $key  = $cache_key . '_p' . $page;
-            $url  = $base_url . '&page=' . $page;
+            $url  = $base_url . '&page=' . $page . '&_cb=' . floor(time() / 1800);
             $data = self::fetch_json($url, $key, 1800, $force);
 
             if (!is_array($data)) {
