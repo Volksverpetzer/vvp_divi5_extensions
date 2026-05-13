@@ -27,7 +27,7 @@ const initAll = () => {
       <div className="vvp-ti__list">
         {articles.map((props) => (
           <div key={props.link} className="vvp-ti__item">
-            <ArticleCard {...props} />
+            <ArticleCard {...props} trackingContext="trending" />
           </div>
         ))}
       </div>,

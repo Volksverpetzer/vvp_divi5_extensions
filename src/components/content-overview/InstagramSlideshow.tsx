@@ -20,9 +20,8 @@ interface InstagramSlideshowProps {
 const trackInstaView = (postId: string) => {
   if (!postId) return;
   try {
-    const w = window as any;
-    if (typeof w.plausible === "function") {
-      w.plausible("pageview", {
+    if (typeof window.plausible === "function") {
+      window.plausible("pageview", {
         u: window.location.origin + "/insta/" + postId,
       });
     }

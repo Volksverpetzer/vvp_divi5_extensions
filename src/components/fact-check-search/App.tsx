@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { trackEvent } from "../../utils/plausible";
 import { createPortal } from "react-dom";
 
 import {
@@ -79,6 +80,7 @@ export const FactCheckSearchApp: React.FC<FactCheckSearchAppProps> = ({
       return;
     }
 
+    trackEvent("search", { query: searchQuery });
     setPhase("searching");
 
     try {

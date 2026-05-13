@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { trackEvent } from "../../utils/plausible";
 
 interface PodcastBannerProps {
   title: string;
@@ -117,7 +118,7 @@ export const PodcastBanner: React.FC<PodcastBannerProps> = ({
               <button
                 type="button"
                 className="vvp-co__podcast-listen-btn"
-                onClick={() => setIsPlaying(true)}
+                onClick={() => { setIsPlaying(true); trackEvent("Podcast Play"); }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

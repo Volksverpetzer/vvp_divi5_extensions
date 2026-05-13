@@ -1,4 +1,5 @@
 import * as React from "react";
+import { trackEvent } from "../../utils/plausible";
 
 export interface ArticleCardProps {
   type?: "article" | "youtube";
@@ -12,6 +13,7 @@ export interface ArticleCardProps {
   category?: string;
   category_link?: string;
   source?: "volksverpetzer" | "pruefpunkt";
+  trackingContext?: "feed" | "trending";
 }
 
 const SourceBadge: React.FC<{ source: "volksverpetzer" | "pruefpunkt" }> = ({
@@ -56,6 +58,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   category,
   category_link,
   source = "volksverpetzer",
+  trackingContext = "feed",
 }) => {
   const isYoutube = type === "youtube";
   const cardClass = isYoutube
@@ -70,12 +73,22 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     }
   };
 
+  const handleClick = () => {
+    if (trackingContext === "trending") {
+      trackEvent("Trending Click");
+    } else {
+      trackEvent("Feed Click");
+      if (source === "pruefpunkt") trackEvent("Pruefpunkt Click");
+    }
+  };
+
   return (
     <a
       href={link}
       className={cardClass}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={handleClick}
     >
       {image_url && (
         <div
