@@ -5,6 +5,7 @@ export interface ArticleCardProps {
   title: string;
   excerpt?: string;
   author?: string;
+  reading_time?: number;
   link: string;
   date: string;
   image_url?: string;
@@ -48,6 +49,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   title,
   excerpt,
   author,
+  reading_time,
   link,
   date,
   image_url,
@@ -124,6 +126,9 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
               <span className="vvp-co__category">{category}</span>
             ))}
           <span className="vvp-co__feed-date">{date}</span>
+          {!!reading_time && (
+            <span className="vvp-co__feed-reading-time">{reading_time} Min.</span>
+          )}
         </div>
       </div>
     </a>
