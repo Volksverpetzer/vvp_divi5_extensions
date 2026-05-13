@@ -180,6 +180,65 @@ trait DataFetchTrait
     }
 
     /**
+     * Fetch featured media for posts that lack _embedded data (e.g. pruefpunkt.org
+     * does not support the _embed parameter) and inject a minimal _embedded structure
+     * so the rest of the pipeline can use get_post_image() without changes.
+     *
+     * @param array  $posts            Posts array (modified in-place).
+     * @param string $media_api_base   Base URL of the WP media endpoint, e.g.
+     *                                 'https://pruefpunkt.org/wp-json/wp/v2/media'.
+     * @param string $cache_key_prefix Transient key prefix for media results.
+     * @param bool   $force            Bypass cache when true.
+     *
+     * @return array Posts with _embedded.wp:featuredmedia injected where available.
+     */
+    private static function hydrate_posts_with_media(array $posts, string $media_api_base, string $cache_key_prefix, bool $force = false): array
+    {
+        // Collect IDs that need fetching (skip posts that already have embedded media).
+        $needed_ids = [];
+        foreach ($posts as $post) {
+            if (!empty($post['_embedded']['wp:featuredmedia'][0]['source_url'])) {
+                continue;
+            }
+            $id = intval($post['featured_media'] ?? 0);
+            if ($id > 0) {
+                $needed_ids[$id] = true;
+            }
+        }
+
+        if (empty($needed_ids)) {
+            return $posts;
+        }
+
+        $ids_str   = implode(',', array_keys($needed_ids));
+        $cache_key = $cache_key_prefix . '_media_' . substr(md5($ids_str), 0, 8);
+        $url       = $media_api_base . '?include=' . $ids_str . '&per_page=100';
+
+        $media_list = self::fetch_json($url, $cache_key, 1800, $force);
+
+        if (!is_array($media_list)) {
+            return $posts;
+        }
+
+        $media_map = [];
+        foreach ($media_list as $media) {
+            if (!empty($media['id'])) {
+                $media_map[$media['id']] = $media;
+            }
+        }
+
+        foreach ($posts as &$post) {
+            $id = intval($post['featured_media'] ?? 0);
+            if ($id > 0 && isset($media_map[$id])) {
+                $post['_embedded']['wp:featuredmedia'] = [$media_map[$id]];
+            }
+        }
+        unset($post);
+
+        return $posts;
+    }
+
+    /**
      * Extract the featured image URL from a WP REST post array.
      *
      * @param array  $post      WP post array with _embedded data.
@@ -414,11 +473,17 @@ trait DataFetchTrait
             'volksverpetzer',
             true
         );
-        self::fetch_wp_posts(
-            'https://pruefpunkt.org/wp-json/wp/v2/posts?per_page=10&_embed=1',
+        $pp_posts = self::fetch_wp_posts(
+            'https://pruefpunkt.org/wp-json/wp/v2/posts?per_page=10',
             'vvp_co_pp_posts',
             1,
             'pruefpunkt',
+            true
+        );
+        self::hydrate_posts_with_media(
+            $pp_posts,
+            'https://pruefpunkt.org/wp-json/wp/v2/media',
+            'vvp_co_pp',
             true
         );
         self::fetch_json('https://volksverpetzer-app.de/proxy/instaFeed', 'vvp_co_insta',   3600, true);

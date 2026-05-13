@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 export interface YouTubeBannerProps {
   videoId: string;
@@ -29,39 +29,54 @@ export const YouTubeBanner: React.FC<YouTubeBannerProps> = ({
   date,
   thumbnailUrl,
 }) => {
+  const [playing, setPlaying] = useState(false);
   const ytUrl = videoId ? `https://youtube.com/watch?v=${videoId}` : "#";
+  const embedUrl = videoId
+    ? `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`
+    : null;
 
   return (
     <div className="vvp-co__yt-banner">
       <div className="vvp-co__yt-banner-inner">
-        <a
-          href={ytUrl}
-          className="vvp-co__yt-banner-thumb-wrap"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={title}
-        >
-          {thumbnailUrl && (
-            <img
-              src={thumbnailUrl}
-              alt={title}
-              className="vvp-co__yt-banner-thumb"
-              loading="lazy"
-              decoding="async"
+        <div className="vvp-co__yt-banner-thumb-wrap">
+          {playing && embedUrl ? (
+            <iframe
+              src={embedUrl}
+              title={title}
+              className="vvp-co__yt-banner-iframe"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
             />
-          )}
-          <div className="vvp-co__yt-banner-play" aria-hidden="true">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="44"
-              height="44"
-              viewBox="0 0 24 24"
-              fill="white"
+          ) : (
+            <button
+              type="button"
+              className="vvp-co__yt-banner-thumb-btn"
+              onClick={() => setPlaying(true)}
+              aria-label={`${title} abspielen`}
             >
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-        </a>
+              {thumbnailUrl && (
+                <img
+                  src={thumbnailUrl}
+                  alt={title}
+                  className="vvp-co__yt-banner-thumb"
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+              <div className="vvp-co__yt-banner-play" aria-hidden="true">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="44"
+                  height="44"
+                  viewBox="0 0 24 24"
+                  fill="white"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+            </button>
+          )}
+        </div>
 
         <div className="vvp-co__yt-banner-content">
           <div className="vvp-co__yt-banner-label">

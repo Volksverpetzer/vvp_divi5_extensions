@@ -102,10 +102,15 @@ trait RenderCallbackTrait
         );
 
         $pp_posts = self::fetch_wp_posts(
-            'https://pruefpunkt.org/wp-json/wp/v2/posts?per_page=10&_embed=1',
+            'https://pruefpunkt.org/wp-json/wp/v2/posts?per_page=10',
             'vvp_co_pp_posts',
             1,
             'pruefpunkt'
+        );
+        $pp_posts = self::hydrate_posts_with_media(
+            $pp_posts,
+            'https://pruefpunkt.org/wp-json/wp/v2/media',
+            'vvp_co_pp'
         );
 
         $insta_raw   = self::fetch_json('https://volksverpetzer-app.de/proxy/instaFeed', 'vvp_co_insta', 3600);

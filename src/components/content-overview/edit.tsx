@@ -14,6 +14,7 @@ import { ModuleScriptData } from "./module-script-data";
 import { ArticleCard } from "./ArticleCard";
 import { InstagramSlideshow } from "./InstagramSlideshow";
 import { PodcastBanner } from "./PodcastBanner";
+import { YouTubeBanner } from "./YouTubeBanner";
 
 // ── Tiny icon set ────────────────────────────────────────────────────────────
 
@@ -86,11 +87,12 @@ const MOCK_IG = {
 };
 
 const MOCK_YT = {
-  type: "youtube" as const,
+  videoId: "",
   title: "Beispiel-Video: Faktencheck aktuell",
-  link: "#",
+  description:
+    "In diesem Video beleuchten wir aktuelle Falschinformationen und zeigen, wie man sie erkennt.",
   date: "Vor 2 Tagen",
-  image_url:
+  thumbnailUrl:
     "https://via.placeholder.com/640x360/1a1a2e/ffffff?text=YouTube+Vorschau",
 };
 
@@ -193,14 +195,13 @@ export const ContentOverviewEdit = (
               <ArticleCard {...MOCK_PRUEFPUNKT} />
             </div>
 
-            {/* Row 2: YouTube + podcast (full width) + article */}
-            <div className="vvp-co__feed-item">
-              <ArticleCard {...MOCK_YT} />
+            {/* Row 2: YouTube banner (full width) */}
+            <div className="vvp-co__feed-item vvp-co__feed-item--youtube-banner">
+              <YouTubeBanner {...MOCK_YT} />
             </div>
-            <div
-              className="vvp-co__feed-item vvp-co__feed-item--podcast"
-              style={{ gridColumn: "span 2" }}
-            >
+
+            {/* Row 3: podcast banner (full width) */}
+            <div className="vvp-co__feed-item vvp-co__feed-item--podcast">
               <PodcastBanner {...MOCK_PODCAST} />
             </div>
 
