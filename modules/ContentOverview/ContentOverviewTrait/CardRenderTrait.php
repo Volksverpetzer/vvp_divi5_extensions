@@ -91,8 +91,15 @@ trait CardRenderTrait
         $is_carousel   = count($slides) > 1;
         $media_category = 'VIDEO' === $media_type ? 'Video' : ($is_carousel ? 'Karussell' : 'Foto');
 
+        // Extract the shortcode from e.g. https://www.instagram.com/p/ABC123/
+        $post_id = '';
+        if (preg_match('#/p/([^/?#]+)#', $permalink, $m)) {
+            $post_id = $m[1];
+        }
+
         $props = [
             'permalink'     => $permalink,
+            'postId'        => $post_id,
             'caption'       => $caption,
             'date'          => $date,
             'badgeLabel'    => 'Instagram',

@@ -8,6 +8,7 @@ interface Slide {
 
 interface InstagramSlideshowProps {
   permalink: string;
+  postId?: string;
   caption: string;
   date: string;
   badgeLabel: string;
@@ -15,6 +16,18 @@ interface InstagramSlideshowProps {
   slides: Slide[];
   isCarousel: boolean;
 }
+
+const trackInstaView = (postId: string) => {
+  if (!postId) return;
+  try {
+    const w = window as any;
+    if (typeof w.plausible === "function") {
+      w.plausible("pageview", {
+        u: window.location.origin + "/insta/" + postId,
+      });
+    }
+  } catch (_) {}
+};
 
 const parseCaption = (text: string): React.ReactNode[] => {
   const parts = text.split(/(https?:\/\/[^\s]+)/g);
@@ -104,6 +117,7 @@ const InternalSlider = ({
   playingVideos,
   setPlayingVideos,
   onCenterClick,
+  onVideoPlay,
   fullscreen = false,
 }) => {
   const [showArrows, setShowArrows] = useState(false);
@@ -261,8 +275,8 @@ const InternalSlider = ({
                           alignItems: "center",
                           justifyContent: "center",
                         }}
-                        onClick={() => setPlayingVideos({ [index]: true })}
-                        onMouseEnter={() => setPlayingVideos({ [index]: true })}
+                        onClick={() => { setPlayingVideos({ [index]: true }); onVideoPlay?.(); }}
+                        onMouseEnter={() => { setPlayingVideos({ [index]: true }); onVideoPlay?.(); }}
                       >
                         {loadedImages.has(index) ? (
                           <img
@@ -584,6 +598,7 @@ const InternalSlider = ({
 
 export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
   permalink,
+  postId = "",
   caption,
   date,
   badgeLabel,
@@ -596,6 +611,22 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
     {},
   );
   const [isFullscreen, setFullscreen] = useState(false);
+  const trackedSwipe = React.useRef(false);
+  const trackedPlay = React.useRef(false);
+
+  const handleVideoPlay = () => {
+    if (!trackedPlay.current) {
+      trackedPlay.current = true;
+      trackInstaView(postId);
+    }
+  };
+
+  useEffect(() => {
+    if (!trackedSwipe.current && activeIndex >= 1) {
+      trackedSwipe.current = true;
+      trackInstaView(postId);
+    }
+  }, [activeIndex, postId]);
 
   useEffect(() => {
     if (isFullscreen) {
@@ -619,7 +650,11 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
           caption={caption}
           playingVideos={playingVideos}
           setPlayingVideos={setPlayingVideos}
-          onCenterClick={() => setFullscreen(true)}
+          onCenterClick={() => {
+            setFullscreen(true);
+            trackInstaView(postId);
+          }}
+          onVideoPlay={handleVideoPlay}
         />
 
         <div
@@ -712,6 +747,7 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
               playingVideos={playingVideos}
               setPlayingVideos={setPlayingVideos}
               onCenterClick={null}
+              onVideoPlay={handleVideoPlay}
               fullscreen={true}
             />
 
