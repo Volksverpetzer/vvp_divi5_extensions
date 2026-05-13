@@ -11,86 +11,6 @@ namespace VVP\Divi5\ContentOverview\ContentOverviewTrait;
 trait CardRenderTrait
 {
     /**
-     * Render a source badge (Volksverpetzer or Prüfpunkt).
-     *
-     * @param string $source 'volksverpetzer' or 'pruefpunkt'.
-     *
-     * @return string HTML badge.
-     */
-    private static function render_source_badge($source)
-    {
-        if ('pruefpunkt' === $source) {
-            return '<span class="vvp-co__badge vvp-co__badge--pruefpunkt">Prüfpunkt</span>';
-        }
-        return '<span class="vvp-co__badge vvp-co__badge--vvp">Volksverpetzer</span>';
-    }
-
-    /**
-     * Render the hero article card (large, 2/3 width layout slot).
-     *
-     * @param array $post WP post array.
-     *
-     * @return string HTML.
-     */
-    private static function render_hero_card($post)
-    {
-        $image_url = esc_url(self::get_post_image($post, 'large'));
-        $title     = esc_html(html_entity_decode(wp_strip_all_tags($post['title']['rendered'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-        $excerpt   = esc_html($post['yoast_head_json']['description'] ?? '');
-        $link      = esc_url($post['link'] ?? '');
-        $date      = esc_html(self::format_date($post['date'] ?? ''));
-        $category  = esc_html(self::get_post_category($post));
-        $source    = $post['_vvp_source'] ?? 'volksverpetzer';
-        $badge     = self::render_source_badge($source);
-
-        $srcset        = self::get_post_image_srcset($post);
-        $srcset_attr   = $srcset ? ' srcset="' . $srcset . '" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 66vw, 800px"' : '';
-        $image_html    = $image_url
-            ? '<div class="vvp-co__hero-image-wrap"><img style="max-height: none;" src="' . $image_url . '"' . $srcset_attr . ' alt="' . $title . '" class="vvp-co__hero-image" loading="lazy" decoding="async"></div>'
-            : '';
-        $category_html = $category ? '<span class="vvp-co__category">' . $category . '</span>' : '';
-
-        return '<a href="' . $link . '" class="vvp-co__hero-card" target="_blank" rel="noopener noreferrer">'
-            . $image_html
-            . '<div class="vvp-co__hero-body">'
-            .   '<div class="vvp-co__hero-meta">' . $category_html . $badge . '</div>'
-            .   '<h2 class="vvp-co__hero-title">' . $title . '</h2>'
-            .   ($excerpt ? '<p class="vvp-co__hero-excerpt">' . $excerpt . '</p>' : '')
-            .   '<span class="vvp-co__hero-date">' . $date . '</span>'
-            . '</div>'
-            . '</a>';
-    }
-
-    /**
-     * Render a compact article card for the sidebar.
-     *
-     * @param array $post WP post array.
-     *
-     * @return string HTML.
-     */
-    private static function render_compact_card($post)
-    {
-        $image_url = esc_url(self::get_post_image($post, 'thumbnail'));
-        $title     = esc_html(html_entity_decode(wp_strip_all_tags($post['title']['rendered'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-        $link      = esc_url($post['link'] ?? '');
-        $date      = esc_html(self::format_date($post['date'] ?? ''));
-        $source    = $post['_vvp_source'] ?? 'volksverpetzer';
-        $badge     = self::render_source_badge($source);
-
-        $thumb_html = $image_url
-            ? '<img src="' . $image_url . '" alt="' . $title . '" class="vvp-co__compact-thumb" loading="lazy" decoding="async">'
-            : '<div class="vvp-co__compact-thumb vvp-co__compact-thumb--placeholder"></div>';
-
-        return '<a href="' . $link . '" class="vvp-co__compact-card" target="_blank" rel="noopener noreferrer">'
-            . '<div class="vvp-co__compact-thumb-wrap">' . $thumb_html . '</div>'
-            . '<div class="vvp-co__compact-body">'
-            .   '<span class="vvp-co__compact-title">' . $title . '</span>'
-            .   '<div class="vvp-co__compact-footer">' . $badge . '<span class="vvp-co__compact-date">' . $date . '</span></div>'
-            . '</div>'
-            . '</a>';
-    }
-
-    /**
      * Render a featured article card for the feed grid.
      * Emits a React mount point hydrated by content-overview-frontend.js.
      *
@@ -221,6 +141,31 @@ trait CardRenderTrait
             .   '</div>'
             . '</div>'
             . '</a>';
+    }
+
+    /**
+     * Render the full-width YouTube banner mount point.
+     *
+     * The React YouTubeBanner component is mounted client-side via
+     * content-overview-frontend.js reading the data-yt-banner-props attribute.
+     *
+     * @param array $video Normalised YouTube video data.
+     *
+     * @return string HTML mount point.
+     */
+    private static function render_youtube_banner($video)
+    {
+        $props = [
+            'videoId'      => $video['id'] ?? '',
+            'title'        => $video['title'] ?? '',
+            'description'  => self::truncate($video['description'] ?? '', 200),
+            'date'         => self::format_date($video['publishedAt'] ?? ''),
+            'thumbnailUrl' => $video['thumbnailUrl'] ?? '',
+        ];
+
+        $encoded = htmlspecialchars(json_encode($props, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8');
+
+        return '<div class="vvp-co-yt-banner-mount" data-yt-banner-props="' . $encoded . '"></div>';
     }
 
     /**

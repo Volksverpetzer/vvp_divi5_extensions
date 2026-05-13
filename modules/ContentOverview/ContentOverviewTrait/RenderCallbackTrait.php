@@ -199,9 +199,19 @@ trait RenderCallbackTrait
             $podcast_feed[] = ['kind' => 'podcast_banner', 'date' => $episode_dt, 'data' => $episode];
         }
 
+        // Extract the latest YouTube video as an always-shown banner.
+        $yt_banner_feed = [];
+        if (!empty($yt_items)) {
+            usort($yt_items, function ($a, $b) {
+                return $b['date']->getTimestamp() - $a['date']->getTimestamp();
+            });
+            $latest_yt        = array_shift($yt_items); // remove from regular pool
+            $yt_banner_feed[] = ['kind' => 'youtube_banner', 'date' => $latest_yt['date'], 'data' => $latest_yt['data']];
+        }
+
         // 4. Merge, sort, cap ------------------------------------------------
-        // Articles + YouTube share a combined cap of 12 (newest first).
-        // Instagram gets its own 12. Podcast banner is always included.
+        // Articles + remaining YouTube share a combined cap of 12 (newest first).
+        // Instagram gets its own 12. Podcast banner and YouTube banner always included.
 
         $other_items = array_merge($article_items, $yt_items);
         usort($other_items, function ($a, $b) {
@@ -209,7 +219,7 @@ trait RenderCallbackTrait
         });
         $other_items = array_slice($other_items, 0, 12);
 
-        $merged = array_merge($insta_items, $other_items, $podcast_feed);
+        $merged = array_merge($insta_items, $other_items, $podcast_feed, $yt_banner_feed);
         usort($merged, function ($a, $b) {
             return $b['date']->getTimestamp() - $a['date']->getTimestamp();
         });
@@ -243,6 +253,11 @@ trait RenderCallbackTrait
                     case 'podcast_banner':
                         $feed_html .= '<div class="vvp-co__feed-item vvp-co__feed-item--podcast" data-co-kind="' . $kind . '">'
                             . self::render_podcast_banner($item['data'], $channel_image)
+                            . '</div>';
+                        break;
+                    case 'youtube_banner':
+                        $feed_html .= '<div class="vvp-co__feed-item vvp-co__feed-item--youtube-banner" data-co-kind="youtube">'
+                            . self::render_youtube_banner($item['data'])
                             . '</div>';
                         break;
                     case 'article':

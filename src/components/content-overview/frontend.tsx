@@ -2,6 +2,7 @@ import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { InstagramSlideshow } from "./InstagramSlideshow";
 import { PodcastBanner } from "./PodcastBanner";
+import { YouTubeBanner, type YouTubeBannerProps } from "./YouTubeBanner";
 import { ArticleCard, type ArticleCardProps } from "../shared/ArticleCard";
 
 const initArticleCards = () => {
@@ -58,6 +59,24 @@ const initPodcastBanners = () => {
   });
 };
 
+const initYouTubeBanners = () => {
+  const mounts = document.querySelectorAll(
+    '.vvp-co-yt-banner-mount:not([data-yt-banner-initialized="true"])',
+  );
+  mounts.forEach((mount) => {
+    mount.setAttribute("data-yt-banner-initialized", "true");
+    const rawProps = mount.getAttribute("data-yt-banner-props");
+    if (rawProps) {
+      try {
+        const props: YouTubeBannerProps = JSON.parse(rawProps);
+        createRoot(mount).render(<YouTubeBanner {...props} />);
+      } catch (e) {
+        console.error("Failed to parse YouTube banner props", e);
+      }
+    }
+  });
+};
+
 const LS_KEY = "vvp_co_articles_only";
 
 const applyArticlesFilter = (grid: Element, checked: boolean) => {
@@ -107,6 +126,7 @@ const initAll = () => {
   initArticleCards();
   initInstagramSlideshows();
   initPodcastBanners();
+  initYouTubeBanners();
   initToggles();
 };
 

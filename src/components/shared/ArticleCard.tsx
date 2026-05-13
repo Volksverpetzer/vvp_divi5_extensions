@@ -22,7 +22,7 @@ const SourceBadge: React.FC<{ source: "volksverpetzer" | "pruefpunkt" }> = ({
     );
   }
   return (
-    <span className="vvp-co__badge vvp-co__badge--vvp">Volksverpetzer</span>
+    <span className="vvp-co__badge vvp-co__badge--vvp">VVP</span>
   );
 };
 
