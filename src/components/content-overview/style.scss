@@ -342,8 +342,9 @@
 .vvp-co__feed-footer {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
-  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+  overflow: hidden;
   margin-top: auto;
   padding-top: 0.375rem;
 }

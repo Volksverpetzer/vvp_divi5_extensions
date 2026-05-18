@@ -16,7 +16,6 @@ import {
 const EXAMPLE_QUERIES = [
   "Corona-Impfungen verändern die DNA",
   "Klimawandel ist eine Erfindung",
-  "Soros steuert die Medien",
   "Asylbewerber bekommen mehr Geld als Rentner",
 ];
 
