@@ -356,6 +356,9 @@
 .vvp-co__feed-footer .vvp-co__feed-reading-time {
   color: #9ca3af;
   font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .vvp-co__feed-footer .vvp-co__category {
