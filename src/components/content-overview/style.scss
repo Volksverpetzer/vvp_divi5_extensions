@@ -360,6 +360,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
+  white-space: nowrap;
 }
 
 .vvp-co__feed-footer .vvp-co__category {
@@ -543,6 +544,24 @@ button.vvp-co__category--btn:hover {
   gap: 1.25rem;
   padding: 1.25rem;
   align-items: flex-start;
+}
+
+@media (max-width: 639px) {
+  .vvp-co__yt-banner-inner {
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+  }
+
+  .vvp-co__yt-banner-thumb-wrap {
+    width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .vvp-co__yt-banner-content {
+    padding: 1rem 1.25rem 1.25rem;
+  }
 }
 
 @media (min-width: 640px) {
