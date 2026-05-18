@@ -315,6 +315,7 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  max-height: calc(1.125rem * 1.35 * 3);
   transition: color 0.15s ease;
 }
 
@@ -639,7 +640,7 @@ button.vvp-co__category--btn:hover {
 
 .vvp-co__yt-banner-title {
   display: block;
-  font-size: 1rem;
+  font-size: 1.125rem;
   font-weight: 700;
   color: #111827;
   text-decoration: none;
