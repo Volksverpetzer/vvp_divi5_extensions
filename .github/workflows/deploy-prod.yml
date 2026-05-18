@@ -47,7 +47,7 @@ jobs:
 
       - name: Deploy via rsync
         run: |
-          rsync -avzO --delete \
+          rsync -avzO --no-perms --delete \
             --exclude='.DS_Store' \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
             /tmp/deploy/ \
