@@ -257,9 +257,6 @@
   border-color: #d1d5db;
 }
 
-.vvp-co__feed-card:hover .vvp-co__feed-title {
-  color: var(--vvp-blue-main, #1e40af);
-}
 
 .vvp-co__feed-image-wrap {
   overflow: hidden;
@@ -491,13 +488,6 @@ button.vvp-co__category--btn:hover {
   color: #6b7280;
 }
 
-.vvp-co__podcast-duration {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 1rem;
-  color: #6b7280;
-}
 
 .vvp-co__podcast-listen-btn {
   display: inline-flex;
