@@ -93,7 +93,7 @@ trait CardRenderTrait
 
         // Extract the shortcode from e.g. https://www.instagram.com/p/ABC123/
         $post_id = '';
-        if (preg_match('#/p/([^/?#]+)#', $permalink, $m)) {
+        if (preg_match('#/p/([^/?\\#]+)#', $permalink, $m)) {
             $post_id = $m[1];
         }
 
