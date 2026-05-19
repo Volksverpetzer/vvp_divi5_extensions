@@ -398,6 +398,14 @@ trait DataFetchTrait
                 $enclosure_url = (string) ($enc_attrs['url'] ?? '');
             }
 
+            $item_image = '';
+            if (!empty($itunes_item->image)) {
+                $item_img_attrs = $itunes_item->image->attributes();
+                if (!empty($item_img_attrs['href'])) {
+                    $item_image = (string) $item_img_attrs['href'];
+                }
+            }
+
             $items[] = [
                 'title'     => (string) ($item->title ?? ''),
                 'pubDate'   => (string) ($item->pubDate ?? ''),
@@ -405,6 +413,7 @@ trait DataFetchTrait
                 'enclosure' => $enclosure_url,
                 'duration'  => (string) ($itunes_item->duration ?? ''),
                 'summary'   => (string) ($itunes_item->summary ?? $item->description ?? ''),
+                'image'     => $item_image,
             ];
         }
 

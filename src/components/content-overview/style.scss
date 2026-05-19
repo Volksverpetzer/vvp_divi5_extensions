@@ -432,7 +432,13 @@ button.vvp-co__category--btn:hover,
 .vvp-co__podcast-artwork-wrap {
   flex: 0 0 33.333%;
   box-sizing: border-box;
-  padding: 2.5rem;
+  padding: 0;
+}
+
+@media (min-width: 700px) {
+  .vvp-co__podcast-artwork-wrap {
+    padding: 2.5rem;
+  }
 }
 
 .vvp-co__podcast-artwork {
