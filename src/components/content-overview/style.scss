@@ -216,7 +216,7 @@
 }
 
 .vvp-co-article-mount {
-  aspect-ratio: 16/9;
+  aspect-ratio: 350/183;
   min-height: 260px;
 }
 
@@ -255,12 +255,13 @@
 .vvp-co__feed-card:hover {
   box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.15);
   border-color: #d1d5db;
+  background: #fff;
 }
 
 
 .vvp-co__feed-image-wrap {
   overflow: hidden;
-  aspect-ratio: 16/9;
+  aspect-ratio: 350/183;
   background: #f3f4f6;
   position: relative;
 }
@@ -382,8 +383,9 @@ button.vvp-co__category--btn {
   line-height: inherit;
 }
 
-button.vvp-co__category--btn:hover {
-  text-decoration: underline;
+button.vvp-co__category--btn:hover,
+.vvp-co__category:hover {
+  color: #585c67;
 }
 
 /* YouTube play button overlay */
@@ -549,6 +551,7 @@ button.vvp-co__category--btn:hover {
 @media (max-width: 639px) {
   .vvp-co__yt-banner-inner {
     flex-direction: column;
+    align-items: stretch;
     gap: 0;
     padding: 0;
   }
@@ -589,7 +592,7 @@ button.vvp-co__category--btn:hover {
 
 @media (min-width: 1024px) {
   .vvp-co__yt-banner-thumb-wrap {
-    width: 280px;
+    width: 33.333%;
   }
 }
 
@@ -812,7 +815,7 @@ video:-moz-full-screen {
 
 /* Hero image — reserve space while lazy image loads to prevent CLS */
 .vvp-co__hero-image-wrap {
-  aspect-ratio: 16/9;
+  aspect-ratio: 350/183;
   overflow: hidden;
   background: #f3f4f6;
 }
