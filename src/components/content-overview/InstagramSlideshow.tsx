@@ -121,7 +121,22 @@ const InternalSlider = ({
 }) => {
   const [showArrows, setShowArrows] = useState(false);
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
+  const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
   const arrowTimeout = React.useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const onFsChange = () => {
+      setIsNativeFullscreen(
+        !!(document.fullscreenElement || (document as any).webkitFullscreenElement),
+      );
+    };
+    document.addEventListener("fullscreenchange", onFsChange);
+    document.addEventListener("webkitfullscreenchange", onFsChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", onFsChange);
+      document.removeEventListener("webkitfullscreenchange", onFsChange);
+    };
+  }, []);
 
   const touchStartX = React.useRef<number>(0);
   const touchEndX = React.useRef<number>(0);
@@ -348,7 +363,7 @@ const InternalSlider = ({
                         autoPlay
                         muted
                         style={
-                          fullscreen
+                          fullscreen || isNativeFullscreen
                             ? {
                                 height: "70vh",
                                 width: "auto",
@@ -359,6 +374,7 @@ const InternalSlider = ({
                             : {
                                 width: "100%",
                                 height: "100%",
+                                objectFit: "cover",
                                 display: "block",
                               }
                         }
