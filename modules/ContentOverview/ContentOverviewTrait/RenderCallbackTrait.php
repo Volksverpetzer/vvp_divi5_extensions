@@ -199,8 +199,8 @@ trait RenderCallbackTrait
 
         $podcast_feed = [];
         $episode      = $podcast_items[0] ?? null;
-        $episode_dt   = $episode ? self::parse_datetime($episode['pubDate'] ?? '') : null;
-        if ($episode && $episode_dt) {
+        if ($episode) {
+            $episode_dt     = self::parse_datetime($episode['pubDate'] ?? '') ?? new \DateTime('1970-01-01');
             $podcast_feed[] = ['kind' => 'podcast_banner', 'date' => $episode_dt, 'data' => $episode];
         }
 
