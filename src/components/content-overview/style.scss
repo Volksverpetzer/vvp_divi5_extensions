@@ -431,21 +431,18 @@ button.vvp-co__category--btn:hover,
 
 .vvp-co__podcast-artwork-wrap {
   flex-shrink: 0;
+  width: calc(33.333% - 0.625rem);
+  padding: 0.625rem;
 }
 
 .vvp-co__podcast-artwork {
-  width: 72px;
-  height: 72px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1/1;
   border-radius: 0.5rem;
   object-fit: cover;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-@media (min-width: 640px) {
-  .vvp-co__podcast-artwork {
-    width: 88px;
-    height: 88px;
-  }
+  display: block;
 }
 
 .vvp-co__podcast-content {
@@ -825,4 +822,6 @@ video:-moz-full-screen {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+;
 }
