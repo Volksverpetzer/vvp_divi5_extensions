@@ -196,7 +196,7 @@ trait CardRenderTrait
             'date'       => self::format_date($episode['pubDate'] ?? ''),
             'duration'   => $episode['duration'] ?? '',
             'summary'    => self::truncate($episode['summary'] ?? '', 180),
-            'artworkUrl' => $channel_image,
+            'artworkUrl' => !empty($episode['image']) ? $episode['image'] : $channel_image,
         ];
 
         $encoded = htmlspecialchars(json_encode($props, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8');
