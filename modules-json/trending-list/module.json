@@ -1,0 +1,86 @@
+{
+  "name": "vvp/trending-list",
+  "d4Shortcode": "",
+  "title": "Trending Liste",
+  "titles": "Trending Listen",
+  "moduleIcon": "vvp/trending-items-icon",
+  "moduleClassName": "trending_list",
+  "moduleOrderClassName": "trending_list",
+  "category": "module",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "styleProps": {
+        "border": {
+          "important": true
+        }
+      },
+      "settings": {
+        "meta": {
+          "adminLabel": {}
+        },
+        "advanced": {
+          "link": {},
+          "text": {},
+          "htmlAttributes": {}
+        },
+        "decoration": {
+          "attributes": {},
+          "background": {},
+          "sizing": {},
+          "spacing": {},
+          "border": {},
+          "boxShadow": {},
+          "filters": {},
+          "transform": {},
+          "animation": {},
+          "overflow": {},
+          "disabledOn": {},
+          "transition": {},
+          "position": {},
+          "zIndex": {},
+          "scroll": {},
+          "sticky": {}
+        }
+      }
+    },
+    "range": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 10,
+            "render": true,
+            "attrName": "range.innerContent",
+            "label": "Zeitraum",
+            "description": "Über welchen Zeitraum werden die meistgelesenen Artikel ermittelt?",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/select",
+              "type": "field",
+              "props": {
+                "options": [
+                  { "value": "last24hours", "label": "Letzte 24 Stunden" },
+                  { "value": "last7days",   "label": "Letzte 7 Tage" },
+                  { "value": "last30days",  "label": "Letzte 30 Tage" },
+                  { "value": "all",         "label": "Gesamt" }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "content": "auto",
+    "design": "auto",
+    "advanced": "auto"
+  }
+}
