@@ -379,11 +379,8 @@ trait DataFetchTrait
 
         $channel_image  = '';
         $itunes_channel = $channel->children($itunes_ns);
-        if (!empty($itunes_channel->image)) {
-            $attrs = $itunes_channel->image->attributes();
-            if (!empty($attrs['href'])) {
-                $channel_image = (string) $attrs['href'];
-            }
+        if (count($itunes_channel->image) > 0) {
+            $channel_image = (string) ($itunes_channel->image->attributes()['href'] ?? '');
         }
         if (empty($channel_image) && !empty($channel->image->url)) {
             $channel_image = (string) $channel->image->url;
@@ -399,11 +396,9 @@ trait DataFetchTrait
             }
 
             $item_image = '';
-            if (!empty($itunes_item->image)) {
+            if (count($itunes_item->image) > 0) {
                 $item_img_attrs = $itunes_item->image->attributes();
-                if (!empty($item_img_attrs['href'])) {
-                    $item_image = (string) $item_img_attrs['href'];
-                }
+                $item_image     = (string) ($item_img_attrs['href'] ?? '');
             }
 
             $items[] = [
