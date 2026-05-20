@@ -34,9 +34,32 @@ trait CardRenderTrait
             'source'        => $post['_vvp_source'] ?? 'volksverpetzer',
         ];
 
+        $image_html = $props['image_url']
+            ? '<img src="' . esc_url($props['image_url']) . '" alt="' . esc_attr($props['title']) . '" class="vvp-co__feed-image" loading="lazy" decoding="async">'
+            : '';
+        $category_html = ($props['category'] && $props['category_link'])
+            ? '<a href="' . esc_url($props['category_link']) . '" class="vvp-co__category">' . esc_html($props['category']) . '</a>'
+            : ($props['category'] ? '<span class="vvp-co__category">' . esc_html($props['category']) . '</span>' : '');
+        $reading_time_html = $props['reading_time']
+            ? '<span class="vvp-co__reading-time">' . (int) $props['reading_time'] . ' Min.</span>'
+            : '';
+
+        $static_html = '<a href="' . esc_url($props['link']) . '" class="vvp-co__feed-card">'
+            . ($image_html ? '<div class="vvp-co__feed-image-wrap">' . $image_html . '</div>' : '')
+            . '<div class="vvp-co__feed-body">'
+            .   '<h3 class="vvp-co__feed-title">' . esc_html($props['title']) . '</h3>'
+            .   ($props['excerpt'] ? '<p class="vvp-co__feed-excerpt">' . esc_html($props['excerpt']) . '</p>' : '')
+            .   '<div class="vvp-co__feed-footer">'
+            .     $category_html
+            .     '<span class="vvp-co__feed-date">' . esc_html($props['date']) . '</span>'
+            .     $reading_time_html
+            .   '</div>'
+            . '</div>'
+            . '</a>';
+
         return '<div class="vvp-co-article-mount" data-article-props="'
             . esc_attr(wp_json_encode($props))
-            . '"></div>';
+            . '">' . $static_html . '</div>';
     }
 
     /**
@@ -171,9 +194,20 @@ trait CardRenderTrait
             'thumbnailUrl' => $video['thumbnailUrl'] ?? '',
         ];
 
-        $encoded = htmlspecialchars(json_encode($props, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8');
+        $encoded  = htmlspecialchars(json_encode($props, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8');
+        $yt_url   = $props['videoId'] ? esc_url('https://youtube.com/watch?v=' . $props['videoId']) : '#';
+        $yt_title = esc_html($props['title']);
+        $yt_desc  = esc_html($props['description']);
+        $yt_date  = esc_html($props['date']);
 
-        return '<div class="vvp-co-yt-banner-mount" data-yt-banner-props="' . $encoded . '"></div>';
+        $static_html = '<a href="' . $yt_url . '" target="_blank" rel="noopener noreferrer">'
+            . ($props['thumbnailUrl'] ? '<img src="' . esc_url($props['thumbnailUrl']) . '" alt="' . $yt_title . '" loading="lazy" decoding="async">' : '')
+            . '<div><h3>' . $yt_title . '</h3>'
+            . ($yt_desc ? '<p>' . $yt_desc . '</p>' : '')
+            . '<span>' . $yt_date . '</span></div>'
+            . '</a>';
+
+        return '<div class="vvp-co-yt-banner-mount" data-yt-banner-props="' . $encoded . '">' . $static_html . '</div>';
     }
 
     /**
@@ -199,8 +233,20 @@ trait CardRenderTrait
             'artworkUrl' => !empty($episode['image']) ? $episode['image'] : $channel_image,
         ];
 
-        $encoded = htmlspecialchars(json_encode($props, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8');
+        $encoded         = htmlspecialchars(json_encode($props, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8');
+        $pod_title       = esc_html($props['title']);
+        $pod_link        = esc_url($props['link']);
+        $pod_date        = esc_html($props['date']);
+        $pod_summary     = esc_html($props['summary']);
+        $pod_duration    = esc_html($props['duration']);
 
-        return '<div class="vvp-co-podcast-mount" data-podcast-props="' . $encoded . '"></div>';
+        $static_html = '<a href="' . $pod_link . '">'
+            . ($props['artworkUrl'] ? '<img src="' . esc_url($props['artworkUrl']) . '" alt="' . $pod_title . '" loading="lazy">' : '')
+            . '<div><h3>' . $pod_title . '</h3>'
+            . ($pod_summary ? '<p>' . $pod_summary . '</p>' : '')
+            . '<span>' . $pod_date . ($pod_duration ? ' · ' . $pod_duration : '') . '</span></div>'
+            . '</a>';
+
+        return '<div class="vvp-co-podcast-mount" data-podcast-props="' . $encoded . '">' . $static_html . '</div>';
     }
 }
