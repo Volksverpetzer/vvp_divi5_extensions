@@ -175,7 +175,8 @@
   max-height: calc(100vh - 8rem);
 
   @media (max-width: 640px) {
-    margin: 1rem;
+    width: calc(100% - 2rem);
+    margin: 1rem auto;
     max-height: calc(100vh - 2rem);
     border-radius: 0.5rem;
   }
@@ -442,6 +443,7 @@
 /* ─── Result card ───────────────────────────────────────────────────────── */
 .vvp-fc__result-card {
   display: flex;
+  align-items: flex-start;
   gap: 1rem;
   padding: 1rem;
   background: #f9fafb;
@@ -469,6 +471,7 @@
 
 .vvp-fc__result-rank {
   flex-shrink: 0;
+  margin-top: 0.1rem;
   width: 1.75rem;
   height: 1.75rem;
   border-radius: 50%;
@@ -508,10 +511,6 @@
   font-weight: 600;
   color: #111827;
   line-height: 1.35;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
   transition: color 0.15s ease;
 }
 
@@ -537,7 +536,7 @@
 .vvp-fc__result-domain {
   display: inline-block;
   flex-shrink: 0;
-  padding: 0.125rem 0.5rem;
+  padding: 0.05rem 0.75rem;
   background: #e5e7eb;
   color: #374151;
   border-radius: 9999px;

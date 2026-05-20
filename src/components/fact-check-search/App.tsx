@@ -340,7 +340,7 @@ export const FactCheckSearchApp: React.FC<FactCheckSearchAppProps> = ({
                         : `${results.length} relevante Artikel gefunden`}
                     </span>
                     <span className="js-vvp-fc-results-time">
-                      {tookTime != null ? `${tookTime} ms` : ""}
+                      {tookTime != null ? `${(tookTime / 1000).toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} s` : ""}
                     </span>
                   </div>
                   <div className="vvp-fc__results-list js-vvp-fc-results-list">
