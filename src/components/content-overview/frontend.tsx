@@ -107,6 +107,13 @@ const initArticlesToggle = (wrapper: Element) => {
     try {
       localStorage.setItem(LS_KEY, String(toggle.checked));
     } catch (_) {}
+    if (toggle.checked) {
+      try {
+        if (typeof window.plausible === "function") {
+          window.plausible("Nur Artikel Filter", { props: { action: "aktiviert" } });
+        }
+      } catch (_) {}
+    }
     apply(toggle.checked);
   });
 };

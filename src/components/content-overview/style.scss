@@ -444,6 +444,8 @@ button.vvp-co__category--btn:hover,
 .vvp-co__podcast-artwork {
   width: 100%;
   height: auto;
+  max-width: 220px;
+  max-height: 220px;
   aspect-ratio: 1/1;
   border-radius: 0.5rem;
   object-fit: cover;
