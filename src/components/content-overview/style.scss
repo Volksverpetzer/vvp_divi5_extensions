@@ -437,15 +437,15 @@ button.vvp-co__category--btn:hover,
 
 @media (min-width: 700px) {
   .vvp-co__podcast-artwork-wrap {
-    padding: 2.5rem;
+    padding: 1.25rem 2.5rem;
   }
 }
 
 .vvp-co__podcast-artwork {
   width: 100%;
   height: auto;
-  max-width: 220px;
-  max-height: 220px;
+  max-width: 190px;
+  max-height: 190px;
   aspect-ratio: 1/1;
   border-radius: 0.5rem;
   object-fit: cover;
