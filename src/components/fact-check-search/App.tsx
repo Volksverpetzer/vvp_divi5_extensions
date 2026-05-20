@@ -366,6 +366,10 @@ export const FactCheckSearchApp: React.FC<FactCheckSearchAppProps> = ({
                         const title = r.title || "Ohne Titel";
                         const excerpt = r.excerpt || "";
                         const url = r.url || "#";
+                        let domain = "";
+                        try {
+                          domain = new URL(url).hostname.replace(/^www\./, "");
+                        } catch (_) {}
 
                         return (
                           <a
@@ -388,6 +392,9 @@ export const FactCheckSearchApp: React.FC<FactCheckSearchAppProps> = ({
                               <p className="vvp-fc__result-excerpt">
                                 {excerpt}
                               </p>
+                              {domain && (
+                                <span className="vvp-fc__result-domain">{domain}</span>
+                              )}
                               {score != null && (
                                 <div className="vvp-fc__score-bar">
                                   <div className="vvp-fc__score-track">
