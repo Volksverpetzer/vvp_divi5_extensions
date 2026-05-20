@@ -236,23 +236,15 @@
 }
 
 .vvp-fc__input-row {
-  position: relative;
   display: flex;
   align-items: center;
-}
-
-.vvp-fc__input-icon {
-  position: absolute;
-  left: 0.75rem;
-  pointer-events: none;
-  color: #9ca3af;
-  display: flex;
-  align-items: center;
+  gap: 0.5rem;
 }
 
 .vvp-fc__text-input {
-  width: 100%;
-  padding: 0.75rem 8rem 0.75rem 2.25rem;
+  flex: 1;
+  min-width: 0;
+  padding: 0.75rem 0.75rem;
   border: 1px solid #d1d5db !important;
   border-radius: 0.5rem;
   font-size: 0.875rem;
@@ -280,8 +272,7 @@
 }
 
 .vvp-fc__submit-btn {
-  position: absolute;
-  right: 0.5rem;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 0.375rem;
@@ -501,6 +492,15 @@
   gap: 0.5rem;
 }
 
+.vvp-fc__result-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+}
+
 .vvp-fc__result-title {
   margin: 0;
   font-size: 0.875rem;
@@ -535,10 +535,10 @@
 
 .vvp-fc__result-domain {
   display: inline-block;
-  margin-top: 0.375rem;
+  flex-shrink: 0;
   padding: 0.125rem 0.5rem;
-  background: var(--vvp-hellblau);
-  color: var(--vvp-blue-main);
+  background: #e5e7eb;
+  color: #374151;
   border-radius: 9999px;
   font-size: 0.7rem;
   font-weight: 500;

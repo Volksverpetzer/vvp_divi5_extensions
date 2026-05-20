@@ -235,13 +235,6 @@ export const FactCheckSearchApp: React.FC<FactCheckSearchAppProps> = ({
                 onSubmit={handleSubmit}
               >
                 <div className="vvp-fc__input-row">
-                  <span className="vvp-fc__input-icon js-vvp-fc-input-icon">
-                    {isUrlQuery ? (
-                      <IconLink size={16} />
-                    ) : (
-                      <IconFileText size={16} />
-                    )}
-                  </span>
                   <input
                     ref={inputRef}
                     type="text"
@@ -382,9 +375,14 @@ export const FactCheckSearchApp: React.FC<FactCheckSearchAppProps> = ({
                             <div className="vvp-fc__result-rank">{i + 1}</div>
                             <div className="vvp-fc__result-body">
                               <div className="vvp-fc__result-header">
-                                <h3 className="vvp-fc__result-title">
-                                  {title}
-                                </h3>
+                                <div className="vvp-fc__result-title-row">
+                                  <h3 className="vvp-fc__result-title">
+                                    {title}
+                                  </h3>
+                                  {domain && (
+                                    <span className="vvp-fc__result-domain">{domain}</span>
+                                  )}
+                                </div>
                                 <span className="vvp-fc__result-ext-icon">
                                   <IconExternalLink size={13} />
                                 </span>
@@ -392,9 +390,6 @@ export const FactCheckSearchApp: React.FC<FactCheckSearchAppProps> = ({
                               <p className="vvp-fc__result-excerpt">
                                 {excerpt}
                               </p>
-                              {domain && (
-                                <span className="vvp-fc__result-domain">{domain}</span>
-                              )}
                               {score != null && (
                                 <div className="vvp-fc__score-bar">
                                   <div className="vvp-fc__score-track">
