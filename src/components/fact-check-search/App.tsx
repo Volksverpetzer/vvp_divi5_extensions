@@ -239,7 +239,7 @@ export const FactCheckSearchApp: React.FC<FactCheckSearchAppProps> = ({
                     ref={inputRef}
                     type="text"
                     className="vvp-fc__text-input js-vvp-fc-input"
-                    placeholder="URL oder Text zum Faktencheck eingeben..."
+                    placeholder="URL oder Text zum Fake eingeben"
                     autoComplete="off"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
