@@ -377,6 +377,7 @@ export const FactCheckSearchApp: React.FC<FactCheckSearchAppProps> = ({
                             href={url}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={() => trackEvent("faktencheck-result-click", { title, url })}
                           >
                             <div className="vvp-fc__result-rank">{i + 1}</div>
                             <div className="vvp-fc__result-body">
