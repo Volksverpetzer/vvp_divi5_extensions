@@ -134,6 +134,8 @@ trait RenderCallbackTrait
         $category_name = $category ? $category->name : '';
         $category_link = $category ? (string) get_category_link($category->term_id) : '';
 
+        $reading_time = (int) get_post_meta($post_id, '_yoast_wpseo_estimated-reading-time-minutes', true);
+
         return [
             'type'          => 'article',
             'title'         => get_the_title($post_id),
@@ -144,6 +146,7 @@ trait RenderCallbackTrait
             'category'      => $category_name,
             'category_link' => $category_link,
             'source'        => 'volksverpetzer',
+            'reading_time'  => $reading_time ?: 0,
         ];
     }
 }

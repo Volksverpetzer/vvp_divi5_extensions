@@ -16,26 +16,6 @@ import { InstagramSlideshow } from "./InstagramSlideshow";
 import { PodcastBanner } from "./PodcastBanner";
 import { YouTubeBanner } from "./YouTubeBanner";
 
-// ── Tiny icon set ────────────────────────────────────────────────────────────
-
-const IconNewspaper = ({ size = 18 }: { size?: number }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2 2zm0 0a2 2 0 01-2-2v-9c0-1.1.9-2 2-2h2" />
-    <path d="M18 14h-8M15 18h-5M10 6h8v4h-8z" />
-  </svg>
-);
-
 // ── Example data ─────────────────────────────────────────────────────────────
 
 const MOCK_ARTICLE = {
@@ -43,7 +23,8 @@ const MOCK_ARTICLE = {
   excerpt:
     "Eine Analyse der häufigsten Desinformationsmuster in sozialen Netzwerken.",
   link: "#",
-  date: "17. April 2026",
+  date: "17.05.2026",
+  reading_time: 4,
   category: "Analyse",
   category_link: "#",
   source: "volksverpetzer" as const,
@@ -51,12 +32,26 @@ const MOCK_ARTICLE = {
     "https://via.placeholder.com/640x360/e5e7eb/a3a3a3?text=Beispiel-Bild",
 };
 
+const MOCK_ARTICLE_2 = {
+  title: "AfD und die Medien: Eine Bilanz",
+  excerpt: "Wie rechte Narrative in den Mainstream gelangen.",
+  link: "#",
+  date: "16.05.2026",
+  reading_time: 6,
+  category: "Politik",
+  category_link: "#",
+  source: "volksverpetzer" as const,
+  image_url:
+    "https://via.placeholder.com/640x360/e5e7eb/a3a3a3?text=Artikel+2",
+};
+
 const MOCK_PRUEFPUNKT = {
   title: "Klimaschutz: Was stimmt wirklich?",
   excerpt:
     "Der Faktencheck zur aktuellen politischen Debatte über Emissionsziele.",
   link: "#",
-  date: "15. April 2026",
+  date: "15.05.2026",
+  reading_time: 3,
   category: "Faktencheck",
   source: "pruefpunkt" as const,
   image_url:
@@ -132,92 +127,42 @@ export const ContentOverviewEdit = (
     >
       {elements.styleComponents({ attrName: "module" })}
 
-      <div className="vvp-co__wrapper vvp-co__wrapper--preview">
-        {/* Module header hint */}
-        <div className="vvp-co__preview-header">
-          <IconNewspaper size={16} />
-          <span className="vvp-co__preview-label">
-            Inhaltsübersicht — Live-Daten werden serverseitig geladen
-          </span>
+      <div className="vvp-co__wrapper">
+        <div className="vvp-co__section-header">
+          <h2 className="vvp-co__section-title">Das Neueste</h2>
         </div>
 
-        {/* Top grid skeleton (hero + sidebar) */}
-        <div className="vvp-co__top-grid">
-          <div className="vvp-co__hero-wrap">
-            <div className="vvp-co__skeleton vvp-co__skeleton--hero">
-              <div className="vvp-co__skeleton-img" />
-              <div className="vvp-co__skeleton-body">
-                <div className="vvp-co__skeleton-badge" />
-                <div className="vvp-co__skeleton-line vvp-co__skeleton-line--title" />
-                <div className="vvp-co__skeleton-line" />
-                <div className="vvp-co__skeleton-line vvp-co__skeleton-line--short" />
-              </div>
-            </div>
+        <div className="vvp-co__feed-grid">
+          {/* Row 1: articles */}
+          <div className="vvp-co__feed-item">
+            <ArticleCard {...MOCK_ARTICLE} />
+          </div>
+          <div className="vvp-co__feed-item">
+            <ArticleCard {...MOCK_ARTICLE_2} />
+          </div>
+          <div className="vvp-co__feed-item">
+            <ArticleCard {...MOCK_PRUEFPUNKT} />
           </div>
 
-          <div className="vvp-co__sidebar">
-            <div className="vvp-co__sidebar-header">
-              <IconNewspaper size={14} />
-              <span className="vvp-co__sidebar-title">Neueste Artikel</span>
-            </div>
-            <div className="vvp-co__sidebar-cards">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="vvp-co__skeleton vvp-co__skeleton--compact"
-                >
-                  <div className="vvp-co__skeleton-thumb" />
-                  <div className="vvp-co__skeleton-body">
-                    <div className="vvp-co__skeleton-line" />
-                    <div className="vvp-co__skeleton-line vvp-co__skeleton-line--short" />
-                  </div>
-                </div>
-              ))}
-            </div>
+          {/* Row 2: Instagram carousels */}
+          <div className="vvp-co__feed-item">
+            <InstagramSlideshow {...MOCK_IG} />
           </div>
-        </div>
-
-        {/* Feed section — representative real-looking example cards */}
-        <div className="vvp-co__feed-section">
-          <div className="vvp-co__feed-header">
-            <span className="vvp-co__feed-heading">Weitere Beiträge</span>
-            <div className="vvp-co__feed-divider" />
+          <div className="vvp-co__feed-item">
+            <InstagramSlideshow {...MOCK_IG} />
           </div>
-          <div className="vvp-co__feed-grid">
-            {/* Row 1: three article cards */}
-            <div className="vvp-co__feed-item">
-              <ArticleCard {...MOCK_ARTICLE} />
-            </div>
-            <div className="vvp-co__feed-item">
-              <InstagramSlideshow {...MOCK_IG} />
-            </div>
-            <div className="vvp-co__feed-item">
-              <ArticleCard {...MOCK_PRUEFPUNKT} />
-            </div>
+          <div className="vvp-co__feed-item">
+            <InstagramSlideshow {...MOCK_IG} />
+          </div>
 
-            {/* Row 2: YouTube banner (full width) */}
-            <div className="vvp-co__feed-item vvp-co__feed-item--youtube-banner">
-              <YouTubeBanner {...MOCK_YT} />
-            </div>
+          {/* YouTube banner */}
+          <div className="vvp-co__feed-item vvp-co__feed-item--youtube-banner">
+            <YouTubeBanner {...MOCK_YT} />
+          </div>
 
-            {/* Row 3: podcast banner (full width) */}
-            <div className="vvp-co__feed-item vvp-co__feed-item--podcast">
-              <PodcastBanner {...MOCK_PODCAST} />
-            </div>
-
-            {/* Row 3: more article skeletons */}
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="vvp-co__feed-item">
-                <div className="vvp-co__skeleton vvp-co__skeleton--feed">
-                  <div className="vvp-co__skeleton-img" />
-                  <div className="vvp-co__skeleton-body">
-                    <div className="vvp-co__skeleton-badge" />
-                    <div className="vvp-co__skeleton-line vvp-co__skeleton-line--title" />
-                    <div className="vvp-co__skeleton-line" />
-                  </div>
-                </div>
-              </div>
-            ))}
+          {/* Podcast banner */}
+          <div className="vvp-co__feed-item vvp-co__feed-item--podcast">
+            <PodcastBanner {...MOCK_PODCAST} />
           </div>
         </div>
       </div>
