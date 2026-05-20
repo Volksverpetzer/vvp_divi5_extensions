@@ -19,6 +19,12 @@ const EXAMPLE_QUERIES = [
   "Asylbewerber bekommen mehr Geld als Rentner",
 ];
 
+const decodeHtml = (html: string): string => {
+  const txt = document.createElement("textarea");
+  txt.innerHTML = html;
+  return txt.value;
+};
+
 const isUrl = (str: string) => {
   try {
     const u = new URL(str.trim());
@@ -356,8 +362,8 @@ export const FactCheckSearchApp: React.FC<FactCheckSearchAppProps> = ({
                             : pct >= 40
                               ? " vvp-fc__score-fill--medium"
                               : " vvp-fc__score-fill--low";
-                        const title = r.title || "Ohne Titel";
-                        const excerpt = r.excerpt || "";
+                        const title = decodeHtml(r.title || "Ohne Titel");
+                        const excerpt = decodeHtml(r.excerpt || "");
                         const url = r.url || "#";
                         let domain = "";
                         try {
