@@ -42,9 +42,6 @@ export const AuthorProfileEdit = (
       {elements.styleComponents({ attrName: "module" })}
 
       <div className="vvp-ap__editor-preview">
-        <div className="vvp-ap__editor-notice">
-          Vorschau — im Frontend werden echte Autorendaten verwendet.
-        </div>
         <AuthorProfileApp
           authors={PLACEHOLDER_AUTHORS}
           showAvatar={showAvatar}

@@ -58,10 +58,7 @@ export const TrendingItemsEdit = (
     >
       {elements.styleComponents({ attrName: "module" })}
 
-      <div className="vvp-ti__editor-preview">
-        <div className="vvp-ti__editor-notice">
-          Vorschau — im Frontend werden echte Trending-Daten geladen.
-        </div>
+      <div className="vvp-trending-items">
         <div className="vvp-ti__list">
           {PLACEHOLDER_ARTICLES.map((article) => (
             <div key={article.link + article.title} className="vvp-ti__item">
