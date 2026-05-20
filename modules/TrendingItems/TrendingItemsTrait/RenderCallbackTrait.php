@@ -138,7 +138,7 @@ trait RenderCallbackTrait
 
         return [
             'type'          => 'article',
-            'title'         => get_the_title($post_id),
+            'title'         => wp_specialchars_decode((string) get_the_title($post_id), ENT_QUOTES),
             'link'          => (string) get_permalink($post_id),
             'date'          => get_the_date('d.m.Y', $post_id),
             'image_url'     => (string) (get_the_post_thumbnail_url($post_id, 'medium_large') ?: ''),

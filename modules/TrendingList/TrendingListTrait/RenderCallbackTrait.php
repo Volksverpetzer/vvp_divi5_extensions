@@ -121,7 +121,7 @@ trait RenderCallbackTrait
         }
 
         return [
-            'title'  => get_the_title($post_id),
+            'title'  => wp_specialchars_decode((string) get_the_title($post_id), ENT_QUOTES),
             'link'   => (string) get_permalink($post_id),
             'date'   => get_the_date('j. F Y', $post_id),
             'author' => get_the_author_meta('display_name', $post->post_author),
