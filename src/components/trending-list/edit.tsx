@@ -28,7 +28,7 @@ export const TrendingListEdit = (
     >
       {elements.styleComponents({ attrName: "module" })}
 
-      <div className="vvp-tl__editor-preview">
+      <div className="vvp-trending-list">
         <div className="vvp-tl__list">
           {PLACEHOLDER_ITEMS.map((item) => (
             <div key={item.link + item.title} className="vvp-tl__item">
