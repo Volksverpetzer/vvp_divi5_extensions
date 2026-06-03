@@ -244,12 +244,6 @@ const InternalSlider = ({
             const isVideo = !!slide.video;
             const isActive = index === activeIndex;
             const isPlaying = !!playingVideos[index];
-            const len = slides.length;
-            const _isNearActive =
-              index === activeIndex ||
-              index === (activeIndex + 1) % len ||
-              index === (activeIndex - 1 + len) % len;
-
             return (
               <div
                 className={classnames("vvp-co-slide vvp-co-slide-with-image", {
