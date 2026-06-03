@@ -9,22 +9,24 @@ import { InstagramSlideshow } from "../src/components/content-overview/Instagram
 import { PodcastBanner } from "../src/components/content-overview/PodcastBanner";
 import { AuthorProfileApp } from "../src/components/author-profile/App";
 import { TrendingItemsApp } from "../src/components/trending-items/App";
+import { type ArticleCardProps } from "../src/components/shared/ArticleCard";
+
 
 // ── Sample data ───────────────────────────────────────────────────────────────
 
-const TRENDING_ALL = [
-  { title: "Faktencheck: Behauptung über Migranten widerlegt",        url: "/faktencheck/behauptung-migranten/",   thumbnailUrl: "https://picsum.photos/seed/101/320/240", type: "post", pageviews: 12450 },
-  { title: "5 Mythen über Impfstoffe — und was wirklich stimmt",      url: "/faktencheck/mythen-impfstoffe/",      thumbnailUrl: "https://picsum.photos/seed/102/320/240", type: "post", pageviews:  9830 },
-  { title: "Warum dieser Viral-Post kompletter Unsinn ist",            url: "/desinformation/viral-post-unsinn/",  thumbnailUrl: "https://picsum.photos/seed/103/320/240", type: "post", pageviews:  7612 },
-  { title: "Klimaschutz: Was die Zahlen wirklich sagen",              url: "/faktencheck/klimaschutz-zahlen/",     thumbnailUrl: "",                                       type: "post", pageviews:  6201 },
-  { title: "Desinformation im Wahlkampf: Das steckt dahinter",        url: "/desinformation/wahlkampf/",           thumbnailUrl: "",                                       type: "post", pageviews:  5443 },
+const TRENDING_ALL: ArticleCardProps[] = [
+  { title: "Faktencheck: Behauptung über Migranten widerlegt",   link: "/faktencheck/behauptung-migranten/",  image_url: "https://picsum.photos/seed/101/320/240", date: "1. Mai 2026",    category: "Faktencheck" },
+  { title: "5 Mythen über Impfstoffe — und was wirklich stimmt", link: "/faktencheck/mythen-impfstoffe/",     image_url: "https://picsum.photos/seed/102/320/240", date: "28. April 2026", category: "Faktencheck" },
+  { title: "Warum dieser Viral-Post kompletter Unsinn ist",       link: "/desinformation/viral-post-unsinn/", image_url: "https://picsum.photos/seed/103/320/240", date: "25. April 2026" },
+  { title: "Klimaschutz: Was die Zahlen wirklich sagen",          link: "/faktencheck/klimaschutz-zahlen/",   date: "20. April 2026", category: "Faktencheck" },
+  { title: "Desinformation im Wahlkampf: Das steckt dahinter",   link: "/desinformation/wahlkampf/",         date: "15. April 2026" },
 ];
 
-const TRENDING_PODCAST = [
-  { title: "Podcast: Medienmanipulation im Netz erklärt",             url: "/podcast/medienmanipulation/",         thumbnailUrl: "https://picsum.photos/seed/107/320/240", type: "post", pageviews:  3870 },
+const TRENDING_PODCAST: ArticleCardProps[] = [
+  { title: "Podcast: Medienmanipulation im Netz erklärt", link: "/podcast/medienmanipulation/", image_url: "https://picsum.photos/seed/107/320/240", date: "10. April 2026" },
 ];
 
-const TRENDING_EMPTY: never[] = [];
+const TRENDING_EMPTY: ArticleCardProps[] = [];
 
 const AUTHOR_SINGLE = [
   {
@@ -205,25 +207,25 @@ const App = () => (
 
       <Section title="TrendingItems · Alle (mit Vorschaubildern)">
         <div className="vvp-trending-items" style={{ maxWidth: 480, padding: "1.5rem", background: "#fff", borderRadius: 8, boxShadow: "0 1px 4px rgba(0,0,0,.08)" }}>
-          <TrendingItemsApp items={TRENDING_ALL} showThumbnail />
+          <TrendingItemsApp items={TRENDING_ALL} />
         </div>
       </Section>
 
       <Section title="TrendingItems · Alle (ohne Vorschaubilder)">
         <div className="vvp-trending-items" style={{ maxWidth: 480, padding: "1.5rem", background: "#fff", borderRadius: 8, boxShadow: "0 1px 4px rgba(0,0,0,.08)" }}>
-          <TrendingItemsApp items={TRENDING_ALL} showThumbnail={false} />
+          <TrendingItemsApp items={TRENDING_ALL.map(({ image_url: _, ...rest }) => rest)} />
         </div>
       </Section>
 
       <Section title="TrendingItems · Podcast (1 Treffer nach URL-Filter)">
         <div className="vvp-trending-items" style={{ maxWidth: 480, padding: "1.5rem", background: "#fff", borderRadius: 8, boxShadow: "0 1px 4px rgba(0,0,0,.08)" }}>
-          <TrendingItemsApp items={TRENDING_PODCAST} showThumbnail />
+          <TrendingItemsApp items={TRENDING_PODCAST} />
         </div>
       </Section>
 
       <Section title="TrendingItems · Leerer Zustand">
         <div className="vvp-trending-items" style={{ maxWidth: 480, padding: "1.5rem", background: "#fff", borderRadius: 8, boxShadow: "0 1px 4px rgba(0,0,0,.08)" }}>
-          <TrendingItemsApp items={TRENDING_EMPTY} showThumbnail />
+          <TrendingItemsApp items={TRENDING_EMPTY} />
         </div>
       </Section>
 
