@@ -245,7 +245,7 @@ const InternalSlider = ({
             const isActive = index === activeIndex;
             const isPlaying = !!playingVideos[index];
             const len = slides.length;
-            const isNearActive =
+            const _isNearActive =
               index === activeIndex ||
               index === (activeIndex + 1) % len ||
               index === (activeIndex - 1 + len) % len;

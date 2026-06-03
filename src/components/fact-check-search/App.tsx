@@ -7,7 +7,6 @@ import {
   IconX,
   IconShieldCheck,
   IconLink,
-  IconFileText,
   IconTrendingUp,
   IconAlertCircle,
   IconExternalLink,
