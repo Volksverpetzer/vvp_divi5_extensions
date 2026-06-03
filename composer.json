@@ -4,7 +4,7 @@
   "type": "wordpress-plugin",
   "autoload": {
     "psr-4": {
-      "VVP\\FactCheckSearch\\": "modules/"
+      "VVP\\Divi5\\": "modules/"
     }
   },
   "require": {

@@ -128,13 +128,15 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           {isYoutube ? <YoutubeBadge /> : <SourceBadge source={source} />}
           {category &&
             (category_link ? (
-              <button
-                type="button"
+              <span
+                role="button"
+                tabIndex={0}
                 className="vvp-co__category vvp-co__category--btn"
                 onClick={handleCategoryClick}
+                onKeyDown={(e) => e.key === "Enter" && handleCategoryClick(e as unknown as React.MouseEvent)}
               >
                 {category}
-              </button>
+              </span>
             ) : (
               <span className="vvp-co__category">{category}</span>
             ))}

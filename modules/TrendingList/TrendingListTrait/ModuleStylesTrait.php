@@ -37,5 +37,7 @@ trait ModuleStylesTrait
                 ]),
             ],
         ]);
+
+        return '';
     }
 }
