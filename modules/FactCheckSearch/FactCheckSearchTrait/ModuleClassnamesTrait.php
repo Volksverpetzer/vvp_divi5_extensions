@@ -2,11 +2,11 @@
 /**
  * FactCheckSearch::module_classnames()
  *
- * @package VVP\FactCheckSearch\FactCheckSearch
+ * @package VVP\Divi5\FactCheckSearch
  * @since 1.0.0
  */
 
-namespace VVP\FactCheckSearch\FactCheckSearch\FactCheckSearchTrait;
+namespace VVP\Divi5\FactCheckSearch\FactCheckSearchTrait;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');
@@ -25,6 +25,6 @@ trait ModuleClassnamesTrait
      */
     public static function module_classnames($args)
     {
-        return 'vvp-fact-check-search';
+        $args['classnamesInstance']->add('vvp-fact-check-search');
     }
 }

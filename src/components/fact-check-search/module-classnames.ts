@@ -1,3 +1,3 @@
 export const moduleClassnames = () => {
-    return 'vvp-fact-check-search';
+  return "vvp-fact-check-search";
 };

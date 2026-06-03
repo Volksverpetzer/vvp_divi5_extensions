@@ -1,0 +1,130 @@
+<?php
+/**
+ * TrendingList::render_callback()
+ *
+ * @package VVP\Divi5\TrendingList
+ * @since 1.0.0
+ */
+
+namespace VVP\Divi5\TrendingList\TrendingListTrait;
+
+if (!defined('ABSPATH')) {
+    die('Direct access forbidden.');
+}
+
+use ET\Builder\Packages\Module\Module;
+use ET\Builder\Framework\Utility\HTMLUtility;
+use ET\Builder\FrontEnd\BlockParser\BlockParserStore;
+use ET\Builder\Packages\Module\Options\Element\ElementComponents;
+use VVP\Divi5\TrendingList\TrendingList;
+
+trait RenderCallbackTrait
+{
+    public static function render_callback($attrs, $content, $block, $elements)
+    {
+        $range = $attrs['range']['desktop']['value'] ?? 'last7days';
+        $items = self::get_trending_items(3, $range);
+
+        $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
+        $parent_attrs = $parent->attrs ?? [];
+
+        return Module::render([
+            'orderIndex'          => $block->parsed_block['orderIndex'],
+            'storeInstance'       => $block->parsed_block['storeInstance'],
+            'attrs'               => $attrs,
+            'elements'            => $elements,
+            'id'                  => $block->parsed_block['id'],
+            'name'                => $block->block_type->name,
+            'moduleCategory'      => $block->block_type->category,
+            'classnamesFunction'  => [TrendingList::class, 'module_classnames'],
+            'stylesComponent'     => [TrendingList::class, 'module_styles'],
+            'scriptDataComponent' => [TrendingList::class, 'module_script_data'],
+            'parentAttrs'         => $parent_attrs,
+            'parentId'            => $parent->id ?? '',
+            'parentName'          => $parent->blockName ?? '',
+            'children'            => [
+                ElementComponents::component([
+                    'attrs'         => $attrs['module']['decoration'] ?? [],
+                    'id'            => $block->parsed_block['id'],
+                    'orderIndex'    => $block->parsed_block['orderIndex'],
+                    'storeInstance' => $block->parsed_block['storeInstance'],
+                ]),
+                HTMLUtility::render([
+                    'tag'               => 'div',
+                    'attributes'        => [
+                        'class'         => 'vvp-tl__mount',
+                        'data-articles' => esc_attr(wp_json_encode($items)),
+                    ],
+                    'childrenSanitizer' => 'esc_html',
+                    'children'          => '',
+                ]),
+            ],
+        ]);
+    }
+
+    /**
+     * @return list<array{title:string,link:string,date:string,author:string}>
+     */
+    private static function get_trending_items(int $item_count, string $range): array
+    {
+        $cache_key = 'vvp_tl_' . md5("{$item_count}_{$range}");
+        $cached    = get_transient($cache_key);
+        if ($cached !== false) {
+            return $cached;
+        }
+
+        $ids   = self::fetch_wpp_ids(min($item_count * 5, 100), $range);
+        $items = [];
+
+        foreach ($ids as $post_id) {
+            if (count($items) >= $item_count) {
+                break;
+            }
+            $post = self::build_post_data((int) $post_id);
+            if ($post !== null) {
+                $items[] = $post;
+            }
+        }
+
+        set_transient($cache_key, $items, HOUR_IN_SECONDS);
+        return $items;
+    }
+
+    /**
+     * Fetches top post IDs via wpp_get_ids. Returns [] silently when WPP is not active.
+     *
+     * @return list<int>
+     */
+    private static function fetch_wpp_ids(int $limit, string $range): array
+    {
+        if (!function_exists('wpp_get_ids')) {
+            return [];
+        }
+
+        $ids = wpp_get_ids([
+            'limit'     => $limit,
+            'range'     => $range,
+            'post_type' => 'post',
+        ]);
+
+        return is_array($ids) ? array_map('intval', $ids) : [];
+    }
+
+    /**
+     * @return array{title:string,link:string,date:string,author:string}|null
+     */
+    private static function build_post_data(int $post_id): ?array
+    {
+        $post = get_post($post_id);
+        if (!$post || $post->post_status !== 'publish') {
+            return null;
+        }
+
+        return [
+            'title'  => html_entity_decode((string) get_the_title($post_id), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            'link'   => (string) get_permalink($post_id),
+            'date'   => get_the_date('j. F Y', $post_id),
+            'author' => get_the_author_meta('display_name', $post->post_author),
+        ];
+    }
+}

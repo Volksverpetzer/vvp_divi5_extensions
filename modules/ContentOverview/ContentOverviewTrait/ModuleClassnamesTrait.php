@@ -2,11 +2,11 @@
 /**
  * ContentOverview::module_classnames()
  *
- * @package VVP\FactCheckSearch\ContentOverview
+ * @package VVP\Divi5\ContentOverview
  * @since 1.0.0
  */
 
-namespace VVP\FactCheckSearch\ContentOverview\ContentOverviewTrait;
+namespace VVP\Divi5\ContentOverview\ContentOverviewTrait;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');
@@ -25,6 +25,6 @@ trait ModuleClassnamesTrait
      */
     public static function module_classnames($args)
     {
-        return 'vvp-content-overview';
+        $args['classnamesInstance']->add('vvp-content-overview');
     }
 }

@@ -1,3 +1,3 @@
 export const moduleClassnames = () => {
-    return 'vvp-content-overview';
+  return "vvp-content-overview";
 };

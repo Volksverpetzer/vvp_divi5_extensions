@@ -2,11 +2,11 @@
 /**
  * Module: FactCheckSearch class.
  *
- * @package VVP\FactCheckSearch\FactCheckSearch
+ * @package VVP\Divi5\FactCheckSearch
  * @since 1.0.0
  */
 
-namespace VVP\FactCheckSearch\FactCheckSearch;
+namespace VVP\Divi5\FactCheckSearch;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');
@@ -36,8 +36,8 @@ class FactCheckSearch implements DependencyInterface
      */
     public function load()
     {
-        $module_json_folder_path = VVP_FACT_CHECK_JSON_PATH . 'fact-check-search/';
-        $source_module_json_path = VVP_FACT_CHECK_PATH . 'src/components/fact-check-search/module.json';
+        $module_json_folder_path = VVP_DIVI5_JSON_PATH . 'fact-check-search/';
+        $source_module_json_path = VVP_DIVI5_PATH . 'src/components/fact-check-search/module.json';
 
         if ( ! file_exists( $module_json_folder_path . 'module.json' ) && file_exists( $source_module_json_path ) ) {
             $module_json_folder_path = dirname( $source_module_json_path ) . '/';

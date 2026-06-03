@@ -1,13 +1,13 @@
 {
-    "name": "volksverpetzer/vvp-fact-check-search",
-    "description": "DIVI 5 Faktencheck Search Extension - Display the Volksverpetzer Faktencheck search bar as a Divi 5 module",
-    "type": "wordpress-plugin",
-    "autoload": {
-        "psr-4": {
-            "VVP\\FactCheckSearch\\": "modules/"
-        }
-    },
-    "require": {
-        "php": ">=7.4"
+  "name": "volksverpetzer/vvp-divi5-extensions",
+  "description": "DIVI 5 Faktencheck Search Extension - Display the Volksverpetzer Faktencheck search bar as a Divi 5 module",
+  "type": "wordpress-plugin",
+  "autoload": {
+    "psr-4": {
+      "VVP\\FactCheckSearch\\": "modules/"
     }
+  },
+  "require": {
+    "php": ">=7.4"
+  }
 }

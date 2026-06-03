@@ -2,11 +2,11 @@
 /**
  * FactCheckSearch::render_callback()
  *
- * @package VVP\FactCheckSearch\FactCheckSearch
+ * @package VVP\Divi5\FactCheckSearch
  * @since 1.0.0
  */
 
-namespace VVP\FactCheckSearch\FactCheckSearch\FactCheckSearchTrait;
+namespace VVP\Divi5\FactCheckSearch\FactCheckSearchTrait;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');
@@ -16,7 +16,7 @@ use ET\Builder\Packages\Module\Module;
 use ET\Builder\Framework\Utility\HTMLUtility;
 use ET\Builder\FrontEnd\BlockParser\BlockParserStore;
 use ET\Builder\Packages\Module\Options\Element\ElementComponents;
-use VVP\FactCheckSearch\FactCheckSearch\FactCheckSearch;
+use VVP\Divi5\FactCheckSearch\FactCheckSearch;
 
 trait RenderCallbackTrait
 {

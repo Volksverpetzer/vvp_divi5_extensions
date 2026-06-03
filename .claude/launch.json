@@ -3,8 +3,14 @@
   "configurations": [
     {
       "name": "preview",
-      "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["preview"],
+      "runtimeExecutable": "php",
+      "runtimeArgs": ["-S", "localhost:8787", "dev-preview.php"],
+      "port": 8787
+    },
+    {
+      "name": "vite",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "preview"],
       "port": 8899
     }
   ]

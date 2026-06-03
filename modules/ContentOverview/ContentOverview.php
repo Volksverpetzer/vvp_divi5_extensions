@@ -2,11 +2,11 @@
 /**
  * Module: ContentOverview class.
  *
- * @package VVP\FactCheckSearch\ContentOverview
+ * @package VVP\Divi5\ContentOverview
  * @since 1.0.0
  */
 
-namespace VVP\FactCheckSearch\ContentOverview;
+namespace VVP\Divi5\ContentOverview;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');
@@ -36,8 +36,8 @@ class ContentOverview implements DependencyInterface
      */
     public function load()
     {
-        $module_json_folder_path = VVP_FACT_CHECK_JSON_PATH . 'content-overview/';
-        $source_module_json_path = VVP_FACT_CHECK_PATH . 'src/components/content-overview/module.json';
+        $module_json_folder_path = VVP_DIVI5_JSON_PATH . 'content-overview/';
+        $source_module_json_path = VVP_DIVI5_PATH . 'src/components/content-overview/module.json';
 
         if ( ! file_exists( $module_json_folder_path . 'module.json' ) && file_exists( $source_module_json_path ) ) {
             $module_json_folder_path = dirname( $source_module_json_path ) . '/';
