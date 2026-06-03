@@ -23,25 +23,28 @@
     "classnames": "^2.5.1"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["@parcel/watcher", "esbuild"]
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "esbuild"
+    ]
   },
   "devDependencies": {
-    "@babel/core": "^7.29.0",
-    "@babel/plugin-transform-class-properties": "^7.28.6",
-    "@babel/plugin-transform-runtime": "^7.29.0",
-    "@babel/preset-env": "^7.29.5",
-    "@babel/preset-react": "^7.28.5",
-    "@babel/preset-typescript": "^7.28.5",
-    "@divi/module": "^1.0.6",
-    "@divi/module-library": "^1.0.6",
-    "@divi/types": "^1.0.5",
+    "@babel/core": "^7.29.7",
+    "@babel/plugin-transform-class-properties": "^7.29.7",
+    "@babel/plugin-transform-runtime": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "@babel/preset-react": "^7.29.7",
+    "@babel/preset-typescript": "^7.29.7",
+    "@divi/module": "^1.0.7",
+    "@divi/module-library": "^1.0.7",
+    "@divi/types": "^1.0.6",
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^9.39.4",
     "@types/lodash": "^4.17.24",
     "@types/react": "17.0.44",
     "@types/react-dom": "17.0.14",
-    "@typescript-eslint/eslint-plugin": "^8.59.3",
-    "@typescript-eslint/parser": "^8.59.3",
+    "@typescript-eslint/eslint-plugin": "^8.60.1",
+    "@typescript-eslint/parser": "^8.60.1",
     "@vitejs/plugin-react": "^4.7.0",
     "@wordpress/hooks": "^3.58.0",
     "@wordpress/i18n": "^4.58.0",
@@ -59,17 +62,17 @@
     "gulp-zip": "^6.1.0",
     "lodash": "^4.18.1",
     "mini-css-extract-plugin": "^2.10.2",
-    "postcss": "^8.5.14",
+    "postcss": "^8.5.15",
     "prettier": "^3.8.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "sass": "^1.99.0",
+    "sass": "^1.100.0",
     "sass-loader": "^14.2.1",
     "style-loader": "^4.0.0",
-    "ts-loader": "^9.5.7",
+    "ts-loader": "^9.6.0",
     "typescript": "^5.9.3",
-    "vite": "^6.4.2",
-    "webpack": "^5.106.2",
+    "vite": "^6.4.3",
+    "webpack": "^5.107.2",
     "webpack-cli": "^5.1.4"
   }
 }
