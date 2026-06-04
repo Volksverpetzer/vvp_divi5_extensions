@@ -41,8 +41,7 @@ const MOCK_ARTICLE_2 = {
   category: "Politik",
   category_link: "#",
   source: "volksverpetzer" as const,
-  image_url:
-    "https://via.placeholder.com/640x360/e5e7eb/a3a3a3?text=Artikel+2",
+  image_url: "https://via.placeholder.com/640x360/e5e7eb/a3a3a3?text=Artikel+2",
 };
 
 const MOCK_PRUEFPUNKT = {

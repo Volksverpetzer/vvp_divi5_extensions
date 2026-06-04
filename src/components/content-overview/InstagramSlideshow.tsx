@@ -66,7 +66,8 @@ const LoadingPlaceholder = () => (
     style={{
       width: "100%",
       height: "100%",
-      background: "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%)",
+      background:
+        "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%)",
       backgroundSize: "600px 100%",
       borderRadius: "0.25rem",
     }}
@@ -127,7 +128,10 @@ const InternalSlider = ({
   useEffect(() => {
     const onFsChange = () => {
       setIsNativeFullscreen(
-        !!(document.fullscreenElement || (document as any).webkitFullscreenElement),
+        !!(
+          document.fullscreenElement ||
+          (document as any).webkitFullscreenElement
+        ),
       );
     };
     document.addEventListener("fullscreenchange", onFsChange);
@@ -147,8 +151,9 @@ const InternalSlider = ({
       const imagesToPreload = [activeIndex];
       // Preload previous and next slides
       if (activeIndex > 0) imagesToPreload.push(activeIndex - 1);
-      if (activeIndex < slides.length - 1) imagesToPreload.push(activeIndex + 1);
-      
+      if (activeIndex < slides.length - 1)
+        imagesToPreload.push(activeIndex + 1);
+
       imagesToPreload.forEach((index) => {
         if (!loadedImages.has(index) && slides[index]?.thumb) {
           const img = new Image();
@@ -159,7 +164,7 @@ const InternalSlider = ({
         }
       });
     };
-    
+
     preloadImages();
   }, [activeIndex, loadedImages, slides]);
 
@@ -283,8 +288,14 @@ const InternalSlider = ({
                           alignItems: "center",
                           justifyContent: "center",
                         }}
-                        onClick={() => { setPlayingVideos({ [index]: true }); onVideoPlay?.(); }}
-                        onMouseEnter={() => { setPlayingVideos({ [index]: true }); onVideoPlay?.(); }}
+                        onClick={() => {
+                          setPlayingVideos({ [index]: true });
+                          onVideoPlay?.();
+                        }}
+                        onMouseEnter={() => {
+                          setPlayingVideos({ [index]: true });
+                          onVideoPlay?.();
+                        }}
                       >
                         {loadedImages.has(index) ? (
                           <img
@@ -316,7 +327,9 @@ const InternalSlider = ({
                             loading={index === 0 ? "eager" : "lazy"}
                             onLoad={(e) => {
                               // Mark image as loaded
-                              setLoadedImages((prev) => new Set(prev).add(index));
+                              setLoadedImages((prev) =>
+                                new Set(prev).add(index),
+                              );
                               e.currentTarget.style.opacity = "1";
                             }}
                           />

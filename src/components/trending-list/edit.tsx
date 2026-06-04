@@ -6,9 +6,25 @@ import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";
 
 const PLACEHOLDER_ITEMS: TrendingListItem[] = [
-  { title: "Bärbel Bas hat RECHT: Aber Tagesthemen stimmen NIUS, BILD & AfD zu!?", link: "#", date: "8. Mai 2026", author: "Thomas Laschyk" },
-  { title: "75 % wollen KEINEN AfD-Kanzler: Wie die WELT für die AfD lügt", link: "#", date: "7. Mai 2026", author: "Thomas Laschyk" },
-  { title: "Faktencheck: Beispielartikel", link: "#", date: "6. Mai 2026", author: "Thomas Laschyk" },
+  {
+    title:
+      "Bärbel Bas hat RECHT: Aber Tagesthemen stimmen NIUS, BILD & AfD zu!?",
+    link: "#",
+    date: "8. Mai 2026",
+    author: "Thomas Laschyk",
+  },
+  {
+    title: "75 % wollen KEINEN AfD-Kanzler: Wie die WELT für die AfD lügt",
+    link: "#",
+    date: "7. Mai 2026",
+    author: "Thomas Laschyk",
+  },
+  {
+    title: "Faktencheck: Beispielartikel",
+    link: "#",
+    date: "6. Mai 2026",
+    author: "Thomas Laschyk",
+  },
 ];
 
 export const TrendingListEdit = (
@@ -32,8 +48,12 @@ export const TrendingListEdit = (
         <div className="vvp-tl__list">
           {PLACEHOLDER_ITEMS.map((item) => (
             <div key={item.link + item.title} className="vvp-tl__item">
-              <a href={item.link} className="vvp-tl__title">{item.title}</a>
-              <span className="vvp-tl__meta">von {item.author} | {item.date}</span>
+              <a href={item.link} className="vvp-tl__title">
+                {item.title}
+              </a>
+              <span className="vvp-tl__meta">
+                von {item.author} | {item.date}
+              </span>
             </div>
           ))}
         </div>

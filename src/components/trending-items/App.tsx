@@ -7,7 +7,9 @@ interface TrendingItemsAppProps {
 
 export const TrendingItemsApp = ({ items }: TrendingItemsAppProps) => {
   if (!items.length) {
-    return <div className="vvp-ti__empty">Keine Trending-Beiträge gefunden.</div>;
+    return (
+      <div className="vvp-ti__empty">Keine Trending-Beiträge gefunden.</div>
+    );
   }
   return (
     <div className="vvp-ti__list">
