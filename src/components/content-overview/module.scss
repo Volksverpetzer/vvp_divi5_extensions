@@ -29,16 +29,6 @@
     color: var(--vvp-blue-main, #3893c0);
   }
 
-  // Skeleton shimmer animation
-  @keyframes vvp-co-shimmer {
-    0% {
-      background-position: -600px 0;
-    }
-    100% {
-      background-position: 600px 0;
-    }
-  }
-
   %skeleton-base {
     background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
     background-size: 600px 100%;

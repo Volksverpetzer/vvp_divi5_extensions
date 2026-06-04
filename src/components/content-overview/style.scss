@@ -247,7 +247,6 @@
   border: 1px solid #e5e7eb;
   border-radius: 0.625rem;
   overflow: hidden;
-  height: auto;
   box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.1);
   transition:
     box-shadow 0.2s ease,
@@ -315,7 +314,6 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  max-height: calc(1.125rem * 1.35 * 3);
   transition: color 0.15s ease;
 }
 
@@ -785,7 +783,6 @@ video:-moz-full-screen {
 /* Instagram card styling */
 .vvp-co__feed-card--insta {
   background-color: rgba(252, 252, 252, 1);
-  opacity: 1;
 }
 
 /* Instagram feed meta and date row */
