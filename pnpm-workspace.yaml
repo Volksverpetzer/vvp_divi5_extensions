@@ -1,6 +1,8 @@
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+nodeLinker: hoisted # see https://pnpm.io/settings#nodelinker
 overrides:
   "@types/codemirror": "5.60.17"
-
 packages:
-  - "."
-
+  - .
