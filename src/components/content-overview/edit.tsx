@@ -29,7 +29,7 @@ const MOCK_ARTICLES = [
   {
     title: "Warum Fakten mehr zählen als Gefühle",
     excerpt:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+      "Faktenchecker arbeiten täglich daran, Fehlinformationen zu widerlegen, bevor sie sich weiter verbreiten. In sozialen Netzwerken kursieren Falschnachrichten oft schneller als Korrekturen – dagegen helfen Medienkompetenz und kritisches Denken.",
     link: "#",
     date: "17.05.2026",
     reading_time: 4,
@@ -53,7 +53,7 @@ const MOCK_ARTICLES = [
   {
     title: "Klimaschutz: Was stimmt wirklich an den Zahlen?",
     excerpt:
-      "Der Faktencheck zur aktuellen politischen Debatte über Emissionsziele. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+      "Der Faktencheck zur aktuellen politischen Debatte über Emissionsziele. Trotz eindeutiger Datenlage werden die Zahlen regelmäßig falsch interpretiert oder bewusst aus dem Kontext gerissen.",
     link: "#",
     date: "15.05.2026",
     reading_time: 3,
@@ -77,7 +77,7 @@ const MOCK_ARTICLES = [
   {
     title: "Verschwörungstheorien: So erkennt man sie",
     excerpt:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin accumsan nunc at velit feugiat, vitae dignissim est maximus. Duis aute irure dolor in reprehenderit in voluptate.",
+      "Verschwörungstheorien folgen immer ähnlichen Mustern: anonyme Quellen, angebliche Geheimnisse und das Gefühl, einer kleinen Elite von Wissenden anzugehören. Mit einfachen Regeln lassen sie sich schnell erkennen.",
     link: "#",
     date: "13.05.2026",
     reading_time: 7,
