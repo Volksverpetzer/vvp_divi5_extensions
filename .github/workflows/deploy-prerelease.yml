@@ -33,7 +33,7 @@ jobs:
           mkdir -p /tmp/deploy
           cp vvp-divi5-extensions.php /tmp/deploy/
           SEMVER=$(grep "^Version:" vvp-divi5-extensions.php | sed 's/Version:[[:space:]]*//')
-          VERSION="${SEMVER}-${GITHUB_SHA::7}"
+          VERSION="${SEMVER}-beta-${GITHUB_SHA::7}"
           sed -i 's/^Plugin Name: .*/Plugin Name: Volksverpetzer DIVI 5 extensions (Beta)/' /tmp/deploy/vvp-divi5-extensions.php
           sed -i "s/^Version:.*/Version:     ${VERSION}/" /tmp/deploy/vvp-divi5-extensions.php
           sed -i "s/define( 'VVP_DIVI5_VERSION', '[^']*' )/define( 'VVP_DIVI5_VERSION', '${VERSION}' )/" /tmp/deploy/vvp-divi5-extensions.php
