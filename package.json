@@ -1,9 +1,9 @@
 {
   "name": "vvp-divi-5-extensions",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "DIVI 5 extension for the vvp wordpress site",
   "private": true,
-  "packageManager": "pnpm@10.15.0",
+  "packageManager": "pnpm@11.5.1",
   "author": "Volksverpetzer",
   "engines": {
     "npm": ">=10.0.0",
@@ -14,19 +14,16 @@
     "build": "NODE_ENV=production webpack --config webpack.config.js --progress",
     "preview": "vite",
     "zip": "gulp zip",
+    "---- check test and lint ----": "-------------",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "------- other scripts -------": "-------------",
+    "update:deps": "pnpx npm-check-updates -c 1d -i --format group"
   },
   "dependencies": {
     "classnames": "^2.5.1"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@parcel/watcher",
-      "esbuild"
-    ]
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",

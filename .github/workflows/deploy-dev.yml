@@ -33,7 +33,7 @@ jobs:
           mkdir -p /tmp/deploy
           cp vvp-divi5-extensions.php /tmp/deploy/
           sed -i 's/^Plugin Name: .*/Plugin Name: Volksverpetzer DIVI 5 extensions (Beta)/' /tmp/deploy/vvp-divi5-extensions.php
-          sed -i "s/define( 'VVP_DIVI5_VERSION', '1.0.0' )/define( 'VVP_DIVI5_VERSION', '${GITHUB_SHA::7}' )/" /tmp/deploy/vvp-divi5-extensions.php
+          sed -i "s/define( 'VVP_DIVI5_VERSION', '[^']*' )/define( 'VVP_DIVI5_VERSION', '${GITHUB_SHA::7}' )/" /tmp/deploy/vvp-divi5-extensions.php
           cp -r modules /tmp/deploy/
           cp -r modules-json /tmp/deploy/
           for f in /tmp/deploy/modules-json/*/module.json; do

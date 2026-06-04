@@ -1,10 +1,10 @@
 {
   "name": "volksverpetzer/vvp-divi5-extensions",
-  "description": "DIVI 5 Faktencheck Search Extension - Display the Volksverpetzer Faktencheck search bar as a Divi 5 module",
+  "description": "Custom Divi 5 modules for Volksverpetzer (Faktencheck Suche, Inhaltsübersicht, Autorenprofil, TrendingList)",
   "type": "wordpress-plugin",
   "autoload": {
     "psr-4": {
-      "VVP\\FactCheckSearch\\": "modules/"
+      "VVP\\Divi5\\": "modules/"
     }
   },
   "require": {

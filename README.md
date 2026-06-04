@@ -183,8 +183,8 @@ Renders the current post author(s) with optional avatar, bio, and a link to the 
 
 | Tool      | Minimum version        |
 | --------- |------------------------|
-| Node.js   | 20.x                   |
-| pnpm      | 9.x                    |
+| Node.js   | 22.x                   |
+| pnpm      | 11.x                   |
 | PHP       | 7.4+                   |
 | Composer  | 2.x                    |
 | WordPress | 6.x with DIVI 5 active |
