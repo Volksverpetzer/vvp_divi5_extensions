@@ -26,36 +26,39 @@ const pimg = (seed: string, w = 640, h = 360) => {
 
 const TRENDING_ALL: ArticleCardProps[] = [
   {
-    title: "Nein, dieser Politiker hat das nicht gesagt – der Faktencheck",
-    link: "/faktencheck/politiker-zitat-gefaelscht/",
+    title:
+      "Nein, diese Katze hat das Sofa NICHT selbst zerkratzt – der Fell-Check",
+    link: "/fell-check/sofa-zerkratzt/",
     image_url: pimg("tr1", 320, 240),
     date: "1. Mai 2026",
-    category: "Faktencheck",
+    category: "Fell-Check",
   },
   {
-    title: "5 Mythen über Impfstoffe — und was die Wissenschaft dazu sagt",
-    link: "/faktencheck/mythen-impfstoffe/",
+    title: "5 Mythen über Katzentrockenfutter – und was Tierärzte dazu sagen",
+    link: "/fell-check/mythen-trockenfutter/",
     image_url: pimg("tr2", 320, 240),
     date: "28. April 2026",
-    category: "Faktencheck",
+    category: "Fell-Check",
   },
   {
-    title: "Warum dieser virale Post über Geflüchtete komplett falsch ist",
-    link: "/desinformation/viral-post-gefluchtete/",
+    title:
+      "Warum dieser virale Post über schlafende Katzen komplett übertrieben ist",
+    link: "/desinformation/viral-post-schlafkatzen/",
     image_url: pimg("tr3", 320, 240),
     date: "25. April 2026",
     category: "Desinformation",
   },
   {
-    title: "Klimaschutz: Was die Zahlen wirklich sagen – und was nicht",
-    link: "/faktencheck/klimaschutz-zahlen/",
+    title:
+      "Katzenklo-Entsorgung: Was die Zahlen wirklich sagen – und was nicht",
+    link: "/analyse/katzenklo-zahlen/",
     image_url: pimg("tr4", 320, 240),
     date: "20. April 2026",
     category: "Analyse",
   },
   {
-    title: "So funktioniert Desinformation im Wahlkampf",
-    link: "/desinformation/wahlkampf-mechanismen/",
+    title: "So funktioniert Manipulation im Katzenheim-Vorstand",
+    link: "/desinformation/katzenheim-vorstand/",
     image_url: pimg("tr5", 320, 240),
     date: "15. April 2026",
     category: "Medien",
@@ -64,8 +67,9 @@ const TRENDING_ALL: ArticleCardProps[] = [
 
 const TRENDING_PODCAST: ArticleCardProps[] = [
   {
-    title: "Podcast – Folge 47: Wie Algorithmen unsere Meinung formen",
-    link: "/podcast/algorithmen-meinung/",
+    title:
+      "Podcast – Folge 47: Wie Katzen das Internet und unsere Meinung formen",
+    link: "/podcast/katzen-internet/",
     image_url: pimg("trpod", 320, 320),
     date: "3. Mai 2026",
   },
@@ -75,24 +79,24 @@ const TRENDING_EMPTY: ArticleCardProps[] = [];
 
 const AUTHOR_SINGLE = [
   {
-    name: "Thomas Laschyk",
-    bio: "Gründer und Chefredakteur von Volksverpetzer.<br />\nSchreibt über Desinformation, Rechtsextremismus und die Krise der Demokratie.<br />\nSeit 2017 bei Volksverpetzer.",
-    avatarUrl: pimg("avatar-thomas", 150, 150),
+    name: "Whisker Pfotenhauer",
+    bio: "Chefredakteur und leitender Schnurrhaar-Analyst bei Volksverpetzer.<br />\nSchreibt über Mäuse, Desinformation und das Phänomen des Karton-Sitzens.<br />\nSeit 2017 bei Volksverpetzer, vorher hauptberuflich Sofa-Bewacher.",
+    avatarUrl: pimg("avatar-whisker", 150, 150),
     profileUrl: "#",
   },
 ];
 
 const AUTHOR_MULTI = [
   {
-    name: "Thomas Laschyk",
-    bio: "Gründer und Chefredakteur. Schwerpunkt: Rechtsextremismus und politische Desinformation.",
-    avatarUrl: pimg("avatar-thomas", 150, 150),
+    name: "Bella Kratzenbach",
+    bio: "Gründerin und Chefredakteurin. Schwerpunkt: politische Fehlinformation und nächtliche Mäusejagd.",
+    avatarUrl: pimg("avatar-bella", 150, 150),
     profileUrl: "#",
   },
   {
-    name: "Sara Steinert",
-    bio: "Redakteurin und Faktencheckerin. Spezialisiert auf Social-Media-Manipulation und Gesundheitsmythen.",
-    avatarUrl: pimg("avatar-sara", 150, 150),
+    name: "Louie Flauschmann",
+    bio: "Redakteur und Faktenprüfer. Spezialisiert auf Knäuel-Analyse, Fensterbank-Recherche und Social-Media-Manipulation.",
+    avatarUrl: pimg("avatar-louie", 150, 150),
     profileUrl: "#",
   },
 ];
@@ -100,7 +104,7 @@ const AUTHOR_MULTI = [
 const IG_PROPS = {
   permalink: "https://www.instagram.com/volksverpetzer/",
   caption:
-    "❌ FALSCH: Diese Behauptung kursiert gerade massenhaft – wir haben sie gecheckt. Hier sind die Fakten 👇 Speichern & teilen, damit dein Umfeld es auch weiß! #Faktenfuchs #Desinformation #Faktencheck",
+    "❌ FALSCH: Diese Behauptung über Katzenfutter kursiert gerade massenhaft – wir haben sie gecheckt. Hier sind die Fakten 🐾 Speichern & teilen, damit dein Umfeld es auch weiß! #Pfotenfuchs #Katzenfakten #Fellcheck",
   date: "9. Mai 2026",
   badgeLabel: "Instagram · 4 Bilder",
   slides: [
@@ -113,13 +117,14 @@ const IG_PROPS = {
 };
 
 const PODCAST_PROPS = {
-  title: "Volksverpetzer Podcast – Folge 47: Rechtsextremismus im Netz",
+  title:
+    "Katzenverpetzer Podcast – Folge 47: Rechtsextremismus im Katzeninternet",
   link: "https://volksverpetzer.de/podcast/",
   enclosure: "https://cdn.podigee.com/media/podcast_episode_example.mp3",
   date: "3. Mai 2026",
   duration: "52:14",
   summary:
-    "Wie radikalisieren sich Menschen online, und was können wir dagegen tun? Wir sprechen mit Expert:innen über Prävention, Plattformverantwortung und die Rolle der Zivilgesellschaft.",
+    "Wie radikalisieren sich Katzen online, und was können Dosenöffner dagegen tun? Wir sprechen mit Expert:innen über Prävention, Kratzbaum-Verantwortung und die Rolle der Zivilgesellschaft.",
   artworkUrl: pimg("podcast", 120, 120),
 };
 
@@ -127,76 +132,76 @@ const PODCAST_PROPS = {
 
 const FEED_ARTICLES: ArticleCardProps[] = [
   {
-    title: "Warum Fakten mehr zählen als Gefühle",
+    title: "Warum Katzenfotos mehr zählen als politische Argumente",
     excerpt:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+      "Fell-Checker arbeiten täglich daran, Fehlinformationen über Katzen zu widerlegen, bevor sie sich weiter verbreiten. In sozialen Netzwerken kursieren Falschnachrichten über Fellpflege oft schneller als Korrekturen – dagegen helfen Katzenkompetenz und kritisches Schnurren.",
     link: "#",
     date: "17.05.2026",
     reading_time: 4,
     category: "Analyse",
     category_link: "#",
     source: "volksverpetzer",
-    image_url: pimg("politik1"),
+    image_url: pimg("katze1"),
   },
   {
-    title: "AfD und die Medien: Eine kritische Bilanz der letzten Monate",
+    title: "Schmusekatze oder Schreibtischtäter: Eine kritische Bilanz",
     excerpt:
-      "Wie rechte Narrative in den Mainstream gelangen und welche Mechanismen dabei eine Rolle spielen. Ein Überblick über aktuelle Entwicklungen in der deutschen Medienlandschaft.",
+      "Wie flauschige Narrative in den Mainstream gelangen und welche Mechanismen dabei eine Rolle spielen. Ein Überblick über aktuelle Entwicklungen in der deutschen Katzenlandschaft.",
     link: "#",
     date: "16.05.2026",
     reading_time: 6,
     category: "Politik",
     category_link: "#",
     source: "volksverpetzer",
-    image_url: pimg("news2"),
+    image_url: pimg("katze2"),
   },
   {
-    title: "Klimaschutz: Was stimmt wirklich an den Zahlen?",
+    title: "Katzenfutter: Was stimmt wirklich an den Nährwerten?",
     excerpt:
-      "Der Faktencheck zur aktuellen politischen Debatte über Emissionsziele. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+      "Der Fell-Check zur aktuellen Debatte über Trocken- versus Nassfutter. Trotz eindeutiger Datenlage werden die Zahlen regelmäßig falsch interpretiert oder bewusst aus dem Napf gerissen.",
     link: "#",
     date: "15.05.2026",
     reading_time: 3,
     category: "Faktencheck",
     category_link: "#",
     source: "pruefpunkt",
-    image_url: pimg("nature3"),
+    image_url: pimg("katze3"),
   },
   {
-    title: "Soziale Medien und politische Polarisierung",
+    title: "Soziale Kratzbäume und politische Polarisierung",
     excerpt:
-      "Algorithmen entscheiden, was wir sehen – und das hat Folgen für die Demokratie. Eine Untersuchung der Filterblasen auf Facebook, TikTok und X.",
+      "Algorithmen entscheiden, welche Katzenfotos wir sehen – und das hat Folgen für die Demokratie. Eine Untersuchung der Filterblasen auf Fensterbank, TikTok und X.",
     link: "#",
     date: "14.05.2026",
     reading_time: 5,
     category: "Medien",
     category_link: "#",
     source: "volksverpetzer",
-    image_url: pimg("tech4"),
+    image_url: pimg("katze4"),
   },
   {
-    title: "Verschwörungstheorien: So erkennt man sie",
+    title: "Verschwörungstheorien: So erkennt man sie am Fell",
     excerpt:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin accumsan nunc at velit feugiat, vitae dignissim est maximus. Duis aute irure dolor in reprehenderit in voluptate.",
+      "Verschwörungstheorien folgen immer ähnlichen Mustern: anonyme Pfoten, angebliche Geheimnisse und das Gefühl, einer kleinen Elite von Dosenöffnern anzugehören. Mit einfachen Regeln lassen sie sich schnell erkennen.",
     link: "#",
     date: "13.05.2026",
     reading_time: 7,
     category: "Bildung",
     category_link: "#",
     source: "volksverpetzer",
-    image_url: pimg("people5"),
+    image_url: pimg("katze5"),
   },
   {
-    title: "Impfmythen im Faktencheck 2026",
+    title: "Impfmythen im Fell-Check 2026",
     excerpt:
-      "Welche Falschbehauptungen kursieren aktuell und was sagt die Wissenschaft dazu? Wir haben die häufigsten Aussagen geprüft und eingeordnet.",
+      "Welche Falschbehauptungen über Katzenimpfungen kursieren aktuell und was sagen Tierärzte dazu? Wir haben die häufigsten Behauptungen geprüft und eingeordnet.",
     link: "#",
     date: "12.05.2026",
     reading_time: 4,
     category: "Gesundheit",
     category_link: "#",
     source: "pruefpunkt",
-    image_url: pimg("health6"),
+    image_url: pimg("katze6"),
   },
 ];
 
@@ -204,7 +209,7 @@ const FEED_IG = [
   {
     permalink: "#",
     caption:
-      "Wusstet ihr das? Hier sind fünf Fakten, die ihr kennen solltet 👇 #Faktenfuchs #Medienkompetenz",
+      "Wusstet ihr das? Hier sind fünf Fakten über Katzen, die ihr kennen solltet 🐾 #Pfotenfuchs #Katzenkompetenz",
     date: "Gestern",
     badgeLabel: "Instagram",
     mediaCategory: "Karussell",
@@ -218,7 +223,7 @@ const FEED_IG = [
   {
     permalink: "#",
     caption:
-      "So erkennst du Fake News auf einen Blick 🔍 Teile diesen Post mit jemandem, der das wissen sollte!",
+      "So erkennst du Fake News über Katzen auf einen Blick 🔍 Teile diesen Post mit jemandem, der das wissen sollte!",
     date: "Vor 2 Tagen",
     badgeLabel: "Instagram",
     mediaCategory: "Karussell",
@@ -231,7 +236,7 @@ const FEED_IG = [
   {
     permalink: "#",
     caption:
-      "Danke für 500.000 Follower! 💙 Gemeinsam gegen Desinformation – das ist möglich.",
+      "Danke für 500.000 Follower! 🐱 Gemeinsam gegen Katzen-Desinformation – das ist möglich.",
     date: "Vor 3 Tagen",
     badgeLabel: "Instagram",
     mediaCategory: "Karussell",
@@ -246,22 +251,23 @@ const FEED_IG = [
 
 const FEED_YT = {
   videoId: "",
-  title: "Faktencheck: Die größten Mythen der Woche",
+  title: "Fell-Check: Die größten Katzen-Mythen der Woche",
   description:
-    "In diesem Video beleuchten wir die meistgeteilten Falschinformationen der letzten Woche und erklären, was wirklich dahintersteckt. Mit konkreten Quellen und verständlichen Erklärungen.",
+    "In diesem Video beleuchten wir die meistgeteilten Falschinformationen über Katzen der letzten Woche und erklären, was wirklich dahintersteckt. Mit konkreten Quellen und verständlichen Schnurr-Erklärungen.",
   date: "Vor 2 Tagen",
-  thumbnailUrl: pimg("youtube1", 1280, 720),
+  thumbnailUrl: pimg("katze-yt", 1280, 720),
 };
 
 const FEED_PODCAST = {
-  title: "Volksverpetzer Podcast – Folge 47: Rechtsextremismus im Netz",
+  title:
+    "Katzenverpetzer Podcast – Folge 47: Rechtsextremismus im Katzeninternet",
   link: "#",
   enclosure: "",
   date: "03. Mai 2026",
   duration: "52 Min.",
   summary:
-    "Wie radikalisieren sich Menschen online, und was können wir dagegen tun? Wir sprechen mit Expert:innen über Prävention, Plattformverantwortung und die Rolle der Zivilgesellschaft.",
-  artworkUrl: pimg("podcast1", 100, 100),
+    "Wie radikalisieren sich Katzen online, und was können Dosenöffner dagegen tun? Wir sprechen mit Expert:innen über Prävention, Kratzbaum-Verantwortung und die Rolle der Zivilgesellschaft.",
+  artworkUrl: pimg("katze-pod", 100, 100),
 };
 
 // ── Preview shell ─────────────────────────────────────────────────────────────
