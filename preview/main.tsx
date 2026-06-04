@@ -17,7 +17,16 @@ import { TrendingItemsApp } from "../src/components/trending-items/App";
 
 // ── Sample data ───────────────────────────────────────────────────────────────
 
-const CATS = ["neo", "millie", "banana", "bella", "poppy", "louie"] as const;
+const CATS = [
+  "bella",
+  "millie",
+  "millie_neo",
+  "neo",
+  "neo_banana",
+  "neo_2",
+  "poppy",
+  "louie",
+] as const;
 const pimg = (seed: string, w = 640, h = 360) => {
   const cat =
     CATS[seed.split("").reduce((a, c) => a + c.charCodeAt(0), 0) % CATS.length];
