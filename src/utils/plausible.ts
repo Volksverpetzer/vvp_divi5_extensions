@@ -1,6 +1,9 @@
 declare global {
   interface Window {
-    plausible?: (event: string, options?: { props?: Record<string, string>; u?: string }) => void;
+    plausible?: (
+      event: string,
+      options?: { props?: Record<string, string>; u?: string },
+    ) => void;
   }
 }
 

@@ -24,9 +24,7 @@ const SourceBadge: React.FC<{ source: "volksverpetzer" | "pruefpunkt" }> = ({
       <span className="vvp-co__badge vvp-co__badge--pruefpunkt">Prüfpunkt</span>
     );
   }
-  return (
-    <span className="vvp-co__badge vvp-co__badge--vvp">VVP</span>
-  );
+  return <span className="vvp-co__badge vvp-co__badge--vvp">VVP</span>;
 };
 
 const YoutubeBadge: React.FC = () => (
@@ -147,7 +145,25 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           <span className="vvp-co__feed-date">{date}</span>
           {!!reading_time && (
             <span className="vvp-co__feed-reading-time">
-              <svg aria-hidden="true" focusable="false" data-icon="clock" width="14" height="14" fill="none" stroke="currentColor" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                data-icon="clock"
+                width="14"
+                height="14"
+                fill="none"
+                stroke="currentColor"
+                role="img"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
               {reading_time} Min.
             </span>
           )}

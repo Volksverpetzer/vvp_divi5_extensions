@@ -1,0 +1,29 @@
+{
+  "import": ["@cspell/dict-de-de/cspell-ext.json"],
+  "language": "de, de_DE, en, en_GB",
+  "words": [
+    "autoprefixer",
+    "classnames",
+    "divi",
+    "eslintrc",
+    "Faktenchecker",
+    "gulpfile",
+    "insta",
+    "Laschyk",
+    "Metaangaben",
+    "NIUS",
+    "nums",
+    "plausible",
+    "postcss",
+    "reinit",
+    "rerank",
+    "scss",
+    "volksverpetzer",
+    "vvp",
+    "webpack"
+  ],
+  "allowCompoundWords": true,
+  "files": ["src/**/*"],
+  "useGitignore": true,
+  "ignoreRandomStrings": true
+}

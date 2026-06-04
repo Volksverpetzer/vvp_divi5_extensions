@@ -28,7 +28,6 @@ const PodcastIcon = () => (
   </svg>
 );
 
-
 export const PodcastBanner: React.FC<PodcastBannerProps> = ({
   title,
   link,
@@ -88,11 +87,14 @@ export const PodcastBanner: React.FC<PodcastBannerProps> = ({
           <div className="vvp-co__podcast-footer">
             <span className="vvp-co__podcast-date">{date}</span>
 
-{enclosure && !isPlaying && (
+            {enclosure && !isPlaying && (
               <button
                 type="button"
                 className="vvp-co__podcast-listen-btn"
-                onClick={() => { setIsPlaying(true); trackEvent("Podcast Play"); }}
+                onClick={() => {
+                  setIsPlaying(true);
+                  trackEvent("Podcast Play");
+                }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

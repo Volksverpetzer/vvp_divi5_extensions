@@ -19,6 +19,6 @@ export interface AuthorProfileAttrs {
 }
 
 export type AuthorProfileEditProps =
-  ModuleLibrary.Module.RenderProps<AuthorProfileAttrs>;
+  ModuleLibrary.Module.Component.EditProps<AuthorProfileAttrs>;
 
 export type Layout = "vertical" | "horizontal";
