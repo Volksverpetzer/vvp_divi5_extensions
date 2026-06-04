@@ -65,7 +65,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     ? "vvp-co__feed-card vvp-co__feed-card--youtube"
     : "vvp-co__feed-card vvp-co__feed-card--article";
 
-  const handleCategoryClick = (e: React.MouseEvent) => {
+  const handleCategoryClick = (e: React.SyntheticEvent) => {
     if (category_link) {
       e.preventDefault();
       e.stopPropagation();
@@ -135,9 +135,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
                 onClick={handleCategoryClick}
                 onKeyDown={(e) => {
                   if ((e.key === "Enter" || e.key === " ") && !e.repeat) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.open(category_link, "_blank", "noopener,noreferrer");
+                    handleCategoryClick(e);
                   }
                 }}
               >
