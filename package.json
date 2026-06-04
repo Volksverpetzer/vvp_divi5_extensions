@@ -1,6 +1,6 @@
 {
   "name": "vvp-divi-5-extensions",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "DIVI 5 extension for the vvp wordpress site",
   "private": true,
   "packageManager": "pnpm@11.5.1",
