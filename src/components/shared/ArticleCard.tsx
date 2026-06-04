@@ -69,7 +69,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     if (category_link) {
       e.preventDefault();
       e.stopPropagation();
-      window.open(category_link, "_blank");
+      window.open(category_link, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -137,7 +137,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
                     e.stopPropagation();
-                    window.open(category_link, "_blank");
+                    window.open(category_link, "_blank", "noopener,noreferrer");
                   }
                 }}
               >
