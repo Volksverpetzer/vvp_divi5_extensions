@@ -15,8 +15,8 @@ trait FeedGroupTrait
      *
      * Rules:
      * - Instagram items are batched into their own rows (never mixed with other kinds).
-     * - Podcast banners are full-width and always occupy their own single-item row.
-     * - All other items (articles, YouTube) share rows.
+     * - Podcast and YouTube banners are full-width and always occupy their own single-item row.
+     * - All other items (articles) share rows.
      * - Leftover partial rows and all completed rows are sorted newest-first by
      *   the date of the first item in each row.
      *
@@ -46,8 +46,8 @@ trait FeedGroupTrait
                 continue;
             }
 
-            // Podcast banner is full-width; always give it its own row.
-            if ('podcast_banner' === $item['kind']) {
+            // Podcast and YouTube banners are full-width and always occupy their own single-item row.
+            if ('podcast_banner' === $item['kind'] || 'youtube_banner' === $item['kind']) {
                 $grouped[] = ['items' => [$item], 'date' => $item['date']];
                 continue;
             }
