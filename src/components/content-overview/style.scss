@@ -147,10 +147,7 @@
 
 .vvp-co__toggle-thumb {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: #d1d5db;
   border-radius: 9999px;
   transition: background 0.2s ease;
@@ -774,7 +771,7 @@ video:-moz-full-screen {
 .vvp-co__insta-fullscreen-caption {
   white-space: pre-wrap !important;
   line-height: 1.6 !important;
-  font-size: 16px !important;
+  font-size: 1rem !important;
   margin: 0 !important;
   display: block !important;
   overflow: visible !important;
@@ -782,7 +779,7 @@ video:-moz-full-screen {
 
 /* Instagram card styling */
 .vvp-co__feed-card--insta {
-  background-color: rgba(252, 252, 252, 1);
+  background-color: #fcfcfc;
 }
 
 /* Instagram feed meta and date row */
@@ -798,23 +795,23 @@ video:-moz-full-screen {
 .vvp-co__feed-meta-date-row .vvp-co__feed-meta {
   display: flex;
   align-items: center;
-  font-size: 18px;
+  font-size: 1.125rem;
   margin: 0;
 }
 
 .vvp-co__feed-meta-date-row .vvp-co__feed-date {
-  font-size: 16px;
+  font-size: 1rem;
   margin: 0;
   padding: 0;
 }
 
 @media (max-width: 640px) {
   .vvp-co__feed-meta-date-row .vvp-co__feed-meta {
-    font-size: 16px;
+    font-size: 1rem;
   }
 
   .vvp-co__feed-meta-date-row .vvp-co__feed-date {
-    font-size: 16px;
+    font-size: 1rem;
   }
 }
 
