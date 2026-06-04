@@ -65,11 +65,11 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     ? "vvp-co__feed-card vvp-co__feed-card--youtube"
     : "vvp-co__feed-card vvp-co__feed-card--article";
 
-  const handleCategoryClick = (e: React.MouseEvent) => {
+  const handleCategoryClick = (e: React.SyntheticEvent) => {
     if (category_link) {
       e.preventDefault();
       e.stopPropagation();
-      window.open(category_link, "_blank");
+      window.open(category_link, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -128,13 +128,19 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           {isYoutube ? <YoutubeBadge /> : <SourceBadge source={source} />}
           {category &&
             (category_link ? (
-              <button
-                type="button"
+              <span
+                role="button"
+                tabIndex={0}
                 className="vvp-co__category vvp-co__category--btn"
                 onClick={handleCategoryClick}
+                onKeyDown={(e) => {
+                  if ((e.key === "Enter" || e.key === " ") && !e.repeat) {
+                    handleCategoryClick(e);
+                  }
+                }}
               >
                 {category}
-              </button>
+              </span>
             ) : (
               <span className="vvp-co__category">{category}</span>
             ))}
