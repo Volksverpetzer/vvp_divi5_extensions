@@ -6,7 +6,7 @@ export interface TrendingListAttrs {
 }
 
 export type TrendingListEditProps =
-  ModuleLibrary.Module.RenderProps<TrendingListAttrs>;
+  ModuleLibrary.Module.Component.EditProps<TrendingListAttrs>;
 
 export interface TrendingListItem {
   title: string;

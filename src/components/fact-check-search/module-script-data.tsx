@@ -1,9 +1,9 @@
+import React from "react";
 import { type Module } from "@divi/types";
-import { type FactCheckSearchAttrs } from "./types";
 import { DEFAULT_API_URLS } from "./constants";
 
 export const ModuleScriptData = (
-  props: Module.ScriptData.Component.Props<FactCheckSearchAttrs>,
+  props: Module.ModuleScriptDataProps<object>,
 ) => {
   const { attrs } = props;
 

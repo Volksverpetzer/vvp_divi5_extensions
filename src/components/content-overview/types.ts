@@ -10,4 +10,4 @@ export interface ContentOverviewAttrs {
 
 // Edit component props.
 export type ContentOverviewEditProps =
-  ModuleLibrary.Module.RenderProps<ContentOverviewAttrs>;
+  ModuleLibrary.Module.Component.EditProps<ContentOverviewAttrs>;

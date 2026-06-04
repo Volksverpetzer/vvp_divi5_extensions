@@ -1,4 +1,5 @@
 export const placeholderContent = {
+  module: {},
   searchApiUrl: {
     desktop: {
       value: "",
