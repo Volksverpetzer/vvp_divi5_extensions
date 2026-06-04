@@ -46,8 +46,8 @@ trait FeedGroupTrait
                 continue;
             }
 
-            // Podcast banner is full-width; always give it its own row.
-            if ('podcast_banner' === $item['kind']) {
+            // Full-width banners always occupy their own single-item row.
+            if ('podcast_banner' === $item['kind'] || 'youtube_banner' === $item['kind']) {
                 $grouped[] = ['items' => [$item], 'date' => $item['date']];
                 continue;
             }
