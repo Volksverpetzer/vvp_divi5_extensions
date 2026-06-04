@@ -134,7 +134,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
                 className="vvp-co__category vvp-co__category--btn"
                 onClick={handleCategoryClick}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
+                  if ((e.key === "Enter" || e.key === " ") && !e.repeat) {
                     e.preventDefault();
                     e.stopPropagation();
                     window.open(category_link, "_blank", "noopener,noreferrer");
