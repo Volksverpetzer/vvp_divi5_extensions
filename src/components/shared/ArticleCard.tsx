@@ -133,7 +133,13 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
                 tabIndex={0}
                 className="vvp-co__category vvp-co__category--btn"
                 onClick={handleCategoryClick}
-                onKeyDown={(e) => e.key === "Enter" && handleCategoryClick(e as unknown as React.MouseEvent)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open(category_link, "_blank");
+                  }
+                }}
               >
                 {category}
               </span>
