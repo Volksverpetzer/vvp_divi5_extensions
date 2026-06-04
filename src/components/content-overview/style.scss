@@ -34,7 +34,7 @@
 
 .vvp-co__badge--vvp {
   background: var(--vvp-hellblau, #dbeafe);
-  color: var(--vvp-blue-main, #1e40af);
+  color: var(--vvp-blue-main, #3893c0);
 }
 
 .vvp-co__badge--pruefpunkt {
@@ -170,7 +170,7 @@
 }
 
 .vvp-co__toggle-track.is-on .vvp-co__toggle-thumb {
-  background: var(--vvp-blue-main, #1e40af);
+  background: var(--vvp-blue-main, #3893c0);
 }
 
 .vvp-co__toggle-track.is-on .vvp-co__toggle-thumb::after {
@@ -786,7 +786,6 @@ video:-moz-full-screen {
 .vvp-co__feed-card--insta {
   background-color: rgba(252, 252, 252, 1);
   opacity: 1;
-  font-size: 24px;
 }
 
 /* Instagram feed meta and date row */
