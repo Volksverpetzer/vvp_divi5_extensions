@@ -1,7 +1,11 @@
 /* Shimmer animation for loading placeholders */
 @keyframes vvp-co-shimmer {
-  0%   { background-position: -600px 0; }
-  100% { background-position: 600px 0; }
+  0% {
+    background-position: -600px 0;
+  }
+  100% {
+    background-position: 600px 0;
+  }
 }
 
 /* Instagram slideshow loading placeholder */
@@ -238,6 +242,7 @@
 .vvp-co__feed-card {
   display: flex;
   flex-direction: column;
+  height: 100%;
   text-decoration: none;
   color: inherit;
   background-color: #f9f9f9;
@@ -255,7 +260,6 @@
   border-color: #d1d5db;
   background: #fff;
 }
-
 
 .vvp-co__feed-image-wrap {
   overflow: hidden;
@@ -323,7 +327,6 @@
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  flex: 1;
 }
 
 .vvp-co__feed-excerpt--insta {
@@ -496,7 +499,6 @@ button.vvp-co__category--btn:hover,
   font-size: 1rem;
   color: #6b7280;
 }
-
 
 .vvp-co__podcast-listen-btn {
   display: inline-flex;

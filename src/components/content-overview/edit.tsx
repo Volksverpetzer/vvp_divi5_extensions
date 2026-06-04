@@ -18,87 +18,151 @@ import { YouTubeBanner } from "./YouTubeBanner";
 
 // ── Example data ─────────────────────────────────────────────────────────────
 
-const MOCK_ARTICLE = {
-  title: "Warum Fakten mehr zählen als Gefühle",
-  excerpt:
-    "Eine Analyse der häufigsten Desinformationsmuster in sozialen Netzwerken.",
-  link: "#",
-  date: "17.05.2026",
-  reading_time: 4,
-  category: "Analyse",
-  category_link: "#",
-  source: "volksverpetzer" as const,
-  image_url:
-    "https://via.placeholder.com/640x360/e5e7eb/a3a3a3?text=Beispiel-Bild",
+const CATS = ["neo", "millie", "banana", "bella", "poppy", "louie"] as const;
+const img = (seed: string, w = 640, h = 360) => {
+  const cat =
+    CATS[seed.split("").reduce((a, c) => a + c.charCodeAt(0), 0) % CATS.length];
+  return `https://placecats.com/${cat}/${w}/${h}`;
 };
 
-const MOCK_ARTICLE_2 = {
-  title: "AfD und die Medien: Eine Bilanz",
-  excerpt: "Wie rechte Narrative in den Mainstream gelangen.",
-  link: "#",
-  date: "16.05.2026",
-  reading_time: 6,
-  category: "Politik",
-  category_link: "#",
-  source: "volksverpetzer" as const,
-  image_url: "https://via.placeholder.com/640x360/e5e7eb/a3a3a3?text=Artikel+2",
-};
+const MOCK_ARTICLES = [
+  {
+    title: "Warum Katzenfotos mehr zählen als politische Argumente",
+    excerpt:
+      "Fell-Checker arbeiten täglich daran, Fehlinformationen über Katzen zu widerlegen, bevor sie sich weiter verbreiten. In sozialen Netzwerken kursieren Falschnachrichten über Fellpflege oft schneller als Korrekturen – dagegen helfen Katzenkompetenz und kritisches Schnurren.",
+    link: "#",
+    date: "17.05.2026",
+    reading_time: 4,
+    category: "Analyse",
+    category_link: "#",
+    source: "volksverpetzer" as const,
+    image_url: img("katze1"),
+  },
+  {
+    title: "Schmusekatze oder Schreibtischtäter: Eine kritische Bilanz",
+    excerpt:
+      "Wie flauschige Narrative in den Mainstream gelangen und welche Mechanismen dabei eine Rolle spielen. Ein Überblick über aktuelle Entwicklungen in der deutschen Katzenlandschaft.",
+    link: "#",
+    date: "16.05.2026",
+    reading_time: 6,
+    category: "Politik",
+    category_link: "#",
+    source: "volksverpetzer" as const,
+    image_url: img("katze2"),
+  },
+  {
+    title: "Katzenfutter: Was stimmt wirklich an den Nährwerten?",
+    excerpt:
+      "Der Fell-Check zur aktuellen Debatte über Trocken- versus Nassfutter. Trotz eindeutiger Datenlage werden die Zahlen regelmäßig falsch interpretiert oder bewusst aus dem Napf gerissen.",
+    link: "#",
+    date: "15.05.2026",
+    reading_time: 3,
+    category: "Faktencheck",
+    category_link: "#",
+    source: "pruefpunkt" as const,
+    image_url: img("katze3"),
+  },
+  {
+    title: "Soziale Kratzbäume und politische Polarisierung",
+    excerpt:
+      "Algorithmen entscheiden, welche Katzenfotos wir sehen – und das hat Folgen für die Demokratie. Eine Untersuchung der Filterblasen auf Fensterbank, TikTok und X.",
+    link: "#",
+    date: "14.05.2026",
+    reading_time: 5,
+    category: "Medien",
+    category_link: "#",
+    source: "volksverpetzer" as const,
+    image_url: img("katze4"),
+  },
+  {
+    title: "Verschwörungstheorien: So erkennt man sie am Fell",
+    excerpt:
+      "Verschwörungstheorien folgen immer ähnlichen Mustern: anonyme Pfoten, angebliche Geheimnisse und das Gefühl, einer kleinen Elite von Dosenöffnern anzugehören. Mit einfachen Regeln lassen sie sich schnell erkennen.",
+    link: "#",
+    date: "13.05.2026",
+    reading_time: 7,
+    category: "Bildung",
+    category_link: "#",
+    source: "volksverpetzer" as const,
+    image_url: img("katze5"),
+  },
+  {
+    title: "Impfmythen im Fell-Check 2026",
+    excerpt:
+      "Welche Falschbehauptungen über Katzenimpfungen kursieren aktuell und was sagen Tierärzte dazu? Wir haben die häufigsten Behauptungen geprüft und eingeordnet.",
+    link: "#",
+    date: "12.05.2026",
+    reading_time: 4,
+    category: "Gesundheit",
+    category_link: "#",
+    source: "pruefpunkt" as const,
+    image_url: img("katze6"),
+  },
+];
 
-const MOCK_PRUEFPUNKT = {
-  title: "Klimaschutz: Was stimmt wirklich?",
-  excerpt:
-    "Der Faktencheck zur aktuellen politischen Debatte über Emissionsziele.",
-  link: "#",
-  date: "15.05.2026",
-  reading_time: 3,
-  category: "Faktencheck",
-  source: "pruefpunkt" as const,
-  image_url:
-    "https://via.placeholder.com/640x360/e5e7eb/a3a3a3?text=Faktencheck",
-};
-
-const MOCK_IG = {
-  permalink: "#",
-  caption: "Beispiel-Caption für einen Instagram-Beitrag …",
-  date: "Gestern",
-  badgeLabel: "Instagram",
-  mediaCategory: "Karussell",
-  isCarousel: true,
-  slides: [
-    {
-      thumb: "https://via.placeholder.com/600x800/1a1a2e/ffffff?text=Slide+1",
-      video: "",
-    },
-    {
-      thumb: "https://via.placeholder.com/600x800/2a2a3e/ffffff?text=Slide+2",
-      video: "",
-    },
-    {
-      thumb: "https://via.placeholder.com/600x800/3a3a4e/ffffff?text=Slide+3",
-      video: "",
-    },
-  ],
-};
+const MOCK_IG_ITEMS = [
+  {
+    permalink: "#",
+    caption:
+      "Wusstet ihr das? Hier sind fünf Fakten über Katzen, die ihr kennen solltet 🐾 #Pfotenfuchs #Katzenkompetenz",
+    date: "Gestern",
+    badgeLabel: "Instagram",
+    mediaCategory: "Karussell",
+    isCarousel: true,
+    slides: [
+      { thumb: img("ig1a", 600, 800), video: "" },
+      { thumb: img("ig1b", 600, 800), video: "" },
+      { thumb: img("ig1c", 600, 800), video: "" },
+    ],
+  },
+  {
+    permalink: "#",
+    caption:
+      "So erkennst du Fake News über Katzen auf einen Blick 🔍 Teile diesen Post mit jemandem, der das wissen sollte!",
+    date: "Vor 2 Tagen",
+    badgeLabel: "Instagram",
+    mediaCategory: "Karussell",
+    isCarousel: true,
+    slides: [
+      { thumb: img("ig2a", 600, 800), video: "" },
+      { thumb: img("ig2b", 600, 800), video: "" },
+    ],
+  },
+  {
+    permalink: "#",
+    caption:
+      "Danke für 500.000 Follower! 🐱 Gemeinsam gegen Katzen-Desinformation – das ist möglich.",
+    date: "Vor 3 Tagen",
+    badgeLabel: "Instagram",
+    mediaCategory: "Karussell",
+    isCarousel: true,
+    slides: [
+      { thumb: img("ig3a", 600, 800), video: "" },
+      { thumb: img("ig3b", 600, 800), video: "" },
+      { thumb: img("ig3c", 600, 800), video: "" },
+    ],
+  },
+];
 
 const MOCK_YT = {
   videoId: "",
-  title: "Beispiel-Video: Faktencheck aktuell",
+  title: "Fell-Check: Die größten Katzen-Mythen der Woche",
   description:
-    "In diesem Video beleuchten wir aktuelle Falschinformationen und zeigen, wie man sie erkennt.",
+    "In diesem Video beleuchten wir die meistgeteilten Falschinformationen über Katzen der letzten Woche und erklären, was wirklich dahintersteckt. Mit konkreten Quellen und verständlichen Schnurr-Erklärungen.",
   date: "Vor 2 Tagen",
-  thumbnailUrl:
-    "https://via.placeholder.com/640x360/1a1a2e/ffffff?text=YouTube+Vorschau",
+  thumbnailUrl: img("katze-yt", 1280, 720),
 };
 
 const MOCK_PODCAST = {
-  title: "Volksverpetzer Podcast – Folge 42",
+  title:
+    "Katzenverpetzer Podcast – Folge 47: Rechtsextremismus im Katzeninternet",
   link: "#",
   enclosure: "",
-  date: "12. April 2026",
-  duration: "45 Min.",
+  date: "03. Mai 2026",
+  duration: "52 Min.",
   summary:
-    "In dieser Folge sprechen wir über Desinformation und Medienkompetenz …",
-  artworkUrl: "https://via.placeholder.com/100x100/2d4a6e/ffffff?text=Podcast",
+    "Wie radikalisieren sich Katzen online, und was können Dosenöffner dagegen tun? Wir sprechen mit Expert:innen über Prävention, Kratzbaum-Verantwortung und die Rolle der Zivilgesellschaft.",
+  artworkUrl: img("katze-pod", 100, 100),
 };
 
 // ── Main edit component ───────────────────────────────────────────────────────
@@ -133,31 +197,30 @@ export const ContentOverviewEdit = (
 
         <div className="vvp-co__feed-grid">
           {/* Row 1: articles */}
-          <div className="vvp-co__feed-item">
-            <ArticleCard {...MOCK_ARTICLE} />
-          </div>
-          <div className="vvp-co__feed-item">
-            <ArticleCard {...MOCK_ARTICLE_2} />
-          </div>
-          <div className="vvp-co__feed-item">
-            <ArticleCard {...MOCK_PRUEFPUNKT} />
-          </div>
-
-          {/* Row 2: Instagram carousels */}
-          <div className="vvp-co__feed-item">
-            <InstagramSlideshow {...MOCK_IG} />
-          </div>
-          <div className="vvp-co__feed-item">
-            <InstagramSlideshow {...MOCK_IG} />
-          </div>
-          <div className="vvp-co__feed-item">
-            <InstagramSlideshow {...MOCK_IG} />
-          </div>
+          {MOCK_ARTICLES.slice(0, 3).map((a, i) => (
+            <div key={i} className="vvp-co__feed-item">
+              <ArticleCard {...a} />
+            </div>
+          ))}
 
           {/* YouTube banner */}
           <div className="vvp-co__feed-item vvp-co__feed-item--youtube-banner">
             <YouTubeBanner {...MOCK_YT} />
           </div>
+
+          {/* Row 2: articles */}
+          {MOCK_ARTICLES.slice(3, 6).map((a, i) => (
+            <div key={i + 3} className="vvp-co__feed-item">
+              <ArticleCard {...a} />
+            </div>
+          ))}
+
+          {/* Row 3: Instagram carousels */}
+          {MOCK_IG_ITEMS.map((ig, i) => (
+            <div key={i} className="vvp-co__feed-item">
+              <InstagramSlideshow {...ig} />
+            </div>
+          ))}
 
           {/* Podcast banner */}
           <div className="vvp-co__feed-item vvp-co__feed-item--podcast">
