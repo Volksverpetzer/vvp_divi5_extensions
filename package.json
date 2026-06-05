@@ -13,6 +13,7 @@
     "start": "NODE_ENV=development webpack -w --config webpack.config.js --progress",
     "build": "NODE_ENV=production webpack --config webpack.config.js --progress",
     "preview": "vite",
+    "build:preview": "vite build --base=/vvp_divi5_extensions/",
     "zip": "gulp zip",
     "---- check test and lint ----": "-------------",
     "check": "pnpm check:spelling && pnpm check:ts",
