@@ -1,3 +1,16 @@
+// Wildcard declarations so TS6 bundler mode accepts side-effect SCSS imports.
+declare module "*.scss" {}
+declare module "*.css" {}
+
+// @divi/types ships .ts source files that reference the global JSX namespace,
+// which React 19 no longer declares globally. Re-export it from React.JSX.
+declare namespace JSX {
+  type Element = React.JSX.Element;
+  type IntrinsicElements = React.JSX.IntrinsicElements;
+  type ElementAttributesProperty = React.JSX.ElementAttributesProperty;
+  type ElementChildrenAttribute = React.JSX.ElementChildrenAttribute;
+}
+
 // Ambient stubs for @divi/types peer dependencies that are not installed.
 // @divi/types ships TypeScript source and imports from AI/editor packages
 // that are not needed by this project.
