@@ -1,6 +1,7 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
-import { ArticleCard, type ArticleCardProps } from "../shared/ArticleCard";
+import { type ArticleCardProps } from "../shared/ArticleCard";
+import { TrendingItemsApp } from "./App";
 
 const initAll = () => {
   const mounts = document.querySelectorAll<HTMLElement>(
@@ -16,22 +17,7 @@ const initAll = () => {
       articles = [];
     }
 
-    if (!articles.length) {
-      createRoot(mount).render(
-        <div className="vvp-ti__empty">Keine Trending-Beiträge gefunden.</div>,
-      );
-      return;
-    }
-
-    createRoot(mount).render(
-      <div className="vvp-ti__list">
-        {articles.map((props) => (
-          <div key={props.link} className="vvp-ti__item">
-            <ArticleCard {...props} trackingContext="trending" />
-          </div>
-        ))}
-      </div>,
-    );
+    createRoot(mount).render(<TrendingItemsApp items={articles} />);
   });
 };
 

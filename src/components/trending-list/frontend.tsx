@@ -1,26 +1,7 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { type TrendingListItem } from "./types";
-
-const TrendingList: React.FC<{ items: TrendingListItem[] }> = ({ items }) => (
-  <div className="vvp-tl__list">
-    {items.map((item) => (
-      <div key={item.link} className="vvp-tl__item">
-        <a
-          href={item.link}
-          className="vvp-tl__title"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {item.title}
-        </a>
-        <span className="vvp-tl__meta">
-          von {item.author} | {item.date}
-        </span>
-      </div>
-    ))}
-  </div>
-);
+import { TrendingListApp } from "./App";
 
 const initAll = () => {
   const mounts = document.querySelectorAll<HTMLElement>(
@@ -36,14 +17,7 @@ const initAll = () => {
       items = [];
     }
 
-    if (!items.length) {
-      createRoot(mount).render(
-        <div className="vvp-tl__empty">Keine Trending-Beiträge gefunden.</div>,
-      );
-      return;
-    }
-
-    createRoot(mount).render(<TrendingList items={items} />);
+    createRoot(mount).render(<TrendingListApp items={items} />);
   });
 };
 

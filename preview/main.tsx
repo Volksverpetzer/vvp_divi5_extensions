@@ -4,6 +4,7 @@ import "../src/components/fact-check-search/style.scss";
 import "../src/components/content-overview/style.scss";
 import "../src/components/author-profile/style.scss";
 import "../src/components/trending-items/style.scss";
+import "../src/components/trending-list/style.scss";
 import { FactCheckSearchApp } from "../src/components/fact-check-search/App";
 import {
   ArticleCard,
@@ -14,6 +15,7 @@ import { PodcastBanner } from "../src/components/content-overview/PodcastBanner"
 import { YouTubeBanner } from "../src/components/content-overview/YouTubeBanner";
 import { AuthorProfileApp } from "../src/components/author-profile/App";
 import { TrendingItemsApp } from "../src/components/trending-items/App";
+import { TrendingListApp } from "../src/components/trending-list/App";
 
 // ── Sample data ───────────────────────────────────────────────────────────────
 
@@ -85,6 +87,29 @@ const TRENDING_PODCAST: ArticleCardProps[] = [
 ];
 
 const TRENDING_EMPTY: ArticleCardProps[] = [];
+
+const TRENDING_LIST_ITEMS = [
+  {
+    title:
+      "Bärbel Bas hat RECHT: Aber Tagesthemen stimmen NIUS, BILD & AfD zu!?",
+    link: "#",
+    date: "8. Mai 2026",
+    author: "Thomas Laschyk",
+  },
+  {
+    title: "75 % wollen KEINEN AfD-Kanzler: Wie die WELT für die AfD lügt",
+    link: "#",
+    date: "7. Mai 2026",
+    author: "Thomas Laschyk",
+  },
+  {
+    title:
+      "Faktencheck: Warum diese Behauptung über Katzen komplett falsch ist",
+    link: "#",
+    date: "6. Mai 2026",
+    author: "Bella Kratzenbach",
+  },
+];
 
 const AUTHOR_SINGLE = [
   {
@@ -281,34 +306,161 @@ const FEED_PODCAST = {
 
 // ── Preview shell ─────────────────────────────────────────────────────────────
 
+const toId = (title: string) =>
+  title
+    .toLowerCase()
+    .replace(/[·\s/,()]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+
 const Section = ({
   title,
   children,
 }: {
   title: string;
   children: React.ReactNode;
-}) => (
-  <section
-    style={{
-      marginBottom: "3rem",
-      paddingTop: "3rem",
-      borderTop: "2px dashed #e5e7eb",
-    }}
-  >
-    <h2
+}) => {
+  const [component, ...rest] = title.split(" · ");
+  const variant = rest.join(" · ");
+  return (
+    <section
+      id={toId(title)}
       style={{
-        fontSize: 13,
-        fontWeight: 700,
-        textTransform: "uppercase",
-        letterSpacing: "0.08em",
-        color: "#6b7280",
-        marginBottom: "1.5rem",
+        marginBottom: "3rem",
+        paddingTop: "3rem",
+        borderTop: "2px dashed #e5e7eb",
+        scrollMarginTop: "1rem",
       }}
     >
-      {title}
-    </h2>
-    {children}
-  </section>
+      <h2
+        style={{
+          fontSize: 22,
+          fontWeight: 700,
+          color: "#111827",
+          marginBottom: "1.5rem",
+          lineHeight: 1.25,
+        }}
+      >
+        {component}
+        {variant && (
+          <span
+            style={{
+              fontSize: 16,
+              fontWeight: 400,
+              color: "#6b7280",
+              marginLeft: "0.5rem",
+            }}
+          >
+            · {variant}
+          </span>
+        )}
+      </h2>
+      {children}
+    </section>
+  );
+};
+
+const TOC_GROUPS: { component: string; sections: string[] }[] = [
+  {
+    component: "FactCheckSearch",
+    sections: ["FactCheckSearch Module"],
+  },
+  {
+    component: "AuthorProfile",
+    sections: [
+      "AuthorProfile · Vertikal (1 Autor)",
+      "AuthorProfile · Horizontal (2 Autoren / Co-Autoren) · avatarSize=120",
+      "AuthorProfile · Kein Avatar, kein Link",
+    ],
+  },
+  {
+    component: "TrendingItems",
+    sections: [
+      "TrendingItems · Alle (mit Vorschaubildern)",
+      "TrendingItems · Alle (ohne Vorschaubilder)",
+      "TrendingItems · Podcast (1 Treffer nach URL-Filter)",
+      "TrendingItems · Leerer Zustand",
+    ],
+  },
+  {
+    component: "TrendingList",
+    sections: ["TrendingList · 3 Einträge", "TrendingList · Leerer Zustand"],
+  },
+  {
+    component: "ContentOverview",
+    sections: [
+      "ContentOverview · Feed (vollständig)",
+      "ContentOverview · InstagramSlideshow (einzeln)",
+      "ContentOverview · PodcastBanner (einzeln)",
+    ],
+  },
+];
+
+const Toc = () => (
+  <nav
+    style={{
+      margin: "2rem 0",
+      padding: "1.25rem 1.5rem",
+      background: "#f9fafb",
+      border: "1px solid #e5e7eb",
+      borderRadius: 8,
+      display: "flex",
+      flexWrap: "wrap",
+      gap: "1.5rem",
+    }}
+  >
+    {TOC_GROUPS.map(({ component, sections }) => (
+      <div key={component}>
+        <div
+          style={{
+            fontSize: 11,
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+            color: "#9ca3af",
+            marginBottom: "0.4rem",
+          }}
+        >
+          {component}
+        </div>
+        <ul
+          style={{
+            margin: 0,
+            padding: 0,
+            listStyle: "none",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.2rem",
+          }}
+        >
+          {sections.map((title) => {
+            const variant = title.split(" · ").slice(1).join(" · ") || title;
+            return (
+              <li key={title}>
+                <a
+                  href={`#${toId(title)}`}
+                  style={{
+                    fontSize: 13,
+                    color: "#2563eb",
+                    textDecoration: "none",
+                  }}
+                  onMouseEnter={(e) =>
+                    ((e.target as HTMLElement).style.textDecoration =
+                      "underline")
+                  }
+                  onMouseLeave={(e) =>
+                    ((e.target as HTMLElement).style.textDecoration = "none")
+                  }
+                >
+                  {variant}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    ))}
+  </nav>
 );
 
 const App = () => (
@@ -331,11 +483,14 @@ const App = () => (
     </div>
 
     <div style={{ width: "100%", padding: "2rem 0" }}>
+      <Toc />
       <Section title="FactCheckSearch Module">
-        <FactCheckSearchApp
-          searchApiUrl="https://ai.volksverpetzer-app.de/api/vector-search/"
-          importApiUrl="https://ai.volksverpetzer-app.de/api/import-url/"
-        />
+        <div className="vvp-fc__mount" data-fc-initialized="true">
+          <FactCheckSearchApp
+            searchApiUrl="https://ai.volksverpetzer-app.de/api/vector-search/"
+            importApiUrl="https://ai.volksverpetzer-app.de/api/import-url/"
+          />
+        </div>
       </Section>
 
       <Section title="AuthorProfile · Vertikal (1 Autor)">
@@ -349,14 +504,16 @@ const App = () => (
             boxShadow: "0 1px 4px rgba(0,0,0,.08)",
           }}
         >
-          <AuthorProfileApp
-            authors={AUTHOR_SINGLE}
-            showAvatar
-            showBio
-            showLink
-            layout="vertical"
-            avatarSize={80}
-          />
+          <div className="vvp-ap__mount" data-ap-initialized="true">
+            <AuthorProfileApp
+              authors={AUTHOR_SINGLE}
+              showAvatar
+              showBio
+              showLink
+              layout="vertical"
+              avatarSize={80}
+            />
+          </div>
         </div>
       </Section>
 
@@ -371,14 +528,16 @@ const App = () => (
             boxShadow: "0 1px 4px rgba(0,0,0,.08)",
           }}
         >
-          <AuthorProfileApp
-            authors={AUTHOR_MULTI}
-            showAvatar
-            showBio
-            showLink
-            layout="horizontal"
-            avatarSize={120}
-          />
+          <div className="vvp-ap__mount" data-ap-initialized="true">
+            <AuthorProfileApp
+              authors={AUTHOR_MULTI}
+              showAvatar
+              showBio
+              showLink
+              layout="horizontal"
+              avatarSize={120}
+            />
+          </div>
         </div>
       </Section>
 
@@ -393,14 +552,16 @@ const App = () => (
             boxShadow: "0 1px 4px rgba(0,0,0,.08)",
           }}
         >
-          <AuthorProfileApp
-            authors={AUTHOR_SINGLE}
-            showAvatar={false}
-            showBio
-            showLink={false}
-            layout="vertical"
-            avatarSize={80}
-          />
+          <div className="vvp-ap__mount" data-ap-initialized="true">
+            <AuthorProfileApp
+              authors={AUTHOR_SINGLE}
+              showAvatar={false}
+              showBio
+              showLink={false}
+              layout="vertical"
+              avatarSize={80}
+            />
+          </div>
         </div>
       </Section>
 
@@ -415,7 +576,9 @@ const App = () => (
             boxShadow: "0 1px 4px rgba(0,0,0,.08)",
           }}
         >
-          <TrendingItemsApp items={TRENDING_ALL} />
+          <div className="vvp-ti__mount" data-ti-initialized="true">
+            <TrendingItemsApp items={TRENDING_ALL} />
+          </div>
         </div>
       </Section>
 
@@ -430,9 +593,11 @@ const App = () => (
             boxShadow: "0 1px 4px rgba(0,0,0,.08)",
           }}
         >
-          <TrendingItemsApp
-            items={TRENDING_ALL.map(({ image_url: _, ...rest }) => rest)}
-          />
+          <div className="vvp-ti__mount" data-ti-initialized="true">
+            <TrendingItemsApp
+              items={TRENDING_ALL.map(({ image_url: _, ...rest }) => rest)}
+            />
+          </div>
         </div>
       </Section>
 
@@ -447,7 +612,9 @@ const App = () => (
             boxShadow: "0 1px 4px rgba(0,0,0,.08)",
           }}
         >
-          <TrendingItemsApp items={TRENDING_PODCAST} />
+          <div className="vvp-ti__mount" data-ti-initialized="true">
+            <TrendingItemsApp items={TRENDING_PODCAST} />
+          </div>
         </div>
       </Section>
 
@@ -462,7 +629,43 @@ const App = () => (
             boxShadow: "0 1px 4px rgba(0,0,0,.08)",
           }}
         >
-          <TrendingItemsApp items={TRENDING_EMPTY} />
+          <div className="vvp-ti__mount" data-ti-initialized="true">
+            <TrendingItemsApp items={TRENDING_EMPTY} />
+          </div>
+        </div>
+      </Section>
+
+      <Section title="TrendingList · 3 Einträge">
+        <div
+          className="vvp-trending-list"
+          style={{
+            maxWidth: 480,
+            padding: "1.5rem",
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+          }}
+        >
+          <div className="vvp-tl__mount" data-tl-initialized="true">
+            <TrendingListApp items={TRENDING_LIST_ITEMS} />
+          </div>
+        </div>
+      </Section>
+
+      <Section title="TrendingList · Leerer Zustand">
+        <div
+          className="vvp-trending-list"
+          style={{
+            maxWidth: 480,
+            padding: "1.5rem",
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+          }}
+        >
+          <div className="vvp-tl__mount" data-tl-initialized="true">
+            <TrendingListApp items={[]} />
+          </div>
         </div>
       </Section>
 
@@ -473,25 +676,61 @@ const App = () => (
           </div>
           <div className="vvp-co__feed-grid">
             {FEED_ARTICLES.slice(0, 3).map((a, i) => (
-              <div key={i} className="vvp-co__feed-item">
-                <ArticleCard {...a} />
+              <div key={i} className="vvp-co__feed-item" data-co-kind="article">
+                <div
+                  className="vvp-co-article-mount"
+                  data-article-initialized="true"
+                >
+                  <ArticleCard {...a} />
+                </div>
               </div>
             ))}
-            <div className="vvp-co__feed-item vvp-co__feed-item--youtube-banner">
-              <YouTubeBanner {...FEED_YT} />
+            <div
+              className="vvp-co__feed-item vvp-co__feed-item--youtube-banner"
+              data-co-kind="youtube"
+            >
+              <div
+                className="vvp-co-yt-banner-mount"
+                data-yt-banner-initialized="true"
+              >
+                <YouTubeBanner {...FEED_YT} />
+              </div>
             </div>
             {FEED_ARTICLES.slice(3, 6).map((a, i) => (
-              <div key={i + 3} className="vvp-co__feed-item">
-                <ArticleCard {...a} />
+              <div
+                key={i + 3}
+                className="vvp-co__feed-item"
+                data-co-kind="article"
+              >
+                <div
+                  className="vvp-co-article-mount"
+                  data-article-initialized="true"
+                >
+                  <ArticleCard {...a} />
+                </div>
               </div>
             ))}
             {FEED_IG.map((ig, i) => (
-              <div key={i} className="vvp-co__feed-item">
-                <InstagramSlideshow {...ig} />
+              <div
+                key={i}
+                className="vvp-co__feed-item"
+                data-co-kind="instagram"
+              >
+                <div className="vvp-co-ig-mount" data-ig-initialized="true">
+                  <InstagramSlideshow {...ig} />
+                </div>
               </div>
             ))}
-            <div className="vvp-co__feed-item vvp-co__feed-item--podcast">
-              <PodcastBanner {...FEED_PODCAST} />
+            <div
+              className="vvp-co__feed-item vvp-co__feed-item--podcast"
+              data-co-kind="podcast"
+            >
+              <div
+                className="vvp-co-podcast-mount"
+                data-podcast-initialized="true"
+              >
+                <PodcastBanner {...FEED_PODCAST} />
+              </div>
             </div>
           </div>
         </div>
