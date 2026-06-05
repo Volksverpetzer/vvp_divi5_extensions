@@ -1,8 +1,7 @@
 import { type Module } from "@divi/types";
-import { type TrendingItemsAttrs } from "./types";
 
 export const ModuleScriptData = (
-  _props: Module.ScriptData.Component.Props<TrendingItemsAttrs>,
+  _props: Module.ModuleScriptDataProps<object>,
 ) => {
   return null;
 };

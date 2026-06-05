@@ -1,19 +1,21 @@
+import React from "react";
 import { type Module } from "@divi/types";
-import { type FactCheckSearchAttrs } from "./types";
 import { DEFAULT_API_URLS } from "./constants";
 
-export const ModuleScriptData = (
-  props: Module.ScriptData.Component.Props<FactCheckSearchAttrs>,
-) => {
-  const { attrs } = props;
+interface ScriptDataAttrs {
+  searchApiUrl?: { desktop?: { value?: string } };
+  importApiUrl?: { desktop?: { value?: string } };
+}
 
-  // Get configured URLs or use defaults
+export const ModuleScriptData = (
+  props: Module.ModuleScriptDataProps<object>,
+) => {
+  const attrs = props.attrs as ScriptDataAttrs | undefined;
+
   const searchApiUrl =
-    (attrs as any).searchApiUrl?.desktop?.value ??
-    DEFAULT_API_URLS.searchApiUrl;
+    attrs?.searchApiUrl?.desktop?.value ?? DEFAULT_API_URLS.searchApiUrl;
   const importApiUrl =
-    (attrs as any).importApiUrl?.desktop?.value ??
-    DEFAULT_API_URLS.importApiUrl;
+    attrs?.importApiUrl?.desktop?.value ?? DEFAULT_API_URLS.importApiUrl;
 
   return (
     <script type="application/json" id="vvp-fact-check-search-config">

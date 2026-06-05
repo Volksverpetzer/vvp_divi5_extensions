@@ -1,7 +1,11 @@
 /* Shimmer animation for loading placeholders */
 @keyframes vvp-co-shimmer {
-  0%   { background-position: -600px 0; }
-  100% { background-position: 600px 0; }
+  0% {
+    background-position: -600px 0;
+  }
+  100% {
+    background-position: 600px 0;
+  }
 }
 
 /* Instagram slideshow loading placeholder */
@@ -34,7 +38,7 @@
 
 .vvp-co__badge--vvp {
   background: var(--vvp-hellblau, #dbeafe);
-  color: var(--vvp-blue-main, #1e40af);
+  color: var(--vvp-blue-main, #3893c0);
 }
 
 .vvp-co__badge--pruefpunkt {
@@ -147,10 +151,7 @@
 
 .vvp-co__toggle-thumb {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: #d1d5db;
   border-radius: 9999px;
   transition: background 0.2s ease;
@@ -170,7 +171,7 @@
 }
 
 .vvp-co__toggle-track.is-on .vvp-co__toggle-thumb {
-  background: var(--vvp-blue-main, #1e40af);
+  background: var(--vvp-blue-main, #3893c0);
 }
 
 .vvp-co__toggle-track.is-on .vvp-co__toggle-thumb::after {
@@ -184,6 +185,7 @@
 /* ---- Feed grid ---- */
 .vvp-co__feed-grid {
   display: grid;
+  grid-auto-flow: dense;
   grid-template-columns: 1fr;
   gap: 1.5rem;
 }
@@ -234,19 +236,20 @@
   border: none;
   background: none;
   border-radius: 0;
+  height: 100%; /* propagate grid-row height through to the card */
 }
 
 /* Feed card base */
 .vvp-co__feed-card {
   display: flex;
   flex-direction: column;
+  height: 100%;
   text-decoration: none;
   color: inherit;
   background-color: #f9f9f9;
   border: 1px solid #e5e7eb;
   border-radius: 0.625rem;
   overflow: hidden;
-  height: auto;
   box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.1);
   transition:
     box-shadow 0.2s ease,
@@ -258,7 +261,6 @@
   border-color: #d1d5db;
   background: #fff;
 }
-
 
 .vvp-co__feed-image-wrap {
   overflow: hidden;
@@ -314,7 +316,6 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  max-height: calc(1.125rem * 1.35 * 3);
   transition: color 0.15s ease;
 }
 
@@ -327,7 +328,6 @@
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  flex: 1;
 }
 
 .vvp-co__feed-excerpt--insta {
@@ -500,7 +500,6 @@ button.vvp-co__category--btn:hover,
   font-size: 1rem;
   color: #6b7280;
 }
-
 
 .vvp-co__podcast-listen-btn {
   display: inline-flex;
@@ -775,7 +774,7 @@ video:-moz-full-screen {
 .vvp-co__insta-fullscreen-caption {
   white-space: pre-wrap !important;
   line-height: 1.6 !important;
-  font-size: 16px !important;
+  font-size: 1rem !important;
   margin: 0 !important;
   display: block !important;
   overflow: visible !important;
@@ -783,9 +782,7 @@ video:-moz-full-screen {
 
 /* Instagram card styling */
 .vvp-co__feed-card--insta {
-  background-color: rgba(252, 252, 252, 1);
-  opacity: 1;
-  font-size: 24px;
+  background-color: #fcfcfc;
 }
 
 /* Instagram feed meta and date row */
@@ -801,23 +798,23 @@ video:-moz-full-screen {
 .vvp-co__feed-meta-date-row .vvp-co__feed-meta {
   display: flex;
   align-items: center;
-  font-size: 18px;
+  font-size: 1.125rem;
   margin: 0;
 }
 
 .vvp-co__feed-meta-date-row .vvp-co__feed-date {
-  font-size: 16px;
+  font-size: 1rem;
   margin: 0;
   padding: 0;
 }
 
 @media (max-width: 640px) {
   .vvp-co__feed-meta-date-row .vvp-co__feed-meta {
-    font-size: 16px;
+    font-size: 1rem;
   }
 
   .vvp-co__feed-meta-date-row .vvp-co__feed-date {
-    font-size: 16px;
+    font-size: 1rem;
   }
 }
 

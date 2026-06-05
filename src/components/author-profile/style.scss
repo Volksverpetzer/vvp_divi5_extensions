@@ -26,7 +26,7 @@
     width: 200px; /* fallback — overridden by inline style from avatarSize attr */
     height: auto;
     display: block;
-    border-radius: 4px;
+    border-radius: 0.25rem;
   }
 
   .vvp-ap__info {
@@ -54,12 +54,10 @@
     font-size: 0.9375rem;
     line-height: 1.6;
     color: inherit;
-    opacity: 0.85;
   }
 
   .vvp-ap__empty {
-    color: inherit;
-    opacity: 0.6;
-    font-size: 0.9rem;
+    color: #6b7280;
+    font-size: 0.875rem;
   }
 }

@@ -10,4 +10,4 @@ export interface FactCheckSearchAttrs {
 
 // Edit component props.
 export type FactCheckSearchEditProps =
-  ModuleLibrary.Module.RenderProps<FactCheckSearchAttrs>;
+  ModuleLibrary.Module.Component.EditProps<FactCheckSearchAttrs>;

@@ -1,6 +1,7 @@
 import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
 import globals from "globals";
+import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -42,7 +43,7 @@ export default [
       ...config,
       files: ["**/*.{tsx,jsx}"],
     })),
-  ...compat.extends("prettier"),
+  eslintPluginPrettierRecommended,
   {
     files: ["**/*.{ts,tsx}"],
     rules: {

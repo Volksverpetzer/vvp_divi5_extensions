@@ -1,0 +1,31 @@
+{
+  "import": ["@cspell/dict-de-de/cspell-ext.json"],
+  "language": "de, de_DE, en, en_GB",
+  "words": [
+    "bella",
+    "classnames",
+    "divi",
+    "Faktenchecker",
+    "insta",
+    "katze",
+    "Katzenverpetzer",
+    "Kratzbäume",
+    "Laschyk",
+    "louie",
+    "Metaangaben",
+    "NIUS",
+    "nums",
+    "Pfotenfuchs",
+    "plausible",
+    "reinit",
+    "rerank",
+    "scss",
+    "Schnurr",
+    "volksverpetzer",
+    "vvp"
+  ],
+  "allowCompoundWords": true,
+  "files": ["src/**/*"],
+  "useGitignore": true,
+  "ignoreRandomStrings": true
+}

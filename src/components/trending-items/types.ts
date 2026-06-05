@@ -7,4 +7,4 @@ export interface TrendingItemsAttrs {
 }
 
 export type TrendingItemsEditProps =
-  ModuleLibrary.Module.RenderProps<TrendingItemsAttrs>;
+  ModuleLibrary.Module.Component.EditProps<TrendingItemsAttrs>;
