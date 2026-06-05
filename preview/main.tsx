@@ -306,34 +306,161 @@ const FEED_PODCAST = {
 
 // ── Preview shell ─────────────────────────────────────────────────────────────
 
+const toId = (title: string) =>
+  title
+    .toLowerCase()
+    .replace(/[·\s/,()]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+
 const Section = ({
   title,
   children,
 }: {
   title: string;
   children: React.ReactNode;
-}) => (
-  <section
-    style={{
-      marginBottom: "3rem",
-      paddingTop: "3rem",
-      borderTop: "2px dashed #e5e7eb",
-    }}
-  >
-    <h2
+}) => {
+  const [component, ...rest] = title.split(" · ");
+  const variant = rest.join(" · ");
+  return (
+    <section
+      id={toId(title)}
       style={{
-        fontSize: 13,
-        fontWeight: 700,
-        textTransform: "uppercase",
-        letterSpacing: "0.08em",
-        color: "#6b7280",
-        marginBottom: "1.5rem",
+        marginBottom: "3rem",
+        paddingTop: "3rem",
+        borderTop: "2px dashed #e5e7eb",
+        scrollMarginTop: "1rem",
       }}
     >
-      {title}
-    </h2>
-    {children}
-  </section>
+      <h2
+        style={{
+          fontSize: 22,
+          fontWeight: 700,
+          color: "#111827",
+          marginBottom: "1.5rem",
+          lineHeight: 1.25,
+        }}
+      >
+        {component}
+        {variant && (
+          <span
+            style={{
+              fontSize: 16,
+              fontWeight: 400,
+              color: "#6b7280",
+              marginLeft: "0.5rem",
+            }}
+          >
+            · {variant}
+          </span>
+        )}
+      </h2>
+      {children}
+    </section>
+  );
+};
+
+const TOC_GROUPS: { component: string; sections: string[] }[] = [
+  {
+    component: "FactCheckSearch",
+    sections: ["FactCheckSearch Module"],
+  },
+  {
+    component: "AuthorProfile",
+    sections: [
+      "AuthorProfile · Vertikal (1 Autor)",
+      "AuthorProfile · Horizontal (2 Autoren / Co-Autoren) · avatarSize=120",
+      "AuthorProfile · Kein Avatar, kein Link",
+    ],
+  },
+  {
+    component: "TrendingItems",
+    sections: [
+      "TrendingItems · Alle (mit Vorschaubildern)",
+      "TrendingItems · Alle (ohne Vorschaubilder)",
+      "TrendingItems · Podcast (1 Treffer nach URL-Filter)",
+      "TrendingItems · Leerer Zustand",
+    ],
+  },
+  {
+    component: "TrendingList",
+    sections: ["TrendingList · 3 Einträge", "TrendingList · Leerer Zustand"],
+  },
+  {
+    component: "ContentOverview",
+    sections: [
+      "ContentOverview · Feed (vollständig)",
+      "ContentOverview · InstagramSlideshow (einzeln)",
+      "ContentOverview · PodcastBanner (einzeln)",
+    ],
+  },
+];
+
+const Toc = () => (
+  <nav
+    style={{
+      margin: "2rem 0",
+      padding: "1.25rem 1.5rem",
+      background: "#f9fafb",
+      border: "1px solid #e5e7eb",
+      borderRadius: 8,
+      display: "flex",
+      flexWrap: "wrap",
+      gap: "1.5rem",
+    }}
+  >
+    {TOC_GROUPS.map(({ component, sections }) => (
+      <div key={component}>
+        <div
+          style={{
+            fontSize: 11,
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+            color: "#9ca3af",
+            marginBottom: "0.4rem",
+          }}
+        >
+          {component}
+        </div>
+        <ul
+          style={{
+            margin: 0,
+            padding: 0,
+            listStyle: "none",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.2rem",
+          }}
+        >
+          {sections.map((title) => {
+            const variant = title.split(" · ").slice(1).join(" · ") || title;
+            return (
+              <li key={title}>
+                <a
+                  href={`#${toId(title)}`}
+                  style={{
+                    fontSize: 13,
+                    color: "#2563eb",
+                    textDecoration: "none",
+                  }}
+                  onMouseEnter={(e) =>
+                    ((e.target as HTMLElement).style.textDecoration =
+                      "underline")
+                  }
+                  onMouseLeave={(e) =>
+                    ((e.target as HTMLElement).style.textDecoration = "none")
+                  }
+                >
+                  {variant}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    ))}
+  </nav>
 );
 
 const App = () => (
@@ -356,6 +483,7 @@ const App = () => (
     </div>
 
     <div style={{ width: "100%", padding: "2rem 0" }}>
+      <Toc />
       <Section title="FactCheckSearch Module">
         <div className="vvp-fc__mount" data-fc-initialized="true">
           <FactCheckSearchApp
