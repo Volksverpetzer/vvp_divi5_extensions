@@ -473,25 +473,61 @@ const App = () => (
           </div>
           <div className="vvp-co__feed-grid">
             {FEED_ARTICLES.slice(0, 3).map((a, i) => (
-              <div key={i} className="vvp-co__feed-item">
-                <ArticleCard {...a} />
+              <div key={i} className="vvp-co__feed-item" data-co-kind="article">
+                <div
+                  className="vvp-co-article-mount"
+                  data-article-initialized="true"
+                >
+                  <ArticleCard {...a} />
+                </div>
               </div>
             ))}
-            <div className="vvp-co__feed-item vvp-co__feed-item--youtube-banner">
-              <YouTubeBanner {...FEED_YT} />
+            <div
+              className="vvp-co__feed-item vvp-co__feed-item--youtube-banner"
+              data-co-kind="youtube"
+            >
+              <div
+                className="vvp-co-yt-banner-mount"
+                data-yt-banner-initialized="true"
+              >
+                <YouTubeBanner {...FEED_YT} />
+              </div>
             </div>
             {FEED_ARTICLES.slice(3, 6).map((a, i) => (
-              <div key={i + 3} className="vvp-co__feed-item">
-                <ArticleCard {...a} />
+              <div
+                key={i + 3}
+                className="vvp-co__feed-item"
+                data-co-kind="article"
+              >
+                <div
+                  className="vvp-co-article-mount"
+                  data-article-initialized="true"
+                >
+                  <ArticleCard {...a} />
+                </div>
               </div>
             ))}
             {FEED_IG.map((ig, i) => (
-              <div key={i} className="vvp-co__feed-item">
-                <InstagramSlideshow {...ig} />
+              <div
+                key={i}
+                className="vvp-co__feed-item"
+                data-co-kind="instagram"
+              >
+                <div className="vvp-co-ig-mount" data-ig-initialized="true">
+                  <InstagramSlideshow {...ig} />
+                </div>
               </div>
             ))}
-            <div className="vvp-co__feed-item vvp-co__feed-item--podcast">
-              <PodcastBanner {...FEED_PODCAST} />
+            <div
+              className="vvp-co__feed-item vvp-co__feed-item--podcast"
+              data-co-kind="podcast"
+            >
+              <div
+                className="vvp-co-podcast-mount"
+                data-podcast-initialized="true"
+              >
+                <PodcastBanner {...FEED_PODCAST} />
+              </div>
             </div>
           </div>
         </div>
