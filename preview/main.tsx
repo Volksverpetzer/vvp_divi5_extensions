@@ -490,7 +490,7 @@ const App = () => (
         gap: 8,
       }}
     >
-      <strong style={{ color: "#fff" }}>Divi5Extensions</strong>
+      <strong style={{ color: "#fff" }}>VVP Divi5 Extensions for WordPress</strong>
       <span>Component Preview</span>
       <span>·</span>
       <span>

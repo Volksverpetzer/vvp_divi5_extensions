@@ -1,4 +1,4 @@
-# Divi5Extensions
+# VVPs Divi5 Extensions for WordPress
 
 A WordPress plugin that adds custom modules to the **DIVI 5 Visual Builder** for Volksverpetzer. Three modules are included:
 
@@ -241,7 +241,7 @@ Renders the full `ContentOverview` HTML output as PHP would on the front end, in
 ### 6. Symlink into WordPress
 
 ```bash
-ln -s /path/to/Divi5Extensions /path/to/wordpress/wp-content/plugins/vvp-divi5-extensions
+ln -s /path/to/vvp_divi5_extensions /path/to/wordpress/wp-content/plugins/vvp-divi5-extensions
 ```
 
 Then activate the plugin in the WordPress admin.
