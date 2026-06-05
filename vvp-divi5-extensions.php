@@ -3,7 +3,7 @@
 Plugin Name: Volksverpetzer DIVI 5 extensions
 Plugin URI:  https://github.com/Volksverpetzer/Divi5Extensions
 Description: Adds the custom DIVI 5 extensions for Volksverpetzer.de to the site
-Version:     1.0.2
+Version:     1.0.3
 Author:      Volksverpetzer
 Author URI:  https://volksverpetzer.de
 License:     GPL2
@@ -29,9 +29,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access forbidden.' );
 }
 
+if ( defined( 'VVP_DIVI5_PATH' ) ) {
+	return; // Another instance of this plugin is already loaded.
+}
+
 define( 'VVP_DIVI5_PATH', plugin_dir_path( __FILE__ ) );
 define( 'VVP_DIVI5_URL', plugin_dir_url( __FILE__ ) );
-define( 'VVP_DIVI5_VERSION', '1.0.2' );
+define( 'VVP_DIVI5_VERSION', '1.0.3' );
 define( 'VVP_DIVI5_JSON_PATH', VVP_DIVI5_PATH . 'modules-json/' );
 
 /**

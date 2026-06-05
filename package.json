@@ -1,9 +1,9 @@
 {
   "name": "vvp-divi-5-extensions",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "DIVI 5 extension for the vvp wordpress site",
   "private": true,
-  "packageManager": "pnpm@11.5.1",
+  "packageManager": "pnpm@11.5.2",
   "author": "Volksverpetzer",
   "engines": {
     "npm": ">=10.0.0",
@@ -13,6 +13,7 @@
     "start": "NODE_ENV=development node build.mjs --watch",
     "build": "NODE_ENV=production node build.mjs",
     "preview": "vite",
+    "build:preview": "vite build --base=/vvp_divi5_extensions/",
     "zip": "gulp zip",
     "---- check test and lint ----": "-------------",
     "check": "pnpm check:spelling && pnpm check:ts",
