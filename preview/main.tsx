@@ -357,10 +357,12 @@ const App = () => (
 
     <div style={{ width: "100%", padding: "2rem 0" }}>
       <Section title="FactCheckSearch Module">
-        <FactCheckSearchApp
-          searchApiUrl="https://ai.volksverpetzer-app.de/api/vector-search/"
-          importApiUrl="https://ai.volksverpetzer-app.de/api/import-url/"
-        />
+        <div className="vvp-fc__mount" data-fc-initialized="true">
+          <FactCheckSearchApp
+            searchApiUrl="https://ai.volksverpetzer-app.de/api/vector-search/"
+            importApiUrl="https://ai.volksverpetzer-app.de/api/import-url/"
+          />
+        </div>
       </Section>
 
       <Section title="AuthorProfile · Vertikal (1 Autor)">
@@ -374,14 +376,16 @@ const App = () => (
             boxShadow: "0 1px 4px rgba(0,0,0,.08)",
           }}
         >
-          <AuthorProfileApp
-            authors={AUTHOR_SINGLE}
-            showAvatar
-            showBio
-            showLink
-            layout="vertical"
-            avatarSize={80}
-          />
+          <div className="vvp-ap__mount" data-ap-initialized="true">
+            <AuthorProfileApp
+              authors={AUTHOR_SINGLE}
+              showAvatar
+              showBio
+              showLink
+              layout="vertical"
+              avatarSize={80}
+            />
+          </div>
         </div>
       </Section>
 
@@ -396,14 +400,16 @@ const App = () => (
             boxShadow: "0 1px 4px rgba(0,0,0,.08)",
           }}
         >
-          <AuthorProfileApp
-            authors={AUTHOR_MULTI}
-            showAvatar
-            showBio
-            showLink
-            layout="horizontal"
-            avatarSize={120}
-          />
+          <div className="vvp-ap__mount" data-ap-initialized="true">
+            <AuthorProfileApp
+              authors={AUTHOR_MULTI}
+              showAvatar
+              showBio
+              showLink
+              layout="horizontal"
+              avatarSize={120}
+            />
+          </div>
         </div>
       </Section>
 
@@ -418,14 +424,16 @@ const App = () => (
             boxShadow: "0 1px 4px rgba(0,0,0,.08)",
           }}
         >
-          <AuthorProfileApp
-            authors={AUTHOR_SINGLE}
-            showAvatar={false}
-            showBio
-            showLink={false}
-            layout="vertical"
-            avatarSize={80}
-          />
+          <div className="vvp-ap__mount" data-ap-initialized="true">
+            <AuthorProfileApp
+              authors={AUTHOR_SINGLE}
+              showAvatar={false}
+              showBio
+              showLink={false}
+              layout="vertical"
+              avatarSize={80}
+            />
+          </div>
         </div>
       </Section>
 
@@ -440,7 +448,9 @@ const App = () => (
             boxShadow: "0 1px 4px rgba(0,0,0,.08)",
           }}
         >
-          <TrendingItemsApp items={TRENDING_ALL} />
+          <div className="vvp-ti__mount" data-ti-initialized="true">
+            <TrendingItemsApp items={TRENDING_ALL} />
+          </div>
         </div>
       </Section>
 
@@ -455,9 +465,11 @@ const App = () => (
             boxShadow: "0 1px 4px rgba(0,0,0,.08)",
           }}
         >
-          <TrendingItemsApp
-            items={TRENDING_ALL.map(({ image_url: _, ...rest }) => rest)}
-          />
+          <div className="vvp-ti__mount" data-ti-initialized="true">
+            <TrendingItemsApp
+              items={TRENDING_ALL.map(({ image_url: _, ...rest }) => rest)}
+            />
+          </div>
         </div>
       </Section>
 
@@ -472,7 +484,9 @@ const App = () => (
             boxShadow: "0 1px 4px rgba(0,0,0,.08)",
           }}
         >
-          <TrendingItemsApp items={TRENDING_PODCAST} />
+          <div className="vvp-ti__mount" data-ti-initialized="true">
+            <TrendingItemsApp items={TRENDING_PODCAST} />
+          </div>
         </div>
       </Section>
 
@@ -487,7 +501,9 @@ const App = () => (
             boxShadow: "0 1px 4px rgba(0,0,0,.08)",
           }}
         >
-          <TrendingItemsApp items={TRENDING_EMPTY} />
+          <div className="vvp-ti__mount" data-ti-initialized="true">
+            <TrendingItemsApp items={TRENDING_EMPTY} />
+          </div>
         </div>
       </Section>
 
@@ -502,7 +518,9 @@ const App = () => (
             boxShadow: "0 1px 4px rgba(0,0,0,.08)",
           }}
         >
-          <TrendingListApp items={TRENDING_LIST_ITEMS} />
+          <div className="vvp-tl__mount" data-tl-initialized="true">
+            <TrendingListApp items={TRENDING_LIST_ITEMS} />
+          </div>
         </div>
       </Section>
 
@@ -517,7 +535,9 @@ const App = () => (
             boxShadow: "0 1px 4px rgba(0,0,0,.08)",
           }}
         >
-          <TrendingListApp items={[]} />
+          <div className="vvp-tl__mount" data-tl-initialized="true">
+            <TrendingListApp items={[]} />
+          </div>
         </div>
       </Section>
 
