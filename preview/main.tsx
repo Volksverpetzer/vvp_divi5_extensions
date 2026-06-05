@@ -4,6 +4,7 @@ import "../src/components/fact-check-search/style.scss";
 import "../src/components/content-overview/style.scss";
 import "../src/components/author-profile/style.scss";
 import "../src/components/trending-items/style.scss";
+import "../src/components/trending-list/style.scss";
 import { FactCheckSearchApp } from "../src/components/fact-check-search/App";
 import {
   ArticleCard,
@@ -14,6 +15,7 @@ import { PodcastBanner } from "../src/components/content-overview/PodcastBanner"
 import { YouTubeBanner } from "../src/components/content-overview/YouTubeBanner";
 import { AuthorProfileApp } from "../src/components/author-profile/App";
 import { TrendingItemsApp } from "../src/components/trending-items/App";
+import { TrendingListApp } from "../src/components/trending-list/App";
 
 // ── Sample data ───────────────────────────────────────────────────────────────
 
@@ -85,6 +87,29 @@ const TRENDING_PODCAST: ArticleCardProps[] = [
 ];
 
 const TRENDING_EMPTY: ArticleCardProps[] = [];
+
+const TRENDING_LIST_ITEMS = [
+  {
+    title:
+      "Bärbel Bas hat RECHT: Aber Tagesthemen stimmen NIUS, BILD & AfD zu!?",
+    link: "#",
+    date: "8. Mai 2026",
+    author: "Thomas Laschyk",
+  },
+  {
+    title: "75 % wollen KEINEN AfD-Kanzler: Wie die WELT für die AfD lügt",
+    link: "#",
+    date: "7. Mai 2026",
+    author: "Thomas Laschyk",
+  },
+  {
+    title:
+      "Faktencheck: Warum diese Behauptung über Katzen komplett falsch ist",
+    link: "#",
+    date: "6. Mai 2026",
+    author: "Bella Kratzenbach",
+  },
+];
 
 const AUTHOR_SINGLE = [
   {
@@ -463,6 +488,36 @@ const App = () => (
           }}
         >
           <TrendingItemsApp items={TRENDING_EMPTY} />
+        </div>
+      </Section>
+
+      <Section title="TrendingList · 3 Einträge">
+        <div
+          className="vvp-trending-list"
+          style={{
+            maxWidth: 480,
+            padding: "1.5rem",
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+          }}
+        >
+          <TrendingListApp items={TRENDING_LIST_ITEMS} />
+        </div>
+      </Section>
+
+      <Section title="TrendingList · Leerer Zustand">
+        <div
+          className="vvp-trending-list"
+          style={{
+            maxWidth: 480,
+            padding: "1.5rem",
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+          }}
+        >
+          <TrendingListApp items={[]} />
         </div>
       </Section>
 
