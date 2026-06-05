@@ -29,6 +29,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Direct access forbidden.' );
 }
 
+if ( defined( 'VVP_DIVI5_PATH' ) ) {
+	return; // Another instance of this plugin is already loaded.
+}
+
 define( 'VVP_DIVI5_PATH', plugin_dir_path( __FILE__ ) );
 define( 'VVP_DIVI5_URL', plugin_dir_url( __FILE__ ) );
 define( 'VVP_DIVI5_VERSION', '1.0.2' );
