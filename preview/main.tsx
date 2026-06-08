@@ -491,7 +491,7 @@ const App = () => (
       }}
     >
       <strong style={{ color: "#fff" }}>
-        VVP Divi5 Extensions for WordPress
+        VVPs Divi5 Extensions for WordPress
       </strong>
       <span>Component Preview</span>
       <span>·</span>

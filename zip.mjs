@@ -39,5 +39,9 @@ const excludes = [
 ];
 
 const args = ["-r", OUTPUT, ".", ...excludes.flatMap((p) => ["--exclude", p])];
-const { status } = spawnSync("zip", args, { stdio: "inherit" });
+const { status, error } = spawnSync("zip", args, { stdio: "inherit" });
+if (error) {
+  console.error(`zip failed: ${error.message}`);
+  process.exit(1);
+}
 process.exit(status ?? 1);

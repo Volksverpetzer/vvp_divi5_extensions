@@ -276,13 +276,14 @@ Renders a compact numbered list of trending article titles and authors within a 
 
 ## Prerequisites
 
-| Tool      | Minimum version        |
-| --------- | ---------------------- |
-| Node.js   | 22.x                   |
-| pnpm      | 11.x                   |
-| PHP       | 7.4+                   |
-| Composer  | 2.x                    |
-| WordPress | 6.x with DIVI 5 active |
+| Tool      | Minimum version                    |
+| --------- | ---------------------------------- |
+| Node.js   | 22.x                               |
+| pnpm      | 11.x                               |
+| PHP       | 7.4+                               |
+| Composer  | 2.x                                |
+| WordPress | 6.x with DIVI 5 active             |
+| zip       | any (pre-installed on macOS/Linux) |
 
 ---
 
