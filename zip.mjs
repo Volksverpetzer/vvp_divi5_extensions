@@ -38,7 +38,7 @@ const excludes = [
   ".prettierrc",
 ];
 
-const args = ["-r", OUTPUT, ".", ...excludes.flatMap((p) => ["--exclude", p])];
+const args = ["-r", OUTPUT, ".", ...excludes.flatMap((p) => ["-x", p])];
 const { status, error } = spawnSync("zip", args, { stdio: "inherit" });
 if (error) {
   console.error(`zip failed: ${error.message}`);
