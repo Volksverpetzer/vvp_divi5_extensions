@@ -10,7 +10,7 @@ const initAll = () => {
   mounts.forEach((mount) => {
     mount.setAttribute("data-ap-initialized", "true");
 
-    let authors: Author[] = [];
+    let authors: Author[];
     try {
       authors = JSON.parse(mount.getAttribute("data-authors") || "[]");
     } catch {

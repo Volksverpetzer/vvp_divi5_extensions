@@ -1,15 +1,10 @@
-import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
 import globals from "globals";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-
-const compat = new FlatCompat({
-  baseDirectory: dirname(fileURLToPath(import.meta.url)),
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
+import tsPlugin from "@typescript-eslint/eslint-plugin";
+import tsParser from "@typescript-eslint/parser";
+import reactPlugin from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
 
 export default [
   {
@@ -32,20 +27,13 @@ export default [
       },
     },
   },
-  ...compat.extends("eslint:recommended"),
-  ...compat.extends("plugin:@typescript-eslint/recommended").map((config) => ({
-    ...config,
-    files: ["**/*.{ts,tsx}"],
-  })),
-  ...compat
-    .extends("plugin:react/recommended", "plugin:react-hooks/recommended")
-    .map((config) => ({
-      ...config,
-      files: ["**/*.{tsx,jsx}"],
-    })),
-  eslintPluginPrettierRecommended,
+  js.configs.recommended,
+  ...tsPlugin.configs["flat/recommended"],
   {
     files: ["**/*.{ts,tsx}"],
+    languageOptions: {
+      parser: tsParser,
+    },
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-expressions": [
@@ -69,12 +57,20 @@ export default [
   },
   {
     files: ["**/*.{tsx,jsx}"],
+    plugins: {
+      ...reactPlugin.configs.flat.recommended.plugins,
+      ...reactHooks.configs.flat["recommended-latest"].plugins,
+    },
+    languageOptions: reactPlugin.configs.flat.recommended.languageOptions,
     settings: {
-      react: { version: "detect" },
+      react: { version: "19" },
     },
     rules: {
+      ...reactPlugin.configs.flat.recommended.rules,
+      ...reactHooks.configs.flat["recommended-latest"].rules,
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
     },
   },
+  eslintPluginPrettierRecommended,
 ];
