@@ -269,7 +269,7 @@ Renders a compact numbered list of trending article titles and authors within a 
 ├── eslint.config.mjs
 ├── cspell.config.json
 ├── lint-staged.config.ts
-└── gulpfile.js                    # ZIP packaging
+└── zip.mjs                        # ZIP packaging
 ```
 
 ---
@@ -277,7 +277,7 @@ Renders a compact numbered list of trending article titles and authors within a 
 ## Prerequisites
 
 | Tool      | Minimum version        |
-| --------- |------------------------|
+| --------- | ---------------------- |
 | Node.js   | 22.x                   |
 | pnpm      | 11.x                   |
 | PHP       | 7.4+                   |
@@ -353,16 +353,16 @@ pnpm build
 
 Vite in production mode outputs:
 
-| File                                    | Description                                                 |
-| --------------------------------------- | ----------------------------------------------------------- |
-| `scripts/bundle.js`                     | DIVI Visual Builder module (externals: React, DIVI globals) |
-| `scripts/fact-check-frontend.js`        | FactCheckSearch frontend bundle (standalone)                |
-| `scripts/content-overview-frontend.js`  | ContentOverview frontend bundle (standalone)                |
-| `scripts/author-profile-frontend.js`    | AuthorProfile frontend bundle (standalone)                  |
-| `scripts/trending-items-frontend.js`    | TrendingItems frontend bundle (standalone)                  |
-| `scripts/trending-list-frontend.js`     | TrendingList frontend bundle (standalone)                   |
-| `styles/main.css`                       | All component CSS                                           |
-| `modules-json/*/module.json`            | Copied module schemas                                       |
+| File                                   | Description                                                 |
+| -------------------------------------- | ----------------------------------------------------------- |
+| `scripts/bundle.js`                    | DIVI Visual Builder module (externals: React, DIVI globals) |
+| `scripts/fact-check-frontend.js`       | FactCheckSearch frontend bundle (standalone)                |
+| `scripts/content-overview-frontend.js` | ContentOverview frontend bundle (standalone)                |
+| `scripts/author-profile-frontend.js`   | AuthorProfile frontend bundle (standalone)                  |
+| `scripts/trending-items-frontend.js`   | TrendingItems frontend bundle (standalone)                  |
+| `scripts/trending-list-frontend.js`    | TrendingList frontend bundle (standalone)                   |
+| `styles/main.css`                      | All component CSS                                           |
+| `modules-json/*/module.json`           | Copied module schemas                                       |
 
 To produce a distributable ZIP:
 
@@ -378,17 +378,17 @@ Deployment is automated via GitHub Actions and SSH/rsync. Push to the relevant b
 
 ### Required GitHub secrets
 
-| Secret            | Description                           |
-| ----------------- | ------------------------------------- |
-| `SSH_DEPLOY_KEY`  | Private SSH key for the deploy user   |
-| `SSH_HOST_KEY`    | Host key entry for `known_hosts`      |
-| `SSH_USER`        | SSH username on the target server     |
-| `SSH_HOST`        | Target server hostname                |
+| Secret           | Description                         |
+| ---------------- | ----------------------------------- |
+| `SSH_DEPLOY_KEY` | Private SSH key for the deploy user |
+| `SSH_HOST_KEY`   | Host key entry for `known_hosts`    |
+| `SSH_USER`       | SSH username on the target server   |
+| `SSH_HOST`       | Target server hostname              |
 
 ### Branch → environment
 
-| Branch       | Target path                                          |
-| ------------ | ---------------------------------------------------- |
+| Branch       | Target path                                         |
+| ------------ | --------------------------------------------------- |
 | `prerelease` | `.../wp-content/plugins/vvp-divi5-extensions-dev/`  |
 | `main`       | `.../wp-content/plugins/vvp-divi5-extensions-prod/` |
 
@@ -407,7 +407,7 @@ rsync -av \
   --exclude='reference' \
   --exclude='vite.config.ts' \
   --exclude='build.mjs' \
-  --exclude='gulpfile.js' \
+  --exclude='zip.mjs' \
   ./ user@host:/path/to/wp-content/plugins/vvp-divi5-extensions/
 ```
 
