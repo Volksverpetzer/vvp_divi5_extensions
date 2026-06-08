@@ -10,7 +10,7 @@ const initAll = () => {
   mounts.forEach((mount) => {
     mount.setAttribute("data-tl-initialized", "true");
 
-    let items: TrendingListItem[] = [];
+    let items: TrendingListItem[];
     try {
       items = JSON.parse(mount.getAttribute("data-articles") || "[]");
     } catch {
