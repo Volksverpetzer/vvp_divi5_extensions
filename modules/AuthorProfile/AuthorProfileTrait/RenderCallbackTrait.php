@@ -42,7 +42,7 @@ trait RenderCallbackTrait
 
         $mount_attrs = [
             'class'            => 'vvp-ap__mount',
-            'data-authors'     => esc_attr(wp_json_encode($authors_data)),
+            'data-authors'     => esc_attr(wp_json_encode($authors_data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)),
             'data-show-avatar' => $show_avatar ? 'true' : 'false',
             'data-show-bio'    => $show_bio ? 'true' : 'false',
             'data-show-link'   => $show_link ? 'true' : 'false',
