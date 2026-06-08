@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@cspell/dict-de-de": "^4.1.2",
-    "@divi/module": "^1.0.7",
+    "@divi/module": "^1.0.8",
     "@divi/module-library": "^1.0.7",
     "@divi/types": "^1.0.6",
     "@eslint/eslintrc": "^3.3.5",
