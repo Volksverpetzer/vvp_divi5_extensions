@@ -235,7 +235,7 @@ trait CardRenderTrait
             .   '<div class="vvp-co__yt-banner-inner">'
             .     '<div class="vvp-co__yt-banner-thumb-wrap">'
             .       '<button type="button" class="vvp-co__yt-banner-thumb-btn" aria-label="' . esc_attr($props['title']) . ' abspielen">'
-            .         ($props['thumbnailUrl'] ? '<img src="' . esc_url($props['thumbnailUrl']) . '" alt="' . $yt_title . '" class="vvp-co__yt-banner-thumb" loading="lazy" decoding="async">' : '')
+            .         ($props['thumbnailUrl'] ? '<img src="' . esc_url($props['thumbnailUrl']) . '" alt="' . esc_attr($props['title']) . '" class="vvp-co__yt-banner-thumb" loading="lazy" decoding="async">' : '')
             .         '<div class="vvp-co__yt-banner-play" aria-hidden="true">' . $yt_play_icon . '</div>'
             .       '</button>'
             .     '</div>'
