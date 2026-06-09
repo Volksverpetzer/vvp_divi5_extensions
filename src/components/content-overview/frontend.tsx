@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createRoot } from "react-dom/client";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import { InstagramSlideshow } from "./InstagramSlideshow";
 import { PodcastBanner } from "./PodcastBanner";
 import { YouTubeBanner, type YouTubeBannerProps } from "./YouTubeBanner";
@@ -15,7 +15,7 @@ const initArticleCards = () => {
     if (rawProps) {
       try {
         const props: ArticleCardProps = JSON.parse(rawProps);
-        createRoot(mount).render(<ArticleCard {...props} />);
+        hydrateRoot(mount, <ArticleCard {...props} />);
       } catch (e) {
         console.error("Failed to parse article card props", e);
       }
@@ -51,7 +51,7 @@ const initPodcastBanners = () => {
     if (rawProps) {
       try {
         const props = JSON.parse(rawProps);
-        createRoot(mount).render(<PodcastBanner {...props} />);
+        hydrateRoot(mount, <PodcastBanner {...props} />);
       } catch (e) {
         console.error("Failed to parse podcast banner props", e);
       }
@@ -69,7 +69,7 @@ const initYouTubeBanners = () => {
     if (rawProps) {
       try {
         const props: YouTubeBannerProps = JSON.parse(rawProps);
-        createRoot(mount).render(<YouTubeBanner {...props} />);
+        hydrateRoot(mount, <YouTubeBanner {...props} />);
       } catch (e) {
         console.error("Failed to parse YouTube banner props", e);
       }
