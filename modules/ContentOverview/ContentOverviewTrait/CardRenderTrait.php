@@ -200,12 +200,33 @@ trait CardRenderTrait
         $yt_desc  = esc_html($props['description']);
         $yt_date  = esc_html($props['date']);
 
-        $static_html = '<a href="' . $yt_url . '" target="_blank" rel="noopener noreferrer">'
-            . ($props['thumbnailUrl'] ? '<img src="' . esc_url($props['thumbnailUrl']) . '" alt="' . $yt_title . '" loading="lazy" decoding="async">' : '')
-            . '<div><h3>' . $yt_title . '</h3>'
-            . ($yt_desc ? '<p>' . $yt_desc . '</p>' : '')
-            . '<span>' . $yt_date . '</span></div>'
-            . '</a>';
+        $yt_youtube_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="10" viewBox="0 0 461 461" fill="currentColor" aria-hidden="true" style="margin-right: 4px;">'
+            . '<path d="M365.257 67.393H95.744C42.866 67.393 0 110.259 0 163.137v134.728c0 52.878 42.866 95.744 95.744 95.744h269.513c52.878 0 95.744-42.866 95.744-95.744V163.137c0-52.878-42.866-95.744-95.744-95.744zm-64.751 169.663l-126.06 60.123c-3.359 1.602-7.239-.847-7.239-4.568V168.607c0-3.774 3.982-6.22 7.348-4.514l126.06 63.943c3.748 1.899 3.683 7.274-.109 9.02z"/>'
+            . '</svg>';
+        $yt_play_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="white">'
+            . '<path d="M8 5v14l11-7z"/>'
+            . '</svg>';
+
+        $static_html = '<div class="vvp-co__yt-banner">'
+            .   '<div class="vvp-co__yt-banner-inner">'
+            .     '<div class="vvp-co__yt-banner-thumb-wrap">'
+            .       '<button type="button" class="vvp-co__yt-banner-thumb-btn" aria-label="' . esc_attr($props['title']) . ' abspielen">'
+            .         ($props['thumbnailUrl'] ? '<img src="' . esc_url($props['thumbnailUrl']) . '" alt="' . $yt_title . '" class="vvp-co__yt-banner-thumb" loading="lazy" decoding="async">' : '')
+            .         '<div class="vvp-co__yt-banner-play" aria-hidden="true">' . $yt_play_icon . '</div>'
+            .       '</button>'
+            .     '</div>'
+            .     '<div class="vvp-co__yt-banner-content">'
+            .       '<div class="vvp-co__yt-banner-label">'
+            .         '<span class="vvp-co__badge vvp-co__badge--youtube">' . $yt_youtube_icon . 'YouTube</span>'
+            .       '</div>'
+            .       '<a href="' . $yt_url . '" class="vvp-co__yt-banner-title" target="_blank" rel="noopener noreferrer">' . $yt_title . '</a>'
+            .       ($yt_desc ? '<p class="vvp-co__yt-banner-description">' . $yt_desc . '</p>' : '')
+            .       '<div class="vvp-co__yt-banner-footer">'
+            .         '<span class="vvp-co__yt-banner-date">' . $yt_date . '</span>'
+            .       '</div>'
+            .     '</div>'
+            .   '</div>'
+            . '</div>';
 
         return '<div class="vvp-co-yt-banner-mount" data-yt-banner-props="' . $encoded . '">' . $static_html . '</div>';
     }
@@ -233,19 +254,40 @@ trait CardRenderTrait
             'artworkUrl' => !empty($episode['image']) ? $episode['image'] : $channel_image,
         ];
 
-        $encoded         = htmlspecialchars(json_encode($props, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8');
-        $pod_title       = esc_html($props['title']);
-        $pod_link        = esc_url($props['link']);
-        $pod_date        = esc_html($props['date']);
-        $pod_summary     = esc_html($props['summary']);
-        $pod_duration    = esc_html($props['duration']);
+        $encoded     = htmlspecialchars(json_encode($props, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8');
+        $pod_title   = esc_html($props['title']);
+        $pod_link    = esc_url($props['link']);
+        $pod_date    = esc_html($props['date']);
+        $pod_summary = esc_html($props['summary']);
 
-        $static_html = '<a href="' . $pod_link . '">'
-            . ($props['artworkUrl'] ? '<img src="' . esc_url($props['artworkUrl']) . '" alt="' . $pod_title . '" loading="lazy">' : '')
-            . '<div><h3>' . $pod_title . '</h3>'
-            . ($pod_summary ? '<p>' . $pod_summary . '</p>' : '')
-            . '<span>' . $pod_date . ($pod_duration ? ' · ' . $pod_duration : '') . '</span></div>'
-            . '</a>';
+        $podcast_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+            . '<path d="M3 18v-6a9 9 0 0 1 18 0v6"/>'
+            . '<path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>'
+            . '</svg>';
+        $pod_play_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'
+            . '<path d="M8 5v14l11-7z"/>'
+            . '</svg>';
+
+        $static_html = '<div class="vvp-co__podcast-banner">'
+            .   '<div class="vvp-co__podcast-inner">'
+            .     ($props['artworkUrl']
+                    ? '<div class="vvp-co__podcast-artwork-wrap"><img src="' . esc_url($props['artworkUrl']) . '" alt="Podcast" class="vvp-co__podcast-artwork" loading="lazy" decoding="async"></div>'
+                    : '')
+            .     '<div class="vvp-co__podcast-content">'
+            .       '<div class="vvp-co__podcast-label">'
+            .         '<span class="vvp-co__badge vvp-co__badge--podcast">' . $podcast_icon . 'Podcast</span>'
+            .       '</div>'
+            .       '<a href="' . $pod_link . '" class="vvp-co__podcast-title" target="_blank" rel="noopener noreferrer">' . $pod_title . '</a>'
+            .       ($props['summary'] ? '<p class="vvp-co__podcast-summary">' . $pod_summary . '</p>' : '')
+            .       '<div class="vvp-co__podcast-footer">'
+            .         '<span class="vvp-co__podcast-date">' . $pod_date . '</span>'
+            .         ($props['enclosure']
+                        ? '<button type="button" class="vvp-co__podcast-listen-btn">' . $pod_play_icon . 'Anhören</button>'
+                        : '')
+            .       '</div>'
+            .     '</div>'
+            .   '</div>'
+            . '</div>';
 
         return '<div class="vvp-co-podcast-mount" data-podcast-props="' . $encoded . '">' . $static_html . '</div>';
     }
