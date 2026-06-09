@@ -16,7 +16,7 @@ export const TrendingListApp: React.FC<TrendingListAppProps> = ({ items }) => {
       {items.map((item) => (
         <div key={item.link} className="vvp-tl__item">
           <a
-            href={/^https?:\/\//.test(item.link) ? item.link : "#"}
+            href={/^https?:\/\//i.test(item.link.trim()) ? item.link : "#"}
             className="vvp-tl__title"
             target="_blank"
             rel="noopener noreferrer"

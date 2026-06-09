@@ -413,8 +413,8 @@ namespace {
           <title>VVP Divi Extensions — Preview</title>
           <style>{$css}</style>
           <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-          <script src="https://unpkg.com/react@19/umd/react.production.min.js"></script>
-          <script src="https://unpkg.com/react-dom@19/umd/react-dom.production.min.js"></script>
+          <script src="https://unpkg.com/react@19.2.7/umd/react.production.min.js"></script>
+          <script src="https://unpkg.com/react-dom@19.2.7/umd/react-dom.production.min.js"></script>
           <script>
             window.wp = window.wp || {};
             window.wp.element = window.React;
