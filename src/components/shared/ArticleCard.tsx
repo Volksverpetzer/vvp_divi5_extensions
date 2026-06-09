@@ -90,7 +90,11 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     >
       {image_url && (
         <div
-          className={`vvp-co__feed-image-wrap ${isYoutube ? "vvp-co__feed-image-wrap--yt" : ""}`}
+          className={
+            isYoutube
+              ? "vvp-co__feed-image-wrap vvp-co__feed-image-wrap--yt"
+              : "vvp-co__feed-image-wrap"
+          }
         >
           <img
             src={image_url}

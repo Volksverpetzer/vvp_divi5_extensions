@@ -35,21 +35,45 @@ trait CardRenderTrait
         ];
 
         $image_html = $props['image_url']
-            ? '<img src="' . esc_url($props['image_url']) . '" alt="' . esc_attr($props['title']) . '" class="vvp-co__feed-image" loading="lazy" decoding="async">'
-            : '';
-        $category_html = ($props['category'] && $props['category_link'])
-            ? '<a href="' . esc_url($props['category_link']) . '" class="vvp-co__category">' . esc_html($props['category']) . '</a>'
-            : ($props['category'] ? '<span class="vvp-co__category">' . esc_html($props['category']) . '</span>' : '');
-        $reading_time_html = $props['reading_time']
-            ? '<span class="vvp-co__reading-time">' . (int) $props['reading_time'] . ' Min.</span>'
+            ? '<div class="vvp-co__feed-image-wrap">'
+            .   '<img src="' . esc_url($props['image_url']) . '" alt="' . esc_attr($props['title']) . '" class="vvp-co__feed-image" loading="lazy" decoding="async">'
+            . '</div>'
             : '';
 
-        $static_html = '<a href="' . esc_url($props['link']) . '" class="vvp-co__feed-card">'
-            . ($image_html ? '<div class="vvp-co__feed-image-wrap">' . $image_html . '</div>' : '')
+        $source_badge = $props['source'] === 'pruefpunkt'
+            ? '<span class="vvp-co__badge vvp-co__badge--pruefpunkt">Prüfpunkt</span>'
+            : '<span class="vvp-co__badge vvp-co__badge--vvp">VVP</span>';
+
+        $category_html = '';
+        if ($props['category']) {
+            $category_html = $props['category_link']
+                ? '<span role="button" tabindex="0" class="vvp-co__category vvp-co__category--btn">' . esc_html($props['category']) . '</span>'
+                : '<span class="vvp-co__category">' . esc_html($props['category']) . '</span>';
+        }
+
+        $clock_svg = '<svg aria-hidden="true" focusable="false" data-icon="clock" width="14" height="14" fill="none" stroke="currentColor" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">'
+            . '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>'
+            . '</svg>';
+        $reading_time_html = $props['reading_time']
+            ? '<span class="vvp-co__feed-reading-time">' . $clock_svg . (int) $props['reading_time'] . ' Min.</span>'
+            : '';
+
+        $excerpt_html = '';
+        if ($props['excerpt']) {
+            $excerpt_html = '<p class="vvp-co__feed-excerpt">' . esc_html($props['excerpt']);
+            if ($props['author']) {
+                $excerpt_html .= '<em class="vvp-co__feed-author"> – ' . esc_html($props['author']) . '</em>';
+            }
+            $excerpt_html .= '</p>';
+        }
+
+        $static_html = '<a href="' . esc_url($props['link']) . '" class="vvp-co__feed-card vvp-co__feed-card--article" target="_blank" rel="noopener noreferrer">'
+            . $image_html
             . '<div class="vvp-co__feed-body">'
             .   '<h3 class="vvp-co__feed-title">' . esc_html($props['title']) . '</h3>'
-            .   ($props['excerpt'] ? '<p class="vvp-co__feed-excerpt">' . esc_html($props['excerpt']) . '</p>' : '')
+            .   $excerpt_html
             .   '<div class="vvp-co__feed-footer">'
+            .     $source_badge
             .     $category_html
             .     '<span class="vvp-co__feed-date">' . esc_html($props['date']) . '</span>'
             .     $reading_time_html
