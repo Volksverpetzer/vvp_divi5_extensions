@@ -1,12 +1,14 @@
-# Divi5Extensions
+# VVPs Divi5 Extensions for WordPress
 
-A WordPress plugin that adds custom modules to the **DIVI 5 Visual Builder** for Volksverpetzer. Three modules are included:
+A WordPress plugin that adds custom modules to the **DIVI 5 Visual Builder** for Volksverpetzer. Five modules are included:
 
 | Module                | DIVI slug               | Description                                                                   |
 | --------------------- | ----------------------- | ----------------------------------------------------------------------------- |
 | **Faktencheck Suche** | `vvp/fact-check-search` | Interactive search bar for the fact-check archive                             |
 | **Inhaltsübersicht**  | `vvp/content-overview`  | Mixed feed of articles, Instagram posts, YouTube videos, and podcast episodes |
 | **Autorenprofil**     | `vvp/author-profile`    | Displays the current post author(s) with avatar, name link, and bio           |
+| **Trending Beiträge** | `vvp/trending-items`    | Card grid of trending articles with thumbnails, configurable time range       |
+| **Trending Liste**    | `vvp/trending-list`     | Compact list of trending article titles and authors, configurable time range  |
 
 ---
 
@@ -76,6 +78,35 @@ Renders the current post author(s) with optional avatar, bio, and a link to the 
 - React app (`src/components/author-profile/App.tsx`) is mounted by `scripts/author-profile-frontend.js`
 - DIVI Visual Builder preview: `src/components/author-profile/edit.tsx` (placeholder author data)
 
+### Trending Beiträge (`vvp/trending-items`)
+
+Renders a card grid of the most-read articles within a configurable time range, with optional thumbnails.
+
+**Settings (DIVI):**
+
+- Zeitraum (`range`): time window for trending data (e.g. `last7days`)
+- Vorschaubild anzeigen (`showThumbnail`): toggle thumbnail display
+
+**Architecture:**
+
+- PHP fetches trending data and server-renders the module (`modules/TrendingItems/TrendingItemsTrait/RenderCallbackTrait.php`)
+- React app (`src/components/trending-items/App.tsx`) is mounted by `scripts/trending-items-frontend.js`
+- DIVI Visual Builder preview: `src/components/trending-items/edit.tsx` (placeholder article cards)
+
+### Trending Liste (`vvp/trending-list`)
+
+Renders a compact numbered list of trending article titles and authors within a configurable time range.
+
+**Settings (DIVI):**
+
+- Zeitraum (`range`): time window for trending data (e.g. `last7days`)
+
+**Architecture:**
+
+- PHP fetches trending data and server-renders the module (`modules/TrendingList/TrendingListTrait/RenderCallbackTrait.php`)
+- React app (`src/components/trending-list/App.tsx`) is mounted by `scripts/trending-list-frontend.js`
+- DIVI Visual Builder preview: `src/components/trending-list/edit.tsx` (placeholder list items)
+
 ---
 
 ## Project Structure
@@ -83,10 +114,13 @@ Renders the current post author(s) with optional avatar, bio, and a link to the 
 ```
 .
 ├── .github/workflows/
-│   ├── deploy-dev.yml             # CI/CD: dev branch → staging FTP
-│   └── deploy-prod.yml            # CI/CD: main branch → production FTP
+│   ├── ci.yml                     # Lint, type-check, and test on every push
+│   ├── deploy-gh-pages.yml        # Publishes Vite preview to GitHub Pages
+│   ├── deploy-prerelease.yml      # CI/CD: prerelease branch → staging (SSH/rsync)
+│   └── deploy-prod.yml            # CI/CD: main branch → production (SSH/rsync)
 ├── modules/                       # PHP backend
 │   ├── autoload.php               # PSR-4 class loader
+│   ├── CronManager.php            # WordPress cron job registration
 │   ├── Modules.php                # DIVI module registration
 │   ├── FactCheckSearch/
 │   │   ├── FactCheckSearch.php
@@ -102,36 +136,58 @@ Renders the current post author(s) with optional avatar, bio, and a link to the 
 │   │       ├── ModuleClassnamesTrait.php
 │   │       ├── ModuleStylesTrait.php
 │   │       └── ModuleScriptDataTrait.php
-│   └── AuthorProfile/
-│       ├── AuthorProfile.php
-│       └── AuthorProfileTrait/
-│           ├── RenderCallbackTrait.php    # Server-side HTML (mount point + author data)
+│   ├── AuthorProfile/
+│   │   ├── AuthorProfile.php
+│   │   └── AuthorProfileTrait/
+│   │       ├── RenderCallbackTrait.php    # Server-side HTML (mount point + author data)
+│   │       ├── ModuleClassnamesTrait.php
+│   │       ├── ModuleStylesTrait.php
+│   │       └── ModuleScriptDataTrait.php
+│   ├── TrendingItems/
+│   │   ├── TrendingItems.php
+│   │   └── TrendingItemsTrait/
+│   │       ├── RenderCallbackTrait.php
+│   │       ├── ModuleClassnamesTrait.php
+│   │       ├── ModuleStylesTrait.php
+│   │       └── ModuleScriptDataTrait.php
+│   └── TrendingList/
+│       ├── TrendingList.php
+│       └── TrendingListTrait/
+│           ├── RenderCallbackTrait.php
 │           ├── ModuleClassnamesTrait.php
 │           ├── ModuleStylesTrait.php
 │           └── ModuleScriptDataTrait.php
 ├── modules-json/                  # Auto-generated — do not edit
 │   ├── fact-check-search/module.json
 │   ├── content-overview/module.json
-│   └── author-profile/module.json
-├── scripts/                       # Compiled JS (webpack output)
+│   ├── author-profile/module.json
+│   ├── trending-items/module.json
+│   └── trending-list/module.json
+├── scripts/                       # Compiled JS (Vite output)
 │   ├── bundle.js                  # DIVI Visual Builder module
 │   ├── fact-check-frontend.js     # Mounts FactCheckSearchApp
 │   ├── content-overview-frontend.js  # Mounts InstagramSlideshow + PodcastBanner
-│   └── author-profile-frontend.js # Mounts AuthorProfileApp
-├── styles/                        # Compiled CSS (webpack output)
+│   ├── author-profile-frontend.js # Mounts AuthorProfileApp
+│   ├── trending-items-frontend.js # Mounts TrendingItemsApp
+│   └── trending-list-frontend.js  # Mounts TrendingListApp
+├── styles/                        # Compiled CSS (Vite output)
 │   └── main.css
 ├── src/                           # TypeScript/React source
 │   ├── index.ts                   # Registers all modules with DIVI
 │   ├── module-icons.ts            # Icon registration
 │   ├── components/
+│   │   ├── shared/
+│   │   │   └── ArticleCard.tsx    # Shared article card component
 │   │   ├── fact-check-search/
 │   │   │   ├── module.json        # DIVI attribute schema
 │   │   │   ├── App.tsx            # Standalone React search UI
 │   │   │   ├── edit.tsx           # DIVI VB preview component
-│   │   │   ├── frontend.tsx       # Webpack entry: mounts App.tsx
+│   │   │   ├── frontend.tsx       # Vite entry: mounts App.tsx
+│   │   │   ├── index.ts
 │   │   │   ├── icons.tsx          # Inline SVG icons
 │   │   │   ├── types.ts
 │   │   │   ├── constants.ts       # Default API URLs
+│   │   │   ├── placeholder-content.ts
 │   │   │   ├── styles.tsx
 │   │   │   ├── module-classnames.ts
 │   │   │   ├── module-script-data.tsx
@@ -140,54 +196,94 @@ Renders the current post author(s) with optional avatar, bio, and a link to the 
 │   │   ├── content-overview/
 │   │   │   ├── module.json
 │   │   │   ├── edit.tsx           # DIVI VB preview (skeleton + example cards)
-│   │   │   ├── frontend.tsx       # Webpack entry: mounts IG + Podcast
+│   │   │   ├── frontend.tsx       # Vite entry: mounts IG + Podcast
+│   │   │   ├── index.ts
+│   │   │   ├── ArticleCard.tsx
 │   │   │   ├── InstagramSlideshow.tsx  # Carousel with fullscreen overlay
 │   │   │   ├── PodcastBanner.tsx       # Audio player banner
+│   │   │   ├── YouTubeBanner.tsx
 │   │   │   ├── types.ts
+│   │   │   ├── placeholder-content.ts
 │   │   │   ├── styles.tsx
 │   │   │   ├── module-classnames.ts
 │   │   │   ├── module-script-data.tsx
 │   │   │   ├── style.scss
 │   │   │   └── module.scss
-│   │   └── author-profile/
-│   │       ├── module.json        # DIVI attribute schema
-│   │       ├── App.tsx            # Standalone React author UI
-│   │       ├── edit.tsx           # DIVI VB preview component
-│   │       ├── frontend.tsx       # Webpack entry: mounts App.tsx
+│   │   ├── author-profile/
+│   │   │   ├── module.json        # DIVI attribute schema
+│   │   │   ├── App.tsx            # Standalone React author UI
+│   │   │   ├── edit.tsx           # DIVI VB preview component
+│   │   │   ├── frontend.tsx       # Vite entry: mounts App.tsx
+│   │   │   ├── index.ts
+│   │   │   ├── types.ts
+│   │   │   ├── placeholder-content.ts
+│   │   │   ├── styles.tsx
+│   │   │   ├── module-classnames.ts
+│   │   │   ├── module-script-data.tsx
+│   │   │   ├── style.scss         # Frontend styles
+│   │   │   └── module.scss        # VB editor styles
+│   │   ├── trending-items/
+│   │   │   ├── module.json
+│   │   │   ├── App.tsx
+│   │   │   ├── edit.tsx
+│   │   │   ├── frontend.tsx
+│   │   │   ├── index.ts
+│   │   │   ├── types.ts
+│   │   │   ├── placeholder-content.ts
+│   │   │   ├── styles.tsx
+│   │   │   ├── module-classnames.ts
+│   │   │   ├── module-script-data.tsx
+│   │   │   ├── style.scss
+│   │   │   └── module.scss
+│   │   └── trending-list/
+│   │       ├── module.json
+│   │       ├── App.tsx
+│   │       ├── edit.tsx
+│   │       ├── frontend.tsx
+│   │       ├── index.ts
 │   │       ├── types.ts
+│   │       ├── placeholder-content.ts
 │   │       ├── styles.tsx
 │   │       ├── module-classnames.ts
 │   │       ├── module-script-data.tsx
-│   │       ├── style.scss         # Frontend styles
-│   │       └── module.scss        # VB editor styles
+│   │       ├── style.scss
+│   │       └── module.scss
 │   └── icons/
 │       ├── fact-check-search/index.tsx
 │       ├── content-overview/index.tsx
-│       └── author-profile/index.tsx
+│       ├── author-profile/index.tsx
+│       ├── trending-items/index.tsx
+│       └── trending-list/index.tsx
 ├── preview/                       # Vite component preview (no WordPress needed)
 │   ├── index.html
 │   └── main.tsx                   # Renders all standalone React components
+├── build.mjs                      # Vite build script (VB bundle + frontend bundles)
 ├── vite.config.ts                 # Vite config for pnpm preview (port 8899)
 ├── vvp-divi5-extensions.php       # WordPress plugin entry point
 ├── dev-preview.php                # PHP preview server (all modules, no WP needed)
 ├── composer.json
 ├── package.json
-├── webpack.config.js              # Four webpack bundles (VB + 3 frontends)
+├── pnpm-workspace.yaml
 ├── tsconfig.json
-└── gulpfile.js                    # ZIP packaging
+├── vitest.config.ts
+├── eslint.config.mjs
+├── cspell.config.json
+├── lint-staged.config.ts
+└── zip.mjs                        # ZIP packaging
 ```
 
 ---
 
 ## Prerequisites
 
-| Tool      | Minimum version        |
-| --------- |------------------------|
-| Node.js   | 22.x                   |
-| pnpm      | 11.x                   |
-| PHP       | 7.4+                   |
-| Composer  | 2.x                    |
-| WordPress | 6.x with DIVI 5 active |
+| Tool      | Minimum version                    |
+| --------- | ---------------------------------- |
+| Node.js   | 22.x                               |
+| pnpm      | 11.x                               |
+| PHP       | 7.4+                               |
+| Composer  | 2.x                                |
+| WordPress | 6.x with DIVI 5 active             |
+| zip       | any (pre-installed on macOS/Linux) |
 
 ---
 
@@ -207,13 +303,13 @@ Sets up the PSR-4 autoloader for `VVP\Divi5\`.
 pnpm install --frozen-lockfile
 ```
 
-### 3. Start the webpack watcher
+### 3. Start the dev server
 
 ```bash
 pnpm start
 ```
 
-Watches `src/` and recompiles `scripts/bundle.js`, `scripts/fact-check-frontend.js`, `scripts/content-overview-frontend.js`, `scripts/author-profile-frontend.js`, and `styles/main.css` on every save.
+Watches `src/` and recompiles `scripts/bundle.js`, `scripts/fact-check-frontend.js`, `scripts/content-overview-frontend.js`, `scripts/author-profile-frontend.js`, `scripts/trending-items-frontend.js`, `scripts/trending-list-frontend.js`, and `styles/main.css` on every save.
 
 ### 4. Vite component preview (no WordPress needed)
 
@@ -227,8 +323,10 @@ Starts a Vite dev server at **http://localhost:8899** that renders:
 - **AuthorProfile** — standalone preview with sample author data + layout variants
 - **InstagramSlideshow** — carousel with fullscreen overlay, sample placeholder images
 - **PodcastBanner** — audio player banner
+- **TrendingItems** — card grid with placeholder articles
+- **TrendingList** — compact list with placeholder items
 
-This is the fast iteration loop for the standalone React components. Vite provides HMR — edits to `src/components/fact-check-search/App.tsx`, `src/components/author-profile/App.tsx`, `InstagramSlideshow.tsx`, `PodcastBanner.tsx`, and the SCSS files reflect instantly without a full reload.
+This is the fast iteration loop for the standalone React components. Vite provides HMR — edits to component files and SCSS files reflect instantly without a full reload.
 
 ### 5. PHP preview server (all modules, no WordPress needed)
 
@@ -241,7 +339,7 @@ Renders the full `ContentOverview` HTML output as PHP would on the front end, in
 ### 6. Symlink into WordPress
 
 ```bash
-ln -s /path/to/Divi5Extensions /path/to/wordpress/wp-content/plugins/vvp-divi5-extensions
+ln -s /path/to/vvp_divi5_extensions /path/to/wordpress/wp-content/plugins/vvp-divi5-extensions
 ```
 
 Then activate the plugin in the WordPress admin.
@@ -254,7 +352,7 @@ Then activate the plugin in the WordPress admin.
 pnpm build
 ```
 
-Webpack in production mode outputs:
+Vite in production mode outputs:
 
 | File                                   | Description                                                 |
 | -------------------------------------- | ----------------------------------------------------------- |
@@ -262,6 +360,8 @@ Webpack in production mode outputs:
 | `scripts/fact-check-frontend.js`       | FactCheckSearch frontend bundle (standalone)                |
 | `scripts/content-overview-frontend.js` | ContentOverview frontend bundle (standalone)                |
 | `scripts/author-profile-frontend.js`   | AuthorProfile frontend bundle (standalone)                  |
+| `scripts/trending-items-frontend.js`   | TrendingItems frontend bundle (standalone)                  |
+| `scripts/trending-list-frontend.js`    | TrendingList frontend bundle (standalone)                   |
 | `styles/main.css`                      | All component CSS                                           |
 | `modules-json/*/module.json`           | Copied module schemas                                       |
 
@@ -275,24 +375,25 @@ pnpm zip
 
 ## Deployment
 
-Deployment is automated via GitHub Actions and FTP. Push to the relevant branch.
+Deployment is automated via GitHub Actions and SSH/rsync. Push to the relevant branch.
 
 ### Required GitHub secrets
 
-| Secret         | Description         |
-| -------------- | ------------------- |
-| `FTP_HOST`     | FTP server hostname |
-| `FTP_USER`     | FTP username        |
-| `FTP_PASSWORD` | FTP password        |
+| Secret           | Description                         |
+| ---------------- | ----------------------------------- |
+| `SSH_DEPLOY_KEY` | Private SSH key for the deploy user |
+| `SSH_HOST_KEY`   | Host key entry for `known_hosts`    |
+| `SSH_USER`       | SSH username on the target server   |
+| `SSH_HOST`       | Target server hostname              |
 
 ### Branch → environment
 
-| Branch | Target path                                          |
-| ------ | ---------------------------------------------------- |
-| `dev`  | `.../wp-content/plugins/vvp-divi5-extensions-dev/`  |
-| `main` | `.../wp-content/plugins/vvp-divi5-extensions-prod/` |
+| Branch       | Target path                                         |
+| ------------ | --------------------------------------------------- |
+| `prerelease` | `.../wp-content/plugins/vvp-divi5-extensions-dev/`  |
+| `main`       | `.../wp-content/plugins/vvp-divi5-extensions-prod/` |
 
-Each workflow: checks out → installs pnpm deps → builds → mirrors to FTP (excluding `node_modules`, `src/`, dev configs). The `dev` workflow patches the plugin display name to append `(Beta)`.
+Each workflow: checks out → installs pnpm deps → builds → mirrors to the server via rsync (excluding `node_modules`, `src/`, dev configs). The `prerelease` workflow patches the plugin display name to append `(Beta)` and appends the commit SHA to the version number.
 
 ### Manual deployment
 
@@ -306,8 +407,8 @@ rsync -av \
   --exclude='.github' \
   --exclude='reference' \
   --exclude='vite.config.ts' \
-  --exclude='*.config.js' \
-  --exclude='gulpfile.js' \
+  --exclude='build.mjs' \
+  --exclude='zip.mjs' \
   ./ user@host:/path/to/wp-content/plugins/vvp-divi5-extensions/
 ```
 
@@ -331,6 +432,10 @@ Configured via `modules/ContentOverview/ContentOverviewTrait/RenderCallbackTrait
 ### Autorenprofil
 
 The module reads the author(s) for the current context (PublishPress Authors if available) and renders the UI via `scripts/author-profile-frontend.js`. The DIVI settings control the visible parts (avatar/bio/link), layout, avatar size, and font styles.
+
+### Trending Beiträge / Trending Liste
+
+Both modules read trending data from the WordPress database (populated by `modules/CronManager.php`). The DIVI settings expose a time-range selector (`range`). TrendingItems additionally has a thumbnail toggle.
 
 ---
 
@@ -394,7 +499,7 @@ Copy `src/components/fact-check-search/` to `src/components/your-module/`. Updat
 | `types.ts`     | Attribute interface                                    |
 | `constants.ts` | Default values                                         |
 | `edit.tsx`     | DIVI VB preview React component (static, no API calls) |
-| `frontend.tsx` | Webpack entry: mounts your React app                   |
+| `frontend.tsx` | Vite entry: mounts your React app                      |
 | `style.scss`   | Component CSS                                          |
 
 Available DIVI attribute components: `divi/text`, `divi/select`, `divi/toggle`, `divi/color-picker`.
@@ -405,9 +510,9 @@ Available DIVI attribute components: `divi/text`, `divi/select`, `divi/toggle`, 
 
 **`src/module-icons.ts`** — register the module icon.
 
-### Step 4 — Add a webpack bundle
+### Step 4 — Add a build entry
 
-In `webpack.config.js`, add a new config entry for your frontend bundle (following the `fact-check-frontend` pattern).
+In `build.mjs`, add a new Vite config entry for your frontend bundle (following the `fact-check-frontend` pattern).
 
 ### Step 5 — Enqueue in WordPress
 
@@ -419,7 +524,7 @@ In `preview/main.tsx`, import your standalone React component and add a `<Sectio
 
 ### Step 7 — Update CI/CD
 
-Update the `sed` patch in `.github/workflows/deploy-dev.yml` if needed.
+Update the `deploy-prerelease.yml` workflow if any new build artifacts need to be copied to the deploy directory.
 
 ---
 
@@ -452,7 +557,7 @@ Update the `sed` patch in `.github/workflows/deploy-dev.yml` if needed.
 - `curl` extension must be available: `php -r "echo extension_loaded('curl') ? 'ok' : 'missing';"`.
 - Clear the transient cache: visit `http://localhost:8787/?flush=1` in the browser, or run `php dev-preview.php --flush` from the CLI.
 
-**CI deployment FTP errors**
+**CI deployment errors**
 
-- Confirm all three secrets are set in GitHub repository settings.
-- Reduce `--parallel` in the `lftp` call if the host blocks multiple simultaneous connections.
+- Confirm all four SSH secrets (`SSH_DEPLOY_KEY`, `SSH_HOST_KEY`, `SSH_USER`, `SSH_HOST`) are set in GitHub repository settings.
+- Check the rsync output in the Actions log for permission or connectivity issues.

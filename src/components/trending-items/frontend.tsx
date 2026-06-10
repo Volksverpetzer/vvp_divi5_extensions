@@ -10,7 +10,7 @@ const initAll = () => {
   mounts.forEach((mount) => {
     mount.setAttribute("data-ti-initialized", "true");
 
-    let articles: ArticleCardProps[] = [];
+    let articles: ArticleCardProps[];
     try {
       articles = JSON.parse(mount.getAttribute("data-articles") || "[]");
     } catch {

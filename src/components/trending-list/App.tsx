@@ -5,6 +5,22 @@ interface TrendingListAppProps {
   items: TrendingListItem[];
 }
 
+const getSafeHref = (rawLink: string): string => {
+  const trimmed = rawLink.trim();
+  if (!trimmed) {
+    return "#";
+  }
+
+  try {
+    const parsed = new URL(trimmed);
+    return parsed.protocol === "http:" || parsed.protocol === "https:"
+      ? parsed.toString()
+      : "#";
+  } catch {
+    return "#";
+  }
+};
+
 export const TrendingListApp: React.FC<TrendingListAppProps> = ({ items }) => {
   if (!items.length) {
     return (
@@ -16,7 +32,7 @@ export const TrendingListApp: React.FC<TrendingListAppProps> = ({ items }) => {
       {items.map((item) => (
         <div key={item.link} className="vvp-tl__item">
           <a
-            href={item.link}
+            href={getSafeHref(item.link)}
             className="vvp-tl__title"
             target="_blank"
             rel="noopener noreferrer"
