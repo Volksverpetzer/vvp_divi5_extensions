@@ -109,6 +109,16 @@ await Promise.all([
     root: ".",
     define,
     plugins: [react(), moveCssPlugin],
+    resolve: {
+      // The automatic JSX runtime isn't covered by the `react` external and
+      // would bundle React 19's runtime, whose elements React 18 in the
+      // Visual Builder rejects (React error #31). The shim creates elements
+      // via the external vendor.React instead.
+      alias: {
+        "react/jsx-runtime": resolve("./src/jsx-runtime-shim.ts"),
+        "react/jsx-dev-runtime": resolve("./src/jsx-runtime-shim.ts"),
+      },
+    },
     css: {
       preprocessorOptions: {
         scss: { silenceDeprecations: ["legacy-js-api"] },
