@@ -65,6 +65,14 @@ const commonBuild = {
   watch: isWatch ? {} : undefined,
 };
 
+// Vite lib-mode builds keep `process.env.NODE_ENV` as-is, which throws
+// "process is not defined" in the browser — replace it statically.
+const define = {
+  "process.env.NODE_ENV": JSON.stringify(
+    isProduction ? "production" : "development",
+  ),
+};
+
 const frontends = [
   {
     name: "fact-check-frontend",
@@ -100,6 +108,7 @@ await Promise.all([
   build({
     configFile: false,
     root: ".",
+    define,
     plugins: [react(), moveCssPlugin],
     css: {
       preprocessorOptions: {
@@ -127,6 +136,7 @@ await Promise.all([
     build({
       configFile: false,
       root: ".",
+      define,
       plugins: [react()],
       build: {
         ...commonBuild,
