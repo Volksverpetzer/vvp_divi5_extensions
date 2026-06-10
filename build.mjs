@@ -96,11 +96,9 @@ const frontends = [
   },
 ];
 
-if (!isWatch) {
-  for (const dir of ["./scripts", "./styles"]) {
-    rmSync(dir, { recursive: true, force: true });
-    mkdirSync(dir, { recursive: true });
-  }
+for (const dir of ["./scripts", "./styles"]) {
+  if (!isWatch) rmSync(dir, { recursive: true, force: true });
+  mkdirSync(dir, { recursive: true });
 }
 
 await Promise.all([
