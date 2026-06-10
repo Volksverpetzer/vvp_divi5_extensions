@@ -7,6 +7,7 @@ import {
   cpSync,
   renameSync,
   existsSync,
+  watch,
 } from "fs";
 import { join, resolve } from "path";
 
@@ -151,3 +152,11 @@ await Promise.all([
 ]);
 
 copyModuleJsons();
+
+// The module JSONs aren't imported by any bundle, so Vite's watcher never
+// sees them — watch them ourselves to keep modules-json/ in sync.
+if (isWatch) {
+  watch("./src/components", { recursive: true }, (_event, filename) => {
+    if (filename?.endsWith(".json")) copyModuleJsons();
+  });
+}
