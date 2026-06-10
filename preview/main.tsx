@@ -502,7 +502,7 @@ const App = () => (
       <a
         href={REPO_URL}
         target="_blank"
-        rel="noreferrer"
+        rel="noopener noreferrer"
         style={{
           color: "#9ca3af",
           display: "flex",
