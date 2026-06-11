@@ -491,6 +491,7 @@ trait DataFetchTrait
             true
         );
         self::fetch_json('https://volksverpetzer-app.de/proxy/instaFeed', 'vvp_co_insta',   3600, true);
+        self::fetch_json('https://volksverpetzer-app.de/proxy/instaFeed?account=pruefpunkt', 'vvp_co_insta_pp', 3600, true);
         self::fetch_json('https://volksverpetzer-app.de/proxy/ytAPI',     'vvp_co_yt',      3600, true);
         self::fetch_raw('https://volksverpetzer.podigee.io/feed/mp3',     'vvp_co_podcast', 3600, true);
     }
