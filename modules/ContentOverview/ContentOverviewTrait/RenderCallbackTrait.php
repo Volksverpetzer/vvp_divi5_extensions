@@ -116,6 +116,26 @@ trait RenderCallbackTrait
         $insta_raw   = self::fetch_json('https://volksverpetzer-app.de/proxy/instaFeed', 'vvp_co_insta', 3600);
         $insta_posts = is_array($insta_raw['data'] ?? null) ? $insta_raw['data'] : [];
 
+        $insta_pp_raw   = self::fetch_json('https://volksverpetzer-app.de/proxy/instaFeed?account=pruefpunkt', 'vvp_co_insta_pp', 3600);
+        $insta_pp_posts = is_array($insta_pp_raw['data'] ?? null) ? $insta_pp_raw['data'] : [];
+
+        // Merge both accounts' Instagram posts. Dedupe by post ID: the proxy may
+        // serve the same posts for both accounts (e.g. while the Prüfpunkt token
+        // is misconfigured), which would otherwise duplicate every card.
+        $insta_posts = array_merge($insta_posts, $insta_pp_posts);
+        $seen_ig_ids = [];
+        $insta_posts = array_values(array_filter($insta_posts, function ($post) use (&$seen_ig_ids) {
+            $id = $post['id'] ?? null;
+            if ($id === null || isset($seen_ig_ids[$id])) {
+                return false;
+            }
+            $seen_ig_ids[$id] = true;
+            return true;
+        }));
+        usort($insta_posts, function ($a, $b) {
+            return strtotime($b['timestamp'] ?? 0) - strtotime($a['timestamp'] ?? 0);
+        });
+
         $yt_raw    = self::fetch_json('https://volksverpetzer-app.de/proxy/ytAPI', 'vvp_co_yt', 3600);
         $yt_videos = is_array($yt_raw['items'] ?? null) ? $yt_raw['items'] : [];
 
@@ -130,10 +150,16 @@ trait RenderCallbackTrait
         $seen_ids     = [];
         $all_articles = array_values(array_filter($all_articles, function ($post) use (&$seen_ids) {
             $id = $post['id'] ?? null;
-            if ($id === null || isset($seen_ids[$id])) {
+            if ($id === null) {
                 return false;
             }
-            $seen_ids[$id] = true;
+            // Key includes the source: post IDs are only unique per site, so a
+            // Prüfpunkt post must never be dropped for sharing an ID with a VVP post.
+            $key = ($post['_vvp_source'] ?? 'volksverpetzer') . ':' . $id;
+            if (isset($seen_ids[$key])) {
+                return false;
+            }
+            $seen_ids[$key] = true;
             return true;
         }));
         usort($all_articles, function ($a, $b) {
