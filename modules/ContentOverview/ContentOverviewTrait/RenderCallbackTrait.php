@@ -133,7 +133,7 @@ trait RenderCallbackTrait
             return true;
         }));
         usort($insta_posts, function ($a, $b) {
-            return strtotime($b['timestamp'] ?? 0) - strtotime($a['timestamp'] ?? 0);
+            return (int) strtotime($b['timestamp'] ?? '') - (int) strtotime($a['timestamp'] ?? '');
         });
 
         $yt_raw    = self::fetch_json('https://volksverpetzer-app.de/proxy/ytAPI', 'vvp_co_yt', 3600);
@@ -163,7 +163,7 @@ trait RenderCallbackTrait
             return true;
         }));
         usort($all_articles, function ($a, $b) {
-            return strtotime($b['date'] ?? 0) - strtotime($a['date'] ?? 0);
+            return (int) strtotime($b['date'] ?? '') - (int) strtotime($a['date'] ?? '');
         });
         $remaining = array_slice($all_articles, 1); // hero post excluded
 
