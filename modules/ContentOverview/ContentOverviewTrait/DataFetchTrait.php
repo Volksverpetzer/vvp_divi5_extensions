@@ -460,6 +460,105 @@ trait DataFetchTrait
     }
 
     /**
+     * Fetch Volksverpetzer articles from the WP REST API.
+     *
+     * Single source of truth for the endpoint, transient key and page count —
+     * used by both the render path and the WP-Cron cache warmer.
+     *
+     * @param bool $force Bypass the transient and refresh it.
+     *
+     * @return array WP post arrays.
+     */
+    private static function fetch_volksverpetzer_articles(bool $force = false): array
+    {
+        return self::fetch_wp_posts(
+            'https://volksverpetzer.de/wp-json/wp/v2/posts?per_page=12&_embed=1',
+            'vvp_co_vp_posts',
+            2,
+            'volksverpetzer',
+            $force
+        );
+    }
+
+    /**
+     * Fetch Prüfpunkt articles (with featured media hydrated) from the WP REST API.
+     *
+     * @param bool $force Bypass the transients and refresh them.
+     *
+     * @return array WP post arrays.
+     */
+    private static function fetch_pruefpunkt_articles(bool $force = false): array
+    {
+        $posts = self::fetch_wp_posts(
+            'https://pruefpunkt.org/wp-json/wp/v2/posts?per_page=10',
+            'vvp_co_pp_posts',
+            1,
+            'pruefpunkt',
+            $force
+        );
+        return self::hydrate_posts_with_media(
+            $posts,
+            'https://pruefpunkt.org/wp-json/wp/v2/media',
+            'vvp_co_pp',
+            $force
+        );
+    }
+
+    /**
+     * Fetch an Instagram feed from the proxy.
+     *
+     * @param string $account Instagram account ('volksverpetzer' or 'pruefpunkt').
+     * @param bool   $force   Bypass the transient and refresh it.
+     *
+     * @return array Instagram post arrays.
+     */
+    private static function fetch_insta_feed(string $account = 'volksverpetzer', bool $force = false): array
+    {
+        $url = 'https://volksverpetzer-app.de/proxy/instaFeed';
+        $key = 'vvp_co_insta';
+        if ('pruefpunkt' === $account) {
+            $url .= '?account=pruefpunkt';
+            $key .= '_pp';
+        }
+        $raw   = self::fetch_json($url, $key, 3600, $force);
+        $posts = is_array($raw['data'] ?? null) ? $raw['data'] : [];
+
+        // Tag each post with its account: the proxy payload carries no account
+        // info, and the card renderer needs it for account-specific fallbacks.
+        foreach ($posts as &$post) {
+            $post['_vvp_ig_account'] = $account;
+        }
+        unset($post);
+
+        return $posts;
+    }
+
+    /**
+     * Fetch the YouTube feed from the proxy.
+     *
+     * @param bool $force Bypass the transient and refresh it.
+     *
+     * @return array Normalised video arrays.
+     */
+    private static function fetch_yt_feed(bool $force = false): array
+    {
+        $raw = self::fetch_json('https://volksverpetzer-app.de/proxy/ytAPI', 'vvp_co_yt', 3600, $force);
+        return is_array($raw['items'] ?? null) ? $raw['items'] : [];
+    }
+
+    /**
+     * Fetch the podcast RSS feed.
+     *
+     * @param bool $force Bypass the transient and refresh it.
+     *
+     * @return string|null Raw feed XML or null on failure.
+     */
+    private static function fetch_podcast_xml(bool $force = false)
+    {
+        return self::fetch_raw('https://volksverpetzer.podigee.io/feed/mp3', 'vvp_co_podcast', 3600, $force);
+    }
+
+    /**
      * Force-refresh all external API transients used by ContentOverview.
      *
      * Fetches fresh data regardless of whether a valid transient already exists,
@@ -470,29 +569,11 @@ trait DataFetchTrait
      */
     public static function warm_caches(): void
     {
-        self::fetch_wp_posts(
-            'https://volksverpetzer.de/wp-json/wp/v2/posts?per_page=12&_embed=1',
-            'vvp_co_vp_posts',
-            2,
-            'volksverpetzer',
-            true
-        );
-        $pp_posts = self::fetch_wp_posts(
-            'https://pruefpunkt.org/wp-json/wp/v2/posts?per_page=10',
-            'vvp_co_pp_posts',
-            1,
-            'pruefpunkt',
-            true
-        );
-        self::hydrate_posts_with_media(
-            $pp_posts,
-            'https://pruefpunkt.org/wp-json/wp/v2/media',
-            'vvp_co_pp',
-            true
-        );
-        self::fetch_json('https://volksverpetzer-app.de/proxy/instaFeed', 'vvp_co_insta',   3600, true);
-        self::fetch_json('https://volksverpetzer-app.de/proxy/instaFeed?account=pruefpunkt', 'vvp_co_insta_pp', 3600, true);
-        self::fetch_json('https://volksverpetzer-app.de/proxy/ytAPI',     'vvp_co_yt',      3600, true);
-        self::fetch_raw('https://volksverpetzer.podigee.io/feed/mp3',     'vvp_co_podcast', 3600, true);
+        self::fetch_volksverpetzer_articles(true);
+        self::fetch_pruefpunkt_articles(true);
+        self::fetch_insta_feed('volksverpetzer', true);
+        self::fetch_insta_feed('pruefpunkt', true);
+        self::fetch_yt_feed(true);
+        self::fetch_podcast_xml(true);
     }
 }
