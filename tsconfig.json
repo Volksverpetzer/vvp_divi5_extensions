@@ -8,17 +8,16 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "allowArbitraryExtensions": true,
-    "types": ["vitest/globals", "react"],
+    "types": ["vitest/globals", "react", "vite/client"],
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
     "resolveJsonModule": true,
     "strict": false,
     "noImplicitAny": false,
     "outDir": "./dist",
-    "rootDir": "./src",
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "preview/**/*", "*.ts"],
   "exclude": ["node_modules", "dist", "scripts"]
 }
