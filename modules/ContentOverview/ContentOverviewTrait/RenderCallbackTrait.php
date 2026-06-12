@@ -119,6 +119,13 @@ trait RenderCallbackTrait
         $insta_pp_raw   = self::fetch_json('https://volksverpetzer-app.de/proxy/instaFeed?account=pruefpunkt', 'vvp_co_insta_pp', 3600);
         $insta_pp_posts = is_array($insta_pp_raw['data'] ?? null) ? $insta_pp_raw['data'] : [];
 
+        // Tag each post with its account: the proxy payload carries no account
+        // info, and the card renderer needs it for account-specific fallbacks.
+        foreach ($insta_pp_posts as &$pp_ig_post) {
+            $pp_ig_post['_vvp_ig_account'] = 'pruefpunkt';
+        }
+        unset($pp_ig_post);
+
         // Merge both accounts' Instagram posts. Dedupe by post ID: the proxy may
         // serve the same posts for both accounts (e.g. while the Prüfpunkt token
         // is misconfigured), which would otherwise duplicate every card.

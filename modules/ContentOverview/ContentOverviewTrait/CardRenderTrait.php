@@ -101,7 +101,11 @@ trait CardRenderTrait
     private static function render_insta_card($post)
     {
         $media_type = $post['media_type'] ?? '';
-        $permalink  = esc_url($post['permalink'] ?? 'https://www.instagram.com/volksverpetzer/');
+        // Fall back to the originating account's profile when a post has no
+        // permalink — both feeds share this renderer since the Prüfpunkt feed
+        // was added.
+        $account    = 'pruefpunkt' === ($post['_vvp_ig_account'] ?? '') ? 'pruefpunkt' : 'volksverpetzer';
+        $permalink  = esc_url($post['permalink'] ?? 'https://www.instagram.com/' . $account . '/');
         $caption    = $post['caption'] ?? '';
         $date       = esc_html(self::format_date($post['timestamp'] ?? ''));
 
