@@ -143,8 +143,10 @@ trait CardRenderTrait
         $media_category = 'VIDEO' === $media_type ? 'Video' : ($is_carousel ? 'Karussell' : 'Foto');
 
         // Extract the shortcode from e.g. https://www.instagram.com/p/ABC123/
+        // or https://www.instagram.com/reel/ABC123/ — Reels and IGTV posts use
+        // their own path segment instead of /p/.
         $post_id = '';
-        if (preg_match('#/p/([^/?\\#]+)#', $permalink, $m)) {
+        if (preg_match('#/(?:p|reel|tv)/([^/?\\#]+)#', $permalink, $m)) {
             $post_id = $m[1];
         }
 
