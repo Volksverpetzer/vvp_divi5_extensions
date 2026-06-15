@@ -22,8 +22,8 @@ importers:
         specifier: ^1.0.8
         version: 1.0.8(codemirror@5.65.21)(moment@2.30.1)
       '@divi/module-library':
-        specifier: ^1.0.8
-        version: 1.0.8(codemirror@5.65.21)(moment@2.30.1)
+        specifier: ^1.0.9
+        version: 1.0.9(codemirror@5.65.21)(moment@2.30.1)
       '@divi/types':
         specifier: ^1.0.7
         version: 1.0.7
@@ -441,6 +441,9 @@ packages:
   '@divi/conversion@1.0.2':
     resolution: {integrity: sha512-0LxCSAu6hqX5O4ERD+Wz+Cv+DKlZuBurQhr6P8fcsXCBdDND1BJSbtV/Wu0fzA/Xs5ndRTRCRpYUHfvHr0Y/uA==}
 
+  '@divi/conversion@1.0.3':
+    resolution: {integrity: sha512-Nt10QLp0ArvaVQV/v+V2z5uUHQSe5tSmBEnQVEx84vTsPwOpvhtoYST9fWhCdrxZNkm+iS9jD8mUyaNFAg3SVg==}
+
   '@divi/data@1.0.1':
     resolution: {integrity: sha512-S4SkP+kdzfmeV7UwUui5H8I+V3nM5jSUHwzGU61aR2sn/zdiz5XMWFlZNfHOLeoN8czyg5Rr1zV7A6T7dVYUKA==}
 
@@ -449,6 +452,9 @@ packages:
 
   '@divi/field-library@1.0.7':
     resolution: {integrity: sha512-bUgqMeUfTDtCc2eZpcaW63/0nFbMdZAaOeM32mp+l8HxxGUWg/atKyz4F3X8RjuUkgR+XBxIcmgN8kdm/RS4XQ==}
+
+  '@divi/field-library@1.0.8':
+    resolution: {integrity: sha512-sYT5LgJKP5ORtvia7W4RbcvNOlJNeHU3wjIj3Mzy0SeLfGCE5SZd6wPbX0xyUVpS3B0YseEe7aJpJ6tkrH4jlA==}
 
   '@divi/hooks@1.0.1':
     resolution: {integrity: sha512-Zy04D4ZTd/SVNKFVXQ4BEOQ90/80f49XgGnQbsUVwW8faBAuimyf5WVTiLitqQF5IG40bLxUUkLCBOBntraGnA==}
@@ -459,32 +465,50 @@ packages:
   '@divi/modal@1.0.3':
     resolution: {integrity: sha512-LFSXxOWh6S7nE1+tHQXGS8hjUnS6nz2ZpZeEMHQ0KQTtkT1mRnU4ntA1V20ZwU2ItEukjeSLHM9VJVkGeXhLUg==}
 
-  '@divi/module-library@1.0.8':
-    resolution: {integrity: sha512-ClaQSjbU21a/Oah5s3m/JvfLobYKG3uLc9M3konHMlYuQK2U5GL5gX9DN4n/oYK/bg3PlBxlqjrSA2uGPwWmRg==}
+  '@divi/modal@1.0.4':
+    resolution: {integrity: sha512-qLI+RiZHbnX2brzhPdhVPUErG63qrd4F8w9t3FpEbu86XSn0ux4rSusd7YRmKDRXFdlvQMx9enn15QTuDKffOA==}
+
+  '@divi/module-library@1.0.9':
+    resolution: {integrity: sha512-TEr+w3C3sCd1+YWbDuCtw9IQpi2SKbOTFYp2/2SmbMydI86C2no31xDA4tqlL71YaquKvIF8ya0s/FwmOTj7Iw==}
 
   '@divi/module-utils@1.0.8':
     resolution: {integrity: sha512-33kG5YN6BodDAor1t7rJSNEA88gmZFIMp9Ea6DMqHpzYHtqa2D9I90kluvIZWvYKgVQ89iqI4GludXPEk4MTQw==}
 
+  '@divi/module-utils@1.0.9':
+    resolution: {integrity: sha512-476hqfMVO+RXCakHss4MrKiIUgq+yjJEAEnefFHBiIlcYks0WhDU62HuRFG7eTtdRp2bX5Gv9CaLUZ9Zlkr7qQ==}
+
   '@divi/module@1.0.8':
     resolution: {integrity: sha512-G3uMy+99ebCeBd9OBtR+woVEcjdvHH2wwxPeb8tu95XROlrqATIzUXNYMms7LdVHYkXm5EwCLvQPFRPSikNxwg==}
+
+  '@divi/module@1.0.9':
+    resolution: {integrity: sha512-9bqJ/NVBdghUqie1Y0SWSrLogIbPx7c5lDONIDdpPNmZ/aGZaSSmxhYMzEahVkhk8I7MByQfcOPAETFuwzDUjg==}
 
   '@divi/right-click-options@1.0.6':
     resolution: {integrity: sha512-FcSnGfkTENndMNuM9Y0pPAHFINMX3W+To6/ScwZtVkaICXLhvGsYdPYl5YglSLz45IEgj8rmEf128C3ntUIRcg==}
 
+  '@divi/right-click-options@1.0.7':
+    resolution: {integrity: sha512-lI5jJP/RI/ORywAYX8BXmc2qyWfAVf8zRL7/pOLOuz+kxJ88btQIEO3h3r/Ef6ARPNtZSUkeDUg5/bH/gOKolQ==}
+
   '@divi/script-library@1.0.7':
     resolution: {integrity: sha512-KfxlM/8LR+Vznkl6b7uPdtAt8hy+xpFmXnNFTQDJ7tp0/A/8vScE8BhGowvFi+2Do6cvYp5u09tKBfqtNfCyDA==}
+
+  '@divi/script-library@1.0.8':
+    resolution: {integrity: sha512-t2Y+c3aAD7VjhIUYf9LYsp5M3kgIMzbLmpN/qBc0qzHld5cehDI85aHv3bEV8JVNVn0JXm7JfxjHp/GaZ9ifWg==}
 
   '@divi/style-library@1.0.6':
     resolution: {integrity: sha512-m0AxbKyS27no2njhOJu2ZPMiR+TmWfg2R6iYaFXgZT1yVZUzPw0SDsb32+G80d9CHVCQhRmjcyLblFz9s1kw5g==}
 
+  '@divi/style-library@1.0.7':
+    resolution: {integrity: sha512-9Qo01j0rhyGvrYq6xZNJIiiWzUs605xA888RT4/T+s7cbYx+MYaWS7pVr/XzBHQ2PhnR4apaeTBcXnyYjHwNwg==}
+
   '@divi/types-external@1.0.1':
     resolution: {integrity: sha512-HGT31EWhcdJDTjHjc1QdD2ypzVlonHVZaGl6+6cH/jtO5bkXMIUajjsp3t4iOmAe2Vq+BRWHu0jfNq+TS1Caaw==}
 
-  '@divi/types@1.0.6':
-    resolution: {integrity: sha512-WAYWa5utTjOSUBNurisxJtD4eMxzvro6GTV4+qg2oSNtLOQWNmC4yLX9q2CVccn7SPsr7gq6i4NAvLRSVEVX1A==}
-
   '@divi/types@1.0.7':
     resolution: {integrity: sha512-aJTJL+PSb5MblxqYl2HxUuQvOQKxFP7+W04BgXlz0P6OEviL0y/SZ6p0sKtmXkcTDOcl/aY6w0q0e4xrt3oPRQ==}
+
+  '@divi/types@1.0.8':
+    resolution: {integrity: sha512-+gTe7X5+3dr8sfexb0rXWIRsG8veFSuwjVbHg4mJba7DleczHPCxzGAJlRPPEKj4QLfRGEiilcVATZwrcY8sqw==}
 
   '@emnapi/core@1.10.0':
     resolution: {integrity: sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw==}
@@ -866,8 +890,8 @@ packages:
   '@types/react-outside-click-handler@1.3.4':
     resolution: {integrity: sha512-kLuYIa9nWk1n0ywJPbVWqOEIRg0mh3vumriCHbz6LUObJw4rXYx9inDm8G579BtnH8vC0wKfrTq5c2y/K/Xzww==}
 
-  '@types/react@18.3.30':
-    resolution: {integrity: sha512-3ek6mwJL5/VBewBcY4S66cqlCtK3qi4WIq37Z0m/NHw1hjhI7274Mx1qz/+ggSzyBCOEf7eHjBN6INjPAWYfYw==}
+  '@types/react@18.3.31':
+    resolution: {integrity: sha512-vfEqpXTvwT91yhmwdfouStN2hSKwTvyRs8qpLfADyrq/kxDw0hZM7Wk9Ug1FELj8hIby+S/+kQCSRFF32nv2Qw==}
 
   '@types/react@19.2.16':
     resolution: {integrity: sha512-esJiCAnl0kfpNdE69f3So4WJUXy95dLZydX0KwK46riIHDzHM7O9Vtf9xCHW0PXIqvgqNrswl522kA/5yx+F4w==}
@@ -1116,6 +1140,11 @@ packages:
 
   acorn@8.16.0:
     resolution: {integrity: sha512-UVJyE9MttOsBQIDKw1skb9nAwQuR5wuGD3+82K6JgJlm/Y+KI92oNsMNGZCYdDsVtRHSak0pcV5Dno5+4jh9sw==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
+
+  acorn@8.17.0:
+    resolution: {integrity: sha512-xRQbDb9BnwDafYNn6Vwl839DYVjqXYb1XVGtWAZ1kcDc6iwAL4hg3B1dZlRiuENFeO2H53gFG3in621AdERVAg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -3190,19 +3219,26 @@ snapshots:
 
   '@divi/context-library@1.0.2':
     dependencies:
-      '@divi/types': 1.0.6
+      '@divi/types': 1.0.7
       react: 18.2.0
 
   '@divi/conversion@1.0.2(react@18.2.0)':
     dependencies:
-      '@divi/types': 1.0.6
+      '@divi/types': 1.0.7
+      '@wordpress/blocks': 12.19.13(react@18.2.0)
+    transitivePeerDependencies:
+      - react
+
+  '@divi/conversion@1.0.3(react@18.2.0)':
+    dependencies:
+      '@divi/types': 1.0.8
       '@wordpress/blocks': 12.19.13(react@18.2.0)
     transitivePeerDependencies:
       - react
 
   '@divi/data@1.0.1':
     dependencies:
-      '@divi/types': 1.0.6
+      '@divi/types': 1.0.8
       '@wordpress/data': 9.20.0(react@18.2.0)
       react: 18.2.0
 
@@ -3229,29 +3265,56 @@ snapshots:
       - codemirror
       - moment
 
+  '@divi/field-library@1.0.8(codemirror@5.65.21)(moment@2.30.1)':
+    dependencies:
+      '@divi/draggable': 1.0.1
+      '@divi/icon-library': 1.0.1
+      '@divi/script-library': 1.0.8
+      '@divi/style-library': 1.0.7
+      '@divi/types': 1.0.8
+      '@divi/types-external': 1.0.1
+      '@types/codemirror': 5.60.17
+      '@types/css-tree': 2.3.11
+      '@types/react-dates': 21.8.8(moment@2.30.1)
+      '@types/seamless-immutable': 7.1.19
+      codemirror-colorpicker: 1.9.80(codemirror@5.65.21)
+      react: 18.2.0
+      tinymce: 5.10.9
+    transitivePeerDependencies:
+      - codemirror
+      - moment
+
   '@divi/hooks@1.0.1':
     dependencies:
       react: 18.2.0
 
   '@divi/icon-library@1.0.1':
     dependencies:
-      '@divi/types': 1.0.6
+      '@divi/types': 1.0.8
       react: 18.2.0
 
   '@divi/modal@1.0.3':
     dependencies:
       '@divi/draggable': 1.0.1
       '@divi/hooks': 1.0.1
-      '@divi/types': 1.0.6
+      '@divi/types': 1.0.7
       '@types/seamless-immutable': 7.1.19
       react: 18.2.0
 
-  '@divi/module-library@1.0.8(codemirror@5.65.21)(moment@2.30.1)':
+  '@divi/modal@1.0.4':
     dependencies:
-      '@divi/module': 1.0.8(codemirror@5.65.21)(moment@2.30.1)
-      '@divi/module-utils': 1.0.8
-      '@divi/style-library': 1.0.6(codemirror@5.65.21)(moment@2.30.1)
-      '@divi/types': 1.0.7
+      '@divi/draggable': 1.0.1
+      '@divi/hooks': 1.0.1
+      '@divi/types': 1.0.8
+      '@types/seamless-immutable': 7.1.19
+      react: 18.2.0
+
+  '@divi/module-library@1.0.9(codemirror@5.65.21)(moment@2.30.1)':
+    dependencies:
+      '@divi/module': 1.0.9(codemirror@5.65.21)(moment@2.30.1)
+      '@divi/module-utils': 1.0.9
+      '@divi/style-library': 1.0.7(codemirror@5.65.21)(moment@2.30.1)
+      '@divi/types': 1.0.8
       '@divi/types-external': 1.0.1
       '@types/seamless-immutable': 7.1.19
       '@wordpress/blocks': 12.19.13(react@18.2.0)
@@ -3265,6 +3328,14 @@ snapshots:
     dependencies:
       '@divi/data': 1.0.1
       '@divi/types': 1.0.7
+      '@divi/types-external': 1.0.1
+      '@types/seamless-immutable': 7.1.19
+      react: 18.2.0
+
+  '@divi/module-utils@1.0.9':
+    dependencies:
+      '@divi/data': 1.0.1
+      '@divi/types': 1.0.8
       '@divi/types-external': 1.0.1
       '@types/seamless-immutable': 7.1.19
       react: 18.2.0
@@ -3302,6 +3373,39 @@ snapshots:
       - codemirror
       - moment
 
+  '@divi/module@1.0.9':
+    dependencies:
+      '@divi/context-library': 1.0.2
+      '@divi/conversion': 1.0.3(react@18.2.0)
+      '@divi/field-library': 1.0.8(codemirror@5.65.21)(moment@2.30.1)
+      '@divi/modal': 1.0.4
+      '@divi/module-utils': 1.0.9
+      '@divi/right-click-options': 1.0.7
+      '@divi/script-library': 1.0.8
+      '@divi/style-library': 1.0.7
+      '@divi/types': 1.0.8
+      '@divi/types-external': 1.0.1
+      '@types/seamless-immutable': 7.1.19
+      react: 18.2.0
+
+  '@divi/module@1.0.9(codemirror@5.65.21)(moment@2.30.1)':
+    dependencies:
+      '@divi/context-library': 1.0.2
+      '@divi/conversion': 1.0.3(react@18.2.0)
+      '@divi/field-library': 1.0.8(codemirror@5.65.21)(moment@2.30.1)
+      '@divi/modal': 1.0.4
+      '@divi/module-utils': 1.0.9
+      '@divi/right-click-options': 1.0.7
+      '@divi/script-library': 1.0.8
+      '@divi/style-library': 1.0.7(codemirror@5.65.21)(moment@2.30.1)
+      '@divi/types': 1.0.8
+      '@divi/types-external': 1.0.1
+      '@types/seamless-immutable': 7.1.19
+      react: 18.2.0
+    transitivePeerDependencies:
+      - codemirror
+      - moment
+
   '@divi/right-click-options@1.0.6':
     dependencies:
       '@divi/module-utils': 1.0.8
@@ -3309,9 +3413,21 @@ snapshots:
       '@types/seamless-immutable': 7.1.19
       react: 18.2.0
 
+  '@divi/right-click-options@1.0.7':
+    dependencies:
+      '@divi/module-utils': 1.0.9
+      '@divi/types': 1.0.8
+      '@types/seamless-immutable': 7.1.19
+      react: 18.2.0
+
   '@divi/script-library@1.0.7':
     dependencies:
       '@divi/types': 1.0.7
+      react: 18.2.0
+
+  '@divi/script-library@1.0.8':
+    dependencies:
+      '@divi/types': 1.0.8
       react: 18.2.0
 
   '@divi/style-library@1.0.6':
@@ -3327,15 +3443,28 @@ snapshots:
       - codemirror
       - moment
 
+  '@divi/style-library@1.0.7':
+    dependencies:
+      '@divi/module': 1.0.9
+      '@divi/types': 1.0.8
+
+  '@divi/style-library@1.0.7(codemirror@5.65.21)(moment@2.30.1)':
+    dependencies:
+      '@divi/module': 1.0.9(codemirror@5.65.21)(moment@2.30.1)
+      '@divi/types': 1.0.8
+    transitivePeerDependencies:
+      - codemirror
+      - moment
+
   '@divi/types-external@1.0.1': {}
 
-  '@divi/types@1.0.6':
+  '@divi/types@1.0.7':
     dependencies:
       '@wordpress/blocks': 12.19.13(react@18.2.0)
       react: 18.2.0
       seamless-immutable: 7.1.4
 
-  '@divi/types@1.0.7':
+  '@divi/types@1.0.8':
     dependencies:
       '@wordpress/blocks': 12.19.13(react@18.2.0)
       react: 18.2.0
@@ -3635,9 +3764,9 @@ snapshots:
       '@types/react-outside-click-handler': 1.3.4
       moment: 2.30.1
 
-  '@types/react-dom@18.3.7(@types/react@18.3.30)':
+  '@types/react-dom@18.3.7(@types/react@18.3.31)':
     dependencies:
-      '@types/react': 18.3.30
+      '@types/react': 18.3.31
 
   '@types/react-dom@19.2.3(@types/react@19.2.17)':
     dependencies:
@@ -3647,7 +3776,7 @@ snapshots:
     dependencies:
       '@types/react': 19.2.16
 
-  '@types/react@18.3.30':
+  '@types/react@18.3.31':
     dependencies:
       '@types/prop-types': 15.7.15
       csstype: 3.2.3
@@ -3934,8 +4063,8 @@ snapshots:
   '@wordpress/element@5.35.0':
     dependencies:
       '@babel/runtime': 7.29.7
-      '@types/react': 18.3.30
-      '@types/react-dom': 18.3.7(@types/react@18.3.30)
+      '@types/react': 18.3.31
+      '@types/react-dom': 18.3.7(@types/react@18.3.31)
       '@wordpress/escape-html': 2.58.0
       change-case: 4.1.2
       is-plain-object: 5.0.0
@@ -4022,6 +4151,9 @@ snapshots:
       acorn: 8.16.0
 
   acorn@8.16.0: {}
+
+  acorn@8.17.0:
+    optional: true
 
   ajv@6.15.0:
     dependencies:
@@ -5696,7 +5828,7 @@ snapshots:
   terser@5.48.0:
     dependencies:
       '@jridgewell/source-map': 0.3.11
-      acorn: 8.16.0
+      acorn: 8.17.0
       commander: 2.20.3
       source-map-support: 0.5.21
     optional: true

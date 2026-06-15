@@ -33,7 +33,7 @@
   "devDependencies": {
     "@cspell/dict-de-de": "^4.1.2",
     "@divi/module": "^1.0.8",
-    "@divi/module-library": "^1.0.8",
+    "@divi/module-library": "^1.0.9",
     "@divi/types": "^1.0.7",
     "@eslint/js": "^10.0.1",
     "@testing-library/react": "^16.3.2",
