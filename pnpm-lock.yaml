@@ -54,11 +54,11 @@ importers:
         specifier: ^4.1.9
         version: 4.1.9(vitest@4.1.9)
       "@wordpress/hooks":
-        specifier: ^4.48.0
-        version: 4.48.0
+        specifier: ^4.48.1
+        version: 4.48.1
       "@wordpress/i18n":
-        specifier: ^6.21.0
-        version: 6.21.0
+        specifier: ^6.21.1
+        version: 6.21.1
       autoprefixer:
         specifier: ^10.5.0
         version: 10.5.0(postcss@8.5.15)
@@ -84,14 +84,14 @@ importers:
         specifier: ^17.6.0
         version: 17.6.0
       happy-dom:
-        specifier: ^20.10.4
-        version: 20.10.4
+        specifier: ^20.10.6
+        version: 20.10.6
       husky:
         specifier: ^9.1.7
         version: 9.1.7
       lint-staged:
-        specifier: ^17.0.7
-        version: 17.0.7
+        specifier: ^17.0.8
+        version: 17.0.8
       lodash:
         specifier: ^4.18.1
         version: 4.18.1
@@ -118,7 +118,7 @@ importers:
         version: 8.0.16(@types/node@25.9.3)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
       vitest:
         specifier: ^4.1.9
-        version: 4.1.9(@types/node@25.9.3)(@vitest/coverage-v8@4.1.9)(happy-dom@20.10.4)(vite@8.0.16(@types/node@25.9.3)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
+        version: 4.1.9(@types/node@25.9.3)(@vitest/coverage-v8@4.1.9)(happy-dom@20.10.6)(vite@8.0.16(@types/node@25.9.3)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
 
 packages:
   "@babel/code-frame@7.29.7":
@@ -1717,10 +1717,10 @@ packages:
       }
     engines: { node: ">=12" }
 
-  "@wordpress/hooks@4.48.0":
+  "@wordpress/hooks@4.48.1":
     resolution:
       {
-        integrity: sha512-rU1yGEy0Mb+2oRG5QX/bKIIwKQmYAvATfUQeXIF20/mbR0qutYeVTCIvWEyb4pf71tvnQFiN18RWRXWsvKrDbQ==,
+        integrity: sha512-QZh3Cv9TMJkrCQikuZSsDKTgX+6BBzYJe0MFKp7yP8drj/dtRpkqo5+eYmovBq3pk+HoyP7UJ1vTOb3GPJeU6Q==,
       }
     engines: { node: ">=18.12.0", npm: ">=8.19.2" }
 
@@ -1739,10 +1739,10 @@ packages:
     engines: { node: ">=12" }
     hasBin: true
 
-  "@wordpress/i18n@6.21.0":
+  "@wordpress/i18n@6.21.1":
     resolution:
       {
-        integrity: sha512-IXGGUJqN6b7QddU0dZB3HLJKu6uDQuhLsrrzYpUYTjDhfa43XEaikA9xHNgZhqzRtOVYqsNHVliWcISvJ/xjZQ==,
+        integrity: sha512-qBbDJTRCtMfEzTVtzOa/fZf8XlU/JY3nI4MSdxyRQKduFanbXvzTRqJSSEIpZS4ACJTyUqafZX8zEZIH5CrNHQ==,
       }
     engines: { node: ">=18.12.0", npm: ">=8.19.2" }
     hasBin: true
@@ -1994,10 +1994,10 @@ packages:
       }
     engines: { node: 18 || 20 || >=22 }
 
-  baseline-browser-mapping@2.10.33:
+  baseline-browser-mapping@2.10.38:
     resolution:
       {
-        integrity: sha512-bA6+tcSLpz2tIEdDXZPpPTIuxBcC4+w6SieaYyfigIa4h8GlFxbA17v22Vx3JUtuZQj9SgOsnbK+aTBzyDyEuw==,
+        integrity: sha512-31/02mVB4yuQU6adKk5SlY6m+mxDwUq5KZkyYgnLrrKl7TEm1+3PyDtDBz2kOv/wxZz41GHsvV1A/u6RmiyBvw==,
       }
     engines: { node: ">=6.0.0" }
     hasBin: true
@@ -2074,6 +2074,12 @@ packages:
     resolution:
       {
         integrity: sha512-iwSsYWaCOoh26cV8NwNRViHlrfUvYsHDfRVcbtmw0Kg6PJIZZXwMkj1442FYLBGkeUf1juAsU3DTfxW579mrPA==,
+      }
+
+  caniuse-lite@1.0.30001799:
+    resolution:
+      {
+        integrity: sha512-hG1bReV+OUU+MOqK4t/ZWI0tZOyz3rqS9XuhOUz1cIcbwBKjOyJEJuw9ER5JuNyqxNk8u/JUVbGibBOL1yrjFw==,
       }
 
   capital-case@1.0.4:
@@ -2412,10 +2418,10 @@ packages:
       }
     engines: { node: ">= 0.4" }
 
-  electron-to-chromium@1.5.366:
+  electron-to-chromium@1.5.375:
     resolution:
       {
-        integrity: sha512-OlRuhb688YTCzzU3gXPLn6nGyd+F+53INE1qaKKlu6kETErE8FYsyDh0XqXEU+uBRn0MpCzz2vfNwORhkap8qg==,
+        integrity: sha512-ZWP5eB4BVPW/ZYo9252hQZHZ5XavtsTgpbhcmMmRwymavC5AsLWQWBPaKMeNd2LW0KGby5HPXvj7+sr4ta5j/Q==,
       }
 
   emoji-regex@10.6.0:
@@ -2899,10 +2905,10 @@ packages:
       }
     engines: { node: ">= 0.4" }
 
-  happy-dom@20.10.4:
+  happy-dom@20.10.6:
     resolution:
       {
-        integrity: sha512-bKrsQnFNpcjZG0UPsH7UMN7Oyp3AB42LXk2GuiQmu7l4QFxH7lsw5T1eWEtE2+vbIFrTC45sbNSB2pkB8MTfKA==,
+        integrity: sha512-6QD0ilzDDt93tX44y8tbmZdAcdTRYDhUP+Asgi6pC8Pp5IA3cvaZGyoVN/EGtlq9ziT65iPuBBn3ASLr6hCgVw==,
       }
     engines: { node: ">=20.0.0" }
 
@@ -3471,10 +3477,10 @@ packages:
       }
     engines: { node: ">= 12.0.0" }
 
-  lint-staged@17.0.7:
+  lint-staged@17.0.8:
     resolution:
       {
-        integrity: sha512-JrSobt+tW3rH8IOMi8tDZd3foorM5yPEkLD/V2NxobgHrFfHWGee4MOLVuZeScgxftEwbHrPHIFA/ZL+nUJeuA==,
+        integrity: sha512-B2P/d+jVW0UXOQ0MVMLrB/9ydA1P+zz6jYfdrbbEd9ur3S2rcbduFWKiUCC02Sm5hbC8nrm7y24WuYMG54HfxA==,
       }
     engines: { node: ">=22.22.1" }
     hasBin: true
@@ -3648,10 +3654,10 @@ packages:
       }
     engines: { node: ">= 0.4" }
 
-  node-releases@2.0.47:
+  node-releases@2.0.48:
     resolution:
       {
-        integrity: sha512-Uzmd6LXpouKo8EUK68IjH4+E01w/hXyV3R3g/geCJo+rXLNfh1xucB+LOzYEOQPSiUK3h/xZf0cQGcSsmyL2Og==,
+        integrity: sha512-1uz8041X6LoI6ZSdZacM9lVY28vuzDlSKitnpbSNK0RfKoIJkX29NBPVEFXhnuSuEOA9Ww0xnPJ+ILWbGAv8DA==,
       }
     engines: { node: ">=18" }
 
@@ -5741,7 +5747,7 @@ snapshots:
       obug: 2.1.3
       std-env: 4.1.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.9(@types/node@25.9.3)(@vitest/coverage-v8@4.1.9)(happy-dom@20.10.4)(vite@8.0.16(@types/node@25.9.3)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
+      vitest: 4.1.9(@types/node@25.9.3)(@vitest/coverage-v8@4.1.9)(happy-dom@20.10.6)(vite@8.0.16(@types/node@25.9.3)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
 
   "@vitest/expect@4.1.9":
     dependencies:
@@ -5911,7 +5917,7 @@ snapshots:
     dependencies:
       "@babel/runtime": 7.29.7
 
-  "@wordpress/hooks@4.48.0": {}
+  "@wordpress/hooks@4.48.1": {}
 
   "@wordpress/html-entities@3.58.0":
     dependencies:
@@ -5926,10 +5932,10 @@ snapshots:
       sprintf-js: 1.1.3
       tannin: 1.2.0
 
-  "@wordpress/i18n@6.21.0":
+  "@wordpress/i18n@6.21.1":
     dependencies:
       "@tannin/sprintf": 1.3.3
-      "@wordpress/hooks": 4.48.0
+      "@wordpress/hooks": 4.48.1
       gettext-parser: 1.4.0
       memize: 2.1.1
       tannin: 1.2.0
@@ -6099,7 +6105,7 @@ snapshots:
 
   balanced-match@4.0.4: {}
 
-  baseline-browser-mapping@2.10.33: {}
+  baseline-browser-mapping@2.10.38: {}
 
   brace-expansion@1.1.15:
     dependencies:
@@ -6112,10 +6118,10 @@ snapshots:
 
   browserslist@4.28.2:
     dependencies:
-      baseline-browser-mapping: 2.10.33
-      caniuse-lite: 1.0.30001793
-      electron-to-chromium: 1.5.366
-      node-releases: 2.0.47
+      baseline-browser-mapping: 2.10.38
+      caniuse-lite: 1.0.30001799
+      electron-to-chromium: 1.5.375
+      node-releases: 2.0.48
       update-browserslist-db: 1.2.3(browserslist@4.28.2)
 
   buffer-from@1.1.2:
@@ -6150,6 +6156,8 @@ snapshots:
   camelcase@5.3.1: {}
 
   caniuse-lite@1.0.30001793: {}
+
+  caniuse-lite@1.0.30001799: {}
 
   capital-case@1.0.4:
     dependencies:
@@ -6402,7 +6410,7 @@ snapshots:
       es-errors: 1.3.0
       gopd: 1.2.0
 
-  electron-to-chromium@1.5.366: {}
+  electron-to-chromium@1.5.375: {}
 
   emoji-regex@10.6.0: {}
 
@@ -6765,7 +6773,7 @@ snapshots:
 
   gopd@1.2.0: {}
 
-  happy-dom@20.10.4:
+  happy-dom@20.10.6:
     dependencies:
       "@types/node": 25.9.3
       "@types/whatwg-mimetype": 3.0.2
@@ -7064,7 +7072,7 @@ snapshots:
       lightningcss-win32-arm64-msvc: 1.32.0
       lightningcss-win32-x64-msvc: 1.32.0
 
-  lint-staged@17.0.7:
+  lint-staged@17.0.8:
     dependencies:
       listr2: 10.2.1
       picomatch: 4.0.4
@@ -7169,7 +7177,7 @@ snapshots:
       object.entries: 1.1.9
       semver: 6.3.1
 
-  node-releases@2.0.47: {}
+  node-releases@2.0.48: {}
 
   object-assign@4.1.1: {}
 
@@ -7769,7 +7777,7 @@ snapshots:
       terser: 5.48.0
       yaml: 2.9.0
 
-  vitest@4.1.9(@types/node@25.9.3)(@vitest/coverage-v8@4.1.9)(happy-dom@20.10.4)(vite@8.0.16(@types/node@25.9.3)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)):
+  vitest@4.1.9(@types/node@25.9.3)(@vitest/coverage-v8@4.1.9)(happy-dom@20.10.6)(vite@8.0.16(@types/node@25.9.3)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)):
     dependencies:
       "@vitest/expect": 4.1.9
       "@vitest/mocker": 4.1.9(vite@8.0.16(@types/node@25.9.3)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
@@ -7794,7 +7802,7 @@ snapshots:
     optionalDependencies:
       "@types/node": 25.9.3
       "@vitest/coverage-v8": 4.1.9(vitest@4.1.9)
-      happy-dom: 20.10.4
+      happy-dom: 20.10.6
     transitivePeerDependencies:
       - msw
 
