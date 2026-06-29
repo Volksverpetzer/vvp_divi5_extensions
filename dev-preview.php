@@ -114,6 +114,10 @@ namespace {
         return file_exists($path) ? @unlink($path) : true;
     }
 
+    // No persistent object cache in the preview: the refresh lock falls back to
+    // the file-based transient stubs above.
+    function wp_using_ext_object_cache(): bool { return false; }
+
     // ── WordPress escaping stubs ──────────────────────────────────────────────
 
     function wp_strip_all_tags(string $text, bool $remove_breaks = false): string

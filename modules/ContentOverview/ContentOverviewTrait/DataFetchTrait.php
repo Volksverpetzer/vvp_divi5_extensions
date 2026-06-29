@@ -123,6 +123,11 @@ trait DataFetchTrait
      * requests serve stale data (or null) and return without blocking. The lock
      * auto-expires so a crashed request can't wedge a key permanently.
      *
+     * With a persistent object cache (e.g. Redis on production) the lock uses
+     * wp_cache_add(), which is atomic — it fails if the key already exists, with
+     * no check-then-set race. Without one it falls back to a transient lock,
+     * whose tiny get/set window is still far shorter than a multi-second fetch.
+     *
      * @param string $cache_key Transient key being refreshed.
      *
      * @return bool True if the lock was acquired and the caller should fetch.
@@ -130,6 +135,11 @@ trait DataFetchTrait
     private static function acquire_refresh_lock(string $cache_key): bool
     {
         $lock_key = $cache_key . '_lock';
+
+        if (wp_using_ext_object_cache()) {
+            return wp_cache_add($lock_key, 1, 'vvp_co_lock', 15);
+        }
+
         if (false !== get_transient($lock_key)) {
             return false;
         }
@@ -140,11 +150,21 @@ trait DataFetchTrait
     /**
      * Release a refresh lock acquired via acquire_refresh_lock().
      *
+     * Must mirror the backend chosen by acquire_refresh_lock(), otherwise an
+     * object-cache lock would linger until its TTL after a successful refresh.
+     *
      * @param string $cache_key Transient key that was being refreshed.
      */
     private static function release_refresh_lock(string $cache_key): void
     {
-        delete_transient($cache_key . '_lock');
+        $lock_key = $cache_key . '_lock';
+
+        if (wp_using_ext_object_cache()) {
+            wp_cache_delete($lock_key, 'vvp_co_lock');
+            return;
+        }
+
+        delete_transient($lock_key);
     }
 
     /**
