@@ -108,6 +108,12 @@ namespace {
         return (bool)file_put_contents($path, serialize(['data' => $value, 'expires' => time() + $ttl]));
     }
 
+    function delete_transient(string $key): bool
+    {
+        $path = sys_get_temp_dir() . '/vvp_co_preview_' . md5($key) . '.cache';
+        return file_exists($path) ? @unlink($path) : true;
+    }
+
     // ── WordPress escaping stubs ──────────────────────────────────────────────
 
     function wp_strip_all_tags(string $text, bool $remove_breaks = false): string
