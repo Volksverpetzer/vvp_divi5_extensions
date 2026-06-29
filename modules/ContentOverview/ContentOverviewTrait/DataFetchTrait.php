@@ -143,8 +143,9 @@ trait DataFetchTrait
         if (false !== get_transient($lock_key)) {
             return false;
         }
-        set_transient($lock_key, 1, 15);
-        return true;
+        // Treat a failed write as "lock not acquired" so the caller serves stale
+        // rather than fetching without a lock and risking a concurrent refresh.
+        return set_transient($lock_key, 1, 15);
     }
 
     /**
