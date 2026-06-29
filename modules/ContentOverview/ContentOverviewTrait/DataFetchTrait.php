@@ -660,18 +660,23 @@ trait DataFetchTrait
 
         // Probe each video's Short status over the wire here so the render path
         // can read the result from cache instead of calling youtube.com itself.
-        // Capped so a large feed can't make the cron job run unbounded.
-        $videos = self::fetch_yt_feed(true);
-        $probed = 0;
+        // Bounded by both a count cap and a wall-clock budget so a large feed or
+        // a slow/down youtube.com can't make the cron run unbounded (worst case
+        // would otherwise be ~30 probes x 3s). Anything not probed this run stays
+        // cache-only on render and gets picked up by a later run.
+        $videos   = self::fetch_yt_feed(true);
+        $probed   = 0;
+        $deadline = microtime(true) + 15;
         foreach ($videos as $video) {
+            if ($probed >= 30 || microtime(true) >= $deadline) {
+                break;
+            }
             $id = $video['id'] ?? '';
             if ('' === $id) {
                 continue;
             }
             self::is_youtube_short($id, true);
-            if (++$probed >= 30) {
-                break;
-            }
+            $probed++;
         }
 
         self::fetch_podcast_xml(true);
