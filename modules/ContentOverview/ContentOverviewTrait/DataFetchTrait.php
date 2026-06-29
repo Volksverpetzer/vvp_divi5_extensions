@@ -13,10 +13,11 @@ trait DataFetchTrait
     /**
      * Fetch a remote URL via wp_remote_get with transient caching.
      *
-     * On a normal (non-forced) request the cached value is served and the
-     * network is never touched — only the WP-Cron warmer ($force = true)
-     * refreshes over the wire. A cold/expired key is refreshed behind a short
-     * stampede lock, and any failure serves the last good value rather than
+     * A warm cache is served without any network call. A cold or expired entry
+     * is refreshed over the wire by at most one request at a time — the refresh
+     * lock holder — or by the WP-Cron warmer ($force = true); other concurrent
+     * requests serve the last good value (or null) instead of piling onto the
+     * upstream. Any failure likewise serves the last good value rather than
      * dropping the section or hammering a broken upstream.
      *
      * @param string $url       Remote URL to fetch.
@@ -47,22 +48,23 @@ trait DataFetchTrait
             'user-agent' => 'VVP-ContentOverview/1.0',
         ]);
 
+        // Default to the stale value; overwrite only on a fully successful fetch.
+        $result = $cached;
+        if (!is_wp_error($response) && 200 === (int) wp_remote_retrieve_response_code($response)) {
+            $data = json_decode(wp_remote_retrieve_body($response), true);
+            if (null !== $data) {
+                set_transient($cache_key, $data, $ttl);
+                $result = $data;
+            }
+        }
+
+        // Release only after the cache write, so a second request can't acquire
+        // the lock and start a duplicate fetch during decode/set_transient.
         if (!$force) {
             self::release_refresh_lock($cache_key);
         }
 
-        if (is_wp_error($response) || 200 !== (int) wp_remote_retrieve_response_code($response)) {
-            return false === $cached ? null : $cached;
-        }
-
-        $data = json_decode(wp_remote_retrieve_body($response), true);
-
-        if (null === $data) {
-            return false === $cached ? null : $cached;
-        }
-
-        set_transient($cache_key, $data, $ttl);
-        return $data;
+        return false === $result ? null : $result;
     }
 
     /**
@@ -94,22 +96,23 @@ trait DataFetchTrait
             'user-agent' => 'VVP-ContentOverview/1.0',
         ]);
 
+        // Default to the stale value; overwrite only on a non-empty 200 response.
+        $result = $cached;
+        if (!is_wp_error($response) && 200 === (int) wp_remote_retrieve_response_code($response)) {
+            $body = wp_remote_retrieve_body($response);
+            if ('' !== $body) {
+                set_transient($cache_key, $body, $ttl);
+                $result = $body;
+            }
+        }
+
+        // Release only after the cache write, so a second request can't acquire
+        // the lock and start a duplicate fetch during set_transient.
         if (!$force) {
             self::release_refresh_lock($cache_key);
         }
 
-        if (is_wp_error($response) || 200 !== (int) wp_remote_retrieve_response_code($response)) {
-            return false === $cached ? null : $cached;
-        }
-
-        $body = wp_remote_retrieve_body($response);
-
-        if ('' === $body) {
-            return false === $cached ? null : $cached;
-        }
-
-        set_transient($cache_key, $body, $ttl);
-        return $body;
+        return false === $result ? null : $result;
     }
 
     /**
