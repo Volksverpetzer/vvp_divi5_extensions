@@ -25,6 +25,7 @@
     "lint:fix": "eslint . --fix",
     "------- other scripts -------": "-------------",
     "prepare": "husky",
+    "postinstall": "node -e \"try { require('fs').chmodSync('node_modules/prettier/bin/prettier.cjs', 0o755) } catch {}\"",
     "update:deps": "pnpx npm-check-updates -c 1d -i --format group"
   },
   "dependencies": {
