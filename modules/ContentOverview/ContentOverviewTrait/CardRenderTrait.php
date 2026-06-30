@@ -2,6 +2,14 @@
 /**
  * HTML card rendering helpers for each content kind.
  *
+ * HYDRATION GUARDRAIL: the markup emitted by render_featured_card,
+ * render_podcast_banner and render_youtube_banner is hydrated by React in
+ * src/components/content-overview/frontend.tsx, so it must byte-match the
+ * corresponding component output. Keep the two sides in sync and avoid inline
+ * `style` attributes (React serialises styles differently — e.g.
+ * `margin-right:4px` vs `margin-right: 4px;`); use a CSS class instead. See the
+ * guardrail comment in frontend.tsx for the full rules.
+ *
  * @package VVP\Divi5\ContentOverview
  * @since 1.0.0
  */
@@ -230,7 +238,7 @@ trait CardRenderTrait
         $yt_desc  = esc_html($props['description']);
         $yt_date  = esc_html($props['date']);
 
-        $yt_youtube_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="10" viewBox="0 0 461 461" fill="currentColor" aria-hidden="true" style="margin-right: 4px;">'
+        $yt_youtube_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="10" viewBox="0 0 461 461" fill="currentColor" aria-hidden="true" class="vvp-co__badge-icon">'
             . '<path d="M365.257 67.393H95.744C42.866 67.393 0 110.259 0 163.137v134.728c0 52.878 42.866 95.744 95.744 95.744h269.513c52.878 0 95.744-42.866 95.744-95.744V163.137c0-52.878-42.866-95.744-95.744-95.744zm-64.751 169.663l-126.06 60.123c-3.359 1.602-7.239-.847-7.239-4.568V168.607c0-3.774 3.982-6.22 7.348-4.514l126.06 63.943c3.748 1.899 3.683 7.274-.109 9.02z"/>'
             . '</svg>';
         $yt_play_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="white">'

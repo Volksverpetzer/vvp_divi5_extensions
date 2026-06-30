@@ -1,3 +1,23 @@
+/**
+ * HYDRATION GUARDRAIL — read before editing the hydrated components below.
+ *
+ * ArticleCard, PodcastBanner and YouTubeBanner are mounted with `hydrateRoot`
+ * over static HTML that PHP emits in CardRenderTrait.php. React then requires
+ * its output to byte-match that PHP markup; any divergence throws a hydration
+ * mismatch (e.g. minified React error #418) and the subtree is re-rendered.
+ *
+ * When changing a hydrated component, mirror the change in CardRenderTrait.php
+ * and avoid the two patterns that silently break the match:
+ *   1. Adjacent dynamic text — `{a} {b}` or `text {expr}` render as separate
+ *      text nodes that React separates with a `<!-- -->` marker PHP can't
+ *      reproduce. Collapse into one node: `{`${a} ${b}`}`.
+ *   2. Inline `style={{…}}` — React serialises styles differently from a
+ *      hand-written PHP string (`margin-right:4px` vs `margin-right: 4px;`).
+ *      Use a CSS class instead.
+ *
+ * Components mounted with `createRoot` (InstagramSlideshow, trending, etc.) are
+ * exempt — they re-render from scratch and never hydrate PHP markup.
+ */
 import * as React from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import { InstagramSlideshow } from "./InstagramSlideshow";
