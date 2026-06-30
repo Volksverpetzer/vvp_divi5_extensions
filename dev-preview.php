@@ -108,6 +108,16 @@ namespace {
         return (bool)file_put_contents($path, serialize(['data' => $value, 'expires' => time() + $ttl]));
     }
 
+    function delete_transient(string $key): bool
+    {
+        $path = sys_get_temp_dir() . '/vvp_co_preview_' . md5($key) . '.cache';
+        return file_exists($path) ? @unlink($path) : true;
+    }
+
+    // No persistent object cache in the preview: the refresh lock falls back to
+    // the file-based transient stubs above.
+    function wp_using_ext_object_cache(): bool { return false; }
+
     // ── WordPress escaping stubs ──────────────────────────────────────────────
 
     function wp_strip_all_tags(string $text, bool $remove_breaks = false): string

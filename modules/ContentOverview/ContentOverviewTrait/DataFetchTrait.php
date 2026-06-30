@@ -13,44 +13,58 @@ trait DataFetchTrait
     /**
      * Fetch a remote URL via wp_remote_get with transient caching.
      *
+     * A warm cache is served without any network call. A cold or expired entry
+     * is refreshed over the wire by at most one request at a time — the refresh
+     * lock holder — or by the WP-Cron warmer ($force = true); other concurrent
+     * requests serve the last good value (or null) instead of piling onto the
+     * upstream. Any failure likewise serves the last good value rather than
+     * dropping the section or hammering a broken upstream.
+     *
      * @param string $url       Remote URL to fetch.
      * @param string $cache_key Transient key.
      * @param int    $ttl       Cache lifetime in seconds.
+     * @param bool   $force      Refresh over the wire (WP-Cron warmer only).
      *
-     * @return mixed|null Decoded JSON body or null on failure.
+     * @return mixed|null Decoded JSON body, stale cached value, or null.
      */
     private static function fetch_json($url, $cache_key, $ttl = 1800, bool $force = false)
     {
-        if (!$force) {
-            $cached = get_transient($cache_key);
-            if (false !== $cached) {
-                return $cached;
-            }
+        $cached = get_transient($cache_key);
+
+        // Warm cache on a render request: serve it, never touch the network.
+        if (false !== $cached && !$force) {
+            return $cached;
+        }
+
+        // Cache miss or forced refresh. Only the lock holder fetches; concurrent
+        // visitors serve stale data (or null) and return immediately so a slow
+        // upstream can't saturate the PHP-FPM pool.
+        if (!$force && !self::acquire_refresh_lock($cache_key)) {
+            return false === $cached ? null : $cached;
         }
 
         $response = wp_remote_get($url, [
-            'timeout'    => 10,
+            'timeout'    => 3,
             'user-agent' => 'VVP-ContentOverview/1.0',
         ]);
 
-        if (is_wp_error($response)) {
-            return null;
+        // Default to the stale value; overwrite only on a fully successful fetch.
+        $result = $cached;
+        if (!is_wp_error($response) && 200 === (int) wp_remote_retrieve_response_code($response)) {
+            $data = json_decode(wp_remote_retrieve_body($response), true);
+            if (null !== $data) {
+                set_transient($cache_key, $data, $ttl);
+                $result = $data;
+            }
         }
 
-        $code = wp_remote_retrieve_response_code($response);
-        if (200 !== (int) $code) {
-            return null;
+        // Release only after the cache write, so a second request can't acquire
+        // the lock and start a duplicate fetch during decode/set_transient.
+        if (!$force) {
+            self::release_refresh_lock($cache_key);
         }
 
-        $body = wp_remote_retrieve_body($response);
-        $data = json_decode($body, true);
-
-        if (null === $data) {
-            return null;
-        }
-
-        set_transient($cache_key, $data, $ttl);
-        return $data;
+        return false === $result ? null : $result;
     }
 
     /**
@@ -59,40 +73,99 @@ trait DataFetchTrait
      * @param string $url       Remote URL.
      * @param string $cache_key Transient key.
      * @param int    $ttl       Cache lifetime in seconds.
+     * @param bool   $force      Refresh over the wire (WP-Cron warmer only).
      *
-     * @return string|null Raw body or null on failure.
+     * @return string|null Raw body, stale cached value, or null.
      */
     private static function fetch_raw($url, $cache_key, $ttl = 3600, bool $force = false)
     {
-        if (!$force) {
-            $cached = get_transient($cache_key);
-            if (false !== $cached) {
-                return $cached;
-            }
+        $cached = get_transient($cache_key);
+
+        // Warm cache on a render request: serve it, never touch the network.
+        if (false !== $cached && !$force) {
+            return $cached;
+        }
+
+        // Cache miss or forced refresh — see fetch_json() for the lock rationale.
+        if (!$force && !self::acquire_refresh_lock($cache_key)) {
+            return false === $cached ? null : $cached;
         }
 
         $response = wp_remote_get($url, [
-            'timeout'    => 10,
+            'timeout'    => 3,
             'user-agent' => 'VVP-ContentOverview/1.0',
         ]);
 
-        if (is_wp_error($response)) {
-            return null;
+        // Default to the stale value; overwrite only on a non-empty 200 response.
+        $result = $cached;
+        if (!is_wp_error($response) && 200 === (int) wp_remote_retrieve_response_code($response)) {
+            $body = wp_remote_retrieve_body($response);
+            if ('' !== $body) {
+                set_transient($cache_key, $body, $ttl);
+                $result = $body;
+            }
         }
 
-        $code = wp_remote_retrieve_response_code($response);
-        if (200 !== (int) $code) {
-            return null;
+        // Release only after the cache write, so a second request can't acquire
+        // the lock and start a duplicate fetch during set_transient.
+        if (!$force) {
+            self::release_refresh_lock($cache_key);
         }
 
-        $body = wp_remote_retrieve_body($response);
+        return false === $result ? null : $result;
+    }
 
-        if ('' === $body) {
-            return null;
+    /**
+     * Acquire a short-lived refresh lock for a cache key.
+     *
+     * Prevents a cache stampede: when a transient is cold or expired, only the
+     * process that wins the lock refreshes it over the network; concurrent
+     * requests serve stale data (or null) and return without blocking. The lock
+     * auto-expires so a crashed request can't wedge a key permanently.
+     *
+     * With a persistent object cache (e.g. Redis on production) the lock uses
+     * wp_cache_add(), which is atomic — it fails if the key already exists, with
+     * no check-then-set race. Without one it falls back to a transient lock,
+     * whose tiny get/set window is still far shorter than a multi-second fetch.
+     *
+     * @param string $cache_key Transient key being refreshed.
+     *
+     * @return bool True if the lock was acquired and the caller should fetch.
+     */
+    private static function acquire_refresh_lock(string $cache_key): bool
+    {
+        $lock_key = $cache_key . '_lock';
+
+        if (wp_using_ext_object_cache()) {
+            return wp_cache_add($lock_key, 1, 'vvp_co_lock', 15);
         }
 
-        set_transient($cache_key, $body, $ttl);
-        return $body;
+        if (false !== get_transient($lock_key)) {
+            return false;
+        }
+        // Treat a failed write as "lock not acquired" so the caller serves stale
+        // rather than fetching without a lock and risking a concurrent refresh.
+        return set_transient($lock_key, 1, 15);
+    }
+
+    /**
+     * Release a refresh lock acquired via acquire_refresh_lock().
+     *
+     * Must mirror the backend chosen by acquire_refresh_lock(), otherwise an
+     * object-cache lock would linger until its TTL after a successful refresh.
+     *
+     * @param string $cache_key Transient key that was being refreshed.
+     */
+    private static function release_refresh_lock(string $cache_key): void
+    {
+        $lock_key = $cache_key . '_lock';
+
+        if (wp_using_ext_object_cache()) {
+            wp_cache_delete($lock_key, 'vvp_co_lock');
+            return;
+        }
+
+        delete_transient($lock_key);
     }
 
     /**
@@ -104,10 +177,11 @@ trait DataFetchTrait
      * Result is cached for 7 days per video ID (a video's type never changes).
      *
      * @param string $video_id YouTube video ID.
+     * @param bool   $force    Probe over the wire (WP-Cron warmer only).
      *
      * @return bool True if the video is a Short (should be filtered out).
      */
-    private static function is_youtube_short(string $video_id): bool
+    private static function is_youtube_short(string $video_id, bool $force = false): bool
     {
         if (empty($video_id)) {
             return false;
@@ -119,9 +193,17 @@ trait DataFetchTrait
             return (bool) $cached;
         }
 
+        // Read-only on the render path: an unprobed video is treated as a
+        // regular video (kept) so a visitor request never makes a live call to
+        // youtube.com. The probe only runs from the WP-Cron warmer ($force),
+        // which populates this transient ahead of time.
+        if (!$force) {
+            return false;
+        }
+
         $url      = 'https://www.youtube.com/shorts/' . rawurlencode($video_id);
         $response = wp_remote_head($url, [
-            'timeout'     => 5,
+            'timeout'     => 3,
             'redirection' => 0,
             'user-agent'  => 'Mozilla/5.0',
             'headers'     => [
@@ -162,7 +244,9 @@ trait DataFetchTrait
         for ($page = 1; $page <= $pages; $page++) {
             $key  = $cache_key . '_p' . $page;
             $url  = $base_url . '&page=' . $page . '&_cb=' . floor(time() / 1800);
-            $data = self::fetch_json($url, $key, 1800, $force);
+            // Long TTL: the cron warmer refreshes every 25 min, so a generous
+            // lifetime just keeps stale data alive if cron or the upstream dies.
+            $data = self::fetch_json($url, $key, 12 * \HOUR_IN_SECONDS, $force);
 
             if (!is_array($data)) {
                 break;
@@ -214,7 +298,7 @@ trait DataFetchTrait
         $cache_key = $cache_key_prefix . '_media_' . substr(md5($ids_str), 0, 8);
         $url       = $media_api_base . '?include=' . $ids_str . '&per_page=100';
 
-        $media_list = self::fetch_json($url, $cache_key, 1800, $force);
+        $media_list = self::fetch_json($url, $cache_key, 12 * \HOUR_IN_SECONDS, $force);
 
         if (!is_array($media_list)) {
             return $posts;
@@ -520,7 +604,7 @@ trait DataFetchTrait
             $url .= '?account=pruefpunkt';
             $key .= '_pp';
         }
-        $raw   = self::fetch_json($url, $key, 3600, $force);
+        $raw   = self::fetch_json($url, $key, 12 * \HOUR_IN_SECONDS, $force);
         $posts = is_array($raw['data'] ?? null) ? $raw['data'] : [];
 
         // Tag each post with its account: the proxy payload carries no account
@@ -542,7 +626,7 @@ trait DataFetchTrait
      */
     private static function fetch_yt_feed(bool $force = false): array
     {
-        $raw = self::fetch_json('https://volksverpetzer-app.de/proxy/ytAPI', 'vvp_co_yt', 3600, $force);
+        $raw = self::fetch_json('https://volksverpetzer-app.de/proxy/ytAPI', 'vvp_co_yt', 12 * \HOUR_IN_SECONDS, $force);
         return is_array($raw['items'] ?? null) ? $raw['items'] : [];
     }
 
@@ -555,7 +639,7 @@ trait DataFetchTrait
      */
     private static function fetch_podcast_xml(bool $force = false)
     {
-        return self::fetch_raw('https://volksverpetzer.podigee.io/feed/mp3', 'vvp_co_podcast', 3600, $force);
+        return self::fetch_raw('https://volksverpetzer.podigee.io/feed/mp3', 'vvp_co_podcast', 12 * \HOUR_IN_SECONDS, $force);
     }
 
     /**
@@ -573,7 +657,28 @@ trait DataFetchTrait
         self::fetch_pruefpunkt_articles(true);
         self::fetch_insta_feed('volksverpetzer', true);
         self::fetch_insta_feed('pruefpunkt', true);
-        self::fetch_yt_feed(true);
+
+        // Probe each video's Short status over the wire here so the render path
+        // can read the result from cache instead of calling youtube.com itself.
+        // Bounded by both a count cap and a wall-clock budget so a large feed or
+        // a slow/down youtube.com can't make the cron run unbounded (worst case
+        // would otherwise be ~30 probes x 3s). Anything not probed this run stays
+        // cache-only on render and gets picked up by a later run.
+        $videos   = self::fetch_yt_feed(true);
+        $probed   = 0;
+        $deadline = microtime(true) + 15;
+        foreach ($videos as $video) {
+            if ($probed >= 30 || microtime(true) >= $deadline) {
+                break;
+            }
+            $id = $video['id'] ?? '';
+            if ('' === $id) {
+                continue;
+            }
+            self::is_youtube_short($id, true);
+            $probed++;
+        }
+
         self::fetch_podcast_xml(true);
     }
 }
