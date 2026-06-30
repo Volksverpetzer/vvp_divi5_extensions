@@ -8,8 +8,6 @@ Author:      Volksverpetzer
 Author URI:  https://volksverpetzer.de
 License:     GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: vvp-divi5-extensions
-Domain Path: /languages
 
 Volksverpetzer DIVI 5 extensions is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
