@@ -2,6 +2,7 @@
   "name": "volksverpetzer/vvp-divi5-extensions",
   "description": "Custom Divi 5 modules for Volksverpetzer (Faktencheck Suche, Inhaltsübersicht, Autorenprofil, TrendingList)",
   "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
   "autoload": {
     "psr-4": {
       "VVP\\Divi5\\": "modules/"

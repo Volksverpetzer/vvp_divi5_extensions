@@ -3,6 +3,7 @@
   "version": "1.0.5",
   "description": "DIVI 5 extension for the vvp wordpress site",
   "private": true,
+  "license": "GPL-2.0-or-later",
   "packageManager": "pnpm@11.9.0",
   "author": "Volksverpetzer",
   "engines": {

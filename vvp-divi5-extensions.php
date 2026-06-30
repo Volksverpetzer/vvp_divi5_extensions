@@ -6,7 +6,7 @@ Description: Adds the custom DIVI 5 extensions for Volksverpetzer.de to the site
 Version:     1.0.5
 Author:      Volksverpetzer
 Author URI:  https://volksverpetzer.de
-License:     GPL2
+License:     GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: vvp-divi5-extensions
 Domain Path: /languages
