@@ -2,6 +2,14 @@
 /**
  * HTML card rendering helpers for each content kind.
  *
+ * HYDRATION GUARDRAIL: the markup emitted by render_featured_card,
+ * render_podcast_banner and render_youtube_banner is hydrated by React in
+ * src/components/content-overview/frontend.tsx, so it must byte-match the
+ * corresponding component output. Keep the two sides in sync and avoid inline
+ * `style` attributes (React serialises styles differently — e.g.
+ * `margin-right:4px` vs `margin-right: 4px;`); use a CSS class instead. See the
+ * guardrail comment in frontend.tsx for the full rules.
+ *
  * @package VVP\Divi5\ContentOverview
  * @since 1.0.0
  */
