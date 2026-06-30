@@ -557,6 +557,29 @@ Update the `deploy-prerelease.yml` workflow if any new build artifacts need to b
 - `curl` extension must be available: `php -r "echo extension_loaded('curl') ? 'ok' : 'missing';"`.
 - Clear the transient cache: visit `http://localhost:8787/?flush=1` in the browser, or run `php dev-preview.php --flush` from the CLI.
 
+**ContentOverview feed is stale, empty, or not updating**
+
+The `Inhaltsübersicht` module never fetches external APIs during a page render — renders only read cached data. A WP-Cron event (`vvp_warm_content_overview_cache`, every 25 min) refreshes that cache out-of-band. This decoupling fixed a production cache-stampede outage; see [PR #74](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/74) for the full background.
+
+So if the feed stops updating, the cache warmer has stopped running. Glance at it occasionally:
+
+```bash
+wp cron event list --allow-root | grep vvp_warm_content_overview_cache
+```
+
+The "next run" should always be ≤25 minutes out. If it has drifted well past that, WP-Cron isn't firing. On production WP-Cron is driven by a **system cron** (`DISABLE_WP_CRON` is `true`), so verify the daemon and the job log:
+
+```bash
+systemctl is-active cron
+tail /var/log/vvp-wp-cron.log
+```
+
+Manually warm the cache to recover immediately:
+
+```bash
+wp cron event run vvp_warm_content_overview_cache --allow-root
+```
+
 **CI deployment errors**
 
 - Confirm all four SSH secrets (`SSH_DEPLOY_KEY`, `SSH_HOST_KEY`, `SSH_USER`, `SSH_HOST`) are set in GitHub repository settings.
