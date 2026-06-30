@@ -123,7 +123,9 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         {excerpt && (
           <p className="vvp-co__feed-excerpt">
             {excerpt}
-            {author && <em className="vvp-co__feed-author"> – {author}</em>}
+            {author && (
+              <em className="vvp-co__feed-author">{` – ${author}`}</em>
+            )}
           </p>
         )}
         <div className="vvp-co__feed-footer">
@@ -168,7 +170,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                 ></path>
               </svg>
-              {reading_time} Min.
+              {`${reading_time} Min.`}
             </span>
           )}
         </div>
