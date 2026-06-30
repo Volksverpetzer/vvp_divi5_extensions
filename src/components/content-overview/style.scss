@@ -61,6 +61,13 @@
   color: #5b21b6;
 }
 
+/* Extra spacing for the YouTube badge icon, on top of the badge flex gap.
+   Replaces an inline style that caused a hydration attribute mismatch
+   between the React component and the PHP-rendered markup. */
+.vvp-co__badge-icon {
+  margin-right: 4px;
+}
+
 /* Category label */
 .vvp-co__category {
   display: inline-block;
