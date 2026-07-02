@@ -99,8 +99,8 @@ class VVP_Dynamic_Content_Meta_Keys_Cache {
 
 		$key    = self::key_from_filter( 'pre_transient_' );
 		$shadow = wp_cache_get( $key, self::CACHE_GROUP );
-		if ( ! is_array( $shadow ) || ! array_key_exists( 'value', $shadow ) ) {
-			return false; // No shadow yet — normal path; backfill()/capture() will store it.
+		if ( ! is_array( $shadow ) || ! array_key_exists( 'value', $shadow ) || ! isset( $shadow['soft_expires'] ) ) {
+			return false; // No shadow yet (or old/corrupt format) — normal path; backfill()/capture() will store it.
 		}
 
 		if ( time() < $shadow['soft_expires'] ) {
