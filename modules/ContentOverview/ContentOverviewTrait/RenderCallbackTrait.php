@@ -94,30 +94,11 @@ trait RenderCallbackTrait
     {
         // 1. Fetch -----------------------------------------------------------
 
-        $vp_posts = self::fetch_wp_posts(
-            'https://volksverpetzer.de/wp-json/wp/v2/posts?per_page=12&_embed=1',
-            'vvp_co_vp_posts',
-            2,
-            'volksverpetzer'
-        );
+        $vp_posts = self::fetch_volksverpetzer_articles();
+        $pp_posts = self::fetch_pruefpunkt_articles();
 
-        $pp_posts = self::fetch_wp_posts(
-            'https://pruefpunkt.org/wp-json/wp/v2/posts?per_page=10',
-            'vvp_co_pp_posts',
-            1,
-            'pruefpunkt'
-        );
-        $pp_posts = self::hydrate_posts_with_media(
-            $pp_posts,
-            'https://pruefpunkt.org/wp-json/wp/v2/media',
-            'vvp_co_pp'
-        );
-
-        $insta_raw   = self::fetch_json('https://volksverpetzer-app.de/proxy/instaFeed', 'vvp_co_insta', 3600);
-        $insta_posts = is_array($insta_raw['data'] ?? null) ? $insta_raw['data'] : [];
-
-        $insta_pp_raw   = self::fetch_json('https://volksverpetzer-app.de/proxy/instaFeed?account=pruefpunkt', 'vvp_co_insta_pp', 3600);
-        $insta_pp_posts = is_array($insta_pp_raw['data'] ?? null) ? $insta_pp_raw['data'] : [];
+        $insta_posts    = self::fetch_insta_feed('volksverpetzer');
+        $insta_pp_posts = self::fetch_insta_feed('pruefpunkt');
 
         // Merge both accounts' Instagram posts. Dedupe by post ID: the proxy may
         // serve the same posts for both accounts (e.g. while the Prüfpunkt token
@@ -136,10 +117,9 @@ trait RenderCallbackTrait
             return (int) strtotime($b['timestamp'] ?? '') - (int) strtotime($a['timestamp'] ?? '');
         });
 
-        $yt_raw    = self::fetch_json('https://volksverpetzer-app.de/proxy/ytAPI', 'vvp_co_yt', 3600);
-        $yt_videos = is_array($yt_raw['items'] ?? null) ? $yt_raw['items'] : [];
+        $yt_videos = self::fetch_yt_feed();
 
-        $podcast_xml   = self::fetch_raw('https://volksverpetzer.podigee.io/feed/mp3', 'vvp_co_podcast', 3600);
+        $podcast_xml   = self::fetch_podcast_xml();
         $podcast_data  = self::parse_podcast_feed($podcast_xml);
         $podcast_items = $podcast_data['items'] ?? [];
         $channel_image = $podcast_data['channel_image'] ?? '';

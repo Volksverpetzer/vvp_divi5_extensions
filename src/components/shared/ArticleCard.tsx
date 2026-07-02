@@ -36,7 +36,7 @@ const YoutubeBadge: React.FC = () => (
       viewBox="0 0 461 461"
       fill="currentColor"
       aria-hidden="true"
-      style={{ marginRight: "4px" }}
+      className="vvp-co__badge-icon"
     >
       <path d="M365.257 67.393H95.744C42.866 67.393 0 110.259 0 163.137v134.728c0 52.878 42.866 95.744 95.744 95.744h269.513c52.878 0 95.744-42.866 95.744-95.744V163.137c0-52.878-42.866-95.744-95.744-95.744zm-64.751 169.663l-126.06 60.123c-3.359 1.602-7.239-.847-7.239-4.568V168.607c0-3.774 3.982-6.22 7.348-4.514l126.06 63.943c3.748 1.899 3.683 7.274-.109 9.02z" />
     </svg>
@@ -123,7 +123,9 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         {excerpt && (
           <p className="vvp-co__feed-excerpt">
             {excerpt}
-            {author && <em className="vvp-co__feed-author"> – {author}</em>}
+            {author && (
+              <em className="vvp-co__feed-author">{` – ${author}`}</em>
+            )}
           </p>
         )}
         <div className="vvp-co__feed-footer">
@@ -168,7 +170,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                 ></path>
               </svg>
-              {reading_time} Min.
+              {`${reading_time} Min.`}
             </span>
           )}
         </div>

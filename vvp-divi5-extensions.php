@@ -3,13 +3,11 @@
 Plugin Name: Volksverpetzer DIVI 5 extensions
 Plugin URI:  https://github.com/Volksverpetzer/vvp_divi5_extensions
 Description: Adds the custom DIVI 5 extensions for Volksverpetzer.de to the site
-Version:     1.0.4
+Version:     1.0.5
 Author:      Volksverpetzer
 Author URI:  https://volksverpetzer.de
-License:     GPL2
+License:     GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: vvp-divi5-extensions
-Domain Path: /languages
 
 Volksverpetzer DIVI 5 extensions is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,7 +33,7 @@ if ( defined( 'VVP_DIVI5_PATH' ) ) {
 
 define( 'VVP_DIVI5_PATH', plugin_dir_path( __FILE__ ) );
 define( 'VVP_DIVI5_URL', plugin_dir_url( __FILE__ ) );
-define( 'VVP_DIVI5_VERSION', '1.0.4' );
+define( 'VVP_DIVI5_VERSION', '1.0.5' );
 define( 'VVP_DIVI5_JSON_PATH', VVP_DIVI5_PATH . 'modules-json/' );
 
 /**
