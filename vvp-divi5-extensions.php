@@ -59,6 +59,16 @@ add_action( 'plugins_loaded', [ 'VVP\Divi5\CronManager', 'register' ] );
 register_deactivation_hook( __FILE__, [ 'VVP\Divi5\CronManager', 'deactivate' ] );
 
 /**
+ * Performance caches for Divi builder-5 render-path queries (uncached
+ * attachment-URL and Dynamic Content lookups that exhausted PHP-FPM).
+ */
+require_once VVP_DIVI5_PATH . 'includes/class-vvp-attachment-url-cache.php';
+require_once VVP_DIVI5_PATH . 'includes/class-vvp-block-render-cache.php';
+
+add_action( 'plugins_loaded', [ 'VVP_Attachment_URL_Cache', 'init' ] );
+add_action( 'plugins_loaded', [ 'VVP_Block_Render_Cache', 'init' ] );
+
+/**
  * Enqueue Visual Builder assets for DIVI 5.
  *
  * @since 1.0.0
