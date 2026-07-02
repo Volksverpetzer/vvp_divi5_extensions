@@ -50,8 +50,15 @@ class VVP_Block_Render_Cache {
 	const CACHE_LOGGED_IN_USERS = false;
 
 	public static function init() {
-		add_filter( 'pre_render_block', array( __CLASS__, 'maybe_serve_cached' ), 10, 2 );
-		add_filter( 'render_block', array( __CLASS__, 'maybe_cache_result' ), 10, 2 );
+		add_filter( 'pre_render_block', array( __CLASS__, 'maybe_serve_cached' ), PHP_INT_MAX, 2 );
+		// The cache write must capture the FINAL rendered output, because cached
+		// fragments are served via pre_render_block, which bypasses the whole
+		// render_block filter chain. Core applies render_block_{name} after all
+		// generic render_block filters, so hooking there at PHP_INT_MAX caches
+		// the block as every other filter would have delivered it.
+		foreach ( self::TARGET_BLOCKS as $block_name ) {
+			add_filter( "render_block_{$block_name}", array( __CLASS__, 'maybe_cache_result' ), PHP_INT_MAX, 2 );
+		}
 	}
 
 	private static function is_cacheable_request() {
@@ -108,7 +115,7 @@ class VVP_Block_Render_Cache {
 			'post_%d_mod_%s_block_%s_%s',
 			$post_id,
 			$last_modified,
-			sanitize_key( $parsed_block['blockName'] ),
+			sanitize_key( str_replace( '/', '_', $parsed_block['blockName'] ) ),
 			$attrs_hash
 		);
 	}

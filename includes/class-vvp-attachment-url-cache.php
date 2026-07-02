@@ -26,8 +26,13 @@ class VVP_Attachment_URL_Cache {
 			add_action( 'admin_notices', array( __CLASS__, 'admin_notice_unsupported' ) );
 			return;
 		}
-		add_filter( 'pre_attachment_url_to_postid', array( __CLASS__, 'pre_lookup' ), 10, 2 );
-		add_filter( 'attachment_url_to_postid', array( __CLASS__, 'cache_result' ), 10, 2 );
+		// Both run at PHP_INT_MAX: the pre-filter so other short-circuits win
+		// first, and the post-filter so the cached value includes every other
+		// attachment_url_to_postid modification (a cached serve bypasses the
+		// post-filter chain entirely, since core returns right after the
+		// pre-filter short-circuits).
+		add_filter( 'pre_attachment_url_to_postid', array( __CLASS__, 'pre_lookup' ), PHP_INT_MAX, 2 );
+		add_filter( 'attachment_url_to_postid', array( __CLASS__, 'cache_result' ), PHP_INT_MAX, 2 );
 	}
 
 	public static function admin_notice_unsupported() {
