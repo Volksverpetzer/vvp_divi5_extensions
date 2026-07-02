@@ -96,8 +96,10 @@ class VVP_Block_Render_Cache {
 	}
 
 	private static function cache_key( $parsed_block ) {
-		$post_id       = get_the_ID() ?: 0;
-		$last_modified = $post_id ? get_post_field( 'post_modified_gmt', $post_id ) : '';
+		$post_id = get_the_ID() ?: 0;
+		// Digits only ("2026-07-02 12:34:56" -> "20260702123456"): some object
+		// cache backends (Memcached) reject keys containing spaces.
+		$last_modified = $post_id ? preg_replace( '/[^0-9]/', '', get_post_field( 'post_modified_gmt', $post_id ) ) : '';
 		$attrs_hash    = md5( wp_json_encode( $parsed_block['attrs'] ?? array() ) );
 		return sprintf(
 			'post_%d_mod_%s_block_%s_%s',
