@@ -35,6 +35,9 @@ class VVP_Attachment_URL_Cache {
 	}
 
 	public static function pre_lookup( $post_id, $url ) {
+		if ( null !== $post_id ) {
+			return $post_id; // Another pre_attachment_url_to_postid callback already short-circuited.
+		}
 		$cached = wp_cache_get( self::cache_key( $url ), self::CACHE_GROUP );
 		if ( false === $cached ) {
 			return null; // Not cached — let core run its query.

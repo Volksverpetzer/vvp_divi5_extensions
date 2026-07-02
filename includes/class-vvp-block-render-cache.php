@@ -68,6 +68,9 @@ class VVP_Block_Render_Cache {
 	}
 
 	public static function maybe_serve_cached( $pre_render, $parsed_block ) {
+		if ( null !== $pre_render ) {
+			return $pre_render; // Another pre_render_block callback already short-circuited.
+		}
 		if ( ! in_array( $parsed_block['blockName'], self::TARGET_BLOCKS, true ) ) {
 			return $pre_render;
 		}
