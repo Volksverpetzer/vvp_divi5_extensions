@@ -3,7 +3,7 @@
 Plugin Name: Volksverpetzer DIVI 5 extensions
 Plugin URI:  https://github.com/Volksverpetzer/vvp_divi5_extensions
 Description: Adds the custom DIVI 5 extensions for Volksverpetzer.de to the site
-Version:     1.0.5
+Version:     1.0.6
 Author:      Volksverpetzer
 Author URI:  https://volksverpetzer.de
 License:     GPLv2 or later
@@ -33,7 +33,7 @@ if ( defined( 'VVP_DIVI5_PATH' ) ) {
 
 define( 'VVP_DIVI5_PATH', plugin_dir_path( __FILE__ ) );
 define( 'VVP_DIVI5_URL', plugin_dir_url( __FILE__ ) );
-define( 'VVP_DIVI5_VERSION', '1.0.5' );
+define( 'VVP_DIVI5_VERSION', '1.0.6' );
 define( 'VVP_DIVI5_JSON_PATH', VVP_DIVI5_PATH . 'modules-json/' );
 
 /**
@@ -57,6 +57,16 @@ require_once VVP_DIVI5_PATH . 'modules/CronManager.php';
 
 add_action( 'plugins_loaded', [ 'VVP\Divi5\CronManager', 'register' ] );
 register_deactivation_hook( __FILE__, [ 'VVP\Divi5\CronManager', 'deactivate' ] );
+
+/**
+ * Performance caches for Divi builder-5 render-path queries (uncached
+ * attachment-URL and Dynamic Content lookups that exhausted PHP-FPM).
+ */
+require_once VVP_DIVI5_PATH . 'includes/class-vvp-attachment-url-cache.php';
+require_once VVP_DIVI5_PATH . 'includes/class-vvp-block-render-cache.php';
+
+add_action( 'plugins_loaded', [ 'VVP_Attachment_URL_Cache', 'init' ] );
+add_action( 'plugins_loaded', [ 'VVP_Block_Render_Cache', 'init' ] );
 
 /**
  * Enqueue Visual Builder assets for DIVI 5.

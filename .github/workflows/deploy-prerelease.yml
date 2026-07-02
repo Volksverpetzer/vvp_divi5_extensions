@@ -44,6 +44,7 @@ jobs:
           sed -i 's/^Plugin Name: .*/Plugin Name: Volksverpetzer DIVI 5 extensions (Beta)/' /tmp/deploy/vvp-divi5-extensions.php
           sed -i "s/^Version:.*/Version:     ${VERSION}/" /tmp/deploy/vvp-divi5-extensions.php
           sed -i "s/define( 'VVP_DIVI5_VERSION', '[^']*' )/define( 'VVP_DIVI5_VERSION', '${VERSION}' )/" /tmp/deploy/vvp-divi5-extensions.php
+          cp -r includes /tmp/deploy/
           cp -r modules /tmp/deploy/
           cp -r modules-json /tmp/deploy/
           for f in /tmp/deploy/modules-json/*/module.json; do
