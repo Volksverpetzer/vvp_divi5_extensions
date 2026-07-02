@@ -3,12 +3,17 @@
  * Fragment-caches specific Divi block types via WordPress core's
  * pre_render_block / render_block filters (official since WP 5.7).
  *
- * Why this exists: et_get_attachment_id_by_url() and
- * get_most_used_meta_keys_by_type() in Divi's own theme files run raw,
- * uncached $wpdb queries with no filter hook available to intercept them
- * directly. Caching at the block level sidesteps that entirely: whatever
- * Divi does internally to render the block, we only pay for it once per
- * TTL window, regardless of which internal function is slow.
+ * Why this exists: et_get_attachment_id_by_url() in Divi's own theme files
+ * runs a raw, uncached $wpdb query with no filter hook available to
+ * intercept it directly. Caching at the block level sidesteps that
+ * entirely: whatever Divi does internally to render the block, we only pay
+ * for it once per TTL window, regardless of which internal function is slow.
+ *
+ * Scope note: this covers RENDER-time work only. Divi resolves Dynamic
+ * Content (including get_most_used_meta_keys_by_type()) during block
+ * PARSING, before pre_render_block fires — that path is handled by
+ * VVP_Dynamic_Content_Meta_Keys_Cache instead (see
+ * class-vvp-dynamic-content-meta-keys-cache.php).
  *
  * SAFETY:
  *  - Skips entirely in wp-admin, REST requests, and Divi's Visual Builder
