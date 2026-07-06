@@ -60,13 +60,12 @@ register_deactivation_hook( __FILE__, [ 'VVP\Divi5\CronManager', 'deactivate' ] 
 
 /**
  * Performance caches for Divi builder-5 render-path queries (uncached
- * attachment-URL and Dynamic Content lookups that exhausted PHP-FPM).
+ * Dynamic Content lookups that exhausted PHP-FPM). The attachment-URL
+ * cache lives in the vvp_site_patches plugin (it patches WP core, not Divi).
  */
-require_once VVP_DIVI5_PATH . 'includes/class-vvp-attachment-url-cache.php';
 require_once VVP_DIVI5_PATH . 'includes/class-vvp-block-render-cache.php';
 require_once VVP_DIVI5_PATH . 'includes/class-vvp-dynamic-content-meta-keys-cache.php';
 
-add_action( 'plugins_loaded', [ 'VVP_Attachment_URL_Cache', 'init' ] );
 add_action( 'plugins_loaded', [ 'VVP_Block_Render_Cache', 'init' ] );
 add_action( 'plugins_loaded', [ 'VVP_Dynamic_Content_Meta_Keys_Cache', 'init' ] );
 
