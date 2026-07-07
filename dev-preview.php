@@ -254,6 +254,15 @@ namespace {
         return 'https://volksverpetzer.de/category/' . ($parts[0] ?? '');
     }
 
+    function get_post_meta(int $post_id, string $key = '', bool $single = false): mixed
+    {
+        // Mock Yoast reading time for the TrendingItems cards.
+        if ('_yoast_wpseo_estimated-reading-time-minutes' === $key) {
+            return (string) (3 + ($post_id % 5));
+        }
+        return $single ? '' : [];
+    }
+
     function get_the_excerpt(int $post_id): string
     {
         static $excerpts = [
