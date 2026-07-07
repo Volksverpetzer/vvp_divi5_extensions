@@ -706,6 +706,14 @@ trait DataFetchTrait
      */
     private static function local_reading_time(int $post_id): int
     {
+        // Prefer the stored meta (same source TrendingItems uses): a plain
+        // postmeta read, no coupling to Yoast's runtime surfaces.
+        $minutes = (int) get_post_meta($post_id, '_yoast_wpseo_estimated-reading-time-minutes', true);
+        if ($minutes > 0) {
+            return $minutes;
+        }
+
+        // Fallback for posts saved before Yoast started writing that meta.
         if (!function_exists('YoastSEO')) {
             return 0;
         }
