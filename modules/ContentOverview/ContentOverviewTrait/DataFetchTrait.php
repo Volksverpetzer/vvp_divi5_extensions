@@ -663,7 +663,7 @@ trait DataFetchTrait
         $categories = get_the_category($id);
         if (!empty($categories)) {
             $category = $categories[0];
-            $link     = get_category_link($category);
+            $link     = get_category_link((int) $category->term_id);
             $post['_embedded']['wp:term'] = [[[
                 'name' => $category->name,
                 'slug' => $category->slug,
