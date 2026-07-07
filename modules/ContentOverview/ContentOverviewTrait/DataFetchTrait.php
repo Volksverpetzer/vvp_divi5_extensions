@@ -544,16 +544,43 @@ trait DataFetchTrait
     }
 
     /**
-     * Fetch Volksverpetzer articles from the WP REST API.
+     * Fetch Volksverpetzer articles — the site's own posts.
+     *
+     * Prefers a local database query: the REST route goes through the public
+     * domain and BunnyCDN, which caches /wp-json/ responses aggressively and
+     * ignores the cache-buster, so REST data can lag behind by hours. The
+     * local query is always current and never leaves the process.
+     *
+     * The REST fetch remains as a fallback for runtimes without WordPress
+     * (dev-preview.php) and for the unexpected case of an empty local result.
+     *
+     * @param bool $force Bypass the REST transient and refresh it (fallback path only).
+     *
+     * @return array WP-REST-shaped post arrays.
+     */
+    private static function fetch_volksverpetzer_articles(bool $force = false): array
+    {
+        if (class_exists('\WP_Query')) {
+            $posts = self::query_local_volksverpetzer_articles();
+            if (!empty($posts)) {
+                return $posts;
+            }
+        }
+
+        return self::fetch_volksverpetzer_articles_rest($force);
+    }
+
+    /**
+     * Fetch Volksverpetzer articles from the WP REST API (fallback path).
      *
      * Single source of truth for the endpoint, transient key and page count —
-     * used by both the render path and the WP-Cron cache warmer.
+     * used by both the render fallback and the WP-Cron cache warmer.
      *
      * @param bool $force Bypass the transient and refresh it.
      *
      * @return array WP post arrays.
      */
-    private static function fetch_volksverpetzer_articles(bool $force = false): array
+    private static function fetch_volksverpetzer_articles_rest(bool $force = false): array
     {
         return self::fetch_wp_posts(
             'https://volksverpetzer.de/wp-json/wp/v2/posts?per_page=12&_embed=1',
@@ -562,6 +589,158 @@ trait DataFetchTrait
             'volksverpetzer',
             $force
         );
+    }
+
+    /**
+     * Query the newest Volksverpetzer posts from the local database and map
+     * them to the WP-REST array shape the rest of the pipeline consumes.
+     *
+     * The mapped result is kept in a short transient: the mapping touches
+     * permalinks, terms, thumbnails and Yoast meta for two dozen posts, which
+     * is worth skipping on every uncached page view. Five minutes of staleness
+     * is harmless here — the hero post is excluded by ID from a live query,
+     * so a lagging list can only delay a brand-new article's first feed
+     * appearance by the TTL, never drop the wrong article.
+     *
+     * @return array WP-REST-shaped post arrays (newest first).
+     */
+    private static function query_local_volksverpetzer_articles(): array
+    {
+        $cache_key = 'vvp_co_vp_local';
+        $cached    = get_transient($cache_key);
+        if (is_array($cached) && !empty($cached)) {
+            return $cached;
+        }
+
+        $query = new \WP_Query([
+            'post_type'           => 'post',
+            'post_status'         => 'publish',
+            'posts_per_page'      => 24,
+            'ignore_sticky_posts' => true,
+            'no_found_rows'       => true,
+        ]);
+
+        $posts = [];
+        foreach ($query->posts as $wp_post) {
+            $posts[] = self::map_local_post($wp_post);
+        }
+
+        if (!empty($posts)) {
+            set_transient($cache_key, $posts, 5 * \MINUTE_IN_SECONDS);
+        }
+
+        return $posts;
+    }
+
+    /**
+     * Map a local WP_Post to the WP-REST post array shape used by the card
+     * renderer (title.rendered, _embedded media/author/terms, yoast_head_json).
+     *
+     * @param \WP_Post $wp_post Post object.
+     *
+     * @return array WP-REST-shaped post array.
+     */
+    private static function map_local_post(\WP_Post $wp_post): array
+    {
+        $id = (int) $wp_post->ID;
+
+        $post = [
+            'id'              => $id,
+            // Site-local time without offset, matching the REST 'date' field.
+            'date'            => get_post_time('Y-m-d\TH:i:s', false, $wp_post),
+            'link'            => get_permalink($wp_post),
+            'title'           => ['rendered' => get_the_title($wp_post)],
+            'reading_time'    => self::local_reading_time($id),
+            'yoast_head_json' => ['description' => self::local_meta_description($id)],
+            '_vvp_source'     => 'volksverpetzer',
+        ];
+
+        $author_name = get_the_author_meta('display_name', (int) $wp_post->post_author);
+        if ($author_name) {
+            $post['_embedded']['author'] = [['name' => $author_name]];
+        }
+
+        $categories = get_the_category($id);
+        if (!empty($categories)) {
+            $category = $categories[0];
+            $link     = get_category_link($category);
+            $post['_embedded']['wp:term'] = [[[
+                'name' => $category->name,
+                'slug' => $category->slug,
+                'link' => is_string($link) ? $link : '',
+            ]]];
+        }
+
+        $thumb_id = get_post_thumbnail_id($wp_post);
+        if ($thumb_id) {
+            $sizes = [];
+            foreach (['medium', 'medium_large', 'large', 'full'] as $size) {
+                $src = wp_get_attachment_image_src($thumb_id, $size);
+                if (is_array($src) && !empty($src[0])) {
+                    $sizes[$size] = [
+                        'source_url' => $src[0],
+                        'width'      => (int) $src[1],
+                    ];
+                }
+            }
+            $full_url = $sizes['full']['source_url'] ?? wp_get_attachment_url($thumb_id);
+            if ($full_url) {
+                $post['_embedded']['wp:featuredmedia'] = [[
+                    'source_url'    => $full_url,
+                    'media_details' => ['sizes' => $sizes],
+                ]];
+            }
+        }
+
+        return $post;
+    }
+
+    /**
+     * Yoast estimated reading time in minutes for a post, 0 when unavailable.
+     *
+     * Mirrors the 'reading_time' field the REST payload carries.
+     *
+     * @param int $post_id Post ID.
+     *
+     * @return int Minutes.
+     */
+    private static function local_reading_time(int $post_id): int
+    {
+        if (!function_exists('YoastSEO')) {
+            return 0;
+        }
+        try {
+            return (int) YoastSEO()->meta->for_post($post_id)->estimated_reading_time_minutes;
+        } catch (\Throwable $e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Meta description for a post: Yoast's (possibly template-generated)
+     * description, falling back to a truncated excerpt.
+     *
+     * Mirrors yoast_head_json.description in the REST payload.
+     *
+     * @param int $post_id Post ID.
+     *
+     * @return string Description or empty string.
+     */
+    private static function local_meta_description(int $post_id): string
+    {
+        if (function_exists('YoastSEO')) {
+            try {
+                $description = (string) YoastSEO()->meta->for_post($post_id)->description;
+                if ('' !== $description) {
+                    return $description;
+                }
+            } catch (\Throwable $e) {
+                // Fall through to the excerpt.
+            }
+        }
+
+        $excerpt = get_the_excerpt($post_id);
+        return $excerpt ? self::truncate($excerpt, 160) : '';
     }
 
     /**
@@ -653,7 +832,10 @@ trait DataFetchTrait
      */
     public static function warm_caches(): void
     {
-        self::fetch_volksverpetzer_articles(true);
+        // Warm the REST transient directly: the render path prefers the local
+        // query, so warming through fetch_volksverpetzer_articles() would be a
+        // no-op — but the REST fallback should stay reasonably fresh.
+        self::fetch_volksverpetzer_articles_rest(true);
         self::fetch_pruefpunkt_articles(true);
         self::fetch_insta_feed('volksverpetzer', true);
         self::fetch_insta_feed('pruefpunkt', true);

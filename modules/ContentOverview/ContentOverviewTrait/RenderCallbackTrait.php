@@ -258,6 +258,12 @@ trait RenderCallbackTrait
      */
     private static function exclude_hero_post(array $articles): array
     {
+        if (!function_exists('get_posts')) {
+            // Outside a full WP runtime (dev-preview.php): keep the old
+            // skip-newest behaviour.
+            return array_slice($articles, 1);
+        }
+
         $hero_ids = get_posts([
             'numberposts'  => 1,
             'post_status'  => 'publish',
