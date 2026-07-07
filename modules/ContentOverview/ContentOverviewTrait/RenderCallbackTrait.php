@@ -145,7 +145,7 @@ trait RenderCallbackTrait
         usort($all_articles, function ($a, $b) {
             return (int) strtotime($b['date'] ?? '') - (int) strtotime($a['date'] ?? '');
         });
-        $remaining = array_slice($all_articles, 1); // hero post excluded
+        $remaining = self::exclude_hero_post($all_articles);
 
         // 3. Build typed feed items ------------------------------------------
 
@@ -238,6 +238,46 @@ trait RenderCallbackTrait
         // 5. Render ----------------------------------------------------------
 
         return self::render_overview($merged, $channel_image);
+    }
+
+    /**
+     * Remove the post shown in the frontpage hero from the article list.
+     *
+     * The hero module queries the local database and always shows the newest
+     * published post, while this feed is built from REST responses that pass
+     * through the CDN and can lag behind by minutes to hours. Dropping "our
+     * newest" (the old array_slice($all_articles, 1)) therefore removed the
+     * wrong article whenever the feed was stale or a Prüfpunkt post happened
+     * to be newest. Matching the hero by its actual post ID cannot misfire:
+     * if the hero post is not in the (stale) list yet, nothing is dropped —
+     * the hero post is not in the feed anyway, so no duplicate can appear.
+     *
+     * @param array $articles Merged, deduped, date-sorted article list.
+     *
+     * @return array Articles without the hero post.
+     */
+    private static function exclude_hero_post(array $articles): array
+    {
+        $hero_ids = get_posts([
+            'numberposts'  => 1,
+            'post_status'  => 'publish',
+            'fields'       => 'ids',
+            'no_found_rows' => true,
+        ]);
+        $hero_id = $hero_ids ? (int) $hero_ids[0] : 0;
+
+        if (0 === $hero_id) {
+            // Cannot determine the hero post (empty site or query failure):
+            // fall back to the old behaviour of skipping the newest article.
+            return array_slice($articles, 1);
+        }
+
+        return array_values(array_filter($articles, function ($post) use ($hero_id) {
+            // Post IDs are only unique per site — never match a Prüfpunkt
+            // post against a Volksverpetzer hero ID.
+            return 'volksverpetzer' !== ($post['_vvp_source'] ?? 'volksverpetzer')
+                || (int) ($post['id'] ?? 0) !== $hero_id;
+        }));
     }
 
     // -------------------------------------------------------------------------
