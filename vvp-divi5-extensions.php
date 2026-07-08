@@ -59,6 +59,17 @@ add_action( 'plugins_loaded', [ 'VVP\Divi5\CronManager', 'register' ] );
 register_deactivation_hook( __FILE__, [ 'VVP\Divi5\CronManager', 'deactivate' ] );
 
 /**
+ * ContentOverview builds its article list from a local query cached for a few
+ * minutes. Purge that transient whenever a post is published, edited or
+ * unpublished so the feed reflects the change on the next page view.
+ */
+add_action( 'transition_post_status', function ( $new_status, $old_status, $post ) {
+	if ( 'post' === $post->post_type && ( 'publish' === $new_status || 'publish' === $old_status ) ) {
+		delete_transient( \VVP\Divi5\ContentOverview\ContentOverview::LOCAL_POSTS_TRANSIENT );
+	}
+}, 10, 3 );
+
+/**
  * Performance caches for Divi builder-5 render-path queries (uncached
  * Dynamic Content lookups that exhausted PHP-FPM). The attachment-URL
  * cache lives in the vvp_site_patches plugin (it patches WP core, not Divi).
