@@ -606,7 +606,7 @@ trait DataFetchTrait
      */
     private static function query_local_volksverpetzer_articles(): array
     {
-        $cache_key = 'vvp_co_vp_local';
+        $cache_key = self::LOCAL_POSTS_TRANSIENT;
         $cached    = get_transient($cache_key);
         if (is_array($cached) && !empty($cached)) {
             return $cached;
