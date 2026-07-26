@@ -20,7 +20,7 @@ jobs:
         uses: pnpm/action-setup@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: "22"
           cache: "pnpm"
@@ -35,6 +35,7 @@ jobs:
         run: |
           mkdir -p /tmp/deploy
           cp vvp-divi5-extensions.php /tmp/deploy/
+          cp -r includes /tmp/deploy/
           cp -r modules /tmp/deploy/
           cp -r modules-json /tmp/deploy/
           cp -r scripts /tmp/deploy/

@@ -28,6 +28,15 @@ class ContentOverview implements DependencyInterface
     use ContentOverviewTrait\ModuleScriptDataTrait;
 
     /**
+     * Transient holding the locally queried Volksverpetzer article list.
+     *
+     * Written by DataFetchTrait::query_local_volksverpetzer_articles() and
+     * purged by the transition_post_status hook in vvp-divi5-extensions.php —
+     * reference this constant from both sides so they cannot drift apart.
+     */
+    public const LOCAL_POSTS_TRANSIENT = 'vvp_co_vp_local';
+
+    /**
      * Loads `ContentOverview` and registers Front-End render callback.
      *
      * @since 1.0.0

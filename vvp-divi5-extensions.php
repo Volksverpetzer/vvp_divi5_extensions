@@ -3,7 +3,7 @@
 Plugin Name: Volksverpetzer DIVI 5 extensions
 Plugin URI:  https://github.com/Volksverpetzer/vvp_divi5_extensions
 Description: Adds the custom DIVI 5 extensions for Volksverpetzer.de to the site
-Version:     1.0.5
+Version:     1.0.6
 Author:      Volksverpetzer
 Author URI:  https://volksverpetzer.de
 License:     GPLv2 or later
@@ -33,7 +33,7 @@ if ( defined( 'VVP_DIVI5_PATH' ) ) {
 
 define( 'VVP_DIVI5_PATH', plugin_dir_path( __FILE__ ) );
 define( 'VVP_DIVI5_URL', plugin_dir_url( __FILE__ ) );
-define( 'VVP_DIVI5_VERSION', '1.0.5' );
+define( 'VVP_DIVI5_VERSION', '1.0.6' );
 define( 'VVP_DIVI5_JSON_PATH', VVP_DIVI5_PATH . 'modules-json/' );
 
 /**
@@ -57,6 +57,28 @@ require_once VVP_DIVI5_PATH . 'modules/CronManager.php';
 
 add_action( 'plugins_loaded', [ 'VVP\Divi5\CronManager', 'register' ] );
 register_deactivation_hook( __FILE__, [ 'VVP\Divi5\CronManager', 'deactivate' ] );
+
+/**
+ * ContentOverview builds its article list from a local query cached for a few
+ * minutes. Purge that transient whenever a post is published, edited or
+ * unpublished so the feed reflects the change on the next page view.
+ */
+add_action( 'transition_post_status', function ( $new_status, $old_status, $post ) {
+	if ( 'post' === $post->post_type && ( 'publish' === $new_status || 'publish' === $old_status ) ) {
+		delete_transient( \VVP\Divi5\ContentOverview\ContentOverview::LOCAL_POSTS_TRANSIENT );
+	}
+}, 10, 3 );
+
+/**
+ * Performance caches for Divi builder-5 render-path queries (uncached
+ * Dynamic Content lookups that exhausted PHP-FPM). The attachment-URL
+ * cache lives in the vvp_site_patches plugin (it patches WP core, not Divi).
+ */
+require_once VVP_DIVI5_PATH . 'includes/class-vvp-block-render-cache.php';
+require_once VVP_DIVI5_PATH . 'includes/class-vvp-dynamic-content-meta-keys-cache.php';
+
+add_action( 'plugins_loaded', [ 'VVP_Block_Render_Cache', 'init' ] );
+add_action( 'plugins_loaded', [ 'VVP_Dynamic_Content_Meta_Keys_Cache', 'init' ] );
 
 /**
  * Enqueue Visual Builder assets for DIVI 5.
