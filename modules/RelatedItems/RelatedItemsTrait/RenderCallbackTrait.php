@@ -133,7 +133,7 @@ trait RenderCallbackTrait
             return [];
         }
 
-        $own_host = wp_parse_url(home_url(), PHP_URL_HOST);
+        $own_host = self::normalize_host(wp_parse_url(home_url(), PHP_URL_HOST));
 
         $items = [];
         foreach ($data['results'] as $result) {
@@ -143,7 +143,13 @@ trait RenderCallbackTrait
             if (!is_array($result) || empty($result['url'])) {
                 continue;
             }
-            if (wp_parse_url($result['url'], PHP_URL_HOST) !== $own_host) {
+            // vectorcrawl's stored Item URLs are www-prefixed while this
+            // site's home_url() is the bare apex domain (verified live:
+            // www.volksverpetzer.de 301s to volksverpetzer.de) -- comparing
+            // hosts raw would filter out every single result. Same www/apex
+            // normalization prune_wordpress.py and vvp_app's isSameHost()
+            // already need for this exact domain.
+            if (self::normalize_host(wp_parse_url($result['url'], PHP_URL_HOST)) !== $own_host) {
                 continue; // Same filtering as the original embed script: same-domain only.
             }
 
@@ -195,6 +201,20 @@ trait RenderCallbackTrait
             'source'        => 'volksverpetzer',
             'reading_time'  => $reading_time ?: 0,
         ];
+    }
+
+    /**
+     * Lower-cases a host and strips a leading "www." so
+     * "www.volksverpetzer.de" and "volksverpetzer.de" compare equal.
+     * Returns '' for a null/false/empty host (e.g. a URL that failed to parse)
+     * rather than matching it against a legitimate empty string.
+     */
+    private static function normalize_host(?string $host): string
+    {
+        if (empty($host)) {
+            return '';
+        }
+        return preg_replace('/^www\./i', '', strtolower($host));
     }
 
     private static function acquire_refresh_lock(string $cache_key): bool
