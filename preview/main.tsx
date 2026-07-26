@@ -5,6 +5,7 @@ import "../src/components/content-overview/style.scss";
 import "../src/components/author-profile/style.scss";
 import "../src/components/trending-items/style.scss";
 import "../src/components/trending-list/style.scss";
+import "../src/components/related-items/style.scss";
 import { FactCheckSearchApp } from "../src/components/fact-check-search/App";
 import {
   ArticleCard,
@@ -16,6 +17,7 @@ import { YouTubeBanner } from "../src/components/content-overview/YouTubeBanner"
 import { AuthorProfileApp } from "../src/components/author-profile/App";
 import { TrendingItemsApp } from "../src/components/trending-items/App";
 import { TrendingListApp } from "../src/components/trending-list/App";
+import { RelatedItemsApp } from "../src/components/related-items/App";
 
 // ── Sample data ───────────────────────────────────────────────────────────────
 
@@ -705,6 +707,40 @@ const App = () => (
         >
           <div className="vvp-tl__mount" data-tl-initialized="true">
             <TrendingListApp items={[]} />
+          </div>
+        </div>
+      </Section>
+
+      <Section title="RelatedItems · Passende Artikel (3 Treffer)">
+        <div
+          className="vvp-related-items"
+          style={{
+            maxWidth: 720,
+            padding: "1.5rem",
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+          }}
+        >
+          <div className="vvp-ri__mount" data-ri-initialized="true">
+            <RelatedItemsApp items={TRENDING_ALL.slice(0, 3)} />
+          </div>
+        </div>
+      </Section>
+
+      <Section title="RelatedItems · Keine Treffer (rendert nichts)">
+        <div
+          className="vvp-related-items"
+          style={{
+            maxWidth: 720,
+            padding: "1.5rem",
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+          }}
+        >
+          <div className="vvp-ri__mount" data-ri-initialized="true">
+            <RelatedItemsApp items={TRENDING_EMPTY} />
           </div>
         </div>
       </Section>

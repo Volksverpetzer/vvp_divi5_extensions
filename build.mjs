@@ -95,6 +95,10 @@ const frontends = [
     name: "trending-list-frontend",
     entry: "./src/components/trending-list/frontend.tsx",
   },
+  {
+    name: "related-items-frontend",
+    entry: "./src/components/related-items/frontend.tsx",
+  },
 ];
 
 for (const dir of ["./scripts", "./styles"]) {
