@@ -1,0 +1,244 @@
+/* ============================================================
+   ArticleCard — vvp-co__* classes shared by every module that
+   renders `shared/ArticleCard.tsx` (ContentOverview, TrendingItems)
+   as well as ContentOverview's Instagram slideshow card, which
+   reuses this same card markup pattern.
+
+   Colocated with the component on purpose: these rules previously
+   lived in content-overview/style.scss, which made it easy for
+   other modules to unknowingly override them (see the Trending
+   card footer-alignment bug) instead of extending them.
+   ============================================================ */
+
+/* Badges */
+.vvp-co__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.vvp-co__badge--vvp {
+  background: var(--vvp-hellblau, #dbeafe);
+  color: var(--vvp-blue-main, #3893c0);
+}
+
+.vvp-co__badge--pruefpunkt {
+  background: #f6f0fe;
+  color: #442674;
+}
+
+.vvp-co__badge--insta {
+  background: #fce7f3;
+  color: #9d174d;
+}
+
+.vvp-co__badge--youtube {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.vvp-co__badge--podcast {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+/* Extra spacing for the YouTube badge icon, on top of the badge flex gap.
+   Replaces an inline style that caused a hydration attribute mismatch
+   between the React component and the PHP-rendered markup. */
+.vvp-co__badge-icon {
+  margin-right: 4px;
+}
+
+/* Category label */
+.vvp-co__category {
+  display: inline-block;
+  font-size: 1rem;
+  transition: color 0.15s ease;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--vvp-blue-2, #2563eb);
+  margin-right: 0.375rem;
+}
+
+/* Feed card base */
+.vvp-co__feed-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+  background-color: #f9f9f9;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.625rem;
+  overflow: hidden;
+  box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.1);
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.vvp-co__feed-card:hover {
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.15);
+  border-color: #d1d5db;
+  background: #fff;
+}
+
+.vvp-co__feed-image-wrap {
+  overflow: hidden;
+  aspect-ratio: 350/183;
+  background: #f3f4f6;
+  position: relative;
+}
+
+.vvp-co__feed-image-wrap--square {
+  aspect-ratio: 1/1;
+}
+
+.vvp-co__feed-image-wrap--yt {
+  aspect-ratio: 16/9;
+}
+
+.vvp-co__feed-image {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease;
+}
+
+.vvp-co__feed-card:hover .vvp-co__feed-image {
+  transform: scale(1.04);
+}
+
+.vvp-co__feed-image--insta {
+  object-position: center;
+}
+
+.vvp-co__feed-body {
+  padding: 0.875rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.vvp-co__feed-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.vvp-co__feed-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #111827;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.15s ease;
+  padding-bottom: 0;
+}
+
+.vvp-co__feed-excerpt {
+  /* Fills the remaining card-body height so `.vvp-co__feed-footer`
+     lands at the same y-position across a row regardless of title
+     length, instead of leaving that job to a margin on the footer. */
+  flex: 1;
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  color: #4b5563;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.vvp-co__feed-excerpt--insta {
+  -webkit-line-clamp: 3;
+}
+
+.vvp-co__feed-date {
+  font-size: 1rem;
+  color: #9ca3af;
+  margin-top: auto;
+  padding-top: 0.375rem;
+}
+
+.vvp-co__feed-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  margin-top: auto;
+  padding-top: 0.375rem;
+}
+
+.vvp-co__feed-footer .vvp-co__feed-date {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.vvp-co__feed-footer .vvp-co__feed-reading-time {
+  color: #9ca3af;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+.vvp-co__feed-footer .vvp-co__category {
+  color: #9ca3af;
+  font-size: 1rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  margin-right: 0;
+}
+
+button.vvp-co__category--btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: inherit;
+}
+
+button.vvp-co__category--btn:hover,
+.vvp-co__category:hover {
+  color: #585c67;
+}
+
+/* YouTube play button overlay */
+.vvp-co__yt-play-btn {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  transition: background 0.2s ease;
+}
+
+.vvp-co__feed-card:hover .vvp-co__yt-play-btn {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.vvp-co__yt-play-btn svg {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+}
