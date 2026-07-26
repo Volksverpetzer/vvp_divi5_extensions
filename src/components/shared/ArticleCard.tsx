@@ -1,5 +1,6 @@
 import * as React from "react";
 import { trackEvent } from "../../utils/plausible";
+import "./ArticleCard.scss";
 
 export interface ArticleCardProps {
   type?: "article" | "youtube";
