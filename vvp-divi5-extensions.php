@@ -62,10 +62,18 @@ register_deactivation_hook( __FILE__, [ 'VVP\Divi5\CronManager', 'deactivate' ] 
  * ContentOverview builds its article list from a local query cached for a few
  * minutes. Purge that transient whenever a post is published, edited or
  * unpublished so the feed reflects the change on the next page view.
+ *
+ * RelatedItems caches a post's own vectorcrawl recommendations (server-side
+ * fetch result) for 6h. Purge that post's own cache on the same event, so a
+ * one-off failed/empty fetch -- or a content change affecting its own card
+ * data (title, thumbnail, excerpt) -- can self-heal by re-publishing/saving
+ * the post, instead of silently sticking for up to 6h with no admin-facing
+ * way to force a refresh.
  */
 add_action( 'transition_post_status', function ( $new_status, $old_status, $post ) {
 	if ( 'post' === $post->post_type && ( 'publish' === $new_status || 'publish' === $old_status ) ) {
 		delete_transient( \VVP\Divi5\ContentOverview\ContentOverview::LOCAL_POSTS_TRANSIENT );
+		delete_transient( \VVP\Divi5\RelatedItems\RelatedItems::cache_key( $post->ID ) );
 	}
 }, 10, 3 );
 

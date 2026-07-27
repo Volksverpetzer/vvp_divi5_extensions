@@ -92,7 +92,7 @@ trait RenderCallbackTrait
             return [];
         }
 
-        $cache_key = 'vvp_ri_' . $post_id;
+        $cache_key = self::cache_key($post_id);
         $cached    = get_transient($cache_key);
         if (false !== $cached) {
             return $cached;
@@ -215,6 +215,17 @@ trait RenderCallbackTrait
             return '';
         }
         return preg_replace('/^www\./i', '', strtolower($host));
+    }
+
+    /**
+     * Public (unlike the rest of this trait) so the main plugin file's
+     * transition_post_status hook can build the same key to purge a post's
+     * cached recommendation list on publish/update, without duplicating the
+     * 'vvp_ri_' prefix format in two places.
+     */
+    public static function cache_key(int $post_id): string
+    {
+        return 'vvp_ri_' . $post_id;
     }
 
     private static function acquire_refresh_lock(string $cache_key): bool
