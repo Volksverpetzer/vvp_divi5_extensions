@@ -52,6 +52,11 @@ export const CampaignProgressApp = ({
   const percent =
     goal > 0 ? Math.min(100, Math.max(0, (total / goal) * 100)) : 0;
 
+  let safeDonateUrl: string | undefined;
+  if (donateUrl && SAFE_URL_PATTERN.test(donateUrl)) {
+    safeDonateUrl = donateUrl;
+  }
+
   return (
     <div className="vvp-cp">
       <div className="vvp-cp__amounts">
@@ -68,8 +73,8 @@ export const CampaignProgressApp = ({
       >
         <div className="vvp-cp__fill" style={{ width: `${percent}%` }} />
       </div>
-      {donateUrl && SAFE_URL_PATTERN.test(donateUrl) && (
-        <a className="vvp-cp__donate" href={donateUrl}>
+      {safeDonateUrl && (
+        <a className="vvp-cp__donate" href={safeDonateUrl}>
           {donateLabel || "Jetzt spenden"}
         </a>
       )}

@@ -131,6 +131,11 @@ export const CampaignDonateApp = ({
   };
 
   if (donationComplete) {
+    let safeCertificateUrl: string | undefined;
+    if (certificateUrl && SAFE_URL_PATTERN.test(certificateUrl)) {
+      safeCertificateUrl = certificateUrl;
+    }
+
     return (
       <div className="vvp-cd">
         <div className="vvp-cd__thanks">
@@ -138,10 +143,10 @@ export const CampaignDonateApp = ({
           <p>
             Deine Spende über {amount.toLocaleString("de-DE")} € wurde gezählt.
           </p>
-          {certificateUrl && SAFE_URL_PATTERN.test(certificateUrl) && (
+          {safeCertificateUrl && (
             <a
               className="vvp-cd__certificate"
-              href={certificateUrl}
+              href={safeCertificateUrl}
               target="_blank"
               rel="noreferrer"
             >
