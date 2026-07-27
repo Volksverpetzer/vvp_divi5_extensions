@@ -5,44 +5,42 @@ import { ModuleStyles } from "./styles";
 import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";
 import { ArticleCard, type ArticleCardProps } from "../shared/ArticleCard";
+import { catPlaceholderImage as img } from "../shared/catPlaceholder";
 
 const PLACEHOLDER_ARTICLES: ArticleCardProps[] = [
   {
-    title: "Warum Fakten mehr zählen als Gefühle",
+    title: "Warum Katzenfotos mehr zählen als politische Argumente",
     excerpt:
-      "Eine Analyse der häufigsten Desinformationsmuster in sozialen Netzwerken.",
+      "Fell-Checker arbeiten täglich daran, Fehlinformationen über Katzen zu widerlegen, bevor sie sich weiter verbreiten.",
     link: "#",
     date: "17.05.2026",
     reading_time: 4,
     category: "Analyse",
     category_link: "#",
     source: "volksverpetzer",
-    image_url:
-      "https://via.placeholder.com/640x360/e5e7eb/a3a3a3?text=Passend+1",
+    image_url: img("passend1"),
   },
   {
-    title: "AfD und die Medien: Eine Bilanz",
-    excerpt: "Wie rechte Narrative in den Mainstream gelangen.",
+    title: "Schmusekatze oder Schreibtischtäter: Eine kritische Bilanz",
+    excerpt: "Wie flauschige Narrative in den Mainstream gelangen.",
     link: "#",
     date: "16.05.2026",
     reading_time: 6,
     category: "Politik",
     category_link: "#",
     source: "volksverpetzer",
-    image_url:
-      "https://via.placeholder.com/640x360/e5e7eb/a3a3a3?text=Passend+2",
+    image_url: img("passend2"),
   },
   {
-    title: "Klimaschutz: Was stimmt wirklich?",
+    title: "Katzenfutter: Was stimmt wirklich an den Nährwerten?",
     excerpt:
-      "Der Faktencheck zur aktuellen politischen Debatte über Emissionsziele.",
+      "Der Fell-Check zur aktuellen Debatte über Trocken- versus Nassfutter.",
     link: "#",
     date: "15.05.2026",
     reading_time: 3,
     category: "Faktencheck",
     source: "volksverpetzer",
-    image_url:
-      "https://via.placeholder.com/640x360/e5e7eb/a3a3a3?text=Passend+3",
+    image_url: img("passend3"),
   },
 ];
 

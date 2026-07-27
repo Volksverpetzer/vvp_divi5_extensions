@@ -18,24 +18,9 @@ import { AuthorProfileApp } from "../src/components/author-profile/App";
 import { TrendingItemsApp } from "../src/components/trending-items/App";
 import { TrendingListApp } from "../src/components/trending-list/App";
 import { RelatedItemsApp } from "../src/components/related-items/App";
+import { catPlaceholderImage as pimg } from "../src/components/shared/catPlaceholder";
 
 // ── Sample data ───────────────────────────────────────────────────────────────
-
-const CATS = [
-  "bella",
-  "millie",
-  "millie_neo",
-  "neo",
-  "neo_banana",
-  "neo_2",
-  "poppy",
-  "louie",
-] as const;
-const pimg = (seed: string, w = 640, h = 360) => {
-  const cat =
-    CATS[seed.split("").reduce((a, c) => a + c.charCodeAt(0), 0) % CATS.length];
-  return `https://placecats.com/${cat}/${w}/${h}`;
-};
 
 const TRENDING_ALL: ArticleCardProps[] = [
   {
