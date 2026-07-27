@@ -1,7 +1,12 @@
 import React, { type ReactElement, useEffect, useState } from "react";
 import { type CampaignProgressAppProps, type CampaignSummary } from "./types";
 import { POLL_INTERVAL_MS } from "./constants";
-import { toSafeUrl } from "../../utils/safeUrl";
+
+// Inline (not delegated to an imported helper) so static analysis tracking
+// this value's flow into the href sink below can see the guard directly:
+// only http(s) or root-relative URLs may reach the anchor, blocking
+// javascript:/data: URL injection via this DOM-attribute-sourced value.
+const SAFE_URL_PATTERN = /^(https?:\/\/|\/(?!\/))/i;
 
 const formatEuro = (value: number): string =>
   value.toLocaleString("de-DE", { minimumFractionDigits: 0 }) + " €";
@@ -46,7 +51,6 @@ export const CampaignProgressApp = ({
 
   const percent =
     goal > 0 ? Math.min(100, Math.max(0, (total / goal) * 100)) : 0;
-  const safeDonateUrl = donateUrl ? toSafeUrl(donateUrl) : null;
 
   return (
     <div className="vvp-cp">
@@ -64,8 +68,8 @@ export const CampaignProgressApp = ({
       >
         <div className="vvp-cp__fill" style={{ width: `${percent}%` }} />
       </div>
-      {safeDonateUrl && (
-        <a className="vvp-cp__donate" href={safeDonateUrl}>
+      {donateUrl && SAFE_URL_PATTERN.test(donateUrl) && (
+        <a className="vvp-cp__donate" href={donateUrl}>
           {donateLabel || "Jetzt spenden"}
         </a>
       )}

@@ -11,7 +11,12 @@ import {
   type StripeEmbeddedCheckout,
 } from "@stripe/stripe-js";
 import { type CampaignDonateAppProps } from "./types";
-import { toSafeUrl } from "../../utils/safeUrl";
+
+// Inline (not delegated to an imported helper) so static analysis tracking
+// this value's flow into the href sink below can see the guard directly:
+// only http(s) or root-relative URLs may reach the anchor, blocking
+// javascript:/data: URL injection via this DOM-attribute-sourced value.
+const SAFE_URL_PATTERN = /^(https?:\/\/|\/(?!\/))/i;
 
 const stripePromises = new Map<string, Promise<Stripe | null>>();
 const getStripe = (publicKey: string) => {
@@ -126,9 +131,6 @@ export const CampaignDonateApp = ({
   };
 
   if (donationComplete) {
-    const safeCertificateUrl = certificateUrl
-      ? toSafeUrl(certificateUrl)
-      : null;
     return (
       <div className="vvp-cd">
         <div className="vvp-cd__thanks">
@@ -136,10 +138,10 @@ export const CampaignDonateApp = ({
           <p>
             Deine Spende über {amount.toLocaleString("de-DE")} € wurde gezählt.
           </p>
-          {safeCertificateUrl && (
+          {certificateUrl && SAFE_URL_PATTERN.test(certificateUrl) && (
             <a
               className="vvp-cd__certificate"
-              href={safeCertificateUrl}
+              href={certificateUrl}
               target="_blank"
               rel="noreferrer"
             >
