@@ -8,6 +8,7 @@ import { contentOverview } from "./components/content-overview";
 import { authorProfile } from "./components/author-profile";
 import { trendingItems } from "./components/trending-items";
 import { trendingList } from "./components/trending-list";
+import { relatedItems } from "./components/related-items";
 
 // Import icons.
 import "./module-icons";
@@ -54,5 +55,14 @@ addAction(
   "vvp/trendingList",
   () => {
     registerModule(trendingList.metadata, omit(trendingList, "metadata"));
+  },
+);
+
+// Register Related Items module with DIVI.
+addAction(
+  "divi.moduleLibrary.registerModuleLibraryStore.after",
+  "vvp/relatedItems",
+  () => {
+    registerModule(relatedItems.metadata, omit(relatedItems, "metadata"));
   },
 );

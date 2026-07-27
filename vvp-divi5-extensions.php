@@ -167,6 +167,19 @@ function VVP_DIVI5_enqueue_vb_scripts() {
 				],
 			]
 		);
+
+		\ET\Builder\VisualBuilder\Assets\PackageBuildManager::register_package_build(
+			[
+				'name'    => 'vvp-related-items-frontend-vb',
+				'version' => VVP_DIVI5_VERSION,
+				'script'  => [
+					'src'                => VVP_DIVI5_URL . 'scripts/related-items-frontend.js',
+					'deps'               => [],
+					'enqueue_top_window' => false,
+					'enqueue_app_window' => true,
+				],
+			]
+		);
 	}
 }
 add_action( 'divi_visual_builder_assets_before_enqueue_scripts', 'VVP_DIVI5_enqueue_vb_scripts' );
@@ -236,6 +249,17 @@ function VVP_DIVI5_enqueue_frontend_scripts() {
 		VVP_DIVI5_URL . 'scripts/trending-list-frontend.js',
 		array(),
 		$tl_frontend_ver,
+		true
+	);
+
+	$ri_frontend_path = VVP_DIVI5_PATH . 'scripts/related-items-frontend.js';
+	$ri_frontend_ver  = file_exists( $ri_frontend_path ) ? filemtime( $ri_frontend_path ) : VVP_DIVI5_VERSION;
+
+	wp_enqueue_script(
+		'vvp-related-items-frontend',
+		VVP_DIVI5_URL . 'scripts/related-items-frontend.js',
+		array(),
+		$ri_frontend_ver,
 		true
 	);
 }
