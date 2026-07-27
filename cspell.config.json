@@ -10,6 +10,7 @@
     "jsxs",
     "katze",
     "Katzenverpetzer",
+    "komma",
     "Kratzbäume",
     "Laschyk",
     "louie",
@@ -23,7 +24,8 @@
     "scss",
     "Schnurr",
     "volksverpetzer",
-    "vvp"
+    "vvp",
+    "xmas"
   ],
   "allowCompoundWords": true,
   "files": ["src/**/*"],

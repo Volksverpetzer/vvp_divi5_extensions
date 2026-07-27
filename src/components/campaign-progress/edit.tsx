@@ -44,7 +44,7 @@ export const CampaignProgressEdit = (
         <div className="vvp-cp__config-hint">
           <p>
             <strong>Keine Fortschritts-API URL gesetzt.</strong> Die Vorschau
-            zeigt Platzhalterwerte. Tragen Sie in den Moduleinstellungen die URL
+            zeigt fiktive Werte. Tragen Sie in den Moduleinstellungen die URL
             des Kampagnen-Endpunkts ein.
           </p>
         </div>
