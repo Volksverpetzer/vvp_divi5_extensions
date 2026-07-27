@@ -1,8 +1,8 @@
 export const placeholderContent = {
   module: {},
-  apiBaseUrl: { desktop: { value: "" } },
-  campaignKey: { desktop: { value: "" } },
-  stripePublicKey: { desktop: { value: "" } },
-  presets: { desktop: { value: "10,50,100" } },
-  certificateUrl: { desktop: { value: "" } },
+  apiBaseUrl: { innerContent: { desktop: { value: "" } } },
+  campaignKey: { innerContent: { desktop: { value: "" } } },
+  stripePublicKey: { innerContent: { desktop: { value: "" } } },
+  presets: { innerContent: { desktop: { value: "10,50,100" } } },
+  certificateUrl: { innerContent: { desktop: { value: "" } } },
 };

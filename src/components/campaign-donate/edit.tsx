@@ -19,14 +19,19 @@ export const CampaignDonateEdit = (
 ): ReactElement => {
   const { attrs, elements, id, name } = props;
 
-  const apiBaseUrl = (attrs as any).apiBaseUrl?.desktop?.value?.trim() ?? "";
-  const campaignKey = (attrs as any).campaignKey?.desktop?.value?.trim() ?? "";
+  // Text fields declared with attrName "<name>.innerContent" in module.json
+  // store their value under attrs.<name>.innerContent.desktop.value, not
+  // attrs.<name>.desktop.value.
+  const apiBaseUrl =
+    (attrs as any).apiBaseUrl?.innerContent?.desktop?.value?.trim() ?? "";
+  const campaignKey =
+    (attrs as any).campaignKey?.innerContent?.desktop?.value?.trim() ?? "";
   const stripePublicKey =
-    (attrs as any).stripePublicKey?.desktop?.value?.trim() ?? "";
+    (attrs as any).stripePublicKey?.innerContent?.desktop?.value?.trim() ?? "";
   const presetsInput =
-    (attrs as any).presets?.desktop?.value?.trim() ?? "10,50,100";
+    (attrs as any).presets?.innerContent?.desktop?.value?.trim() ?? "10,50,100";
   const certificateUrl =
-    (attrs as any).certificateUrl?.desktop?.value?.trim() ?? "";
+    (attrs as any).certificateUrl?.innerContent?.desktop?.value?.trim() ?? "";
 
   const missingConfig =
     apiBaseUrl === "" || campaignKey === "" || stripePublicKey === "";
