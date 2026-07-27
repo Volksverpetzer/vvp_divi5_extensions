@@ -1,0 +1,89 @@
+/* Campaign Donate — frontend styles */
+
+.vvp-campaign-donate {
+  .vvp-cd__form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .vvp-cd__presets {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .vvp-cd__preset {
+    padding: 0.75rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+
+    &.is-active {
+      border-color: #dc2626;
+      color: #dc2626;
+    }
+  }
+
+  .vvp-cd__label {
+    font-size: 0.85rem;
+    color: #6b7280;
+  }
+
+  .vvp-cd__input {
+    padding: 0.75rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .vvp-cd__submit {
+    padding: 0.875rem;
+    border: none;
+    border-radius: 999px;
+    background: #dc2626;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+
+    &:hover {
+      background: #b91c1c;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .vvp-cd__error {
+    color: #dc2626;
+    font-size: 0.9rem;
+  }
+
+  .vvp-cd__checkout {
+    min-height: 500px;
+  }
+
+  .vvp-cd__thanks {
+    text-align: center;
+    padding: 2rem 1rem;
+
+    strong {
+      display: block;
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .vvp-cd__certificate {
+    display: inline-block;
+    margin-top: 1rem;
+    color: #dc2626;
+    font-weight: 700;
+  }
+}

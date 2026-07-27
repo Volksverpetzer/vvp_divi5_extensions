@@ -18,6 +18,8 @@ use VVP\Divi5\AuthorProfile\AuthorProfile;
 use VVP\Divi5\TrendingItems\TrendingItems;
 use VVP\Divi5\TrendingList\TrendingList;
 use VVP\Divi5\RelatedItems\RelatedItems;
+use VVP\Divi5\CampaignProgress\CampaignProgress;
+use VVP\Divi5\CampaignDonate\CampaignDonate;
 
 add_action(
     'divi_module_library_modules_dependency_tree',
@@ -28,5 +30,7 @@ add_action(
         $dependency_tree->add_dependency(new TrendingItems());
         $dependency_tree->add_dependency(new TrendingList());
         $dependency_tree->add_dependency(new RelatedItems());
+        $dependency_tree->add_dependency(new CampaignProgress());
+        $dependency_tree->add_dependency(new CampaignDonate());
     }
 );
