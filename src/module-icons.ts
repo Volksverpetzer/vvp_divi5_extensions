@@ -4,6 +4,8 @@ import * as contentOverviewIcon from "./icons/content-overview";
 import * as authorProfileIcon from "./icons/author-profile";
 import * as trendingItemsIcon from "./icons/trending-items";
 import * as relatedItemsIcon from "./icons/related-items";
+import * as campaignProgressIcon from "./icons/campaign-progress";
+import * as campaignDonateIcon from "./icons/campaign-donate";
 
 // Add module icons to the icon library.
 addFilter("divi.iconLibrary.icon.map", "vvp/divi5", (icons) => {
@@ -14,5 +16,7 @@ addFilter("divi.iconLibrary.icon.map", "vvp/divi5", (icons) => {
     [authorProfileIcon.name]: authorProfileIcon,
     [trendingItemsIcon.name]: trendingItemsIcon,
     [relatedItemsIcon.name]: relatedItemsIcon,
+    [campaignProgressIcon.name]: campaignProgressIcon,
+    [campaignDonateIcon.name]: campaignDonateIcon,
   };
 });

@@ -188,6 +188,32 @@ function VVP_DIVI5_enqueue_vb_scripts() {
 				],
 			]
 		);
+
+		\ET\Builder\VisualBuilder\Assets\PackageBuildManager::register_package_build(
+			[
+				'name'    => 'vvp-campaign-progress-frontend-vb',
+				'version' => VVP_DIVI5_VERSION,
+				'script'  => [
+					'src'                => VVP_DIVI5_URL . 'scripts/campaign-progress-frontend.js',
+					'deps'               => [],
+					'enqueue_top_window' => false,
+					'enqueue_app_window' => true,
+				],
+			]
+		);
+
+		\ET\Builder\VisualBuilder\Assets\PackageBuildManager::register_package_build(
+			[
+				'name'    => 'vvp-campaign-donate-frontend-vb',
+				'version' => VVP_DIVI5_VERSION,
+				'script'  => [
+					'src'                => VVP_DIVI5_URL . 'scripts/campaign-donate-frontend.js',
+					'deps'               => [],
+					'enqueue_top_window' => false,
+					'enqueue_app_window' => true,
+				],
+			]
+		);
 	}
 }
 add_action( 'divi_visual_builder_assets_before_enqueue_scripts', 'VVP_DIVI5_enqueue_vb_scripts' );
@@ -268,6 +294,28 @@ function VVP_DIVI5_enqueue_frontend_scripts() {
 		VVP_DIVI5_URL . 'scripts/related-items-frontend.js',
 		array(),
 		$ri_frontend_ver,
+		true
+	);
+
+	$cp_frontend_path = VVP_DIVI5_PATH . 'scripts/campaign-progress-frontend.js';
+	$cp_frontend_ver  = file_exists( $cp_frontend_path ) ? filemtime( $cp_frontend_path ) : VVP_DIVI5_VERSION;
+
+	wp_enqueue_script(
+		'vvp-campaign-progress-frontend',
+		VVP_DIVI5_URL . 'scripts/campaign-progress-frontend.js',
+		array(),
+		$cp_frontend_ver,
+		true
+	);
+
+	$cd_frontend_path = VVP_DIVI5_PATH . 'scripts/campaign-donate-frontend.js';
+	$cd_frontend_ver  = file_exists( $cd_frontend_path ) ? filemtime( $cd_frontend_path ) : VVP_DIVI5_VERSION;
+
+	wp_enqueue_script(
+		'vvp-campaign-donate-frontend',
+		VVP_DIVI5_URL . 'scripts/campaign-donate-frontend.js',
+		array(),
+		$cd_frontend_ver,
 		true
 	);
 }

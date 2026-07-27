@@ -99,6 +99,14 @@ const frontends = [
     name: "related-items-frontend",
     entry: "./src/components/related-items/frontend.tsx",
   },
+  {
+    name: "campaign-progress-frontend",
+    entry: "./src/components/campaign-progress/frontend.tsx",
+  },
+  {
+    name: "campaign-donate-frontend",
+    entry: "./src/components/campaign-donate/frontend.tsx",
+  },
 ];
 
 for (const dir of ["./scripts", "./styles"]) {

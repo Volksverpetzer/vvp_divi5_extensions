@@ -4,7 +4,7 @@
   "description": "DIVI 5 extension for the vvp wordpress site",
   "private": true,
   "license": "GPL-2.0-or-later",
-  "packageManager": "pnpm@11.16.0",
+  "packageManager": "pnpm@11.17.0",
   "author": "Volksverpetzer",
   "engines": {
     "npm": ">=10.0.0",
@@ -31,6 +31,7 @@
     "update:deps": "pnpx npm-check-updates -c 1d -i --format group"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^8.5.3",
     "classnames": "^2.5.1"
   },
   "devDependencies": {
@@ -56,7 +57,7 @@
     "eslint-plugin-prettier": "^5.5.6",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "globals": "^17.7.0",
+    "globals": "^17.8.0",
     "happy-dom": "^20.11.1",
     "husky": "^9.1.7",
     "lint-staged": "^17.2.0",

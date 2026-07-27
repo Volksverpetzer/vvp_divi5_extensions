@@ -1,0 +1,20 @@
+/* Campaign Donate — Visual Builder specific styles */
+
+.et-fb {
+  .vvp-campaign-donate {
+    .vvp-cd__config-hint {
+      font-size: 0.75rem;
+      color: #6b7280;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.25rem;
+      padding: 0.375rem 0.625rem;
+      margin-top: 0.75rem;
+    }
+
+    .vvp-cd__preset,
+    .vvp-cd__submit {
+      pointer-events: none;
+    }
+  }
+}

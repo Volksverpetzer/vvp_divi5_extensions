@@ -1,0 +1,174 @@
+{
+  "name": "vvp/campaign-donate",
+  "d4Shortcode": "",
+  "title": "Spenden-Formular",
+  "titles": "Spenden-Formulare",
+  "moduleIcon": "vvp/campaign-donate-icon",
+  "moduleClassName": "campaign_donate",
+  "moduleOrderClassName": "campaign_donate",
+  "category": "module",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "styleProps": {
+        "border": {
+          "important": true
+        }
+      },
+      "settings": {
+        "meta": {
+          "adminLabel": {}
+        },
+        "advanced": {
+          "link": {},
+          "text": {},
+          "htmlAttributes": {}
+        },
+        "decoration": {
+          "attributes": {},
+          "background": {},
+          "sizing": {},
+          "spacing": {},
+          "border": {},
+          "boxShadow": {},
+          "filters": {},
+          "transform": {},
+          "animation": {},
+          "overflow": {},
+          "disabledOn": {},
+          "transition": {},
+          "position": {},
+          "zIndex": {},
+          "scroll": {},
+          "sticky": {}
+        }
+      }
+    },
+    "apiBaseUrl": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 10,
+            "render": true,
+            "attrName": "apiBaseUrl.innerContent",
+            "label": "Kampagnen-API Basis-URL",
+            "description": "Basis-URL der Spenden-App, ohne abschließenden Slash, z. B. https://crowdfund.volksverpetzer.de. Ruft dort /api/create-checkout-session und /api/finalize-session auf.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "campaignKey": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 15,
+            "render": true,
+            "attrName": "campaignKey.innerContent",
+            "label": "Kampagnen-Kennung",
+            "description": "Trennt Spenden verschiedener Kampagnen in derselben App/DB, z. B. flyer2026, xmas2025.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "stripePublicKey": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 20,
+            "render": true,
+            "attrName": "stripePublicKey.innerContent",
+            "label": "Stripe Publishable Key",
+            "description": "Öffentlicher Stripe-Schlüssel (pk_live_... / pk_test_...) des Kampagnen-Accounts.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "presets": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 30,
+            "render": true,
+            "attrName": "presets.innerContent",
+            "label": "Betrags-Vorschläge (€, komma-getrennt)",
+            "description": "Zum Beispiel: 10,50,100",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "certificateUrl": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 40,
+            "render": true,
+            "attrName": "certificateUrl.innerContent",
+            "label": "Urkunde-Link (optional)",
+            "description": "Wird nach abgeschlossener Spende als Download-Link angezeigt. Leer lassen, um ihn auszublenden.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "content": "auto",
+    "design": "auto",
+    "advanced": "auto"
+  }
+}
