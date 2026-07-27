@@ -11,6 +11,7 @@ import {
   type StripeEmbeddedCheckout,
 } from "@stripe/stripe-js";
 import { type CampaignDonateAppProps } from "./types";
+import { isSafeUrl } from "../../utils/safeUrl";
 
 const stripePromises = new Map<string, Promise<Stripe | null>>();
 const getStripe = (publicKey: string) => {
@@ -132,7 +133,7 @@ export const CampaignDonateApp = ({
           <p>
             Deine Spende über {amount.toLocaleString("de-DE")} € wurde gezählt.
           </p>
-          {certificateUrl && (
+          {certificateUrl && isSafeUrl(certificateUrl) && (
             <a
               className="vvp-cd__certificate"
               href={certificateUrl}

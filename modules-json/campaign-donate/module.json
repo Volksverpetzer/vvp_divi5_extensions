@@ -127,7 +127,7 @@
             "priority": 30,
             "render": true,
             "attrName": "presets.innerContent",
-            "label": "Betrags-Vorschläge (€, kommagetrennt)",
+            "label": "Betrags-Vorschläge (€, komma-getrennt)",
             "description": "Zum Beispiel: 10,50,100",
             "features": {
               "sticky": false,
