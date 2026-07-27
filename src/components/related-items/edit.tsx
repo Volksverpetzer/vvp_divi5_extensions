@@ -5,15 +5,7 @@ import { ModuleStyles } from "./styles";
 import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";
 import { ArticleCard, type ArticleCardProps } from "../shared/ArticleCard";
-
-// Same placecats.com cat-photo placeholder as ContentOverview's edit.tsx,
-// used here for consistency across the Visual Builder editor previews.
-const CATS = ["neo", "millie", "banana", "bella", "poppy", "louie"] as const;
-const img = (seed: string, w = 640, h = 360) => {
-  const cat =
-    CATS[seed.split("").reduce((a, c) => a + c.charCodeAt(0), 0) % CATS.length];
-  return `https://placecats.com/${cat}/${w}/${h}`;
-};
+import { catPlaceholderImage as img } from "../shared/catPlaceholder";
 
 const PLACEHOLDER_ARTICLES: ArticleCardProps[] = [
   {
