@@ -1,13 +1,17 @@
 export const placeholderContent = {
   module: {},
   searchApiUrl: {
-    desktop: {
-      value: "",
+    innerContent: {
+      desktop: {
+        value: "",
+      },
     },
   },
   importApiUrl: {
-    desktop: {
-      value: "",
+    innerContent: {
+      desktop: {
+        value: "",
+      },
     },
   },
 };

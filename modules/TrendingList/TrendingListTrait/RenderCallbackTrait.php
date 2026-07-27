@@ -22,7 +22,10 @@ trait RenderCallbackTrait
 {
     public static function render_callback($attrs, $content, $block, $elements)
     {
-        $range = $attrs['range']['desktop']['value'] ?? 'last7days';
+        // "range" is declared with attrName "range.innerContent" in
+        // module.json, so it's stored under attrs.range.innerContent.<bp>.value,
+        // not attrs.range.<bp>.value — see PR #105.
+        $range = $attrs['range']['innerContent']['desktop']['value'] ?? 'last7days';
         $items = self::get_trending_items(3, $range);
 
         $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);

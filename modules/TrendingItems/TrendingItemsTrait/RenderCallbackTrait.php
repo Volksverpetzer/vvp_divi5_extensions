@@ -22,8 +22,11 @@ trait RenderCallbackTrait
 {
     public static function render_callback($attrs, $content, $block, $elements)
     {
-        $show_thumb = ($attrs['showThumbnail']['desktop']['value'] ?? 'on') !== 'off';
-        $range      = $attrs['range']['desktop']['value'] ?? 'last7days';
+        // Fields declared with attrName "<name>.innerContent" in module.json
+        // are stored under attrs.<name>.innerContent.<bp>.value, not
+        // attrs.<name>.<bp>.value — see PR #105.
+        $show_thumb = ($attrs['showThumbnail']['innerContent']['desktop']['value'] ?? 'on') !== 'off';
+        $range      = $attrs['range']['innerContent']['desktop']['value'] ?? 'last7days';
 
         $items = self::get_trending_items(3, $range);
 

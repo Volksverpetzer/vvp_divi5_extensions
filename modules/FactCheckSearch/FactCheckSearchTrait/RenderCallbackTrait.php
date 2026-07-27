@@ -34,8 +34,11 @@ trait RenderCallbackTrait
      */
     public static function render_callback($attrs, $content, $block, $elements)
     {
-        $search_api_url = $attrs['searchApiUrl']['desktop']['value'] ?? '';
-        $import_api_url = $attrs['importApiUrl']['desktop']['value'] ?? '';
+        // Text fields declared with attrName "<name>.innerContent" in
+        // module.json are stored under attrs.<name>.innerContent.<bp>.value,
+        // not attrs.<name>.<bp>.value — see PR #105 for how this was found.
+        $search_api_url = $attrs['searchApiUrl']['innerContent']['desktop']['value'] ?? '';
+        $import_api_url = $attrs['importApiUrl']['innerContent']['desktop']['value'] ?? '';
 
         if ( '' === $search_api_url ) {
             $search_api_url = 'https://ai.volksverpetzer-app.de/api/vector-search/';
