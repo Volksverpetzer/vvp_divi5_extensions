@@ -29,11 +29,14 @@ trait RenderCallbackTrait
      */
     public static function render_callback($attrs, $content, $block, $elements)
     {
-        $show_avatar = ($attrs['showAvatar']['desktop']['value'] ?? 'on') !== 'off';
-        $show_bio    = ($attrs['showBio']['desktop']['value'] ?? 'on') !== 'off';
-        $show_link   = ($attrs['showLink']['desktop']['value'] ?? 'on') !== 'off';
-        $layout      = $attrs['layout']['desktop']['value'] ?? 'vertical';
-        $avatar_size = max(16, (int) preg_replace('/[^0-9]/', '', $attrs['avatarSize']['desktop']['value'] ?? '200') ?: 200);
+        // Fields declared with attrName "<name>.innerContent" in module.json
+        // are stored under attrs.<name>.innerContent.<bp>.value, not
+        // attrs.<name>.<bp>.value — see PR #105.
+        $show_avatar = ($attrs['showAvatar']['innerContent']['desktop']['value'] ?? 'on') !== 'off';
+        $show_bio    = ($attrs['showBio']['innerContent']['desktop']['value'] ?? 'on') !== 'off';
+        $show_link   = ($attrs['showLink']['innerContent']['desktop']['value'] ?? 'on') !== 'off';
+        $layout      = $attrs['layout']['innerContent']['desktop']['value'] ?? 'vertical';
+        $avatar_size = max(16, (int) preg_replace('/[^0-9]/', '', $attrs['avatarSize']['innerContent']['desktop']['value'] ?? '200') ?: 200);
 
         $authors_data = self::get_authors_for_context();
 

@@ -21,13 +21,22 @@ export const AuthorProfileEdit = (
 ): ReactElement => {
   const { attrs, elements, id, name } = props;
 
-  const showAvatar = (attrs as any).showAvatar?.desktop?.value !== "off";
-  const showBio = (attrs as any).showBio?.desktop?.value !== "off";
-  const showLink = (attrs as any).showLink?.desktop?.value !== "off";
-  const layout = ((attrs as any).layout?.desktop?.value ??
+  // Fields declared with attrName "<name>.innerContent" in module.json store
+  // their value under attrs.<name>.innerContent.desktop.value, not
+  // attrs.<name>.desktop.value — see PR #105.
+  const showAvatar =
+    (attrs as any).showAvatar?.innerContent?.desktop?.value !== "off";
+  const showBio =
+    (attrs as any).showBio?.innerContent?.desktop?.value !== "off";
+  const showLink =
+    (attrs as any).showLink?.innerContent?.desktop?.value !== "off";
+  const layout = ((attrs as any).layout?.innerContent?.desktop?.value ??
     "vertical") as Layout;
   const avatarSize =
-    parseInt((attrs as any).avatarSize?.desktop?.value ?? "200", 10) || 200;
+    parseInt(
+      (attrs as any).avatarSize?.innerContent?.desktop?.value ?? "200",
+      10,
+    ) || 200;
 
   return (
     <ModuleContainer

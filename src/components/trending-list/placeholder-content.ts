@@ -1,4 +1,4 @@
 export const placeholderContent = {
   module: {},
-  range: { desktop: { value: "last7days" } },
+  range: { innerContent: { desktop: { value: "last7days" } } },
 };

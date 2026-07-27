@@ -1,10 +1,10 @@
 export const placeholderContent = {
   module: {},
-  showAvatar: { desktop: { value: "on" } },
-  showBio: { desktop: { value: "on" } },
-  showLink: { desktop: { value: "on" } },
-  layout: { desktop: { value: "vertical" } },
-  avatarSize: { desktop: { value: "200" } },
+  showAvatar: { innerContent: { desktop: { value: "on" } } },
+  showBio: { innerContent: { desktop: { value: "on" } } },
+  showLink: { innerContent: { desktop: { value: "on" } } },
+  layout: { innerContent: { desktop: { value: "vertical" } } },
+  avatarSize: { innerContent: { desktop: { value: "200" } } },
   nameFont: {},
   bioFont: {},
 };
