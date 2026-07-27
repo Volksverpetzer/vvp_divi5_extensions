@@ -1,7 +1,7 @@
 import React, { type ReactElement, useEffect, useState } from "react";
 import { type CampaignProgressAppProps, type CampaignSummary } from "./types";
 import { POLL_INTERVAL_MS } from "./constants";
-import { isSafeUrl } from "../../utils/safeUrl";
+import { toSafeUrl } from "../../utils/safeUrl";
 
 const formatEuro = (value: number): string =>
   value.toLocaleString("de-DE", { minimumFractionDigits: 0 }) + " €";
@@ -46,6 +46,7 @@ export const CampaignProgressApp = ({
 
   const percent =
     goal > 0 ? Math.min(100, Math.max(0, (total / goal) * 100)) : 0;
+  const safeDonateUrl = donateUrl ? toSafeUrl(donateUrl) : null;
 
   return (
     <div className="vvp-cp">
@@ -63,8 +64,8 @@ export const CampaignProgressApp = ({
       >
         <div className="vvp-cp__fill" style={{ width: `${percent}%` }} />
       </div>
-      {donateUrl && isSafeUrl(donateUrl) && (
-        <a className="vvp-cp__donate" href={donateUrl}>
+      {safeDonateUrl && (
+        <a className="vvp-cp__donate" href={safeDonateUrl}>
           {donateLabel || "Jetzt spenden"}
         </a>
       )}
