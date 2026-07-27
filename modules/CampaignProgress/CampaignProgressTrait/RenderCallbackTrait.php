@@ -38,10 +38,15 @@ trait RenderCallbackTrait
      */
     public static function render_callback($attrs, $content, $block, $elements)
     {
-        $summary_api_url = trim($attrs['summaryApiUrl']['desktop']['value'] ?? '');
-        $goal_input      = trim($attrs['goal']['desktop']['value'] ?? '');
-        $donate_url      = trim($attrs['donateUrl']['desktop']['value'] ?? '');
-        $donate_label    = trim($attrs['donateLabel']['desktop']['value'] ?? '');
+        // Text/select fields declared with attrName "<name>.innerContent" in
+        // module.json are actually stored under attrs.<name>.innerContent.<bp>.value
+        // — attrs.<name>.desktop.value is a separate, unused shadow default.
+        // Confirmed against the raw saved block markup; the shallow path (no
+        // .innerContent) silently always read the empty/placeholder default.
+        $summary_api_url = trim($attrs['summaryApiUrl']['innerContent']['desktop']['value'] ?? '');
+        $goal_input      = trim($attrs['goal']['innerContent']['desktop']['value'] ?? '');
+        $donate_url      = trim($attrs['donateUrl']['innerContent']['desktop']['value'] ?? '');
+        $donate_label    = trim($attrs['donateLabel']['innerContent']['desktop']['value'] ?? '');
 
         $fallback_goal = is_numeric($goal_input) && (float) $goal_input > 0 ? (float) $goal_input : 100000;
 

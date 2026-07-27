@@ -38,11 +38,14 @@ trait RenderCallbackTrait
      */
     public static function render_callback($attrs, $content, $block, $elements)
     {
-        $api_base_url      = rtrim(trim($attrs['apiBaseUrl']['desktop']['value'] ?? ''), '/');
-        $campaign_key      = trim($attrs['campaignKey']['desktop']['value'] ?? '');
-        $stripe_public_key = trim($attrs['stripePublicKey']['desktop']['value'] ?? '');
-        $presets           = trim($attrs['presets']['desktop']['value'] ?? '') ?: '10,50,100';
-        $certificate_url   = trim($attrs['certificateUrl']['desktop']['value'] ?? '');
+        // Text fields declared with attrName "<name>.innerContent" in
+        // module.json are actually stored under attrs.<name>.innerContent.<bp>.value
+        // — attrs.<name>.desktop.value is a separate, unused shadow default.
+        $api_base_url      = rtrim(trim($attrs['apiBaseUrl']['innerContent']['desktop']['value'] ?? ''), '/');
+        $campaign_key      = trim($attrs['campaignKey']['innerContent']['desktop']['value'] ?? '');
+        $stripe_public_key = trim($attrs['stripePublicKey']['innerContent']['desktop']['value'] ?? '');
+        $presets           = trim($attrs['presets']['innerContent']['desktop']['value'] ?? '') ?: '10,50,100';
+        $certificate_url   = trim($attrs['certificateUrl']['innerContent']['desktop']['value'] ?? '');
 
         $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
         $parent_attrs = $parent->attrs ?? [];
