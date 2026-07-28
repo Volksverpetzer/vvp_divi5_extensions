@@ -94,17 +94,24 @@ trait RenderCallbackTrait
     private static function get_related_items(int $post_id): array
     {
         if ($post_id <= 0) {
+            error_log('[VVP RelatedItems] get_related_items: post_id <= 0');
             return [];
         }
 
         $permalink = get_permalink($post_id);
         if (!$permalink) {
+            error_log("[VVP RelatedItems] get_related_items: no permalink for post $post_id");
             return [];
         }
 
         $cache_key = self::cache_key($post_id);
         $cached    = get_transient($cache_key);
         if (false !== $cached) {
+            error_log(sprintf(
+                '[VVP RelatedItems] cache HIT for post %d: %d item(s)',
+                $post_id,
+                is_array($cached) ? count($cached) : -1
+            ));
             return $cached;
         }
 
@@ -112,8 +119,11 @@ trait RenderCallbackTrait
         // the same post render nothing this time rather than piling onto
         // vectorcrawl's own rate limit (10/min) or the PHP-FPM pool.
         if (!self::acquire_refresh_lock($cache_key)) {
+            error_log("[VVP RelatedItems] cache MISS for post $post_id: refresh lock held, skipping");
             return [];
         }
+
+        error_log("[VVP RelatedItems] cache MISS for post $post_id: fetching");
 
         $items = self::fetch_related_items($permalink);
         $ttl   = empty($items) ? self::EMPTY_RESULT_CACHE_TTL : self::CACHE_TTL;
@@ -152,10 +162,17 @@ trait RenderCallbackTrait
 
         $data = json_decode(wp_remote_retrieve_body($response), true);
         if (!is_array($data) || !is_array($data['results'] ?? null)) {
+            error_log('[VVP RelatedItems] unexpected response body: ' . wp_remote_retrieve_body($response));
             return [];
         }
 
         $own_host = self::normalize_host(wp_parse_url(home_url(), PHP_URL_HOST));
+        error_log(sprintf(
+            '[VVP RelatedItems] fetched %d raw result(s) for %s, own_host=%s',
+            count($data['results']),
+            $permalink,
+            $own_host
+        ));
 
         $items = [];
         foreach ($data['results'] as $result) {
@@ -171,7 +188,14 @@ trait RenderCallbackTrait
             // hosts raw would filter out every single result. Same www/apex
             // normalization prune_wordpress.py and vvp_app's isSameHost()
             // already need for this exact domain.
-            if (self::normalize_host(wp_parse_url($result['url'], PHP_URL_HOST)) !== $own_host) {
+            $result_host = self::normalize_host(wp_parse_url($result['url'], PHP_URL_HOST));
+            if ($result_host !== $own_host) {
+                error_log(sprintf(
+                    '[VVP RelatedItems] skip %s: host %s != own_host %s',
+                    $result['url'],
+                    $result_host,
+                    $own_host
+                ));
                 continue; // Same filtering as the original embed script: same-domain only.
             }
 
@@ -182,9 +206,15 @@ trait RenderCallbackTrait
             // no longer resolves to a published post at all.
             $post_id = url_to_postid($result['url']);
             $post    = self::build_post_data($post_id);
-            if ($post !== null) {
-                $items[] = $post;
+            if ($post === null) {
+                error_log(sprintf(
+                    '[VVP RelatedItems] skip %s: url_to_postid=%d, build_post_data=null',
+                    $result['url'],
+                    $post_id
+                ));
+                continue;
             }
+            $items[] = $post;
         }
 
         return $items;
