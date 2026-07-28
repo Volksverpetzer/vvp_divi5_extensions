@@ -92,54 +92,6 @@
           }
         }
       }
-    },
-    "donateUrl": {
-      "type": "object",
-      "settings": {
-        "innerContent": {
-          "groupType": "group-item",
-          "item": {
-            "groupName": "mainContent",
-            "priority": 30,
-            "render": true,
-            "attrName": "donateUrl.innerContent",
-            "label": "Spenden-Link",
-            "description": "Ziel des Spenden-Buttons. Leer lassen, um den Button auszublenden.",
-            "features": {
-              "sticky": false,
-              "dynamicContent": false
-            },
-            "component": {
-              "name": "divi/text",
-              "type": "field"
-            }
-          }
-        }
-      }
-    },
-    "donateLabel": {
-      "type": "object",
-      "settings": {
-        "innerContent": {
-          "groupType": "group-item",
-          "item": {
-            "groupName": "mainContent",
-            "priority": 40,
-            "render": true,
-            "attrName": "donateLabel.innerContent",
-            "label": "Button-Text",
-            "description": "Beschriftung des Spenden-Buttons.",
-            "features": {
-              "sticky": false,
-              "dynamicContent": false
-            },
-            "component": {
-              "name": "divi/text",
-              "type": "field"
-            }
-          }
-        }
-      }
     }
   },
   "settings": {
