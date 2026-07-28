@@ -200,13 +200,24 @@ trait RenderCallbackTrait
 
         $reading_time = (int) get_post_meta($post_id, '_yoast_wpseo_estimated-reading-time-minutes', true);
 
+        // Many posts have no native excerpt (post_excerpt) set, only a
+        // Yoast SEO meta description -- vvp_app already shows these same
+        // articles' descriptions via the REST API's yoast_head_json.description
+        // field, which reads from this same meta key. Fall back to it here
+        // so this module matches what the app already displays instead of
+        // rendering a blank excerpt.
+        $excerpt = wp_strip_all_tags(get_the_excerpt($post_id));
+        if ('' === trim($excerpt)) {
+            $excerpt = trim((string) get_post_meta($post_id, '_yoast_wpseo_metadesc', true));
+        }
+
         return [
             'type'          => 'article',
             'title'         => html_entity_decode((string) get_the_title($post_id), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
             'link'          => (string) get_permalink($post_id),
             'date'          => get_the_date('d.m.Y', $post_id),
             'image_url'     => (string) (get_the_post_thumbnail_url($post_id, 'medium_large') ?: ''),
-            'excerpt'       => wp_strip_all_tags(get_the_excerpt($post_id)),
+            'excerpt'       => $excerpt,
             'category'      => $category_name,
             'category_link' => $category_link,
             'source'        => 'volksverpetzer',
