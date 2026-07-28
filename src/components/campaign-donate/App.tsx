@@ -106,7 +106,10 @@ export const CampaignDonateApp = ({
 
     getStripe(stripePublicKey).then(async (stripe) => {
       if (cancelled || !stripe || !checkoutContainerRef.current) return;
-      instance = await stripe.initEmbeddedCheckout({
+      // @stripe/stripe-js v9 renamed initEmbeddedCheckout -> createEmbeddedCheckoutPage
+      // (matches the crowdfunding app's Checkout Session ui_mode: 'embedded_page');
+      // same options/return shape, method renamed only.
+      instance = await stripe.createEmbeddedCheckoutPage({
         clientSecret: checkoutClientSecret,
         onComplete: () => {
           if (checkoutSessionId) {
