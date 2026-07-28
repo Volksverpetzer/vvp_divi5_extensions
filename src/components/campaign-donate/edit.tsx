@@ -28,13 +28,17 @@ export const CampaignDonateEdit = (
     (attrs as any).campaignKey?.innerContent?.desktop?.value?.trim() ?? "";
   const stripePublicKey =
     (attrs as any).stripePublicKey?.innerContent?.desktop?.value?.trim() ?? "";
+  const paypalClientId =
+    (attrs as any).paypalClientId?.innerContent?.desktop?.value?.trim() ?? "";
   const presetsInput =
     (attrs as any).presets?.innerContent?.desktop?.value?.trim() ?? "10,50,100";
   const certificateUrl =
     (attrs as any).certificateUrl?.innerContent?.desktop?.value?.trim() ?? "";
 
   const missingConfig =
-    apiBaseUrl === "" || campaignKey === "" || stripePublicKey === "";
+    apiBaseUrl === "" ||
+    campaignKey === "" ||
+    (stripePublicKey === "" && paypalClientId === "");
 
   return (
     <ModuleContainer
@@ -53,6 +57,7 @@ export const CampaignDonateEdit = (
         apiBaseUrl={apiBaseUrl}
         campaignKey={campaignKey}
         stripePublicKey={stripePublicKey}
+        paypalClientId={paypalClientId}
         presets={parsePresets(presetsInput)}
         certificateUrl={certificateUrl}
         preview
@@ -62,7 +67,8 @@ export const CampaignDonateEdit = (
         <div className="vvp-cd__config-hint">
           <p>
             <strong>Konfiguration unvollständig.</strong> Bitte Kampagnen-API
-            Basis-URL, Kampagnen-Kennung und Stripe Publishable Key in den
+            Basis-URL, Kampagnen-Kennung sowie mindestens einen Zahlungsanbieter
+            (Stripe Publishable Key oder PayPal Client-ID) in den
             Moduleinstellungen eintragen, bevor das Modul live geschaltet wird.
           </p>
         </div>

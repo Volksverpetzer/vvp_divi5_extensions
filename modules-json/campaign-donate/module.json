@@ -117,6 +117,30 @@
         }
       }
     },
+    "paypalClientId": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 25,
+            "render": true,
+            "attrName": "paypalClientId.innerContent",
+            "label": "PayPal Client-ID",
+            "description": "Öffentliche Client-ID (aus dem PayPal Developer Dashboard) des Kampagnen-Accounts. Leer lassen, um den PayPal-Button auszublenden.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
     "presets": {
       "type": "object",
       "settings": {

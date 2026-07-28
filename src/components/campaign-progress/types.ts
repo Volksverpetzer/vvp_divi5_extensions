@@ -4,8 +4,6 @@ export interface CampaignProgressAttrs {
   module: object;
   summaryApiUrl: object;
   goal: object;
-  donateUrl: object;
-  donateLabel: object;
 }
 
 export type CampaignProgressEditProps =
@@ -19,8 +17,6 @@ export interface CampaignSummary {
 export interface CampaignProgressAppProps {
   total: number;
   goal: number;
-  donateUrl?: string;
-  donateLabel?: string;
   /** When set, the component fetches this URL itself and polls for updates. */
   apiUrl?: string;
 }

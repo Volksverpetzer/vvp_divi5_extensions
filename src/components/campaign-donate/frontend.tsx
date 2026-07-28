@@ -18,8 +18,9 @@ const initAll = () => {
     const apiBaseUrl = mount.getAttribute("data-api-base") || "";
     const campaignKey = mount.getAttribute("data-campaign-key") || "";
     const stripePublicKey = mount.getAttribute("data-stripe-key") || "";
+    const paypalClientId = mount.getAttribute("data-paypal-client-id") || "";
 
-    if (!apiBaseUrl || !campaignKey || !stripePublicKey) {
+    if (!apiBaseUrl || !campaignKey || (!stripePublicKey && !paypalClientId)) {
       return;
     }
 
@@ -36,6 +37,7 @@ const initAll = () => {
         apiBaseUrl={apiBaseUrl}
         campaignKey={campaignKey}
         stripePublicKey={stripePublicKey}
+        paypalClientId={paypalClientId}
         presets={presets}
         certificateUrl={certificateUrl}
       />,

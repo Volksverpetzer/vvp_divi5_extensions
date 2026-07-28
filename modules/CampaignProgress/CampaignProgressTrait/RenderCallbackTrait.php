@@ -45,8 +45,6 @@ trait RenderCallbackTrait
         // .innerContent) silently always read the empty/placeholder default.
         $summary_api_url = trim($attrs['summaryApiUrl']['innerContent']['desktop']['value'] ?? '');
         $goal_input      = trim($attrs['goal']['innerContent']['desktop']['value'] ?? '');
-        $donate_url      = trim($attrs['donateUrl']['innerContent']['desktop']['value'] ?? '');
-        $donate_label    = trim($attrs['donateLabel']['innerContent']['desktop']['value'] ?? '');
 
         $fallback_goal = is_numeric($goal_input) && (float) $goal_input > 0 ? (float) $goal_input : 100000;
 
@@ -81,13 +79,11 @@ trait RenderCallbackTrait
                 HTMLUtility::render([
                     'tag'               => 'div',
                     'attributes'        => [
-                        'class'               => 'vvp-cp__mount',
-                        'data-summary-url'    => esc_attr($summary_api_url),
-                        'data-goal'           => esc_attr((string) $fallback_goal),
-                        'data-initial-total'  => esc_attr((string) $initial_total),
-                        'data-initial-goal'   => esc_attr((string) $initial_goal),
-                        'data-donate-url'     => esc_attr($donate_url),
-                        'data-donate-label'   => esc_attr($donate_label),
+                        'class'              => 'vvp-cp__mount',
+                        'data-summary-url'   => esc_attr($summary_api_url),
+                        'data-goal'          => esc_attr((string) $fallback_goal),
+                        'data-initial-total' => esc_attr((string) $initial_total),
+                        'data-initial-goal'  => esc_attr((string) $initial_goal),
                     ],
                     'childrenSanitizer' => 'esc_html',
                     'children'          => '',

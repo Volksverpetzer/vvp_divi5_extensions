@@ -60,6 +60,36 @@
     }
   }
 
+  .vvp-cd__methods {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+  }
+
+  .vvp-cd__divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 0.85rem;
+
+    &::before,
+    &::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    span {
+      padding: 0 0.75rem;
+    }
+  }
+
+  .vvp-cd__paypal {
+    min-height: 45px;
+  }
+
   .vvp-cd__error {
     color: #dc2626;
     font-size: 0.9rem;

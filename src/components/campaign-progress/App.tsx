@@ -1,12 +1,6 @@
 import React, { type ReactElement, useEffect, useState } from "react";
 import { type CampaignProgressAppProps, type CampaignSummary } from "./types";
-import { POLL_INTERVAL_MS } from "./constants";
-
-// Inline (not delegated to an imported helper) so static analysis tracking
-// this value's flow into the href sink below can see the guard directly:
-// only http(s) or root-relative URLs may reach the anchor, blocking
-// javascript:/data: URL injection via this DOM-attribute-sourced value.
-const SAFE_URL_PATTERN = /^(https?:\/\/|\/(?!\/))/i;
+import { POLL_INTERVAL_MS, DONATION_COMPLETE_EVENT } from "./constants";
 
 const formatEuro = (value: number): string =>
   value.toLocaleString("de-DE", { minimumFractionDigits: 0 }) + " €";
@@ -14,8 +8,6 @@ const formatEuro = (value: number): string =>
 export const CampaignProgressApp = ({
   total: initialTotal,
   goal: initialGoal,
-  donateUrl,
-  donateLabel,
   apiUrl,
 }: CampaignProgressAppProps): ReactElement => {
   const [total, setTotal] = useState(initialTotal);
@@ -43,19 +35,22 @@ export const CampaignProgressApp = ({
 
     fetchSummary();
     const interval = window.setInterval(fetchSummary, POLL_INTERVAL_MS);
+
+    // CampaignDonate (a separate module instance/React root) dispatches this
+    // on the window right after a successful payment, so a donor's own
+    // contribution shows up immediately instead of waiting for the next
+    // scheduled poll.
+    window.addEventListener(DONATION_COMPLETE_EVENT, fetchSummary);
+
     return () => {
       cancelled = true;
       window.clearInterval(interval);
+      window.removeEventListener(DONATION_COMPLETE_EVENT, fetchSummary);
     };
   }, [apiUrl]);
 
   const percent =
     goal > 0 ? Math.min(100, Math.max(0, (total / goal) * 100)) : 0;
-
-  let safeDonateUrl: string | undefined;
-  if (donateUrl && SAFE_URL_PATTERN.test(donateUrl)) {
-    safeDonateUrl = donateUrl;
-  }
 
   return (
     <div className="vvp-cp">
@@ -73,11 +68,6 @@ export const CampaignProgressApp = ({
       >
         <div className="vvp-cp__fill" style={{ width: `${percent}%` }} />
       </div>
-      {safeDonateUrl && (
-        <a className="vvp-cp__donate" href={safeDonateUrl}>
-          {donateLabel || "Jetzt spenden"}
-        </a>
-      )}
     </div>
   );
 };
