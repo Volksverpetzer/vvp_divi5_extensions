@@ -23,9 +23,10 @@ trait RenderCallbackTrait
     /**
      * CampaignDonate render callback for server-side rendering.
      *
-     * Only emits the data attributes; the actual amount picker and Stripe
-     * Embedded Checkout are mounted client-side (frontend.tsx), since taking
-     * payment requires Stripe.js in the browser.
+     * Only emits the data attributes; the actual amount picker and payment
+     * buttons (Stripe Embedded Checkout, PayPal Smart Buttons) are mounted
+     * client-side (frontend.tsx), since both require their own JS SDK in
+     * the browser.
      *
      * @since 1.0.0
      *
@@ -44,6 +45,7 @@ trait RenderCallbackTrait
         $api_base_url      = rtrim(trim($attrs['apiBaseUrl']['innerContent']['desktop']['value'] ?? ''), '/');
         $campaign_key      = trim($attrs['campaignKey']['innerContent']['desktop']['value'] ?? '');
         $stripe_public_key = trim($attrs['stripePublicKey']['innerContent']['desktop']['value'] ?? '');
+        $paypal_client_id  = trim($attrs['paypalClientId']['innerContent']['desktop']['value'] ?? '');
         $presets           = trim($attrs['presets']['innerContent']['desktop']['value'] ?? '') ?: '10,50,100';
         $certificate_url   = trim($attrs['certificateUrl']['innerContent']['desktop']['value'] ?? '');
 
@@ -74,12 +76,13 @@ trait RenderCallbackTrait
                 HTMLUtility::render([
                     'tag'               => 'div',
                     'attributes'        => [
-                        'class'                => 'vvp-cd__mount',
-                        'data-api-base'        => esc_attr($api_base_url),
-                        'data-campaign-key'    => esc_attr($campaign_key),
-                        'data-stripe-key'      => esc_attr($stripe_public_key),
-                        'data-presets'         => esc_attr($presets),
-                        'data-certificate-url' => esc_attr($certificate_url),
+                        'class'                 => 'vvp-cd__mount',
+                        'data-api-base'         => esc_attr($api_base_url),
+                        'data-campaign-key'     => esc_attr($campaign_key),
+                        'data-stripe-key'       => esc_attr($stripe_public_key),
+                        'data-paypal-client-id' => esc_attr($paypal_client_id),
+                        'data-presets'          => esc_attr($presets),
+                        'data-certificate-url'  => esc_attr($certificate_url),
                     ],
                     'childrenSanitizer' => 'esc_html',
                     'children'          => '',

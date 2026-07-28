@@ -5,7 +5,7 @@ import { ModuleStyles } from "./styles";
 import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";
 import { CampaignProgressApp } from "./App";
-import { DEFAULT_GOAL_EUR, DEFAULT_DONATE_LABEL } from "./constants";
+import { DEFAULT_GOAL_EUR } from "./constants";
 
 export const CampaignProgressEdit = (
   props: CampaignProgressEditProps,
@@ -18,11 +18,6 @@ export const CampaignProgressEdit = (
   const goalInput =
     (attrs as any).goal?.innerContent?.desktop?.value?.trim() ?? "";
   const goal = Number(goalInput) > 0 ? Number(goalInput) : DEFAULT_GOAL_EUR;
-  const donateUrl =
-    (attrs as any).donateUrl?.innerContent?.desktop?.value?.trim() ?? "";
-  const donateLabel =
-    (attrs as any).donateLabel?.innerContent?.desktop?.value?.trim() ||
-    DEFAULT_DONATE_LABEL;
 
   return (
     <ModuleContainer
@@ -37,12 +32,7 @@ export const CampaignProgressEdit = (
       {elements.styleComponents({ attrName: "module" })}
 
       {/* Preview: static placeholder values, no live network call in the builder. */}
-      <CampaignProgressApp
-        total={Math.round(goal * 0.42)}
-        goal={goal}
-        donateUrl={donateUrl}
-        donateLabel={donateLabel}
-      />
+      <CampaignProgressApp total={Math.round(goal * 0.5)} goal={goal} />
 
       <div className="vvp-cp__config-hint">
         <p>Die Vorschau zeigt keine echten Werte.</p>

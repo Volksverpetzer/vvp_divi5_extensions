@@ -16,15 +16,11 @@ const initAll = () => {
     const initialTotal = Number(mount.getAttribute("data-initial-total")) || 0;
     const initialGoal =
       Number(mount.getAttribute("data-initial-goal")) || fallbackGoal;
-    const donateUrl = mount.getAttribute("data-donate-url") || undefined;
-    const donateLabel = mount.getAttribute("data-donate-label") || undefined;
 
     createRoot(mount).render(
       <CampaignProgressApp
         total={initialTotal}
         goal={initialGoal}
-        donateUrl={donateUrl}
-        donateLabel={donateLabel}
         apiUrl={apiUrl || undefined}
       />,
     );
@@ -36,9 +32,6 @@ if (document.readyState === "loading") {
 } else {
   initAll();
 }
-
-document.addEventListener("et_pb_reinit_modules", initAll);
-document.addEventListener("ajaxComplete", initAll);
 
 if (document.body && "MutationObserver" in window) {
   const observer = new MutationObserver(initAll);
