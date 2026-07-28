@@ -261,6 +261,17 @@ trait RenderCallbackTrait
     }
 
     /**
+     * Bump whenever a code change to what gets cached here (e.g. what
+     * build_post_data() computes) should invalidate every existing
+     * per-post transient immediately, instead of each one silently
+     * carrying stale data for up to CACHE_TTL until it naturally expires
+     * or that specific post gets re-saved. Cheap: old-version entries are
+     * simply orphaned under the old key and expire on their original
+     * schedule, never read again.
+     */
+    private const CACHE_VERSION = 2;
+
+    /**
      * Public (unlike the rest of this trait) so the main plugin file's
      * transition_post_status hook can build the same key to purge a post's
      * cached recommendation list on publish/update, without duplicating the
@@ -268,7 +279,7 @@ trait RenderCallbackTrait
      */
     public static function cache_key(int $post_id): string
     {
-        return 'vvp_ri_' . $post_id;
+        return 'vvp_ri_v' . self::CACHE_VERSION . '_' . $post_id;
     }
 
     private static function acquire_refresh_lock(string $cache_key): bool
