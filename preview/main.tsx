@@ -831,7 +831,7 @@ const App = () => (
           <CampaignProgressApp
             total={62340}
             goal={100000}
-            donateUrl="#"
+            donateUrl="https://volksverpetzer.de/spenden/"
             donateLabel="Jetzt spenden"
           />
         </div>
@@ -851,7 +851,7 @@ const App = () => (
           <CampaignProgressApp
             total={104500}
             goal={100000}
-            donateUrl="#"
+            donateUrl="https://volksverpetzer.de/spenden/"
             donateLabel="Jetzt spenden"
           />
         </div>
