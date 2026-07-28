@@ -33,6 +33,16 @@ trait RenderCallbackTrait
      */
     private const CACHE_TTL = 6 * \HOUR_IN_SECONDS;
 
+    /**
+     * TTL for a *failed* fetch (timeout, non-200, no same-domain matches
+     * resolving to a local post). An empty result is almost always a
+     * transient hiccup on a site with thousands of posts, not genuinely
+     * zero related content -- caching it for the full 6h would let a
+     * one-off failure look identical to "nothing to show" for hours, with
+     * no admin-facing way to force a retry sooner than a full re-save.
+     */
+    private const EMPTY_RESULT_CACHE_TTL = 5 * \MINUTE_IN_SECONDS;
+
     public static function render_callback($attrs, $content, $block, $elements)
     {
         $items = self::get_related_items(get_the_ID());
@@ -106,7 +116,8 @@ trait RenderCallbackTrait
         }
 
         $items = self::fetch_related_items($permalink);
-        set_transient($cache_key, $items, self::CACHE_TTL);
+        $ttl   = empty($items) ? self::EMPTY_RESULT_CACHE_TTL : self::CACHE_TTL;
+        set_transient($cache_key, $items, $ttl);
         self::release_refresh_lock($cache_key);
 
         return $items;
