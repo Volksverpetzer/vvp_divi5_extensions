@@ -37,6 +37,13 @@ class ContentOverview implements DependencyInterface
     public const LOCAL_POSTS_TRANSIENT = 'vvp_co_vp_local';
 
     /**
+     * YouTube classifies videos at or under this length as Shorts.
+     *
+     * Used to filter the YouTube feed down to regular (3-min+) videos only.
+     */
+    public const YT_SHORT_MAX_SECONDS = 180;
+
+    /**
      * Loads `ContentOverview` and registers Front-End render callback.
      *
      * @since 1.0.0
