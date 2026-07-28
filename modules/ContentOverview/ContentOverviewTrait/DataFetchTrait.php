@@ -228,6 +228,37 @@ trait DataFetchTrait
     }
 
     /**
+     * Determine whether a YouTube video is a Short from its actual duration.
+     *
+     * The ytAPI proxy fetches contentDetails.duration alongside the snippet, so
+     * this is a synchronous, data-only check — no network probe needed, unlike
+     * is_youtube_short(). Duration is YouTube's own definition of a Short
+     * (currently <= 3 minutes) and is available immediately for every video, so
+     * it should never let a Short slip through the way an unprobed video could.
+     *
+     * Falls back to the URL-probe check for items cached before the proxy
+     * started returning contentDetails (no duration field yet).
+     *
+     * @param array $video Raw video item from the ytAPI proxy.
+     *
+     * @return bool True if the video is a Short (should be filtered out).
+     */
+    private static function is_youtube_short_video(array $video): bool
+    {
+        $duration = $video['contentDetails']['duration'] ?? '';
+
+        if ('' !== $duration && preg_match('/^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/', $duration, $matches)) {
+            $hours   = isset($matches[1]) ? (int) $matches[1] : 0;
+            $minutes = isset($matches[2]) ? (int) $matches[2] : 0;
+            $seconds = isset($matches[3]) ? (int) $matches[3] : 0;
+
+            return ($hours * 3600 + $minutes * 60 + $seconds) < self::YT_SHORT_MAX_SECONDS;
+        }
+
+        return self::is_youtube_short($video['id'] ?? '');
+    }
+
+    /**
      * Fetch WordPress posts from a REST API endpoint (one or more pages merged).
      *
      * @param string $base_url  Base REST URL including per_page and _embed params.
