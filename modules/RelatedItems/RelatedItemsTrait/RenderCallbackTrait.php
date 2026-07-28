@@ -135,7 +135,18 @@ trait RenderCallbackTrait
             'user-agent' => 'VVP-RelatedItems/1.0',
         ]);
 
-        if (is_wp_error($response) || 200 !== (int) wp_remote_retrieve_response_code($response)) {
+        if (is_wp_error($response)) {
+            // Temporary diagnostic: the endpoint is confirmed healthy and fast
+            // from outside, so a failure here points at something specific to
+            // this server's own outbound path (DNS, egress firewall, TLS).
+            // Remove once that's identified.
+            error_log('[VVP RelatedItems] wp_remote_get failed: ' . $response->get_error_message());
+            return [];
+        }
+
+        $response_code = (int) wp_remote_retrieve_response_code($response);
+        if (200 !== $response_code) {
+            error_log('[VVP RelatedItems] non-200 response: ' . $response_code);
             return [];
         }
 
