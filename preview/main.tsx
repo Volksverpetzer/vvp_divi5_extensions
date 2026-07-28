@@ -6,7 +6,9 @@ import "../src/components/author-profile/style.scss";
 import "../src/components/trending-items/style.scss";
 import "../src/components/trending-list/style.scss";
 import "../src/components/related-items/style.scss";
+import "../src/components/campaign-progress/style.scss";
 import { FactCheckSearchApp } from "../src/components/fact-check-search/App";
+import { CampaignProgressApp } from "../src/components/campaign-progress/App";
 import {
   ArticleCard,
   type ArticleCardProps,
@@ -379,6 +381,14 @@ const TOC_GROUPS: { component: string; sections: string[] }[] = [
       "ContentOverview · Feed (vollständig)",
       "ContentOverview · InstagramSlideshow (einzeln)",
       "ContentOverview · PodcastBanner (einzeln)",
+    ],
+  },
+  {
+    component: "CampaignProgress",
+    sections: [
+      "CampaignProgress · Standard (mit Spenden-Button)",
+      "CampaignProgress · Ziel erreicht",
+      "CampaignProgress · Ohne Spenden-Button",
     ],
   },
 ];
@@ -805,6 +815,61 @@ const App = () => (
 
       <Section title="ContentOverview · PodcastBanner (einzeln)">
         <PodcastBanner {...PODCAST_PROPS} />
+      </Section>
+
+      <Section title="CampaignProgress · Standard (mit Spenden-Button)">
+        <div
+          className="vvp-campaign-progress"
+          style={{
+            maxWidth: 480,
+            padding: "1.5rem",
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+          }}
+        >
+          <CampaignProgressApp
+            total={62340}
+            goal={100000}
+            donateUrl="#"
+            donateLabel="Jetzt spenden"
+          />
+        </div>
+      </Section>
+
+      <Section title="CampaignProgress · Ziel erreicht">
+        <div
+          className="vvp-campaign-progress"
+          style={{
+            maxWidth: 480,
+            padding: "1.5rem",
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+          }}
+        >
+          <CampaignProgressApp
+            total={104500}
+            goal={100000}
+            donateUrl="#"
+            donateLabel="Jetzt spenden"
+          />
+        </div>
+      </Section>
+
+      <Section title="CampaignProgress · Ohne Spenden-Button">
+        <div
+          className="vvp-campaign-progress"
+          style={{
+            maxWidth: 480,
+            padding: "1.5rem",
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+          }}
+        >
+          <CampaignProgressApp total={33333} goal={50000} />
+        </div>
       </Section>
     </div>
   </div>
