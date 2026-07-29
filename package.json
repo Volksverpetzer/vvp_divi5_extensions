@@ -1,10 +1,10 @@
 {
   "name": "vvp-divi5-extensions",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "DIVI 5 extension for the vvp wordpress site",
   "private": true,
   "license": "GPL-2.0-or-later",
-  "packageManager": "pnpm@11.16.0",
+  "packageManager": "pnpm@11.17.0",
   "author": "Volksverpetzer",
   "engines": {
     "npm": ">=10.0.0",
@@ -31,6 +31,7 @@
     "update:deps": "pnpx npm-check-updates -c 1d -i --format group"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^9.12.1",
     "classnames": "^2.5.1"
   },
   "devDependencies": {
@@ -41,8 +42,8 @@
     "@eslint/js": "^10.0.1",
     "@testing-library/react": "^16.3.2",
     "@types/lodash": "^4.17.24",
-    "@types/react": "19.2.17",
-    "@types/react-dom": "19.2.3",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.65.0",
     "@typescript-eslint/parser": "^8.65.0",
     "@vitejs/plugin-react": "^6.0.4",
@@ -51,21 +52,21 @@
     "@wordpress/i18n": "^6.24.0",
     "autoprefixer": "^10.5.4",
     "cspell": "^10.0.1",
-    "eslint": "^10.7.0",
+    "eslint": "^10.8.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "globals": "^17.7.0",
+    "globals": "^17.8.0",
     "happy-dom": "^20.11.1",
     "husky": "^9.1.7",
     "lint-staged": "^17.2.0",
     "lodash": "^4.18.1",
-    "postcss": "^8.5.22",
+    "postcss": "^8.5.24",
     "prettier": "^3.9.6",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "sass": "^1.101.6",
+    "sass": "^1.102.0",
     "typescript": "^6.0.3",
     "vite": "^8.1.5",
     "vitest": "^4.1.10"

@@ -8,6 +8,9 @@ import { contentOverview } from "./components/content-overview";
 import { authorProfile } from "./components/author-profile";
 import { trendingItems } from "./components/trending-items";
 import { trendingList } from "./components/trending-list";
+import { relatedItems } from "./components/related-items";
+import { campaignProgress } from "./components/campaign-progress";
+import { campaignDonate } from "./components/campaign-donate";
 
 // Import icons.
 import "./module-icons";
@@ -54,5 +57,35 @@ addAction(
   "vvp/trendingList",
   () => {
     registerModule(trendingList.metadata, omit(trendingList, "metadata"));
+  },
+);
+
+// Register Related Items module with DIVI.
+addAction(
+  "divi.moduleLibrary.registerModuleLibraryStore.after",
+  "vvp/relatedItems",
+  () => {
+    registerModule(relatedItems.metadata, omit(relatedItems, "metadata"));
+  },
+);
+
+// Register Campaign Progress module with DIVI.
+addAction(
+  "divi.moduleLibrary.registerModuleLibraryStore.after",
+  "vvp/campaignProgress",
+  () => {
+    registerModule(
+      campaignProgress.metadata,
+      omit(campaignProgress, "metadata"),
+    );
+  },
+);
+
+// Register Campaign Donate module with DIVI.
+addAction(
+  "divi.moduleLibrary.registerModuleLibraryStore.after",
+  "vvp/campaignDonate",
+  () => {
+    registerModule(campaignDonate.metadata, omit(campaignDonate, "metadata"));
   },
 );

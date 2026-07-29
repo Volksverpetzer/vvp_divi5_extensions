@@ -16,6 +16,7 @@ export default [
       "styles/**",
       ".cache/**",
       "dist/**",
+      "**/dist/**",
       "build/**",
     ],
   },

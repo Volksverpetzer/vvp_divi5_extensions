@@ -5,7 +5,10 @@ import "../src/components/content-overview/style.scss";
 import "../src/components/author-profile/style.scss";
 import "../src/components/trending-items/style.scss";
 import "../src/components/trending-list/style.scss";
+import "../src/components/related-items/style.scss";
+import "../src/components/campaign-progress/style.scss";
 import { FactCheckSearchApp } from "../src/components/fact-check-search/App";
+import { CampaignProgressApp } from "../src/components/campaign-progress/App";
 import {
   ArticleCard,
   type ArticleCardProps,
@@ -16,24 +19,10 @@ import { YouTubeBanner } from "../src/components/content-overview/YouTubeBanner"
 import { AuthorProfileApp } from "../src/components/author-profile/App";
 import { TrendingItemsApp } from "../src/components/trending-items/App";
 import { TrendingListApp } from "../src/components/trending-list/App";
+import { RelatedItemsApp } from "../src/components/related-items/App";
+import { catPlaceholderImage as pimg } from "../src/components/shared/catPlaceholder";
 
 // ── Sample data ───────────────────────────────────────────────────────────────
-
-const CATS = [
-  "bella",
-  "millie",
-  "millie_neo",
-  "neo",
-  "neo_banana",
-  "neo_2",
-  "poppy",
-  "louie",
-] as const;
-const pimg = (seed: string, w = 640, h = 360) => {
-  const cat =
-    CATS[seed.split("").reduce((a, c) => a + c.charCodeAt(0), 0) % CATS.length];
-  return `https://placecats.com/${cat}/${w}/${h}`;
-};
 
 const TRENDING_ALL: ArticleCardProps[] = [
   {
@@ -394,6 +383,13 @@ const TOC_GROUPS: { component: string; sections: string[] }[] = [
       "ContentOverview · PodcastBanner (einzeln)",
     ],
   },
+  {
+    component: "CampaignProgress",
+    sections: [
+      "CampaignProgress · Standard",
+      "CampaignProgress · Ziel erreicht",
+    ],
+  },
 ];
 
 const Toc = () => (
@@ -709,6 +705,40 @@ const App = () => (
         </div>
       </Section>
 
+      <Section title="RelatedItems · Passende Artikel (3 Treffer)">
+        <div
+          className="vvp-related-items"
+          style={{
+            maxWidth: 720,
+            padding: "1.5rem",
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+          }}
+        >
+          <div className="vvp-ri__mount" data-ri-initialized="true">
+            <RelatedItemsApp items={TRENDING_ALL.slice(0, 3)} />
+          </div>
+        </div>
+      </Section>
+
+      <Section title="RelatedItems · Keine Treffer (rendert nichts)">
+        <div
+          className="vvp-related-items"
+          style={{
+            maxWidth: 720,
+            padding: "1.5rem",
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+          }}
+        >
+          <div className="vvp-ri__mount" data-ri-initialized="true">
+            <RelatedItemsApp items={TRENDING_EMPTY} />
+          </div>
+        </div>
+      </Section>
+
       <Section title="ContentOverview · Feed (vollständig)">
         <div className="vvp-co__wrapper">
           <div className="vvp-co__section-header">
@@ -784,6 +814,36 @@ const App = () => (
 
       <Section title="ContentOverview · PodcastBanner (einzeln)">
         <PodcastBanner {...PODCAST_PROPS} />
+      </Section>
+
+      <Section title="CampaignProgress · Standard">
+        <div
+          className="vvp-campaign-progress"
+          style={{
+            maxWidth: 480,
+            padding: "1.5rem",
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+          }}
+        >
+          <CampaignProgressApp total={62340} goal={100000} />
+        </div>
+      </Section>
+
+      <Section title="CampaignProgress · Ziel erreicht">
+        <div
+          className="vvp-campaign-progress"
+          style={{
+            maxWidth: 480,
+            padding: "1.5rem",
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+          }}
+        >
+          <CampaignProgressApp total={104500} goal={100000} />
+        </div>
       </Section>
     </div>
   </div>

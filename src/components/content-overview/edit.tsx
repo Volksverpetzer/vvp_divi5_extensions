@@ -15,15 +15,11 @@ import { ArticleCard } from "./ArticleCard";
 import { InstagramSlideshow } from "./InstagramSlideshow";
 import { PodcastBanner } from "./PodcastBanner";
 import { YouTubeBanner } from "./YouTubeBanner";
+import { catPlaceholderImage } from "../shared/catPlaceholder";
 
 // ── Example data ─────────────────────────────────────────────────────────────
 
-const CATS = ["neo", "millie", "banana", "bella", "poppy", "louie"] as const;
-const img = (seed: string, w = 640, h = 360) => {
-  const cat =
-    CATS[seed.split("").reduce((a, c) => a + c.charCodeAt(0), 0) % CATS.length];
-  return `https://placecats.com/${cat}/${w}/${h}`;
-};
+const img = catPlaceholderImage;
 
 const MOCK_ARTICLES = [
   {

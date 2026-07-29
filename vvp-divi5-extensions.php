@@ -3,7 +3,7 @@
 Plugin Name: Volksverpetzer DIVI 5 extensions
 Plugin URI:  https://github.com/Volksverpetzer/vvp_divi5_extensions
 Description: Adds the custom DIVI 5 extensions for Volksverpetzer.de to the site
-Version:     1.0.6
+Version:     1.1.0
 Author:      Volksverpetzer
 Author URI:  https://volksverpetzer.de
 License:     GPLv2 or later
@@ -33,7 +33,7 @@ if ( defined( 'VVP_DIVI5_PATH' ) ) {
 
 define( 'VVP_DIVI5_PATH', plugin_dir_path( __FILE__ ) );
 define( 'VVP_DIVI5_URL', plugin_dir_url( __FILE__ ) );
-define( 'VVP_DIVI5_VERSION', '1.0.6' );
+define( 'VVP_DIVI5_VERSION', '1.1.0' );
 define( 'VVP_DIVI5_JSON_PATH', VVP_DIVI5_PATH . 'modules-json/' );
 
 /**
@@ -62,10 +62,18 @@ register_deactivation_hook( __FILE__, [ 'VVP\Divi5\CronManager', 'deactivate' ] 
  * ContentOverview builds its article list from a local query cached for a few
  * minutes. Purge that transient whenever a post is published, edited or
  * unpublished so the feed reflects the change on the next page view.
+ *
+ * RelatedItems caches a post's own vectorcrawl recommendations (server-side
+ * fetch result) for 6h. Purge that post's own cache on the same event, so a
+ * one-off failed/empty fetch -- or a content change affecting its own card
+ * data (title, thumbnail, excerpt) -- can self-heal by re-publishing/saving
+ * the post, instead of silently sticking for up to 6h with no admin-facing
+ * way to force a refresh.
  */
 add_action( 'transition_post_status', function ( $new_status, $old_status, $post ) {
 	if ( 'post' === $post->post_type && ( 'publish' === $new_status || 'publish' === $old_status ) ) {
 		delete_transient( \VVP\Divi5\ContentOverview\ContentOverview::LOCAL_POSTS_TRANSIENT );
+		delete_transient( \VVP\Divi5\RelatedItems\RelatedItems::cache_key( $post->ID ) );
 	}
 }, 10, 3 );
 
@@ -167,6 +175,45 @@ function VVP_DIVI5_enqueue_vb_scripts() {
 				],
 			]
 		);
+
+		\ET\Builder\VisualBuilder\Assets\PackageBuildManager::register_package_build(
+			[
+				'name'    => 'vvp-related-items-frontend-vb',
+				'version' => VVP_DIVI5_VERSION,
+				'script'  => [
+					'src'                => VVP_DIVI5_URL . 'scripts/related-items-frontend.js',
+					'deps'               => [],
+					'enqueue_top_window' => false,
+					'enqueue_app_window' => true,
+				],
+			]
+		);
+
+		\ET\Builder\VisualBuilder\Assets\PackageBuildManager::register_package_build(
+			[
+				'name'    => 'vvp-campaign-progress-frontend-vb',
+				'version' => VVP_DIVI5_VERSION,
+				'script'  => [
+					'src'                => VVP_DIVI5_URL . 'scripts/campaign-progress-frontend.js',
+					'deps'               => [],
+					'enqueue_top_window' => false,
+					'enqueue_app_window' => true,
+				],
+			]
+		);
+
+		\ET\Builder\VisualBuilder\Assets\PackageBuildManager::register_package_build(
+			[
+				'name'    => 'vvp-campaign-donate-frontend-vb',
+				'version' => VVP_DIVI5_VERSION,
+				'script'  => [
+					'src'                => VVP_DIVI5_URL . 'scripts/campaign-donate-frontend.js',
+					'deps'               => [],
+					'enqueue_top_window' => false,
+					'enqueue_app_window' => true,
+				],
+			]
+		);
 	}
 }
 add_action( 'divi_visual_builder_assets_before_enqueue_scripts', 'VVP_DIVI5_enqueue_vb_scripts' );
@@ -236,6 +283,39 @@ function VVP_DIVI5_enqueue_frontend_scripts() {
 		VVP_DIVI5_URL . 'scripts/trending-list-frontend.js',
 		array(),
 		$tl_frontend_ver,
+		true
+	);
+
+	$ri_frontend_path = VVP_DIVI5_PATH . 'scripts/related-items-frontend.js';
+	$ri_frontend_ver  = file_exists( $ri_frontend_path ) ? filemtime( $ri_frontend_path ) : VVP_DIVI5_VERSION;
+
+	wp_enqueue_script(
+		'vvp-related-items-frontend',
+		VVP_DIVI5_URL . 'scripts/related-items-frontend.js',
+		array(),
+		$ri_frontend_ver,
+		true
+	);
+
+	$cp_frontend_path = VVP_DIVI5_PATH . 'scripts/campaign-progress-frontend.js';
+	$cp_frontend_ver  = file_exists( $cp_frontend_path ) ? filemtime( $cp_frontend_path ) : VVP_DIVI5_VERSION;
+
+	wp_enqueue_script(
+		'vvp-campaign-progress-frontend',
+		VVP_DIVI5_URL . 'scripts/campaign-progress-frontend.js',
+		array(),
+		$cp_frontend_ver,
+		true
+	);
+
+	$cd_frontend_path = VVP_DIVI5_PATH . 'scripts/campaign-donate-frontend.js';
+	$cd_frontend_ver  = file_exists( $cd_frontend_path ) ? filemtime( $cd_frontend_path ) : VVP_DIVI5_VERSION;
+
+	wp_enqueue_script(
+		'vvp-campaign-donate-frontend',
+		VVP_DIVI5_URL . 'scripts/campaign-donate-frontend.js',
+		array(),
+		$cd_frontend_ver,
 		true
 	);
 }

@@ -178,7 +178,7 @@ trait RenderCallbackTrait
             if (!$dt) {
                 continue;
             }
-            if (self::is_youtube_short($video['id'] ?? '')) {
+            if (self::is_youtube_short_video($video)) {
                 continue;
             }
 

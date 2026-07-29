@@ -2,6 +2,6 @@ export const placeholderContent = {
   module: {},
   contentType: { desktop: { value: "all" } },
   itemCount: { desktop: { value: "5" } },
-  range: { desktop: { value: "last7days" } },
-  showThumbnail: { desktop: { value: "on" } },
+  range: { innerContent: { desktop: { value: "last7days" } } },
+  showThumbnail: { innerContent: { desktop: { value: "on" } } },
 };

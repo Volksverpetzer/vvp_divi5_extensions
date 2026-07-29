@@ -10,6 +10,7 @@
     "jsxs",
     "katze",
     "Katzenverpetzer",
+    "komma",
     "Kratzbäume",
     "Laschyk",
     "louie",
@@ -22,8 +23,10 @@
     "rerank",
     "scss",
     "Schnurr",
+    "SEPA",
     "volksverpetzer",
-    "vvp"
+    "vvp",
+    "xmas"
   ],
   "allowCompoundWords": true,
   "files": ["src/**/*"],

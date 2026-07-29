@@ -26,11 +26,14 @@ export const FactCheckSearchEdit = (
 ): ReactElement => {
   const { attrs, elements, id, name } = props;
 
+  // Text fields declared with attrName "<name>.innerContent" in module.json
+  // store their value under attrs.<name>.innerContent.desktop.value, not
+  // attrs.<name>.desktop.value — see PR #105.
   const searchApiUrl =
-    (attrs as any).searchApiUrl?.desktop?.value ??
+    (attrs as any).searchApiUrl?.innerContent?.desktop?.value ||
     DEFAULT_API_URLS.searchApiUrl;
   const importApiUrl =
-    (attrs as any).importApiUrl?.desktop?.value ??
+    (attrs as any).importApiUrl?.innerContent?.desktop?.value ||
     DEFAULT_API_URLS.importApiUrl;
 
   return (
