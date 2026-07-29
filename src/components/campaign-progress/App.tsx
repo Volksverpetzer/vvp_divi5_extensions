@@ -56,7 +56,7 @@ export const CampaignProgressApp = ({
     <div className="vvp-cp">
       <div className="vvp-cp__amounts">
         <span className="vvp-cp__total">{formatEuro(total)}</span>
-        <span className="vvp-cp__goal">von {formatEuro(goal)}</span>
+        <span className="vvp-cp__goal"> von {formatEuro(goal)}</span>
       </div>
       <div
         className="vvp-cp__track"
