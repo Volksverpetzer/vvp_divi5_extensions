@@ -67,3 +67,12 @@ jobs:
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
             /tmp/deploy/ \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:plugins/vvp-divi5-extensions-dev/
+
+      - name: Purge Bunny CDN cache
+        # Bunny caches plugin assets for 30 days and ignores query-string
+        # cache-busting (?ver=...), so without this every deploy would keep
+        # serving whatever was first cached until it expires on its own.
+        run: |
+          curl -sS --fail -X POST "https://api.bunny.net/pullzone/${{ secrets.BUNNY_PULL_ZONE_ID }}/purgeCache" \
+            -H "AccessKey: ${{ secrets.BUNNY_API_KEY }}" \
+            -H "Content-Type: application/json"
