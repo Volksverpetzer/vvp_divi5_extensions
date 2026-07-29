@@ -20,6 +20,16 @@ use VVP\Divi5\TrendingItems\TrendingItems;
 
 trait RenderCallbackTrait
 {
+    /**
+     * TTL for an empty result (WPP inactive/misconfigured, or the range
+     * yields no posts). Caching that at the full 1h TTL like a normal
+     * successful result would leave the list looking empty for up to an
+     * hour after a transient hiccup, with no way to force a retry sooner
+     * than a full hour -- see PR #111 (RelatedItems), which hit the same
+     * failure mode.
+     */
+    private const EMPTY_RESULT_CACHE_TTL = 5 * \MINUTE_IN_SECONDS;
+
     public static function render_callback($attrs, $content, $block, $elements)
     {
         // Fields declared with attrName "<name>.innerContent" in module.json
@@ -98,7 +108,8 @@ trait RenderCallbackTrait
             }
         }
 
-        set_transient($cache_key, $items, HOUR_IN_SECONDS);
+        $ttl = empty($items) ? self::EMPTY_RESULT_CACHE_TTL : HOUR_IN_SECONDS;
+        set_transient($cache_key, $items, $ttl);
         return $items;
     }
 
