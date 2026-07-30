@@ -147,12 +147,19 @@ await Promise.all([
       outDir: "scripts",
       rollupOptions: {
         external: Object.keys(wpGlobals),
-        output: { globals: wpGlobals },
+        // Vite's lib-mode CSS filename defaults to the package name, which
+        // every one of these parallel builds would otherwise share — give
+        // this build its own name so it can't collide with a frontend
+        // bundle's CSS output (see the frontends map below).
+        output: { globals: wpGlobals, assetFileNames: "bundle.css" },
       },
     },
   }),
 
-  // Frontend bundles — React is bundled in (no WordPress externals)
+  // Frontend bundles — React is bundled in (no WordPress externals).
+  // Any CSS these emit is redundant (the page already loads styles/main.css
+  // from the bundle above) and is deleted after the build; it just needs a
+  // name that can't collide with "bundle.css" while the parallel builds run.
   ...frontends.map(({ name, entry }) =>
     build({
       configFile: false,
@@ -168,10 +175,20 @@ await Promise.all([
           fileName: () => `${name}.js`,
         },
         outDir: "scripts",
+        rollupOptions: {
+          output: { assetFileNames: `${name}.[ext]` },
+        },
       },
     }),
   ),
 ]);
+
+// Frontend bundles emit their own (unused) CSS alongside their JS — see the
+// comment above the frontends map. Delete it so scripts/ only ever holds JS.
+for (const { name } of frontends) {
+  const cssPath = resolve("./scripts", `${name}.css`);
+  if (existsSync(cssPath)) rmSync(cssPath);
+}
 
 copyModuleJsons();
 
