@@ -97,6 +97,44 @@ export const CampaignDonateApp = ({
     window.dispatchEvent(new CustomEvent(DONATION_COMPLETE_EVENT));
   };
 
+  // Some Stripe payment methods (3D Secure, Klarna, Sofort, ...) leave the
+  // page entirely instead of completing inline, so onComplete below never
+  // fires for them. Stripe's return_url brings the browser back here with
+  // this marker instead, and we finalize the session client-side the same
+  // way onComplete does.
+  useEffect(() => {
+    if (preview) return;
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("vvp_cd_session_id");
+    if (!sessionId) return;
+
+    params.delete("vvp_cd_session_id");
+    const cleanedSearch = params.toString();
+    window.history.replaceState(
+      null,
+      "",
+      `${window.location.pathname}${cleanedSearch ? `?${cleanedSearch}` : ""}${window.location.hash}`,
+    );
+
+    fetch(`${apiBaseUrl}/api/finalize-session`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session_id: sessionId }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json?.recorded) {
+          finishDonation(json.amount ?? 0);
+        } else {
+          setError(json?.error ?? "Zahlung konnte nicht bestätigt werden.");
+        }
+      })
+      .catch(() => {
+        setError("Zahlung konnte nicht bestätigt werden.");
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (preview || !checkoutClientSecret || !checkoutContainerRef.current)
       return;
@@ -221,12 +259,19 @@ export const CampaignDonateApp = ({
     setLoading(true);
 
     try {
+      // Plain string concat, not URLSearchParams: the {CHECKOUT_SESSION_ID}
+      // placeholder must reach Stripe unencoded so it can substitute it in
+      // before redirecting the browser back here.
+      const currentUrl = window.location.href.split("#")[0];
+      const separator = currentUrl.includes("?") ? "&" : "?";
+      const returnUrl = `${currentUrl}${separator}vvp_cd_session_id={CHECKOUT_SESSION_ID}`;
+
       const response = await fetch(
         `${apiBaseUrl}/api/create-checkout-session`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount, campaign: campaignKey }),
+          body: JSON.stringify({ amount, campaign: campaignKey, returnUrl }),
         },
       );
       const json = await response.json();
