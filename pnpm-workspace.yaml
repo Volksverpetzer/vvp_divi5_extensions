@@ -8,5 +8,15 @@ overrides:
 packages:
   - .
 minimumReleaseAgeExclude:
-  - globals@17.8.0
-  - "@stripe/stripe-js@9.12.1"
+  - "@divi/conversion@1.0.4"
+  - "@divi/field-library@1.0.10"
+  - "@divi/modal@1.0.5"
+  - "@divi/module-library@1.0.11"
+  - "@divi/module-utils@1.0.11"
+  - "@divi/module@1.0.11"
+  - "@divi/script-library@1.0.10"
+  - "@divi/style-library@1.0.8"
+  - "@divi/types@1.0.10"
+  - "@wordpress/hooks@4.52.0"
+  - "@wordpress/i18n@6.25.0"
+  - postcss@8.5.25
