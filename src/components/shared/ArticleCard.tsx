@@ -17,16 +17,9 @@ export interface ArticleCardProps {
   trackingContext?: "feed" | "trending" | "related";
 }
 
-const SourceBadge: React.FC<{ source: "volksverpetzer" | "pruefpunkt" }> = ({
-  source,
-}) => {
-  if (source === "pruefpunkt") {
-    return (
-      <span className="vvp-co__badge vvp-co__badge--pruefpunkt">Prüfpunkt</span>
-    );
-  }
-  return <span className="vvp-co__badge vvp-co__badge--vvp">VVP</span>;
-};
+const PruefpunktBadge: React.FC = () => (
+  <span className="vvp-co__badge vvp-co__badge--pruefpunkt">Prüfpunkt</span>
+);
 
 const YoutubeBadge: React.FC = () => (
   <span className="vvp-co__badge vvp-co__badge--youtube">
@@ -132,7 +125,8 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           </p>
         )}
         <div className="vvp-co__feed-footer">
-          {isYoutube ? <YoutubeBadge /> : <SourceBadge source={source} />}
+          {isYoutube && <YoutubeBadge />}
+          {!isYoutube && source === "pruefpunkt" && <PruefpunktBadge />}
           {category &&
             (category_link ? (
               <span

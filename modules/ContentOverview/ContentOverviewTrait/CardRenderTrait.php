@@ -50,7 +50,7 @@ trait CardRenderTrait
 
         $source_badge = $props['source'] === 'pruefpunkt'
             ? '<span class="vvp-co__badge vvp-co__badge--pruefpunkt">Prüfpunkt</span>'
-            : '<span class="vvp-co__badge vvp-co__badge--vvp">VVP</span>';
+            : '';
 
         $category_html = '';
         if ($props['category']) {
