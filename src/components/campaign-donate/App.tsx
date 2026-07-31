@@ -63,6 +63,7 @@ export const CampaignDonateApp = ({
     presets[Math.floor(presets.length / 2)] ?? 25,
   );
   const [customAmount, setCustomAmount] = useState("");
+  const [customAmountOpen, setCustomAmountOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [checkoutClientSecret, setCheckoutClientSecret] = useState<
@@ -75,6 +76,7 @@ export const CampaignDonateApp = ({
   const [completedAmount, setCompletedAmount] = useState(0);
   const checkoutContainerRef = useRef<HTMLDivElement | null>(null);
   const paypalContainerRef = useRef<HTMLDivElement | null>(null);
+  const customInputRef = useRef<HTMLInputElement | null>(null);
 
   const amount = useMemo(() => {
     const custom = Number(customAmount);
@@ -96,6 +98,10 @@ export const CampaignDonateApp = ({
     setDonationComplete(true);
     window.dispatchEvent(new CustomEvent(DONATION_COMPLETE_EVENT));
   };
+
+  useEffect(() => {
+    if (customAmountOpen) customInputRef.current?.focus();
+  }, [customAmountOpen]);
 
   // Some Stripe payment methods (3D Secure, Klarna, Sofort, ...) leave the
   // page entirely instead of completing inline, so onComplete below never
@@ -346,25 +352,40 @@ export const CampaignDonateApp = ({
               className={`vvp-cd__preset ${amount === value && !customAmount ? "is-active" : ""}`}
               onClick={() => {
                 setCustomAmount("");
+                setCustomAmountOpen(false);
                 setSelected(value);
               }}
             >
               {value} €
             </button>
           ))}
+          <button
+            type="button"
+            className={`vvp-cd__preset vvp-cd__preset-custom ${customAmount ? "is-active" : ""}`}
+            aria-expanded={customAmountOpen}
+            aria-controls="vvp-cd-custom"
+            onClick={() => setCustomAmountOpen((open) => !open)}
+          >
+            {customAmount ? `${amount} €` : "Eigener Betrag"}
+          </button>
         </div>
-        <label className="vvp-cd__label" htmlFor="vvp-cd-custom">
-          Eigener Betrag
-        </label>
-        <input
-          id="vvp-cd-custom"
-          className="vvp-cd__input"
-          inputMode="decimal"
-          placeholder="z. B. 35"
-          value={customAmount}
-          onChange={(event) => setCustomAmount(event.target.value)}
-          aria-label="Eigener Betrag"
-        />
+        {customAmountOpen && (
+          <>
+            <label className="vvp-cd__label" htmlFor="vvp-cd-custom">
+              Eigener Betrag
+            </label>
+            <input
+              id="vvp-cd-custom"
+              ref={customInputRef}
+              className="vvp-cd__input"
+              inputMode="decimal"
+              placeholder="z. B. 35"
+              value={customAmount}
+              onChange={(event) => setCustomAmount(event.target.value)}
+              aria-label="Eigener Betrag"
+            />
+          </>
+        )}
 
         <div className="vvp-cd__methods">
           {hasStripe && (
