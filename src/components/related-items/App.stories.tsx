@@ -7,7 +7,11 @@ import { TRENDING_ALL, TRENDING_EMPTY } from "../shared/previewFixtures";
 const meta: Meta<typeof RelatedItemsApp> = {
   title: "Modules/RelatedItems",
   component: RelatedItemsApp,
-  decorators: [(Story) => <PreviewCard>{Story()}</PreviewCard>],
+  decorators: [
+    (Story) => (
+      <PreviewCard moduleClass="vvp-related-items">{Story()}</PreviewCard>
+    ),
+  ],
 };
 
 export default meta;

@@ -6,7 +6,11 @@ import { PreviewCard } from "../shared/PreviewCard";
 const meta: Meta<typeof CampaignDonateApp> = {
   title: "Modules/CampaignDonate",
   component: CampaignDonateApp,
-  decorators: [(Story) => <PreviewCard>{Story()}</PreviewCard>],
+  decorators: [
+    (Story) => (
+      <PreviewCard moduleClass="vvp-campaign-donate">{Story()}</PreviewCard>
+    ),
+  ],
 };
 
 export default meta;

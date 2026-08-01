@@ -7,7 +7,11 @@ import { AUTHOR_SINGLE, AUTHOR_MULTI } from "../shared/previewFixtures";
 const meta: Meta<typeof AuthorProfileApp> = {
   title: "Modules/AuthorProfile",
   component: AuthorProfileApp,
-  decorators: [(Story) => <PreviewCard>{Story()}</PreviewCard>],
+  decorators: [
+    (Story) => (
+      <PreviewCard moduleClass="vvp-author-profile">{Story()}</PreviewCard>
+    ),
+  ],
 };
 
 export default meta;

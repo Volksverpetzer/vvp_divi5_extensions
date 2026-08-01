@@ -11,7 +11,11 @@ import {
 const meta: Meta<typeof TrendingItemsApp> = {
   title: "Modules/TrendingItems",
   component: TrendingItemsApp,
-  decorators: [(Story) => <PreviewCard>{Story()}</PreviewCard>],
+  decorators: [
+    (Story) => (
+      <PreviewCard moduleClass="vvp-trending-items">{Story()}</PreviewCard>
+    ),
+  ],
 };
 
 export default meta;

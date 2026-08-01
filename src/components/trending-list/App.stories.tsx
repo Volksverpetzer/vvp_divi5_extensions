@@ -7,7 +7,11 @@ import { TRENDING_LIST_ITEMS } from "../shared/previewFixtures";
 const meta: Meta<typeof TrendingListApp> = {
   title: "Modules/TrendingList",
   component: TrendingListApp,
-  decorators: [(Story) => <PreviewCard>{Story()}</PreviewCard>],
+  decorators: [
+    (Story) => (
+      <PreviewCard moduleClass="vvp-trending-list">{Story()}</PreviewCard>
+    ),
+  ],
 };
 
 export default meta;
