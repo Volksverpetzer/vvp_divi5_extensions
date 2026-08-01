@@ -859,7 +859,8 @@ const App = () => (
         <div
           className="vvp-campaign-donate"
           style={{
-            maxWidth: 480,
+            maxWidth: "100%",
+            width: "100%",
             padding: "1.5rem",
             background: "#fff",
             borderRadius: 8,
@@ -882,7 +883,8 @@ const App = () => (
         <div
           className="vvp-campaign-donate"
           style={{
-            maxWidth: 480,
+            maxWidth: "100%",
+            width: "100%",
             padding: "1.5rem",
             background: "#fff",
             borderRadius: 8,
