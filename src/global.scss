@@ -19,9 +19,3 @@ body {
   margin: 0;
   padding: 0;
 }
-
-/* Ensure flex and grid containers don't overflow */
-[style*="display: flex"],
-[style*="display: grid"] {
-  min-width: 0;
-}
