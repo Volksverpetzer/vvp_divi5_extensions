@@ -824,7 +824,7 @@ const App = () => (
               ))}
               {FEED_IG.map((ig, i) => (
                 <div
-                  key={i}
+                  key={`ig-${i}`}
                   className="vvp-co__feed-item"
                   data-co-kind="instagram"
                 >
