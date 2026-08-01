@@ -5,13 +5,13 @@ import { ModuleStyles } from "./styles";
 import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";
 import { AuthorProfileApp } from "./App";
+import { catPlaceholderImage as img } from "../shared/catPlaceholder";
 
 const PLACEHOLDER_AUTHORS: Author[] = [
   {
     name: "Max Mustermann",
     bio: "Journalist und Faktenchecker bei Volksverpetzer. Schreibt über Desinformation, Medien und Demokratie.",
-    avatarUrl:
-      "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=150",
+    avatarUrl: img("max-mustermann", 150, 150),
     profileUrl: "#",
   },
 ];
