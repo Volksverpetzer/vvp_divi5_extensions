@@ -485,7 +485,7 @@ const GitHubIcon = () => (
 );
 
 const App = () => (
-  <div>
+  <div style={{ overflowX: "hidden" }}>
     <div
       style={{
         background: "#111827",
