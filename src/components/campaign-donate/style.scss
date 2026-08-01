@@ -12,6 +12,9 @@
   max-width: 100%;
   box-sizing: border-box;
 
+  // global.scss (box-sizing: border-box reset) is only loaded by the Vite
+  // preview, not by the WordPress/Divi frontend — this component must set
+  // its own box-sizing or width: 100% + padding/border will overflow there.
   * {
     box-sizing: border-box;
   }
@@ -19,6 +22,7 @@
   .vvp-cd {
     width: 100%;
     max-width: 100%;
+    min-width: 0;
   }
 
   .vvp-cd__form {
@@ -26,15 +30,18 @@
     flex-direction: column;
     gap: 14px;
     width: 100%;
+    min-width: 0;
   }
 
   .vvp-cd__presets {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
+    width: 100%;
   }
 
   .vvp-cd__preset {
+    width: 100%;
     padding: 0.75rem;
     border: 2px solid #e5e7eb;
     border-radius: 0.5rem;
