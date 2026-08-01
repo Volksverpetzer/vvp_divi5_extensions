@@ -485,7 +485,7 @@ const GitHubIcon = () => (
 );
 
 const App = () => (
-  <div style={{ overflowX: "hidden" }}>
+  <div>
     <div
       style={{
         background: "#111827",
@@ -538,7 +538,14 @@ const App = () => (
         alignItems: "center",
       }}
     >
-      <div style={{ width: "100%", maxWidth: "1400px" }}>
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "1400px",
+          boxSizing: "border-box",
+          padding: "0 1rem",
+        }}
+      >
         <Toc />
         <Section title="FactCheckSearch Module">
           <div className="vvp-fc__mount" data-fc-initialized="true">
@@ -558,6 +565,7 @@ const App = () => (
               background: "#fff",
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+              boxSizing: "border-box",
             }}
           >
             <div className="vvp-ap__mount" data-ap-initialized="true">
@@ -606,6 +614,7 @@ const App = () => (
               background: "#fff",
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+              boxSizing: "border-box",
             }}
           >
             <div className="vvp-ap__mount" data-ap-initialized="true">
@@ -630,6 +639,7 @@ const App = () => (
               background: "#fff",
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+              boxSizing: "border-box",
             }}
           >
             <div className="vvp-ti__mount" data-ti-initialized="true">
@@ -647,6 +657,7 @@ const App = () => (
               background: "#fff",
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+              boxSizing: "border-box",
             }}
           >
             <div className="vvp-ti__mount" data-ti-initialized="true">
@@ -666,6 +677,7 @@ const App = () => (
               background: "#fff",
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+              boxSizing: "border-box",
             }}
           >
             <div className="vvp-ti__mount" data-ti-initialized="true">
@@ -683,6 +695,7 @@ const App = () => (
               background: "#fff",
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+              boxSizing: "border-box",
             }}
           >
             <div className="vvp-ti__mount" data-ti-initialized="true">
@@ -700,6 +713,7 @@ const App = () => (
               background: "#fff",
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+              boxSizing: "border-box",
             }}
           >
             <div className="vvp-tl__mount" data-tl-initialized="true">
@@ -717,6 +731,7 @@ const App = () => (
               background: "#fff",
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+              boxSizing: "border-box",
             }}
           >
             <div className="vvp-tl__mount" data-tl-initialized="true">
@@ -734,6 +749,7 @@ const App = () => (
               background: "#fff",
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+              boxSizing: "border-box",
             }}
           >
             <div className="vvp-ri__mount" data-ri-initialized="true">
@@ -751,6 +767,7 @@ const App = () => (
               background: "#fff",
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+              boxSizing: "border-box",
             }}
           >
             <div className="vvp-ri__mount" data-ri-initialized="true">
@@ -849,6 +866,7 @@ const App = () => (
               background: "#fff",
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+              boxSizing: "border-box",
             }}
           >
             <CampaignProgressApp total={62340} goal={100000} />
@@ -864,6 +882,7 @@ const App = () => (
               background: "#fff",
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+              boxSizing: "border-box",
             }}
           >
             <CampaignProgressApp total={104500} goal={100000} />
