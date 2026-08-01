@@ -566,7 +566,6 @@ const App = () => (
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
               boxSizing: "border-box",
-              overflow: "hidden",
             }}
           >
             <div className="vvp-ap__mount" data-ap-initialized="true">
@@ -616,7 +615,6 @@ const App = () => (
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
               boxSizing: "border-box",
-              overflow: "hidden",
             }}
           >
             <div className="vvp-ap__mount" data-ap-initialized="true">
@@ -642,7 +640,6 @@ const App = () => (
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
               boxSizing: "border-box",
-              overflow: "hidden",
             }}
           >
             <div className="vvp-ti__mount" data-ti-initialized="true">
@@ -661,7 +658,6 @@ const App = () => (
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
               boxSizing: "border-box",
-              overflow: "hidden",
             }}
           >
             <div className="vvp-ti__mount" data-ti-initialized="true">
@@ -682,7 +678,6 @@ const App = () => (
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
               boxSizing: "border-box",
-              overflow: "hidden",
             }}
           >
             <div className="vvp-ti__mount" data-ti-initialized="true">
@@ -701,7 +696,6 @@ const App = () => (
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
               boxSizing: "border-box",
-              overflow: "hidden",
             }}
           >
             <div className="vvp-ti__mount" data-ti-initialized="true">
@@ -720,7 +714,6 @@ const App = () => (
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
               boxSizing: "border-box",
-              overflow: "hidden",
             }}
           >
             <div className="vvp-tl__mount" data-tl-initialized="true">
@@ -739,7 +732,6 @@ const App = () => (
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
               boxSizing: "border-box",
-              overflow: "hidden",
             }}
           >
             <div className="vvp-tl__mount" data-tl-initialized="true">
@@ -758,7 +750,6 @@ const App = () => (
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
               boxSizing: "border-box",
-              overflow: "hidden",
             }}
           >
             <div className="vvp-ri__mount" data-ri-initialized="true">
@@ -777,7 +768,6 @@ const App = () => (
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
               boxSizing: "border-box",
-              overflow: "hidden",
             }}
           >
             <div className="vvp-ri__mount" data-ri-initialized="true">
@@ -877,7 +867,6 @@ const App = () => (
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
               boxSizing: "border-box",
-              overflow: "hidden",
             }}
           >
             <CampaignProgressApp total={62340} goal={100000} />
@@ -894,7 +883,6 @@ const App = () => (
               borderRadius: 8,
               boxShadow: "0 1px 4px rgba(0,0,0,.08)",
               boxSizing: "border-box",
-              overflow: "hidden",
             }}
           >
             <CampaignProgressApp total={104500} goal={100000} />

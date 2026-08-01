@@ -19,6 +19,8 @@
   .vvp-cd {
     width: 100%;
     max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
   }
 
   .vvp-cd__form {
@@ -26,12 +28,16 @@
     flex-direction: column;
     gap: 14px;
     width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
   }
 
   .vvp-cd__presets {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .vvp-cd__preset {
