@@ -6,6 +6,7 @@ import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";
 import { CampaignProgressApp } from "./App";
 import { DEFAULT_GOAL_EUR } from "./constants";
+import "../../global.scss";
 
 export const CampaignProgressEdit = (
   props: CampaignProgressEditProps,

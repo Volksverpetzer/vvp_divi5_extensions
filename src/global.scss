@@ -1,0 +1,27 @@
+/* Global reset and normalization for VVP Divi5 Extensions */
+
+* {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure flex and grid containers don't overflow */
+[style*="display: flex"],
+[style*="display: grid"] {
+  min-width: 0;
+}

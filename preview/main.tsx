@@ -1,5 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
+import "../src/global.scss";
 import "../src/components/fact-check-search/style.scss";
 import "../src/components/content-overview/style.scss";
 import "../src/components/author-profile/style.scss";
