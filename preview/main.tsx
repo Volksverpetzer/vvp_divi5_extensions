@@ -411,12 +411,13 @@ const Toc = () => (
       borderRadius: 8,
       display: "flex",
       flexWrap: "wrap",
-      gap: "1.5rem",
+      gap: "1rem",
       width: "100%",
+      overflow: "hidden",
     }}
   >
     {TOC_GROUPS.map(({ component, sections }) => (
-      <div key={component}>
+      <div key={component} style={{ minWidth: 0, flexShrink: 1 }}>
         <div
           style={{
             fontSize: 11,
