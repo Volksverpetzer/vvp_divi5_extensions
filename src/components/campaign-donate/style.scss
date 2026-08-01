@@ -10,6 +10,14 @@
   // module visually ignores whatever max-width was set in the Builder.
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
+
+  // global.scss (box-sizing: border-box reset) is only loaded by the Vite
+  // preview, not by the WordPress/Divi frontend — this component must set
+  // its own box-sizing or width: 100% + padding/border will overflow there.
+  * {
+    box-sizing: border-box;
+  }
 
   .vvp-cd {
     width: 100%;

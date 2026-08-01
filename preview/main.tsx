@@ -414,7 +414,6 @@ const Toc = () => (
       flexWrap: "wrap",
       gap: "1rem",
       width: "100%",
-      overflow: "hidden",
     }}
   >
     {TOC_GROUPS.map(({ component, sections }) => (
