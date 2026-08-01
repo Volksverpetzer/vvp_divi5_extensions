@@ -5,7 +5,6 @@ import { ModuleStyles } from "./styles";
 import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";
 import { CampaignDonateApp } from "./App";
-import "../../global.scss";
 import "./style.scss";
 
 const parsePresets = (input: string): number[] => {

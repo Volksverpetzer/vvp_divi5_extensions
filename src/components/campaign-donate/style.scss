@@ -10,16 +10,10 @@
   // module visually ignores whatever max-width was set in the Builder.
   width: 100%;
   max-width: 100%;
-  box-sizing: border-box;
-
-  * {
-    box-sizing: border-box;
-  }
 
   .vvp-cd {
     width: 100%;
     max-width: 100%;
-    box-sizing: border-box;
     min-width: 0;
   }
 
@@ -28,7 +22,6 @@
     flex-direction: column;
     gap: 14px;
     width: 100%;
-    box-sizing: border-box;
     min-width: 0;
   }
 
@@ -37,7 +30,6 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     width: 100%;
-    box-sizing: border-box;
   }
 
   .vvp-cd__preset {
