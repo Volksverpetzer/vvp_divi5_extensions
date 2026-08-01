@@ -412,6 +412,7 @@ const Toc = () => (
       display: "flex",
       flexWrap: "wrap",
       gap: "1.5rem",
+      width: "100%",
     }}
   >
     {TOC_GROUPS.map(({ component, sections }) => (
@@ -527,381 +528,395 @@ const App = () => (
       </a>
     </div>
 
-    <div style={{ width: "100%", padding: "2rem 0" }}>
-      <Toc />
-      <Section title="FactCheckSearch Module">
-        <div className="vvp-fc__mount" data-fc-initialized="true">
-          <FactCheckSearchApp
-            searchApiUrl="https://ai.volksverpetzer-app.de/api/vector-search/"
-            importApiUrl="https://ai.volksverpetzer-app.de/api/import-url/"
-          />
-        </div>
-      </Section>
-
-      <Section title="AuthorProfile · Vertikal (1 Autor)">
-        <div
-          className="vvp-author-profile"
-          style={{
-            maxWidth: 640,
-            padding: "1.5rem",
-            background: "#fff",
-            borderRadius: 8,
-            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
-          }}
-        >
-          <div className="vvp-ap__mount" data-ap-initialized="true">
-            <AuthorProfileApp
-              authors={AUTHOR_SINGLE}
-              showAvatar
-              showBio
-              showLink
-              layout="vertical"
-              avatarSize={80}
+    <div
+      style={{
+        width: "100%",
+        padding: "2rem 1rem",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <div style={{ width: "100%", maxWidth: "1400px" }}>
+        <Toc />
+        <Section title="FactCheckSearch Module">
+          <div className="vvp-fc__mount" data-fc-initialized="true">
+            <FactCheckSearchApp
+              searchApiUrl="https://ai.volksverpetzer-app.de/api/vector-search/"
+              importApiUrl="https://ai.volksverpetzer-app.de/api/import-url/"
             />
           </div>
-        </div>
-      </Section>
+        </Section>
 
-      <Section title="AuthorProfile · Horizontal (2 Autoren / Co-Autoren) · avatarSize=120">
-        <div
-          className="vvp-author-profile"
-          style={{
-            maxWidth: 760,
-            padding: "1.5rem",
-            background: "#fff",
-            borderRadius: 8,
-            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
-          }}
-        >
-          <div className="vvp-ap__mount" data-ap-initialized="true">
-            <AuthorProfileApp
-              authors={AUTHOR_MULTI}
-              showAvatar
-              showBio
-              showLink
-              layout="horizontal"
-              avatarSize={120}
-            />
-          </div>
-        </div>
-      </Section>
-
-      <Section title="AuthorProfile · Kein Avatar, kein Link">
-        <div
-          className="vvp-author-profile"
-          style={{
-            maxWidth: 640,
-            padding: "1.5rem",
-            background: "#fff",
-            borderRadius: 8,
-            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
-          }}
-        >
-          <div className="vvp-ap__mount" data-ap-initialized="true">
-            <AuthorProfileApp
-              authors={AUTHOR_SINGLE}
-              showAvatar={false}
-              showBio
-              showLink={false}
-              layout="vertical"
-              avatarSize={80}
-            />
-          </div>
-        </div>
-      </Section>
-
-      <Section title="TrendingItems · Alle (mit Vorschaubildern)">
-        <div
-          className="vvp-trending-items"
-          style={{
-            maxWidth: 480,
-            padding: "1.5rem",
-            background: "#fff",
-            borderRadius: 8,
-            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
-          }}
-        >
-          <div className="vvp-ti__mount" data-ti-initialized="true">
-            <TrendingItemsApp items={TRENDING_ALL} />
-          </div>
-        </div>
-      </Section>
-
-      <Section title="TrendingItems · Alle (ohne Vorschaubilder)">
-        <div
-          className="vvp-trending-items"
-          style={{
-            maxWidth: 480,
-            padding: "1.5rem",
-            background: "#fff",
-            borderRadius: 8,
-            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
-          }}
-        >
-          <div className="vvp-ti__mount" data-ti-initialized="true">
-            <TrendingItemsApp
-              items={TRENDING_ALL.map(({ image_url: _, ...rest }) => rest)}
-            />
-          </div>
-        </div>
-      </Section>
-
-      <Section title="TrendingItems · Podcast (1 Treffer nach URL-Filter)">
-        <div
-          className="vvp-trending-items"
-          style={{
-            maxWidth: 480,
-            padding: "1.5rem",
-            background: "#fff",
-            borderRadius: 8,
-            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
-          }}
-        >
-          <div className="vvp-ti__mount" data-ti-initialized="true">
-            <TrendingItemsApp items={TRENDING_PODCAST} />
-          </div>
-        </div>
-      </Section>
-
-      <Section title="TrendingItems · Leerer Zustand">
-        <div
-          className="vvp-trending-items"
-          style={{
-            maxWidth: 480,
-            padding: "1.5rem",
-            background: "#fff",
-            borderRadius: 8,
-            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
-          }}
-        >
-          <div className="vvp-ti__mount" data-ti-initialized="true">
-            <TrendingItemsApp items={TRENDING_EMPTY} />
-          </div>
-        </div>
-      </Section>
-
-      <Section title="TrendingList · 3 Einträge">
-        <div
-          className="vvp-trending-list"
-          style={{
-            maxWidth: 480,
-            padding: "1.5rem",
-            background: "#fff",
-            borderRadius: 8,
-            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
-          }}
-        >
-          <div className="vvp-tl__mount" data-tl-initialized="true">
-            <TrendingListApp items={TRENDING_LIST_ITEMS} />
-          </div>
-        </div>
-      </Section>
-
-      <Section title="TrendingList · Leerer Zustand">
-        <div
-          className="vvp-trending-list"
-          style={{
-            maxWidth: 480,
-            padding: "1.5rem",
-            background: "#fff",
-            borderRadius: 8,
-            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
-          }}
-        >
-          <div className="vvp-tl__mount" data-tl-initialized="true">
-            <TrendingListApp items={[]} />
-          </div>
-        </div>
-      </Section>
-
-      <Section title="RelatedItems · Passende Artikel (3 Treffer)">
-        <div
-          className="vvp-related-items"
-          style={{
-            maxWidth: 720,
-            padding: "1.5rem",
-            background: "#fff",
-            borderRadius: 8,
-            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
-          }}
-        >
-          <div className="vvp-ri__mount" data-ri-initialized="true">
-            <RelatedItemsApp items={TRENDING_ALL.slice(0, 3)} />
-          </div>
-        </div>
-      </Section>
-
-      <Section title="RelatedItems · Keine Treffer (rendert nichts)">
-        <div
-          className="vvp-related-items"
-          style={{
-            maxWidth: 720,
-            padding: "1.5rem",
-            background: "#fff",
-            borderRadius: 8,
-            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
-          }}
-        >
-          <div className="vvp-ri__mount" data-ri-initialized="true">
-            <RelatedItemsApp items={TRENDING_EMPTY} />
-          </div>
-        </div>
-      </Section>
-
-      <Section title="ContentOverview · Feed (vollständig)">
-        <div className="vvp-co__wrapper">
-          <div className="vvp-co__section-header">
-            <h2 className="vvp-co__section-title">Das Neueste</h2>
-          </div>
-          <div className="vvp-co__feed-grid">
-            {FEED_ARTICLES.slice(0, 3).map((a, i) => (
-              <div key={i} className="vvp-co__feed-item" data-co-kind="article">
-                <div
-                  className="vvp-co-article-mount"
-                  data-article-initialized="true"
-                >
-                  <ArticleCard {...a} />
-                </div>
-              </div>
-            ))}
-            <div
-              className="vvp-co__feed-item vvp-co__feed-item--youtube-banner"
-              data-co-kind="youtube"
-            >
-              <div
-                className="vvp-co-yt-banner-mount"
-                data-yt-banner-initialized="true"
-              >
-                <YouTubeBanner {...FEED_YT} />
-              </div>
-            </div>
-            {FEED_ARTICLES.slice(3, 6).map((a, i) => (
-              <div
-                key={i + 3}
-                className="vvp-co__feed-item"
-                data-co-kind="article"
-              >
-                <div
-                  className="vvp-co-article-mount"
-                  data-article-initialized="true"
-                >
-                  <ArticleCard {...a} />
-                </div>
-              </div>
-            ))}
-            {FEED_IG.map((ig, i) => (
-              <div
-                key={i}
-                className="vvp-co__feed-item"
-                data-co-kind="instagram"
-              >
-                <div className="vvp-co-ig-mount" data-ig-initialized="true">
-                  <InstagramSlideshow {...ig} />
-                </div>
-              </div>
-            ))}
-            <div
-              className="vvp-co__feed-item vvp-co__feed-item--podcast"
-              data-co-kind="podcast"
-            >
-              <div
-                className="vvp-co-podcast-mount"
-                data-podcast-initialized="true"
-              >
-                <PodcastBanner {...FEED_PODCAST} />
-              </div>
+        <Section title="AuthorProfile · Vertikal (1 Autor)">
+          <div
+            className="vvp-author-profile"
+            style={{
+              width: "100%",
+              padding: "1.5rem",
+              background: "#fff",
+              borderRadius: 8,
+              boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+            }}
+          >
+            <div className="vvp-ap__mount" data-ap-initialized="true">
+              <AuthorProfileApp
+                authors={AUTHOR_SINGLE}
+                showAvatar
+                showBio
+                showLink
+                layout="vertical"
+                avatarSize={80}
+              />
             </div>
           </div>
-        </div>
-      </Section>
+        </Section>
 
-      <Section title="ContentOverview · InstagramSlideshow (einzeln)">
-        <div style={{ maxWidth: 360 }}>
-          <InstagramSlideshow {...IG_PROPS} />
-        </div>
-      </Section>
+        <Section title="AuthorProfile · Horizontal (2 Autoren / Co-Autoren) · avatarSize=120">
+          <div
+            className="vvp-author-profile"
+            style={{
+              maxWidth: 760,
+              padding: "1.5rem",
+              background: "#fff",
+              borderRadius: 8,
+              boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+            }}
+          >
+            <div className="vvp-ap__mount" data-ap-initialized="true">
+              <AuthorProfileApp
+                authors={AUTHOR_MULTI}
+                showAvatar
+                showBio
+                showLink
+                layout="horizontal"
+                avatarSize={120}
+              />
+            </div>
+          </div>
+        </Section>
 
-      <Section title="ContentOverview · PodcastBanner (einzeln)">
-        <PodcastBanner {...PODCAST_PROPS} />
-      </Section>
+        <Section title="AuthorProfile · Kein Avatar, kein Link">
+          <div
+            className="vvp-author-profile"
+            style={{
+              width: "100%",
+              padding: "1.5rem",
+              background: "#fff",
+              borderRadius: 8,
+              boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+            }}
+          >
+            <div className="vvp-ap__mount" data-ap-initialized="true">
+              <AuthorProfileApp
+                authors={AUTHOR_SINGLE}
+                showAvatar={false}
+                showBio
+                showLink={false}
+                layout="vertical"
+                avatarSize={80}
+              />
+            </div>
+          </div>
+        </Section>
 
-      <Section title="CampaignProgress · Standard">
-        <div
-          className="vvp-campaign-progress"
-          style={{
-            maxWidth: 480,
-            padding: "1.5rem",
-            background: "#fff",
-            borderRadius: 8,
-            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
-          }}
-        >
-          <CampaignProgressApp total={62340} goal={100000} />
-        </div>
-      </Section>
+        <Section title="TrendingItems · Alle (mit Vorschaubildern)">
+          <div
+            className="vvp-trending-items"
+            style={{
+              width: "100%",
+              padding: "1.5rem",
+              background: "#fff",
+              borderRadius: 8,
+              boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+            }}
+          >
+            <div className="vvp-ti__mount" data-ti-initialized="true">
+              <TrendingItemsApp items={TRENDING_ALL} />
+            </div>
+          </div>
+        </Section>
 
-      <Section title="CampaignProgress · Ziel erreicht">
-        <div
-          className="vvp-campaign-progress"
-          style={{
-            maxWidth: 480,
-            padding: "1.5rem",
-            background: "#fff",
-            borderRadius: 8,
-            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
-          }}
-        >
-          <CampaignProgressApp total={104500} goal={100000} />
-        </div>
-      </Section>
+        <Section title="TrendingItems · Alle (ohne Vorschaubilder)">
+          <div
+            className="vvp-trending-items"
+            style={{
+              width: "100%",
+              padding: "1.5rem",
+              background: "#fff",
+              borderRadius: 8,
+              boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+            }}
+          >
+            <div className="vvp-ti__mount" data-ti-initialized="true">
+              <TrendingItemsApp
+                items={TRENDING_ALL.map(({ image_url: _, ...rest }) => rest)}
+              />
+            </div>
+          </div>
+        </Section>
 
-      <Section title="CampaignDonate · Stripe + PayPal (mit Presets)">
-        <div
-          className="vvp-campaign-donate"
-          style={{
-            maxWidth: "100%",
-            width: "100%",
-            padding: "1.5rem",
-            background: "#fff",
-            borderRadius: 8,
-            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
-          }}
-        >
-          <CampaignDonateApp
-            apiBaseUrl="https://crowdfunding.volksverpetzer.de"
-            campaignKey="flyer2026"
-            stripePublicKey="pk_test_51234567890"
-            paypalClientId="AWJvLVwI_example"
-            presets={[10, 50, 100]}
-            certificateUrl="/"
-            preview
-          />
-        </div>
-      </Section>
+        <Section title="TrendingItems · Podcast (1 Treffer nach URL-Filter)">
+          <div
+            className="vvp-trending-items"
+            style={{
+              width: "100%",
+              padding: "1.5rem",
+              background: "#fff",
+              borderRadius: 8,
+              boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+            }}
+          >
+            <div className="vvp-ti__mount" data-ti-initialized="true">
+              <TrendingItemsApp items={TRENDING_PODCAST} />
+            </div>
+          </div>
+        </Section>
 
-      <Section title="CampaignDonate · Nur Stripe">
-        <div
-          className="vvp-campaign-donate"
-          style={{
-            maxWidth: "100%",
-            width: "100%",
-            padding: "1.5rem",
-            background: "#fff",
-            borderRadius: 8,
-            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
-          }}
-        >
-          <CampaignDonateApp
-            apiBaseUrl="https://crowdfunding.volksverpetzer.de"
-            campaignKey="flyer2026"
-            stripePublicKey="pk_test_01234567890"
-            paypalClientId=""
-            presets={[15, 30, 75, 150]}
-            certificateUrl="/"
-            preview
-          />
-        </div>
-      </Section>
+        <Section title="TrendingItems · Leerer Zustand">
+          <div
+            className="vvp-trending-items"
+            style={{
+              width: "100%",
+              padding: "1.5rem",
+              background: "#fff",
+              borderRadius: 8,
+              boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+            }}
+          >
+            <div className="vvp-ti__mount" data-ti-initialized="true">
+              <TrendingItemsApp items={TRENDING_EMPTY} />
+            </div>
+          </div>
+        </Section>
+
+        <Section title="TrendingList · 3 Einträge">
+          <div
+            className="vvp-trending-list"
+            style={{
+              width: "100%",
+              padding: "1.5rem",
+              background: "#fff",
+              borderRadius: 8,
+              boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+            }}
+          >
+            <div className="vvp-tl__mount" data-tl-initialized="true">
+              <TrendingListApp items={TRENDING_LIST_ITEMS} />
+            </div>
+          </div>
+        </Section>
+
+        <Section title="TrendingList · Leerer Zustand">
+          <div
+            className="vvp-trending-list"
+            style={{
+              width: "100%",
+              padding: "1.5rem",
+              background: "#fff",
+              borderRadius: 8,
+              boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+            }}
+          >
+            <div className="vvp-tl__mount" data-tl-initialized="true">
+              <TrendingListApp items={[]} />
+            </div>
+          </div>
+        </Section>
+
+        <Section title="RelatedItems · Passende Artikel (3 Treffer)">
+          <div
+            className="vvp-related-items"
+            style={{
+              width: "100%",
+              padding: "1.5rem",
+              background: "#fff",
+              borderRadius: 8,
+              boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+            }}
+          >
+            <div className="vvp-ri__mount" data-ri-initialized="true">
+              <RelatedItemsApp items={TRENDING_ALL.slice(0, 3)} />
+            </div>
+          </div>
+        </Section>
+
+        <Section title="RelatedItems · Keine Treffer (rendert nichts)">
+          <div
+            className="vvp-related-items"
+            style={{
+              width: "100%",
+              padding: "1.5rem",
+              background: "#fff",
+              borderRadius: 8,
+              boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+            }}
+          >
+            <div className="vvp-ri__mount" data-ri-initialized="true">
+              <RelatedItemsApp items={TRENDING_EMPTY} />
+            </div>
+          </div>
+        </Section>
+
+        <Section title="ContentOverview · Feed (vollständig)">
+          <div className="vvp-co__wrapper">
+            <div className="vvp-co__section-header">
+              <h2 className="vvp-co__section-title">Das Neueste</h2>
+            </div>
+            <div className="vvp-co__feed-grid">
+              {FEED_ARTICLES.slice(0, 3).map((a, i) => (
+                <div
+                  key={i}
+                  className="vvp-co__feed-item"
+                  data-co-kind="article"
+                >
+                  <div
+                    className="vvp-co-article-mount"
+                    data-article-initialized="true"
+                  >
+                    <ArticleCard {...a} />
+                  </div>
+                </div>
+              ))}
+              <div
+                className="vvp-co__feed-item vvp-co__feed-item--youtube-banner"
+                data-co-kind="youtube"
+              >
+                <div
+                  className="vvp-co-yt-banner-mount"
+                  data-yt-banner-initialized="true"
+                >
+                  <YouTubeBanner {...FEED_YT} />
+                </div>
+              </div>
+              {FEED_ARTICLES.slice(3, 6).map((a, i) => (
+                <div
+                  key={i + 3}
+                  className="vvp-co__feed-item"
+                  data-co-kind="article"
+                >
+                  <div
+                    className="vvp-co-article-mount"
+                    data-article-initialized="true"
+                  >
+                    <ArticleCard {...a} />
+                  </div>
+                </div>
+              ))}
+              {FEED_IG.map((ig, i) => (
+                <div
+                  key={i}
+                  className="vvp-co__feed-item"
+                  data-co-kind="instagram"
+                >
+                  <div className="vvp-co-ig-mount" data-ig-initialized="true">
+                    <InstagramSlideshow {...ig} />
+                  </div>
+                </div>
+              ))}
+              <div
+                className="vvp-co__feed-item vvp-co__feed-item--podcast"
+                data-co-kind="podcast"
+              >
+                <div
+                  className="vvp-co-podcast-mount"
+                  data-podcast-initialized="true"
+                >
+                  <PodcastBanner {...FEED_PODCAST} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </Section>
+
+        <Section title="ContentOverview · InstagramSlideshow (einzeln)">
+          <div style={{ width: "100%", maxWidth: "100%" }}>
+            <InstagramSlideshow {...IG_PROPS} />
+          </div>
+        </Section>
+
+        <Section title="ContentOverview · PodcastBanner (einzeln)">
+          <PodcastBanner {...PODCAST_PROPS} />
+        </Section>
+
+        <Section title="CampaignProgress · Standard">
+          <div
+            className="vvp-campaign-progress"
+            style={{
+              width: "100%",
+              padding: "1.5rem",
+              background: "#fff",
+              borderRadius: 8,
+              boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+            }}
+          >
+            <CampaignProgressApp total={62340} goal={100000} />
+          </div>
+        </Section>
+
+        <Section title="CampaignProgress · Ziel erreicht">
+          <div
+            className="vvp-campaign-progress"
+            style={{
+              width: "100%",
+              padding: "1.5rem",
+              background: "#fff",
+              borderRadius: 8,
+              boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+            }}
+          >
+            <CampaignProgressApp total={104500} goal={100000} />
+          </div>
+        </Section>
+
+        <Section title="CampaignDonate · Stripe + PayPal (mit Presets)">
+          <div
+            className="vvp-campaign-donate"
+            style={{
+              maxWidth: "100%",
+              width: "100%",
+              padding: "1.5rem",
+              background: "#fff",
+              borderRadius: 8,
+              boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+            }}
+          >
+            <CampaignDonateApp
+              apiBaseUrl="https://crowdfunding.volksverpetzer.de"
+              campaignKey="flyer2026"
+              stripePublicKey="pk_test_51234567890"
+              paypalClientId="AWJvLVwI_example"
+              presets={[10, 50, 100]}
+              certificateUrl="/"
+              preview
+            />
+          </div>
+        </Section>
+
+        <Section title="CampaignDonate · Nur Stripe">
+          <div
+            className="vvp-campaign-donate"
+            style={{
+              maxWidth: "100%",
+              width: "100%",
+              padding: "1.5rem",
+              background: "#fff",
+              borderRadius: 8,
+              boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+            }}
+          >
+            <CampaignDonateApp
+              apiBaseUrl="https://crowdfunding.volksverpetzer.de"
+              campaignKey="flyer2026"
+              stripePublicKey="pk_test_01234567890"
+              paypalClientId=""
+              presets={[15, 30, 75, 150]}
+              certificateUrl="/"
+              preview
+            />
+          </div>
+        </Section>
+      </div>
     </div>
   </div>
 );
