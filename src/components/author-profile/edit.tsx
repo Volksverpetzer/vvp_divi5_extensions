@@ -9,9 +9,9 @@ import { catPlaceholderImage as img } from "../shared/catPlaceholder";
 
 const PLACEHOLDER_AUTHORS: Author[] = [
   {
-    name: "Max Mustermann",
-    bio: "Journalist und Faktenchecker bei Volksverpetzer. Schreibt über Desinformation, Medien und Demokratie.",
-    avatarUrl: img("max-mustermann", 150, 150),
+    name: "Minka Fellstein",
+    bio: "Journalistin und Faktencheckerin bei Volksverpetzer. Schreibt über Desinformation, Medien und Demokratie – schnurrt dabei kritisch mit.",
+    avatarUrl: img("minka-fellstein", 150, 150),
     profileUrl: "#",
   },
 ];
