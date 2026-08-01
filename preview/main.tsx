@@ -7,8 +7,10 @@ import "../src/components/trending-items/style.scss";
 import "../src/components/trending-list/style.scss";
 import "../src/components/related-items/style.scss";
 import "../src/components/campaign-progress/style.scss";
+import "../src/components/campaign-donate/style.scss";
 import { FactCheckSearchApp } from "../src/components/fact-check-search/App";
 import { CampaignProgressApp } from "../src/components/campaign-progress/App";
+import { CampaignDonateApp } from "../src/components/campaign-donate/App";
 import {
   ArticleCard,
   type ArticleCardProps,
@@ -388,6 +390,13 @@ const TOC_GROUPS: { component: string; sections: string[] }[] = [
     sections: [
       "CampaignProgress · Standard",
       "CampaignProgress · Ziel erreicht",
+    ],
+  },
+  {
+    component: "CampaignDonate",
+    sections: [
+      "CampaignDonate · Stripe + PayPal (mit Presets)",
+      "CampaignDonate · Nur Stripe",
     ],
   },
 ];
@@ -843,6 +852,52 @@ const App = () => (
           }}
         >
           <CampaignProgressApp total={104500} goal={100000} />
+        </div>
+      </Section>
+
+      <Section title="CampaignDonate · Stripe + PayPal (mit Presets)">
+        <div
+          className="vvp-campaign-donate"
+          style={{
+            maxWidth: 480,
+            padding: "1.5rem",
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+          }}
+        >
+          <CampaignDonateApp
+            apiBaseUrl="https://crowdfunding.volksverpetzer.de"
+            campaignKey="flyer2026"
+            stripePublicKey="pk_test_51234567890"
+            paypalClientId="AWJvLVwI_example"
+            presets={[10, 50, 100]}
+            certificateUrl="/"
+            preview
+          />
+        </div>
+      </Section>
+
+      <Section title="CampaignDonate · Nur Stripe">
+        <div
+          className="vvp-campaign-donate"
+          style={{
+            maxWidth: 480,
+            padding: "1.5rem",
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 1px 4px rgba(0,0,0,.08)",
+          }}
+        >
+          <CampaignDonateApp
+            apiBaseUrl="https://crowdfunding.volksverpetzer.de"
+            campaignKey="flyer2026"
+            stripePublicKey="pk_test_01234567890"
+            paypalClientId=""
+            presets={[15, 30, 75, 150]}
+            certificateUrl="/"
+            preview
+          />
         </div>
       </Section>
     </div>
