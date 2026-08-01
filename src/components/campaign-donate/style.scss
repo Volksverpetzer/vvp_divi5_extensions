@@ -49,26 +49,29 @@
     }
   }
 
-  .vvp-cd__preset-custom {
-    color: #6b7280;
-
-    &.is-active {
-      color: var(--vvp-cd-pink);
-    }
-  }
-
-  .vvp-cd__label {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #374151;
-  }
-
-  .vvp-cd__input {
+  .vvp-cd__preset-input {
     padding: 0.75rem;
     border: 2px solid #e5e7eb;
     border-radius: 0.5rem;
+    background: #fff;
+    font-weight: 700;
     font-size: 1rem;
-    width: 100%;
+    cursor: text;
+
+    &::placeholder {
+      color: #9ca3af;
+      font-weight: 400;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--vvp-cd-pink);
+    }
+
+    &.is-active {
+      border-color: var(--vvp-cd-pink);
+      color: var(--vvp-cd-pink);
+    }
   }
 
   .vvp-cd__submit {
@@ -104,6 +107,15 @@
   .vvp-cd__paypal {
     max-width: 50%;
     min-width: 280px;
+    width: 100%;
+  }
+
+  // Input fields styling for when not in the preset grid
+  .vvp-cd__input {
+    padding: 0.75rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 1rem;
     width: 100%;
   }
 
