@@ -23,11 +23,3 @@ export const Success: Story = {
     certificateUrl: "/",
   },
 };
-
-export const SuccessNoCertificate: Story = {
-  name: "Success (no certificate link)",
-  args: {
-    amount: 15,
-    certificateUrl: undefined,
-  },
-};
