@@ -53,11 +53,11 @@ export const CampaignDonateEdit = (
     >
       {elements.styleComponents({ attrName: "module" })}
 
-      {/* ModuleContainer/Divi's Visual Builder only applies the module's
-          wrapper class (module-classnames.ts) when it gets a single root
-          child here — wrap everything in one div rather than passing the
-          app and the config hint as siblings. */}
-      <div className="vvp-cd__editor-preview">
+      {/* Explicitly add the module wrapper class so CSS selectors like
+          .vvp-campaign-donate .vvp-cd__form work in the Divi VB editor.
+          Divi's ModuleContainer does not reliably apply classnamesFunction
+          when StyleContainer is combined with a stateful component. */}
+      <div className="vvp-campaign-donate">
         {/* Preview: inert form, no network calls in the builder. */}
         <CampaignDonateApp
           apiBaseUrl={apiBaseUrl}

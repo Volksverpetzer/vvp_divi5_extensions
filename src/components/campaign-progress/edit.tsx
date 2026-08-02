@@ -31,11 +31,11 @@ export const CampaignProgressEdit = (
     >
       {elements.styleComponents({ attrName: "module" })}
 
-      {/* ModuleContainer/Divi's Visual Builder only applies the module's
-          wrapper class (module-classnames.ts) when it gets a single root
-          child here — wrap everything in one div rather than passing the
-          app and the config hint as siblings. */}
-      <div className="vvp-cp__editor-preview">
+      {/* Explicitly add the module wrapper class so CSS selectors like
+          .vvp-campaign-progress .vvp-cp__amounts work in the Divi VB editor.
+          Divi's ModuleContainer does not reliably apply classnamesFunction
+          when StyleContainer is combined with a stateful component. */}
+      <div className="vvp-campaign-progress">
         {/* Preview: static placeholder values, no live network call in the builder. */}
         <CampaignProgressApp total={Math.round(goal * 0.5)} goal={goal} />
 
