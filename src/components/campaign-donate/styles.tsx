@@ -1,13 +1,24 @@
-import { type Module } from "@divi/types";
+import React, { type ReactElement } from "react";
+import { StyleContainer, type StylesProps } from "@divi/module";
 import { type CampaignDonateAttrs } from "./types";
 
-// DIAGNOSTIC: temporarily simplified to isolate a bug where the module's
-// wrapper class (from module-classnames.ts) doesn't get applied in the Divi
-// Visual Builder editor — only reproduces when a StyleContainer/elements.style()
-// styles.tsx is combined with a stateful (useState/useEffect) App component.
-// Revert to the StyleContainer/elements.style() version once confirmed/fixed.
-export const ModuleStyles = (
-  _props: Module.StylesProps<CampaignDonateAttrs>,
-) => {
-  return null;
+export const ModuleStyles = ({
+  elements,
+  settings,
+  mode,
+  state,
+  noStyleTag,
+}: StylesProps<CampaignDonateAttrs>): ReactElement => {
+  return (
+    <StyleContainer mode={mode} state={state} noStyleTag={noStyleTag}>
+      {elements.style({
+        attrName: "module",
+        styleProps: {
+          disabledOn: {
+            disabledModuleVisibility: settings?.disabledModuleVisibility,
+          },
+        },
+      })}
+    </StyleContainer>
+  );
 };

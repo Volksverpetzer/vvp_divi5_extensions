@@ -53,27 +53,34 @@ export const CampaignDonateEdit = (
     >
       {elements.styleComponents({ attrName: "module" })}
 
-      {/* Preview: inert form, no network calls in the builder. */}
-      <CampaignDonateApp
-        apiBaseUrl={apiBaseUrl}
-        campaignKey={campaignKey}
-        stripePublicKey={stripePublicKey}
-        paypalClientId={paypalClientId}
-        presets={parsePresets(presetsInput)}
-        certificateUrl={certificateUrl}
-        preview
-      />
+      {/* ModuleContainer/Divi's Visual Builder only applies the module's
+          wrapper class (module-classnames.ts) when it gets a single root
+          child here — wrap everything in one div rather than passing the
+          app and the config hint as siblings. */}
+      <div className="vvp-cd__editor-preview">
+        {/* Preview: inert form, no network calls in the builder. */}
+        <CampaignDonateApp
+          apiBaseUrl={apiBaseUrl}
+          campaignKey={campaignKey}
+          stripePublicKey={stripePublicKey}
+          paypalClientId={paypalClientId}
+          presets={parsePresets(presetsInput)}
+          certificateUrl={certificateUrl}
+          preview
+        />
 
-      {missingConfig && (
-        <div className="vvp-cd__config-hint">
-          <p>
-            <strong>Konfiguration unvollständig.</strong> Bitte Kampagnen-API
-            Basis-URL, Kampagnen-Kennung sowie mindestens einen Zahlungsanbieter
-            (Stripe Publishable Key oder PayPal Client-ID) in den
-            Moduleinstellungen eintragen, bevor das Modul live geschaltet wird.
-          </p>
-        </div>
-      )}
+        {missingConfig && (
+          <div className="vvp-cd__config-hint">
+            <p>
+              <strong>Konfiguration unvollständig.</strong> Bitte Kampagnen-API
+              Basis-URL, Kampagnen-Kennung sowie mindestens einen
+              Zahlungsanbieter (Stripe Publishable Key oder PayPal Client-ID) in
+              den Moduleinstellungen eintragen, bevor das Modul live geschaltet
+              wird.
+            </p>
+          </div>
+        )}
+      </div>
     </ModuleContainer>
   );
 };
