@@ -31,11 +31,17 @@ export const CampaignProgressEdit = (
     >
       {elements.styleComponents({ attrName: "module" })}
 
-      {/* Preview: static placeholder values, no live network call in the builder. */}
-      <CampaignProgressApp total={Math.round(goal * 0.5)} goal={goal} />
+      {/* ModuleContainer/Divi's Visual Builder only applies the module's
+          wrapper class (module-classnames.ts) when it gets a single root
+          child here — wrap everything in one div rather than passing the
+          app and the config hint as siblings. */}
+      <div className="vvp-cp__editor-preview">
+        {/* Preview: static placeholder values, no live network call in the builder. */}
+        <CampaignProgressApp total={Math.round(goal * 0.5)} goal={goal} />
 
-      <div className="vvp-cp__config-hint">
-        <p>Die Vorschau zeigt keine echten Werte.</p>
+        <div className="vvp-cp__config-hint">
+          <p>Die Vorschau zeigt keine echten Werte.</p>
+        </div>
       </div>
     </ModuleContainer>
   );
