@@ -5,6 +5,7 @@ import { ModuleStyles } from "./styles";
 import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";
 import { ArticleCard, type ArticleCardProps } from "../shared/ArticleCard";
+import { catPlaceholderImage as img } from "../shared/catPlaceholder";
 
 const PLACEHOLDER_ARTICLES: ArticleCardProps[] = [
   {
@@ -17,8 +18,7 @@ const PLACEHOLDER_ARTICLES: ArticleCardProps[] = [
     category: "Analyse",
     category_link: "#",
     source: "volksverpetzer",
-    image_url:
-      "https://via.placeholder.com/640x360/e5e7eb/a3a3a3?text=Trending+1",
+    image_url: img("trending1"),
   },
   {
     title: "AfD und die Medien: Eine Bilanz",
@@ -29,8 +29,7 @@ const PLACEHOLDER_ARTICLES: ArticleCardProps[] = [
     category: "Politik",
     category_link: "#",
     source: "volksverpetzer",
-    image_url:
-      "https://via.placeholder.com/640x360/e5e7eb/a3a3a3?text=Trending+2",
+    image_url: img("trending2"),
   },
   {
     title: "Klimaschutz: Was stimmt wirklich?",
@@ -41,8 +40,7 @@ const PLACEHOLDER_ARTICLES: ArticleCardProps[] = [
     reading_time: 3,
     category: "Faktencheck",
     source: "pruefpunkt",
-    image_url:
-      "https://via.placeholder.com/640x360/e5e7eb/a3a3a3?text=Trending+3",
+    image_url: img("trending3"),
   },
 ];
 
