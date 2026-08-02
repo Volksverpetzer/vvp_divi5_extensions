@@ -48,16 +48,24 @@ export const CampaignDonateEdit = (
     >
       {elements.styleComponents({ attrName: "module" })}
 
-      {/* Preview: inert form, no network calls in the builder. */}
-      <CampaignDonateApp
-        apiBaseUrl={apiBaseUrl}
-        campaignKey={campaignKey}
-        stripePublicKey={stripePublicKey}
-        paypalClientId={paypalClientId}
-        presets={parsePresets(presetsInput)}
-        certificateUrl={certificateUrl}
-        preview
-      />
+      {/* Explicitly set the module wrapper class here rather than relying
+          on Divi's ModuleContainer to apply it (via classnamesFunction) to
+          its own outer element — in the Visual Builder editor that outer
+          class is unreliable, sometimes replaced by an auto-generated
+          "preset--group--...--divi-background--default" class instead, so
+          .vvp-campaign-donate-scoped selectors in style.scss never matched. */}
+      <div className="vvp-campaign-donate">
+        {/* Preview: inert form, no network calls in the builder. */}
+        <CampaignDonateApp
+          apiBaseUrl={apiBaseUrl}
+          campaignKey={campaignKey}
+          stripePublicKey={stripePublicKey}
+          paypalClientId={paypalClientId}
+          presets={parsePresets(presetsInput)}
+          certificateUrl={certificateUrl}
+          preview
+        />
+      </div>
     </ModuleContainer>
   );
 };
