@@ -20,6 +20,40 @@ const SAFE_URL_PATTERN = /^(https?:\/\/|\/(?!\/))/i;
 
 const DONATION_COMPLETE_EVENT = "vvp-donation-completed";
 
+export const CampaignDonateThanks = ({
+  amount,
+  certificateUrl,
+}: {
+  amount: number;
+  certificateUrl?: string;
+}): ReactElement => {
+  let safeCertificateUrl: string | undefined;
+  if (certificateUrl && SAFE_URL_PATTERN.test(certificateUrl)) {
+    safeCertificateUrl = certificateUrl;
+  }
+
+  return (
+    <div className="vvp-cd">
+      <div className="vvp-cd__thanks">
+        <strong>Danke für deine Unterstützung!</strong>
+        <p>
+          Deine Spende über {amount.toLocaleString("de-DE")} € wurde gezählt.
+        </p>
+        {safeCertificateUrl && (
+          <a
+            className="vvp-cd__certificate"
+            href={safeCertificateUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Urkunde öffnen (PDF)
+          </a>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const stripePromises = new Map<string, Promise<Stripe | null>>();
 const getStripe = (publicKey: string) => {
   if (!stripePromises.has(publicKey)) {
@@ -293,31 +327,11 @@ export const CampaignDonateApp = ({
   };
 
   if (donationComplete) {
-    let safeCertificateUrl: string | undefined;
-    if (certificateUrl && SAFE_URL_PATTERN.test(certificateUrl)) {
-      safeCertificateUrl = certificateUrl;
-    }
-
     return (
-      <div className="vvp-cd">
-        <div className="vvp-cd__thanks">
-          <strong>Danke für deine Unterstützung!</strong>
-          <p>
-            Deine Spende über {completedAmount.toLocaleString("de-DE")} € wurde
-            gezählt.
-          </p>
-          {safeCertificateUrl && (
-            <a
-              className="vvp-cd__certificate"
-              href={safeCertificateUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Urkunde öffnen (PDF)
-            </a>
-          )}
-        </div>
-      </div>
+      <CampaignDonateThanks
+        amount={completedAmount}
+        certificateUrl={certificateUrl}
+      />
     );
   }
 
