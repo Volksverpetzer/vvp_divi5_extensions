@@ -38,6 +38,9 @@ export const CampaignDonateThanks = ({
         <strong>Danke für deine Unterstützung!</strong>
         <p>
           Deine Spende über {amount.toLocaleString("de-DE")} € wurde gezählt.
+          Durch deine Spende ermöglichst du unsere Arbeit weiterzuführen und
+          mehr Aktionen wie diese durchzuführen. Gemeinsam mit dir kämpfen wir
+          für die Demokratie!
         </p>
         {safeCertificateUrl && (
           <a
