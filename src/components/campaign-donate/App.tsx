@@ -96,9 +96,7 @@ export const CampaignDonateApp = ({
   certificateUrl,
   preview = false,
 }: CampaignDonateAppProps): ReactElement => {
-  const [selected, setSelected] = useState(
-    presets[Math.floor(presets.length / 2)] ?? 25,
-  );
+  const [selected, setSelected] = useState(presets[1] ?? presets[0] ?? 25);
   const [customAmount, setCustomAmount] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
