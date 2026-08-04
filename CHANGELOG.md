@@ -4,6 +4,22 @@ All notable changes to the Volksverpetzer DIVI 5 extensions are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-08-04
+
+### Added
+
+- Campaign Donate and Campaign Progress: Stripe redirect-based payments (3D Secure, Klarna, Sofort, Bancontact, giropay) no longer leave the WP page, button/preset layout and styling were polished, the default preset selection and thank-you text were adjusted, and the Divi-configured goal now always takes precedence over the campaign API's goal.
+
+### Changed
+
+- Removed the editor-only config-hint/notice boxes from all modules ([#131](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/131)).
+- Replaced the 944-line hand-rolled component preview page with Storybook, with a full-width, responsive preview during the transition ([#126](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/126), [#127](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/127)).
+- Simplified the article card footer per design feedback ([#120](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/120)).
+
+### Fixed
+
+- Fixed a `build.mjs` race where parallel bundle builds could corrupt `styles/main.css` by writing to the same output path ([#121](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/121)).
+
 ## [1.1.0] - 2026-07-28
 
 First release with a maintained changelog; entries cover everything since v1.0.6.
@@ -38,4 +54,5 @@ First release with a maintained changelog; entries cover everything since v1.0.6
 
 - Both deploy workflows now purge the Bunny CDN cache for this plugin's assets after each deploy. Bunny previously ignored the `?ver=` cache-buster and served the plugin's JS/CSS for up to 30 days regardless of how many times it was redeployed ([#117](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/117)).
 
+[1.2.0]: https://github.com/Volksverpetzer/vvp_divi5_extensions/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/Volksverpetzer/vvp_divi5_extensions/compare/v1.0.6...v1.1.0
