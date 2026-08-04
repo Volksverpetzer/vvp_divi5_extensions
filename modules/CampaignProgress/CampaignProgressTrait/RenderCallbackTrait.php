@@ -137,7 +137,14 @@ trait RenderCallbackTrait
             if (is_array($data)) {
                 $result = [
                     'totalRaised' => is_numeric($data['totalRaised'] ?? null) ? (float) $data['totalRaised'] : 0,
-                    'goal'        => is_numeric($data['goal'] ?? null) ? (float) $data['goal'] : null,
+                    // Must match the > 0 check used for $divi_goal above and
+                    // the frontend's polling guard (data.goal > 0) — a 0 or
+                    // negative API goal here would otherwise slip through
+                    // the ?? fallback chain (PHP's ?? only skips null, not
+                    // 0) and neither side would ever correct it afterwards.
+                    'goal'        => is_numeric($data['goal'] ?? null) && (float) $data['goal'] > 0
+                        ? (float) $data['goal']
+                        : null,
                 ];
                 set_transient($cache_key, $result, 60);
             }
