@@ -11,16 +11,18 @@ const initAll = () => {
     mount.setAttribute("data-cp-initialized", "true");
 
     const apiUrl = mount.getAttribute("data-summary-url") || "";
-    const fallbackGoal =
-      Number(mount.getAttribute("data-goal")) || DEFAULT_GOAL_EUR;
+    const goalOverrideAttr = mount.getAttribute("data-goal-override") || "";
+    const goalOverride =
+      Number(goalOverrideAttr) > 0 ? Number(goalOverrideAttr) : undefined;
     const initialTotal = Number(mount.getAttribute("data-initial-total")) || 0;
     const initialGoal =
-      Number(mount.getAttribute("data-initial-goal")) || fallbackGoal;
+      Number(mount.getAttribute("data-initial-goal")) || DEFAULT_GOAL_EUR;
 
     createRoot(mount).render(
       <CampaignProgressApp
         total={initialTotal}
         goal={initialGoal}
+        goalOverride={goalOverride}
         apiUrl={apiUrl || undefined}
       />,
     );

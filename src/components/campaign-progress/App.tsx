@@ -8,6 +8,7 @@ const formatEuro = (value: number): string =>
 export const CampaignProgressApp = ({
   total: initialTotal,
   goal: initialGoal,
+  goalOverride,
   apiUrl,
 }: CampaignProgressAppProps): ReactElement => {
   const [total, setTotal] = useState(initialTotal);
@@ -27,7 +28,16 @@ export const CampaignProgressApp = ({
         const data: CampaignSummary = await response.json();
         if (cancelled) return;
         if (typeof data.totalRaised === "number") setTotal(data.totalRaised);
-        if (typeof data.goal === "number" && data.goal > 0) setGoal(data.goal);
+        // A goal explicitly configured in the Divi module always wins over
+        // whatever the campaign API reports — only follow the API's goal
+        // when no override was configured.
+        if (
+          goalOverride === undefined &&
+          typeof data.goal === "number" &&
+          data.goal > 0
+        ) {
+          setGoal(data.goal);
+        }
       } catch {
         // Keep showing the last known value on a failed poll.
       }
@@ -47,7 +57,7 @@ export const CampaignProgressApp = ({
       window.clearInterval(interval);
       window.removeEventListener(DONATION_COMPLETE_EVENT, fetchSummary);
     };
-  }, [apiUrl]);
+  }, [apiUrl, goalOverride]);
 
   const percent =
     goal > 0 ? Math.min(100, Math.max(0, (total / goal) * 100)) : 0;
