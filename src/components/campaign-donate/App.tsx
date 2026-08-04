@@ -47,7 +47,7 @@ export const CampaignDonateThanks = ({
             className="vvp-cd__certificate"
             href={safeCertificateUrl}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >
             Urkunde öffnen (PDF)
           </a>
