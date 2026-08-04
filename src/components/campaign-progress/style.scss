@@ -1,6 +1,9 @@
 /* Campaign Progress — frontend styles */
 
 .vvp-campaign-progress {
+  --vvp-cp-pink: var(--brand-pink-main, #e62379);
+  --vvp-cp-pink-shadow: var(--brand-pink-shadow, #bf1f6b);
+
   text-align: center;
 
   .vvp-cp__amounts {
@@ -20,7 +23,7 @@
 
   .vvp-cp__goal {
     font-size: 0.95rem;
-    color: #6b7280;
+    color: #374151;
   }
 
   .vvp-cp__track {
@@ -35,7 +38,11 @@
 
   .vvp-cp__fill {
     height: 100%;
-    background: linear-gradient(120deg, #dc2626, #f97316);
+    background: linear-gradient(
+      120deg,
+      var(--vvp-cp-pink),
+      var(--vvp-cp-pink-shadow)
+    );
     border-radius: 999px;
     transition: width 300ms ease-out;
   }

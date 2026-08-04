@@ -20,6 +20,43 @@ const SAFE_URL_PATTERN = /^(https?:\/\/|\/(?!\/))/i;
 
 const DONATION_COMPLETE_EVENT = "vvp-donation-completed";
 
+export const CampaignDonateThanks = ({
+  amount,
+  certificateUrl,
+}: {
+  amount: number;
+  certificateUrl?: string;
+}): ReactElement => {
+  let safeCertificateUrl: string | undefined;
+  if (certificateUrl && SAFE_URL_PATTERN.test(certificateUrl)) {
+    safeCertificateUrl = certificateUrl;
+  }
+
+  return (
+    <div className="vvp-cd">
+      <div className="vvp-cd__thanks">
+        <strong>Danke für deine Unterstützung!</strong>
+        <p>
+          Deine Spende über {amount.toLocaleString("de-DE")} € wurde gezählt.
+          Durch deine Spende ermöglichst du unsere Arbeit weiterzuführen und
+          mehr Aktionen wie diese durchzuführen. Gemeinsam mit dir kämpfen wir
+          für die Demokratie!
+        </p>
+        {safeCertificateUrl && (
+          <a
+            className="vvp-cd__certificate"
+            href={safeCertificateUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Urkunde öffnen (PDF)
+          </a>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const stripePromises = new Map<string, Promise<Stripe | null>>();
 const getStripe = (publicKey: string) => {
   if (!stripePromises.has(publicKey)) {
@@ -59,9 +96,7 @@ export const CampaignDonateApp = ({
   certificateUrl,
   preview = false,
 }: CampaignDonateAppProps): ReactElement => {
-  const [selected, setSelected] = useState(
-    presets[Math.floor(presets.length / 2)] ?? 25,
-  );
+  const [selected, setSelected] = useState(presets[1] ?? presets[0] ?? 25);
   const [customAmount, setCustomAmount] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -75,12 +110,17 @@ export const CampaignDonateApp = ({
   const [completedAmount, setCompletedAmount] = useState(0);
   const checkoutContainerRef = useRef<HTMLDivElement | null>(null);
   const paypalContainerRef = useRef<HTMLDivElement | null>(null);
+  const customInputRef = useRef<HTMLInputElement | null>(null);
 
   const amount = useMemo(() => {
-    const custom = Number(customAmount);
-    if (customAmount && !Number.isNaN(custom) && custom > 0)
-      return Math.round(custom);
-    return selected;
+    if (!customAmount) return selected;
+    // Accept German-style decimal commas ("35,50") in addition to dots.
+    const custom = Number(customAmount.replace(",", "."));
+    // Custom input is active but not (yet) a valid amount — don't silently
+    // fall back to the last preset, or the donor could end up charged an
+    // amount that doesn't match what's shown as selected in the UI.
+    if (Number.isNaN(custom) || custom <= 0) return 0;
+    return Math.round(custom);
   }, [customAmount, selected]);
 
   // PayPal's Buttons are only initialized once per mount; createOrder/onApprove
@@ -96,6 +136,44 @@ export const CampaignDonateApp = ({
     setDonationComplete(true);
     window.dispatchEvent(new CustomEvent(DONATION_COMPLETE_EVENT));
   };
+
+  // Some Stripe payment methods (3D Secure, Klarna, Sofort, ...) leave the
+  // page entirely instead of completing inline, so onComplete below never
+  // fires for them. Stripe's return_url brings the browser back here with
+  // this marker instead, and we finalize the session client-side the same
+  // way onComplete does.
+  useEffect(() => {
+    if (preview) return;
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("vvp_cd_session_id");
+    if (!sessionId) return;
+
+    params.delete("vvp_cd_session_id");
+    const cleanedSearch = params.toString();
+    window.history.replaceState(
+      null,
+      "",
+      `${window.location.pathname}${cleanedSearch ? `?${cleanedSearch}` : ""}${window.location.hash}`,
+    );
+
+    fetch(`${apiBaseUrl}/api/finalize-session`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session_id: sessionId }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json?.recorded) {
+          finishDonation(json.amount ?? 0);
+        } else {
+          setError(json?.error ?? "Zahlung konnte nicht bestätigt werden.");
+        }
+      })
+      .catch(() => {
+        setError("Zahlung konnte nicht bestätigt werden.");
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (preview || !checkoutClientSecret || !checkoutContainerRef.current)
@@ -221,12 +299,19 @@ export const CampaignDonateApp = ({
     setLoading(true);
 
     try {
+      // Plain string concat, not URLSearchParams: the {CHECKOUT_SESSION_ID}
+      // placeholder must reach Stripe unencoded so it can substitute it in
+      // before redirecting the browser back here.
+      const currentUrl = window.location.href.split("#")[0];
+      const separator = currentUrl.includes("?") ? "&" : "?";
+      const returnUrl = `${currentUrl}${separator}vvp_cd_session_id={CHECKOUT_SESSION_ID}`;
+
       const response = await fetch(
         `${apiBaseUrl}/api/create-checkout-session`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount, campaign: campaignKey }),
+          body: JSON.stringify({ amount, campaign: campaignKey, returnUrl }),
         },
       );
       const json = await response.json();
@@ -247,31 +332,11 @@ export const CampaignDonateApp = ({
   };
 
   if (donationComplete) {
-    let safeCertificateUrl: string | undefined;
-    if (certificateUrl && SAFE_URL_PATTERN.test(certificateUrl)) {
-      safeCertificateUrl = certificateUrl;
-    }
-
     return (
-      <div className="vvp-cd">
-        <div className="vvp-cd__thanks">
-          <strong>Danke für deine Unterstützung!</strong>
-          <p>
-            Deine Spende über {completedAmount.toLocaleString("de-DE")} € wurde
-            gezählt.
-          </p>
-          {safeCertificateUrl && (
-            <a
-              className="vvp-cd__certificate"
-              href={safeCertificateUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Urkunde öffnen (PDF)
-            </a>
-          )}
-        </div>
-      </div>
+      <CampaignDonateThanks
+        amount={completedAmount}
+        certificateUrl={certificateUrl}
+      />
     );
   }
 
@@ -307,19 +372,18 @@ export const CampaignDonateApp = ({
               {value} €
             </button>
           ))}
+          <input
+            id="vvp-cd-custom"
+            ref={customInputRef}
+            className={`vvp-cd__preset vvp-cd__preset-input ${customAmount ? "is-active" : ""}`}
+            type="text"
+            inputMode="decimal"
+            placeholder="Eigener Betrag..."
+            value={customAmount}
+            onChange={(event) => setCustomAmount(event.target.value)}
+            aria-label="Eigener Betrag eingeben"
+          />
         </div>
-        <label className="vvp-cd__label" htmlFor="vvp-cd-custom">
-          Eigener Betrag
-        </label>
-        <input
-          id="vvp-cd-custom"
-          className="vvp-cd__input"
-          inputMode="decimal"
-          placeholder="z. B. 35"
-          value={customAmount}
-          onChange={(event) => setCustomAmount(event.target.value)}
-          aria-label="Eigener Betrag"
-        />
 
         <div className="vvp-cd__methods">
           {hasStripe && (

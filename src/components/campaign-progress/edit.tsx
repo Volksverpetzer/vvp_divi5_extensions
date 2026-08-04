@@ -31,11 +31,15 @@ export const CampaignProgressEdit = (
     >
       {elements.styleComponents({ attrName: "module" })}
 
-      {/* Preview: static placeholder values, no live network call in the builder. */}
-      <CampaignProgressApp total={Math.round(goal * 0.5)} goal={goal} />
-
-      <div className="vvp-cp__config-hint">
-        <p>Die Vorschau zeigt keine echten Werte.</p>
+      {/* Explicitly set the module wrapper class here rather than relying
+          on Divi's ModuleContainer to apply it (via classnamesFunction) to
+          its own outer element — in the Visual Builder editor that outer
+          class is unreliable, sometimes replaced by an auto-generated
+          "preset--group--...--divi-background--default" class instead, so
+          .vvp-campaign-progress-scoped selectors in style.scss never matched. */}
+      <div className="vvp-campaign-progress">
+        {/* Preview: static placeholder values, no live network call in the builder. */}
+        <CampaignProgressApp total={Math.round(goal * 0.5)} goal={goal} />
       </div>
     </ModuleContainer>
   );

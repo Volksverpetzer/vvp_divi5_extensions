@@ -1,19 +1,47 @@
 /* Campaign Donate — frontend styles */
 
 .vvp-campaign-donate {
+  --vvp-cd-pink: var(--brand-pink-main, #e62379);
+  --vvp-cd-pink-shadow: var(--brand-pink-shadow, #bf1f6b);
+
+  // The module wrapper itself picks up Divi's Sizing (max-width) controls
+  // fine; it's the content below that needs to explicitly stay inside it —
+  // otherwise the PayPal/Stripe iframes can report/keep a wider box and the
+  // module visually ignores whatever max-width was set in the Builder.
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  // global.scss (box-sizing: border-box reset) is only loaded by the Vite
+  // preview, not by the WordPress/Divi frontend — this component must set
+  // its own box-sizing or width: 100% + padding/border will overflow there.
+  * {
+    box-sizing: border-box;
+  }
+
+  .vvp-cd {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
   .vvp-cd__form {
     display: flex;
     flex-direction: column;
     gap: 14px;
+    width: 100%;
+    min-width: 0;
   }
 
   .vvp-cd__presets {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
+    width: 100%;
   }
 
   .vvp-cd__preset {
+    width: 100%;
     padding: 0.75rem;
     border: 2px solid #e5e7eb;
     border-radius: 0.5rem;
@@ -23,35 +51,48 @@
     cursor: pointer;
 
     &.is-active {
-      border-color: #dc2626;
-      color: #dc2626;
+      border-color: var(--vvp-cd-pink);
+      color: var(--vvp-cd-pink);
     }
   }
 
-  .vvp-cd__label {
-    font-size: 0.85rem;
-    color: #6b7280;
-  }
-
-  .vvp-cd__input {
+  .vvp-cd__preset-input {
     padding: 0.75rem;
     border: 2px solid #e5e7eb;
     border-radius: 0.5rem;
+    background: #fff;
+    font-weight: 700;
     font-size: 1rem;
+    cursor: text;
+
+    &::placeholder {
+      color: #9ca3af;
+      font-weight: 400;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--vvp-cd-pink);
+    }
+
+    &.is-active {
+      border-color: var(--vvp-cd-pink);
+      color: var(--vvp-cd-pink);
+    }
   }
 
   .vvp-cd__submit {
     padding: 0.875rem;
     border: none;
     border-radius: 999px;
-    background: #dc2626;
+    background: var(--vvp-cd-pink);
     color: #fff;
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
 
     &:hover {
-      background: #b91c1c;
+      background: var(--vvp-cd-pink-shadow);
     }
 
     &:disabled {
@@ -63,16 +104,36 @@
   .vvp-cd__methods {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 0.75rem;
     margin-top: 0.25rem;
+    width: 100%;
+  }
+
+  .vvp-cd__submit,
+  .vvp-cd__paypal {
+    max-width: 50%;
+    min-width: 280px;
+    width: 100%;
+  }
+
+  // Input fields styling for when not in the preset grid
+  .vvp-cd__input {
+    padding: 0.75rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    width: 100%;
   }
 
   .vvp-cd__divider {
     display: flex;
     align-items: center;
     text-align: center;
-    color: #9ca3af;
+    color: #e5e7eb;
     font-size: 0.85rem;
+    width: 100%;
+    max-width: 50%;
 
     &::before,
     &::after {
@@ -88,15 +149,18 @@
 
   .vvp-cd__paypal {
     min-height: 45px;
+    overflow: hidden;
   }
 
   .vvp-cd__error {
-    color: #dc2626;
+    color: var(--vvp-cd-pink);
     font-size: 0.9rem;
   }
 
   .vvp-cd__checkout {
     min-height: 500px;
+    width: 100%;
+    max-width: 100%;
   }
 
   .vvp-cd__thanks {
@@ -113,7 +177,7 @@
   .vvp-cd__certificate {
     display: inline-block;
     margin-top: 1rem;
-    color: #dc2626;
+    color: var(--vvp-cd-pink);
     font-weight: 700;
   }
 }

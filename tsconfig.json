@@ -18,6 +18,6 @@
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true
   },
-  "include": ["src/**/*", "preview/**/*", "*.ts"],
+  "include": ["src/**/*", ".storybook/**/*", "*.ts"],
   "exclude": ["node_modules", "dist", "scripts"]
 }

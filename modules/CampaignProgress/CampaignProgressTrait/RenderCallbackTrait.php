@@ -46,11 +46,15 @@ trait RenderCallbackTrait
         $summary_api_url = trim($attrs['summaryApiUrl']['innerContent']['desktop']['value'] ?? '');
         $goal_input      = trim($attrs['goal']['innerContent']['desktop']['value'] ?? '');
 
-        $fallback_goal = is_numeric($goal_input) && (float) $goal_input > 0 ? (float) $goal_input : 100000;
+        // A goal explicitly configured in the Divi module always takes
+        // precedence over whatever the campaign API reports — the API's
+        // goal is only used as a fallback when the module's own field is
+        // left empty.
+        $divi_goal = is_numeric($goal_input) && (float) $goal_input > 0 ? (float) $goal_input : null;
 
         $summary        = self::fetch_summary($summary_api_url);
         $initial_total  = $summary['totalRaised'] ?? 0;
-        $initial_goal   = $summary['goal'] ?? $fallback_goal;
+        $initial_goal   = $divi_goal ?? $summary['goal'] ?? 100000;
 
         $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
         $parent_attrs = $parent->attrs ?? [];
@@ -81,7 +85,7 @@ trait RenderCallbackTrait
                     'attributes'        => [
                         'class'              => 'vvp-cp__mount',
                         'data-summary-url'   => esc_attr($summary_api_url),
-                        'data-goal'          => esc_attr((string) $fallback_goal),
+                        'data-goal-override' => esc_attr(null !== $divi_goal ? (string) $divi_goal : ''),
                         'data-initial-total' => esc_attr((string) $initial_total),
                         'data-initial-goal'  => esc_attr((string) $initial_goal),
                     ],
@@ -133,7 +137,14 @@ trait RenderCallbackTrait
             if (is_array($data)) {
                 $result = [
                     'totalRaised' => is_numeric($data['totalRaised'] ?? null) ? (float) $data['totalRaised'] : 0,
-                    'goal'        => is_numeric($data['goal'] ?? null) ? (float) $data['goal'] : null,
+                    // Must match the > 0 check used for $divi_goal above and
+                    // the frontend's polling guard (data.goal > 0) — a 0 or
+                    // negative API goal here would otherwise slip through
+                    // the ?? fallback chain (PHP's ?? only skips null, not
+                    // 0) and neither side would ever correct it afterwards.
+                    'goal'        => is_numeric($data['goal'] ?? null) && (float) $data['goal'] > 0
+                        ? (float) $data['goal']
+                        : null,
                 ];
                 set_transient($cache_key, $result, 60);
             }

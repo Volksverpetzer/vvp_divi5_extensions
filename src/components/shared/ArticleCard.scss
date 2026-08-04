@@ -25,11 +25,6 @@
   white-space: nowrap;
 }
 
-.vvp-co__badge--vvp {
-  background: var(--vvp-hellblau, #dbeafe);
-  color: var(--vvp-blue-main, #3893c0);
-}
-
 .vvp-co__badge--pruefpunkt {
   background: #f6f0fe;
   color: #442674;
@@ -191,6 +186,7 @@
 .vvp-co__feed-footer .vvp-co__feed-date {
   margin-top: 0;
   padding-top: 0;
+  flex-shrink: 0;
 }
 
 .vvp-co__feed-footer .vvp-co__feed-reading-time {
@@ -200,8 +196,16 @@
   align-items: center;
   gap: 0.25rem;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
+.vvp-co__feed-footer .vvp-co__badge {
+  flex-shrink: 0;
+}
+
+/* Date and reading time are the footer's must-haves; the category
+   label is the first thing to give — it shrinks and truncates
+   instead of pushing them out of the (overflow: hidden) footer. */
 .vvp-co__feed-footer .vvp-co__category {
   color: #9ca3af;
   font-size: 1rem;
@@ -209,6 +213,11 @@
   text-transform: none;
   letter-spacing: normal;
   margin-right: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 button.vvp-co__category--btn {

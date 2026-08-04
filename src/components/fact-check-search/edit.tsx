@@ -49,30 +49,10 @@ export const FactCheckSearchEdit = (
       {elements.styleComponents({ attrName: "module" })}
 
       {/* Preview: full React App */}
-      <div className="vvp-fc__mount-preview" style={{ position: "relative" }}>
-        <FactCheckSearchApp
-          searchApiUrl={searchApiUrl}
-          importApiUrl={importApiUrl}
-        />
-
-        {/* API URL hints for editor only */}
-        {(searchApiUrl === DEFAULT_API_URLS.searchApiUrl ||
-          importApiUrl === DEFAULT_API_URLS.importApiUrl) && (
-          <div className="vvp-fc__config-hint" style={{ marginTop: "1rem" }}>
-            <p>
-              <strong>Standard-API-URLs werden verwendet:</strong> Such-API URL
-              {searchApiUrl === DEFAULT_API_URLS.searchApiUrl
-                ? " (Standard)"
-                : " ✓"}{" "}
-              und Import-API URL
-              {importApiUrl === DEFAULT_API_URLS.importApiUrl
-                ? " (Standard)"
-                : " ✓"}
-              . Sie können diese in den Moduleinstellungen anpassen.
-            </p>
-          </div>
-        )}
-      </div>
+      <FactCheckSearchApp
+        searchApiUrl={searchApiUrl}
+        importApiUrl={importApiUrl}
+      />
     </ModuleContainer>
   );
 };

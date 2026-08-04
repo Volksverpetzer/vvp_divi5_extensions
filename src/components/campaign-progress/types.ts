@@ -17,6 +17,12 @@ export interface CampaignSummary {
 export interface CampaignProgressAppProps {
   total: number;
   goal: number;
+  /**
+   * A goal explicitly configured in the Divi module. When set, polling
+   * never overwrites the displayed goal with whatever the campaign API
+   * reports — the Divi field always wins.
+   */
+  goalOverride?: number;
   /** When set, the component fetches this URL itself and polls for updates. */
   apiUrl?: string;
 }

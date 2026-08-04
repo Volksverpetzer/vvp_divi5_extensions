@@ -5,6 +5,7 @@ import { ModuleStyles } from "./styles";
 import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";
 import { CampaignDonateApp } from "./App";
+import "./style.scss";
 
 const parsePresets = (input: string): number[] => {
   const values = input
@@ -35,11 +36,6 @@ export const CampaignDonateEdit = (
   const certificateUrl =
     (attrs as any).certificateUrl?.innerContent?.desktop?.value?.trim() ?? "";
 
-  const missingConfig =
-    apiBaseUrl === "" ||
-    campaignKey === "" ||
-    (stripePublicKey === "" && paypalClientId === "");
-
   return (
     <ModuleContainer
       attrs={attrs}
@@ -52,27 +48,24 @@ export const CampaignDonateEdit = (
     >
       {elements.styleComponents({ attrName: "module" })}
 
-      {/* Preview: inert form, no network calls in the builder. */}
-      <CampaignDonateApp
-        apiBaseUrl={apiBaseUrl}
-        campaignKey={campaignKey}
-        stripePublicKey={stripePublicKey}
-        paypalClientId={paypalClientId}
-        presets={parsePresets(presetsInput)}
-        certificateUrl={certificateUrl}
-        preview
-      />
-
-      {missingConfig && (
-        <div className="vvp-cd__config-hint">
-          <p>
-            <strong>Konfiguration unvollständig.</strong> Bitte Kampagnen-API
-            Basis-URL, Kampagnen-Kennung sowie mindestens einen Zahlungsanbieter
-            (Stripe Publishable Key oder PayPal Client-ID) in den
-            Moduleinstellungen eintragen, bevor das Modul live geschaltet wird.
-          </p>
-        </div>
-      )}
+      {/* Explicitly set the module wrapper class here rather than relying
+          on Divi's ModuleContainer to apply it (via classnamesFunction) to
+          its own outer element — in the Visual Builder editor that outer
+          class is unreliable, sometimes replaced by an auto-generated
+          "preset--group--...--divi-background--default" class instead, so
+          .vvp-campaign-donate-scoped selectors in style.scss never matched. */}
+      <div className="vvp-campaign-donate">
+        {/* Preview: inert form, no network calls in the builder. */}
+        <CampaignDonateApp
+          apiBaseUrl={apiBaseUrl}
+          campaignKey={campaignKey}
+          stripePublicKey={stripePublicKey}
+          paypalClientId={paypalClientId}
+          presets={parsePresets(presetsInput)}
+          certificateUrl={certificateUrl}
+          preview
+        />
+      </div>
     </ModuleContainer>
   );
 };

@@ -62,10 +62,6 @@ export const RelatedItemsEdit = (
       {elements.styleComponents({ attrName: "module" })}
 
       <div className="vvp-related-items">
-        <div className="vvp-ri__editor-notice">
-          Zeigt zur Laufzeit bis zu 3 von vectorcrawl empfohlene Artikel für den
-          aktuellen Beitrag. Platzhalter im Builder.
-        </div>
         <div className="vvp-ri__list">
           {PLACEHOLDER_ARTICLES.map((article) => (
             <div key={article.link + article.title} className="vvp-ri__item">
