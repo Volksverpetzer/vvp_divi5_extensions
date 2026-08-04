@@ -47,7 +47,7 @@ export const CampaignDonateThanks = ({
             className="vvp-cd__certificate"
             href={safeCertificateUrl}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >
             Urkunde öffnen (PDF)
           </a>
@@ -113,10 +113,14 @@ export const CampaignDonateApp = ({
   const customInputRef = useRef<HTMLInputElement | null>(null);
 
   const amount = useMemo(() => {
-    const custom = Number(customAmount);
-    if (customAmount && !Number.isNaN(custom) && custom > 0)
-      return Math.round(custom);
-    return selected;
+    if (!customAmount) return selected;
+    // Accept German-style decimal commas ("35,50") in addition to dots.
+    const custom = Number(customAmount.replace(",", "."));
+    // Custom input is active but not (yet) a valid amount — don't silently
+    // fall back to the last preset, or the donor could end up charged an
+    // amount that doesn't match what's shown as selected in the UI.
+    if (Number.isNaN(custom) || custom <= 0) return 0;
+    return Math.round(custom);
   }, [customAmount, selected]);
 
   // PayPal's Buttons are only initialized once per mount; createOrder/onApprove
