@@ -12,8 +12,8 @@ importers:
   .:
     dependencies:
       '@stripe/stripe-js':
-        specifier: ^9.12.1
-        version: 9.12.1
+        specifier: ^9.13.0
+        version: 9.13.0
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -1281,8 +1281,8 @@ packages:
       typescript:
         optional: true
 
-  '@stripe/stripe-js@9.12.1':
-    resolution: {integrity: sha512-KLXPvjA0BfS4dQnW+ddHjwtIXMnIfKYxqmeNMmQCfKjvYog0cSG+Z7ZvK4RH1+bV90GC07nUztWDRWmJLi5HZQ==}
+  '@stripe/stripe-js@9.13.0':
+    resolution: {integrity: sha512-/0c72BUgzzVkVTlsw5uBn8x3waTdVJ/PZGfQ6jY1eu6K7olUPf4d9lgDPA9/0sIdsR8j7o3QIG8fOCO6ItcL7A==}
     engines: {node: '>=12.16'}
 
   '@tannin/compile@1.1.0':
@@ -4551,7 +4551,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@stripe/stripe-js@9.12.1': {}
+  '@stripe/stripe-js@9.13.0': {}
 
   '@tannin/compile@1.1.0':
     dependencies:

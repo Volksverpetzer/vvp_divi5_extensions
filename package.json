@@ -31,7 +31,7 @@
     "update:deps": "pnpx npm-check-updates -c 1d -i --format group"
   },
   "dependencies": {
-    "@stripe/stripe-js": "^9.12.1",
+    "@stripe/stripe-js": "^9.13.0",
     "classnames": "^2.5.1"
   },
   "devDependencies": {
