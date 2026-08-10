@@ -10,28 +10,29 @@ permissions:
 
 jobs:
   build-and-deploy:
+    name: 🚀 Deploy Production
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: ⬇️ Checkout repo
         uses: actions/checkout@v7
 
-      - name: Setup pnpm
+      - name: 📦 Setup pnpm
         uses: pnpm/action-setup@v6
 
-      - name: Setup Node.js
+      - name: 🏗 Setup Node.js
         uses: actions/setup-node@v7
         with:
           node-version: "22"
           cache: "pnpm"
 
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build
+      - name: 🏗 Build
         run: pnpm run build
 
-      - name: Prepare deploy directory
+      - name: 🛠 Prepare deploy directory
         run: |
           mkdir -p /tmp/deploy
           cp vvp-divi5-extensions.php /tmp/deploy/
@@ -41,14 +42,14 @@ jobs:
           cp -r scripts /tmp/deploy/
           cp -r styles /tmp/deploy/
 
-      - name: Set up SSH key
+      - name: 🔑 Set up SSH key
         run: |
           install -m 700 -d ~/.ssh
           echo "${{ secrets.SSH_DEPLOY_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           echo "${{ secrets.SSH_HOST_KEY }}" >> ~/.ssh/known_hosts
 
-      - name: Deploy via rsync
+      - name: 🚀 Deploy via rsync
         run: |
           rsync -avzO --no-perms --delete \
             --exclude='.DS_Store' \
@@ -56,7 +57,7 @@ jobs:
             /tmp/deploy/ \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:plugins/vvp-divi5-extensions-prod/
 
-      - name: Purge Bunny CDN cache for this plugin's assets
+      - name: 🧹 Purge Bunny CDN cache for this plugin's assets
         # Bunny caches plugin assets for 30 days and ignores query-string
         # cache-busting (?ver=...), so without this every deploy would keep
         # serving whatever was first cached until it expires on its own.
