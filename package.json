@@ -7,7 +7,6 @@
   "packageManager": "pnpm@11.21.0",
   "author": "Volksverpetzer",
   "engines": {
-    "npm": ">=10.0.0",
     "node": ">=24.0.0"
   },
   "scripts": {
