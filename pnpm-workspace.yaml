@@ -9,14 +9,16 @@ packages:
   - .
 minimumReleaseAgeExclude:
   - "@divi/conversion@1.0.4"
-  - "@divi/field-library@1.0.10"
+  - "@divi/field-library@1.0.10 || 1.0.11"
   - "@divi/modal@1.0.5"
-  - "@divi/module-library@1.0.11"
-  - "@divi/module-utils@1.0.11"
-  - "@divi/module@1.0.11"
+  - "@divi/module-library@1.0.11 || 1.0.12"
+  - "@divi/module-utils@1.0.11 || 1.0.12"
+  - "@divi/module@1.0.11 || 1.0.12"
   - "@divi/script-library@1.0.10"
   - "@divi/style-library@1.0.8"
-  - "@divi/types@1.0.10"
-  - "@wordpress/hooks@4.52.0"
-  - "@wordpress/i18n@6.25.0"
+  - "@divi/types@1.0.10 || 1.0.11"
+  - "@wordpress/hooks@4.52.0 || 4.53.0"
+  - "@wordpress/i18n@6.25.0 || 6.26.0"
   - postcss@8.5.25
+  - "@divi/context-library@1.0.3"
+  - globals@17.11.0
