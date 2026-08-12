@@ -8,7 +8,7 @@
   "author": "Volksverpetzer",
   "engines": {
     "npm": ">=10.0.0",
-    "node": ">=22.22.1"
+    "node": ">=24.0.0"
   },
   "scripts": {
     "start": "NODE_ENV=development node build.mjs --watch",
