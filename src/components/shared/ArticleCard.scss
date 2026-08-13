@@ -10,6 +10,8 @@
    card footer-alignment bug) instead of extending them.
    ============================================================ */
 
+@import "../../styles/vvp-tokens";
+
 /* Badges */
 .vvp-co__badge {
   display: inline-flex;
@@ -60,7 +62,7 @@
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--vvp-blue-2, #2563eb);
+  color: var(--vvp-blue-2);
   margin-right: 0.375rem;
 }
 

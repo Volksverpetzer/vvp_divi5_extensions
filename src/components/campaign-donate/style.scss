@@ -1,9 +1,8 @@
 /* Campaign Donate — frontend styles */
 
-.vvp-campaign-donate {
-  --vvp-cd-pink: var(--brand-pink-main, #e62379);
-  --vvp-cd-pink-shadow: var(--brand-pink-shadow, #bf1f6b);
+@import "../../styles/vvp-tokens";
 
+.vvp-campaign-donate {
   // The module wrapper itself picks up Divi's Sizing (max-width) controls
   // fine; it's the content below that needs to explicitly stay inside it —
   // otherwise the PayPal/Stripe iframes can report/keep a wider box and the
@@ -51,8 +50,8 @@
     cursor: pointer;
 
     &.is-active {
-      border-color: var(--vvp-cd-pink);
-      color: var(--vvp-cd-pink);
+      border-color: var(--vvp-pink-main);
+      color: var(--vvp-pink-main);
     }
   }
 
@@ -72,12 +71,12 @@
 
     &:focus {
       outline: none;
-      border-color: var(--vvp-cd-pink);
+      border-color: var(--vvp-pink-main);
     }
 
     &.is-active {
-      border-color: var(--vvp-cd-pink);
-      color: var(--vvp-cd-pink);
+      border-color: var(--vvp-pink-main);
+      color: var(--vvp-pink-main);
     }
   }
 
@@ -85,14 +84,14 @@
     padding: 0.875rem;
     border: none;
     border-radius: 999px;
-    background: var(--vvp-cd-pink);
+    background: var(--vvp-pink-main);
     color: #fff;
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
 
     &:hover {
-      background: var(--vvp-cd-pink-shadow);
+      background: var(--vvp-pink-shadow);
     }
 
     &:disabled {
@@ -153,7 +152,7 @@
   }
 
   .vvp-cd__error {
-    color: var(--vvp-cd-pink);
+    color: var(--vvp-pink-main);
     font-size: 0.9rem;
   }
 
@@ -177,7 +176,7 @@
   .vvp-cd__certificate {
     display: inline-block;
     margin-top: 1rem;
-    color: var(--vvp-cd-pink);
+    color: var(--vvp-pink-main);
     font-weight: 700;
   }
 }

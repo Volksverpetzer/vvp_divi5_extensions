@@ -4,11 +4,7 @@
    or inherits the Volksverpetzer theme variables.
    ========================================================================= */
 
-:root {
-  --vvp-blue-main: var(--brand-blue-main, #3893c0);
-  --vvp-blue-2: var(--brand-blue-2, #2563eb);
-  --vvp-hellblau: var(--brand-hellblau, #dbeafe);
-}
+@import "../../styles/vvp-tokens";
 
 /* ─── Outer wrapper ─────────────────────────────────────────────────────── */
 .vvp-fc__wrapper {

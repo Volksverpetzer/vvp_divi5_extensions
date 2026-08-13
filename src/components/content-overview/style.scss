@@ -1,3 +1,5 @@
+@import "../../styles/vvp-tokens";
+
 /* Shimmer animation for loading placeholders */
 @keyframes vvp-co-shimmer {
   0% {
@@ -123,7 +125,7 @@
 }
 
 .vvp-co__toggle-track.is-on .vvp-co__toggle-thumb {
-  background: var(--vvp-blue-main, #3893c0);
+  background: var(--vvp-blue-main);
 }
 
 .vvp-co__toggle-track.is-on .vvp-co__toggle-thumb::after {

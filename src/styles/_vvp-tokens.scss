@@ -1,0 +1,35 @@
+// Brand color tokens, synced from @volksverpetzer/design-tokens
+// (vvp_design_system/packages/tokens/tokens/color/volksverpetzer.json).
+// Do not hand-edit the color VALUES here — change the source token and
+// re-sync this file. The `--brand-*` indirection is how the WordPress
+// site's Divi "Global Colors" admin UI overrides these at runtime; keep
+// it intact when re-syncing.
+//
+// The `--vvp-blue-main` / `--vvp-blue-2` / `--vvp-hellblau` / `--vvp-pink-*`
+// names below are legacy aliases already referenced throughout this repo's
+// component styles — kept as-is so component code didn't need to change,
+// just re-pointed at the shared, non-duplicated values.
+:root {
+  // Shared semantic tokens (volksverpetzer brand, light palette — Divi's
+  // frontend has no dark-mode concept).
+  --vvp-color-primary: var(--brand-primary, #1b7194);
+  --vvp-color-primary-muted: var(--brand-primary-muted, #3893c0);
+  --vvp-color-accent: var(--brand-accent, #db2685);
+  --vvp-color-surface: var(--brand-surface, #e2f0f5);
+
+  // Legacy aliases used by existing component styles.
+  --vvp-blue-main: var(
+    --vvp-color-primary-muted
+  ); // was its own hardcoded #3893c0 (already vvp_app's primaryMuted)
+  --vvp-blue-2: var(
+    --vvp-color-primary
+  ); // was its own hardcoded #2563eb, unrelated to the brand palette
+  --vvp-hellblau: var(--vvp-color-surface); // was its own hardcoded #dbeafe
+  --vvp-pink-main: var(
+    --vvp-color-accent
+  ); // was --vvp-cd-pink / --vvp-cp-pink, duplicated under two prefixes
+  --vvp-pink-shadow: var(
+    --brand-accent-dark,
+    #d31c74
+  ); // vvp_app's dark-mode accent value, reused as a fixed hover/shadow shade
+}

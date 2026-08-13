@@ -1,9 +1,8 @@
 /* Campaign Progress — frontend styles */
 
-.vvp-campaign-progress {
-  --vvp-cp-pink: var(--brand-pink-main, #e62379);
-  --vvp-cp-pink-shadow: var(--brand-pink-shadow, #bf1f6b);
+@import "../../styles/vvp-tokens";
 
+.vvp-campaign-progress {
   text-align: center;
 
   .vvp-cp__amounts {
@@ -40,8 +39,8 @@
     height: 100%;
     background: linear-gradient(
       120deg,
-      var(--vvp-cp-pink),
-      var(--vvp-cp-pink-shadow)
+      var(--vvp-pink-main),
+      var(--vvp-pink-shadow)
     );
     border-radius: 999px;
     transition: width 300ms ease-out;
