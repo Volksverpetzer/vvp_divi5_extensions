@@ -17,6 +17,9 @@ importers:
       '@volksverpetzer/design-tokens':
         specifier: 0.1.0
         version: 0.1.0
+      '@volksverpetzer/ui-web':
+        specifier: link:../vvp_design_system/packages/ui-web
+        version: link:../vvp_design_system/packages/ui-web
       classnames:
         specifier: ^2.5.1
         version: 2.5.1

@@ -80,25 +80,10 @@
     }
   }
 
-  .vvp-cd__submit {
-    padding: 0.875rem;
-    border: none;
-    border-radius: 999px;
-    background: var(--vvp-pink-main);
-    color: #fff;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-
-    &:hover {
-      background: var(--vvp-pink-shadow);
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-  }
+  // .vvp-cd__submit's color/shape/disabled state now come from
+  // @volksverpetzer/ui-web's Button (variant="accent") — this class is
+  // layout-only, applied alongside it (see .vvp-cd__submit's width rules
+  // below).
 
   .vvp-cd__methods {
     display: flex;
