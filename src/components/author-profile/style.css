@@ -20,7 +20,7 @@
   width: 200px; /* fallback — overridden by inline style from avatarSize attr */
   height: auto;
   display: block;
-  border-radius: 0.25rem;
+  border-radius: var(--vvp-radius-xs);
 }
 .vvp-author-profile .vvp-ap__info {
   min-width: 0;

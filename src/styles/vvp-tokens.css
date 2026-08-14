@@ -27,6 +27,22 @@
 }
 
 /*
+ * Corner-radius scale, from the same package (dist/css/radius.css).
+ * Not every radius in this codebase maps onto this scale — e.g. 6px/10px
+ * have no matching step — those stay as local literals rather than being
+ * force-rounded onto a neighbor.
+ */
+:root {
+  --vvp-radius-xs: 4px;
+  --vvp-radius-sm: 8px;
+  --vvp-radius-md: 12px;
+  --vvp-radius-lg: 16px;
+  --vvp-radius-xl: 20px;
+  --vvp-radius-xxl: 24px;
+  --vvp-radius-full: 9999px;
+}
+
+/*
  * Legacy aliases used by existing component styles — kept as-is so
  * component code didn't need to change, just re-pointed at the shared,
  * non-duplicated values.

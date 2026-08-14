@@ -105,7 +105,7 @@
   position: absolute;
   inset: 0;
   background: #d1d5db;
-  border-radius: 9999px;
+  border-radius: var(--vvp-radius-full);
   transition: background 0.2s ease;
 }
 
@@ -191,7 +191,7 @@
 /* ---- Podcast banner ---- */
 .vvp-co__podcast-banner {
   border: 1px solid #ede9fe;
-  border-radius: 0.75rem;
+  border-radius: var(--vvp-radius-md);
   background: linear-gradient(135deg, #faf5ff 0%, #f5f3ff 100%);
   box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -226,7 +226,7 @@
   max-width: 190px;
   max-height: 190px;
   aspect-ratio: 1/1;
-  border-radius: 0.5rem;
+  border-radius: var(--vvp-radius-sm);
   object-fit: cover;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   display: block;
@@ -286,7 +286,7 @@
   padding: 0.4rem 0.875rem;
   background: #5b21b6;
   border: none;
-  border-radius: 9999px;
+  border-radius: var(--vvp-radius-full);
   color: #fff;
   font-size: 1rem;
   font-weight: 600;
@@ -304,7 +304,7 @@
 }
 
 .vvp-co-yt-banner-mount {
-  border-radius: 0.75rem;
+  border-radius: var(--vvp-radius-md);
   border: 1px solid #fee2e2;
   background: #fff5f5;
   min-height: 140px;
@@ -319,7 +319,7 @@
 
 .vvp-co__yt-banner {
   border: 1px solid #fee2e2;
-  border-radius: 0.75rem;
+  border-radius: var(--vvp-radius-md);
   background: linear-gradient(135deg, #fff5f5 0%, #fef2f2 100%);
   box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -358,7 +358,7 @@
   position: relative;
   flex-shrink: 0;
   width: 160px;
-  border-radius: 0.5rem;
+  border-radius: var(--vvp-radius-sm);
   overflow: hidden;
   aspect-ratio: 16/9;
   background: #000;
@@ -474,7 +474,7 @@
 /* ===== Instagram card — Divi slider wrapper ===== */
 .vvp-co__insta-slider-wrap .et_pb_slider {
   margin: 0;
-  border-radius: 0.5rem 0.5rem 0 0;
+  border-radius: var(--vvp-radius-sm) var(--vvp-radius-sm) 0 0;
   overflow: hidden;
 }
 

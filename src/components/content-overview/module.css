@@ -30,11 +30,11 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
   background-size: 600px 100%;
   animation: vvp-co-shimmer 1.4s ease infinite;
-  border-radius: 0.25rem;
+  border-radius: var(--vvp-radius-xs);
 }
 .et-fb .vvp-content-overview .vvp-co__skeleton {
   border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
+  border-radius: var(--vvp-radius-sm);
   overflow: hidden;
 }
 .et-fb .vvp-content-overview .vvp-co__skeleton--hero .vvp-co__skeleton-img {
@@ -58,7 +58,7 @@
   flex-shrink: 0;
   width: 52px;
   height: 52px;
-  border-radius: 0.25rem;
+  border-radius: var(--vvp-radius-xs);
 }
 .et-fb .vvp-content-overview .vvp-co__skeleton--compact .vvp-co__skeleton-body {
   flex: 1;
