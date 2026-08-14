@@ -22,3 +22,4 @@ minimumReleaseAgeExclude:
   - postcss@8.5.25
   - "@divi/context-library@1.0.3"
   - globals@17.11.0
+  - "@volksverpetzer/design-tokens@0.1.0"

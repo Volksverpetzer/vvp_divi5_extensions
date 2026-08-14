@@ -14,6 +14,9 @@ importers:
       '@stripe/stripe-js':
         specifier: ^9.13.0
         version: 9.13.0
+      '@volksverpetzer/design-tokens':
+        specifier: 0.1.0
+        version: 0.1.0
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -1552,6 +1555,9 @@ packages:
 
   '@vitest/utils@4.1.10':
     resolution: {integrity: sha512-fy9am/HWxbaGt/Sawrp90vt6Y6jQwf1RX77cz3uwoJwJVMli/e1IEwRPnMNJ7vKfPTwo0diXifkpPvwH9v7nGA==}
+
+  '@volksverpetzer/design-tokens@0.1.0':
+    resolution: {integrity: sha512-YPSjaOexpT64mQDKs3L/zuVobNFIgZPKVvKz9gQid/mWLY90akYCA+N+fy+CheOR8az6prFGMOCurr4vtuKIgw==}
 
   '@webcontainer/env@1.1.1':
     resolution: {integrity: sha512-6aN99yL695Hi9SuIk1oC88l9o0gmxL1nGWWQ/kNy81HigJ0FoaoTXpytCj6ItzgyCEwA9kF1wixsTuv5cjsgng==}
@@ -4905,6 +4911,8 @@ snapshots:
       '@vitest/pretty-format': 4.1.10
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.1
+
+  '@volksverpetzer/design-tokens@0.1.0': {}
 
   '@webcontainer/env@1.1.1': {}
 
