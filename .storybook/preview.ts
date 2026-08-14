@@ -1,13 +1,13 @@
 import type { Preview } from "@storybook/react-vite";
-import "../src/global.scss";
-import "../src/components/fact-check-search/style.scss";
-import "../src/components/content-overview/style.scss";
-import "../src/components/author-profile/style.scss";
-import "../src/components/trending-items/style.scss";
-import "../src/components/trending-list/style.scss";
-import "../src/components/related-items/style.scss";
-import "../src/components/campaign-progress/style.scss";
-import "../src/components/campaign-donate/style.scss";
+import "../src/global.css";
+import "../src/components/fact-check-search/style.css";
+import "../src/components/content-overview/style.css";
+import "../src/components/author-profile/style.css";
+import "../src/components/trending-items/style.css";
+import "../src/components/trending-list/style.css";
+import "../src/components/related-items/style.css";
+import "../src/components/campaign-progress/style.css";
+import "../src/components/campaign-donate/style.css";
 
 const preview: Preview = {
   parameters: {

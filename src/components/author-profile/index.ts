@@ -5,8 +5,8 @@ import { AuthorProfileEdit } from "./edit";
 import { type AuthorProfileAttrs } from "./types";
 import { placeholderContent } from "./placeholder-content";
 
-import "./style.scss";
-import "./module.scss";
+import "./style.css";
+import "./module.css";
 
 export const authorProfile: ModuleLibrary.Module.RegisterDefinition<AuthorProfileAttrs> =
   {

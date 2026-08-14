@@ -1,0 +1,45 @@
+/*
+ * Brand color tokens, from the published @volksverpetzer/design-tokens
+ * package (see vvp_design_system/packages/tokens). The `--brand-*`
+ * indirection is how the WordPress site's Divi "Global Colors" admin UI
+ * overrides these at runtime; keep it intact when upgrading the package.
+ *
+ * This used to be generated via a Sass @import of the package's .scss
+ * export, but this repo doesn't use any other Sass feature (see the
+ * "drop Sass" commit), so the token values are just copied in directly
+ * now. Re-sync by hand from the package's dist/css/volksverpetzer.css
+ * when it changes.
+ */
+:root {
+  --vvp-color-background: var(--brand-background, #fff);
+  --vvp-color-surface: var(--brand-surface, #e2f0f5);
+  --vvp-color-surface-input: var(--brand-surface-input, #badde8);
+  --vvp-color-surface-disabled: var(--brand-surface-disabled, #ddd);
+  --vvp-color-surface-error: var(--brand-surface-error, #c62828);
+  --vvp-color-text: var(--brand-text, #111);
+  --vvp-color-text-muted: var(--brand-text-muted, #666);
+  --vvp-color-on-primary: var(--brand-on-primary, #fff);
+  --vvp-color-on-error: var(--brand-on-error, #fff);
+  --vvp-color-primary: var(--brand-primary, #1b7194);
+  --vvp-color-primary-muted: var(--brand-primary-muted, #3893c0);
+  --vvp-color-accent: var(--brand-accent, #db2685);
+  --vvp-color-error: var(--brand-error, #c62828);
+}
+
+/*
+ * Legacy aliases used by existing component styles — kept as-is so
+ * component code didn't need to change, just re-pointed at the shared,
+ * non-duplicated values.
+ */
+:root {
+  /* was its own hardcoded #3893c0 (already vvp_app's primaryMuted) */
+  --vvp-blue-main: var(--vvp-color-primary-muted);
+  /* was its own hardcoded #2563eb, unrelated to the brand palette */
+  --vvp-blue-2: var(--vvp-color-primary);
+  /* was its own hardcoded #dbeafe */
+  --vvp-hellblau: var(--vvp-color-surface);
+  /* was --vvp-cd-pink / --vvp-cp-pink, duplicated under two prefixes */
+  --vvp-pink-main: var(--vvp-color-accent);
+  /* vvp_app's dark-mode accent value, reused as a fixed hover/shadow shade */
+  --vvp-pink-shadow: var(--brand-accent-dark, #d31c74);
+}

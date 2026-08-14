@@ -1,0 +1,4 @@
+/* Faktencheck Search — Visual Builder specific styles */
+.et-fb .vvp-fact-check-search .vvp-fc__bar-trigger--preview {
+  pointer-events: none;
+}

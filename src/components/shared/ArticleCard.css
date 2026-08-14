@@ -9,9 +9,7 @@
    other modules to unknowingly override them (see the Trending
    card footer-alignment bug) instead of extending them.
    ============================================================ */
-
-@import "../../styles/vvp-tokens";
-
+@import "../../styles/vvp-tokens.css";
 /* Badges */
 .vvp-co__badge {
   display: inline-flex;

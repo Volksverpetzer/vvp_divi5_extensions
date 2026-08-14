@@ -5,8 +5,8 @@ import { TrendingItemsEdit } from "./edit";
 import { type TrendingItemsAttrs } from "./types";
 import { placeholderContent } from "./placeholder-content";
 
-import "./style.scss";
-import "./module.scss";
+import "./style.css";
+import "./module.css";
 
 export const trendingItems: ModuleLibrary.Module.RegisterDefinition<TrendingItemsAttrs> =
   {

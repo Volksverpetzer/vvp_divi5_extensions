@@ -1,0 +1,5 @@
+/* Trending List — Visual Builder specific styles */
+.et-fb .vvp-trending-list .vvp-tl__title {
+  cursor: default;
+  pointer-events: none;
+}

@@ -191,8 +191,8 @@ Renders a compact numbered list of trending article titles and authors within a 
 │   │   │   ├── styles.tsx
 │   │   │   ├── module-classnames.ts
 │   │   │   ├── module-script-data.tsx
-│   │   │   ├── style.scss         # Frontend styles
-│   │   │   └── module.scss        # VB editor styles
+│   │   │   ├── style.css         # Frontend styles
+│   │   │   └── module.css        # VB editor styles
 │   │   ├── content-overview/
 │   │   │   ├── module.json
 │   │   │   ├── edit.tsx           # DIVI VB preview (skeleton + example cards)
@@ -207,8 +207,8 @@ Renders a compact numbered list of trending article titles and authors within a 
 │   │   │   ├── styles.tsx
 │   │   │   ├── module-classnames.ts
 │   │   │   ├── module-script-data.tsx
-│   │   │   ├── style.scss
-│   │   │   └── module.scss
+│   │   │   ├── style.css
+│   │   │   └── module.css
 │   │   ├── author-profile/
 │   │   │   ├── module.json        # DIVI attribute schema
 │   │   │   ├── App.tsx            # Standalone React author UI
@@ -220,8 +220,8 @@ Renders a compact numbered list of trending article titles and authors within a 
 │   │   │   ├── styles.tsx
 │   │   │   ├── module-classnames.ts
 │   │   │   ├── module-script-data.tsx
-│   │   │   ├── style.scss         # Frontend styles
-│   │   │   └── module.scss        # VB editor styles
+│   │   │   ├── style.css         # Frontend styles
+│   │   │   └── module.css        # VB editor styles
 │   │   ├── trending-items/
 │   │   │   ├── module.json
 │   │   │   ├── App.tsx
@@ -233,8 +233,8 @@ Renders a compact numbered list of trending article titles and authors within a 
 │   │   │   ├── styles.tsx
 │   │   │   ├── module-classnames.ts
 │   │   │   ├── module-script-data.tsx
-│   │   │   ├── style.scss
-│   │   │   └── module.scss
+│   │   │   ├── style.css
+│   │   │   └── module.css
 │   │   └── trending-list/
 │   │       ├── module.json
 │   │       ├── App.tsx
@@ -246,8 +246,8 @@ Renders a compact numbered list of trending article titles and authors within a 
 │   │       ├── styles.tsx
 │   │       ├── module-classnames.ts
 │   │       ├── module-script-data.tsx
-│   │       ├── style.scss
-│   │       └── module.scss
+│   │       ├── style.css
+│   │       └── module.css
 │   └── icons/
 │       ├── fact-check-search/index.tsx
 │       ├── content-overview/index.tsx
@@ -500,7 +500,7 @@ Copy `src/components/fact-check-search/` to `src/components/your-module/`. Updat
 | `constants.ts` | Default values                                         |
 | `edit.tsx`     | DIVI VB preview React component (static, no API calls) |
 | `frontend.tsx` | Vite entry: mounts your React app                      |
-| `style.scss`   | Component CSS                                          |
+| `style.css`    | Component CSS                                          |
 
 Available DIVI attribute components: `divi/text`, `divi/select`, `divi/toggle`, `divi/color-picker`.
 
