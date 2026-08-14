@@ -80,7 +80,7 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 /**
  * Performance caches for Divi builder-5 render-path queries (uncached
  * Dynamic Content lookups that exhausted PHP-FPM). The attachment-URL
- * cache lives in the vvp_site_patches plugin (it patches WP core, not Divi).
+ * cache lives in the vvp_wp_patches plugin (it patches WP core, not Divi).
  */
 require_once VVP_DIVI5_PATH . 'includes/class-vvp-block-render-cache.php';
 require_once VVP_DIVI5_PATH . 'includes/class-vvp-dynamic-content-meta-keys-cache.php';
