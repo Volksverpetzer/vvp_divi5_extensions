@@ -1,9 +1,7 @@
 import React, { type ReactElement, useEffect, useState } from "react";
+import { ProgressBar } from "@volksverpetzer/ui-web";
 import { type CampaignProgressAppProps, type CampaignSummary } from "./types";
 import { POLL_INTERVAL_MS, DONATION_COMPLETE_EVENT } from "./constants";
-
-const formatEuro = (value: number): string =>
-  value.toLocaleString("de-DE", { minimumFractionDigits: 0 }) + " €";
 
 export const CampaignProgressApp = ({
   total: initialTotal,
@@ -59,25 +57,5 @@ export const CampaignProgressApp = ({
     };
   }, [apiUrl, goalOverride]);
 
-  const percent =
-    goal > 0 ? Math.min(100, Math.max(0, (total / goal) * 100)) : 0;
-
-  return (
-    <div className="vvp-cp">
-      <div className="vvp-cp__amounts">
-        <span className="vvp-cp__total">{formatEuro(total)}</span>
-        <span className="vvp-cp__goal"> von {formatEuro(goal)}</span>
-      </div>
-      <div
-        className="vvp-cp__track"
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={goal}
-        aria-valuenow={Math.min(total, goal)}
-        aria-label={`${formatEuro(total)} von ${formatEuro(goal)} gesammelt`}
-      >
-        <div className="vvp-cp__fill" style={{ width: `${percent}%` }} />
-      </div>
-    </div>
-  );
+  return <ProgressBar total={total} goal={goal} />;
 };
