@@ -1,0 +1,41 @@
+/* Campaign Progress — frontend styles */
+@import "../../styles/vvp-tokens.css";
+.vvp-campaign-progress {
+  text-align: center;
+}
+.vvp-campaign-progress .vvp-cp__amounts {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+.vvp-campaign-progress .vvp-cp__total {
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+.vvp-campaign-progress .vvp-cp__goal {
+  font-size: 0.95rem;
+  color: #374151;
+}
+.vvp-campaign-progress .vvp-cp__track {
+  width: 100%;
+  height: 24px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--vvp-radius-full);
+  overflow: hidden;
+  position: relative;
+}
+.vvp-campaign-progress .vvp-cp__fill {
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    var(--vvp-pink-main),
+    var(--vvp-pink-shadow)
+  );
+  border-radius: var(--vvp-radius-full);
+  transition: width 300ms ease-out;
+}

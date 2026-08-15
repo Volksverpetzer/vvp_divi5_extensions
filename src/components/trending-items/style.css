@@ -1,0 +1,18 @@
+/* Trending Items — frontend styles */
+.vvp-trending-items .vvp-ti__list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+@media (max-width: 640px) {
+  .vvp-trending-items .vvp-ti__list {
+    grid-template-columns: 1fr;
+  }
+}
+.vvp-trending-items .vvp-ti__item {
+  min-width: 0;
+}
+.vvp-trending-items .vvp-ti__empty {
+  color: #6b7280;
+  font-size: 0.875rem;
+}

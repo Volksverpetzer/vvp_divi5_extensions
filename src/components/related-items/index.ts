@@ -5,8 +5,8 @@ import { RelatedItemsEdit } from "./edit";
 import { type RelatedItemsAttrs } from "./types";
 import { placeholderContent } from "./placeholder-content";
 
-import "./style.scss";
-import "./module.scss";
+import "./style.css";
+import "./module.css";
 
 export const relatedItems: ModuleLibrary.Module.RegisterDefinition<RelatedItemsAttrs> =
   {

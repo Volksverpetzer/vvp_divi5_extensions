@@ -131,11 +131,6 @@ await Promise.all([
         "react/jsx-dev-runtime": resolve("./src/jsx-runtime-shim.ts"),
       },
     },
-    css: {
-      preprocessorOptions: {
-        scss: { silenceDeprecations: ["legacy-js-api"] },
-      },
-    },
     build: {
       ...commonBuild,
       lib: {

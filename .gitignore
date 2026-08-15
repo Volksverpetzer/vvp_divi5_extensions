@@ -5,8 +5,8 @@ vendor/
 Divi/
 
 # Build outputs
-scripts/
-styles/
+/scripts/
+/styles/
 dist/
 *.zip
 

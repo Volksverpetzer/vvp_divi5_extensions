@@ -1,0 +1,41 @@
+/*
+ * Brand color tokens, imported directly from the published
+ * @volksverpetzer/design-tokens package (see vvp_design_system/packages/
+ * tokens) — upgrading the package's version in package.json is enough to
+ * pick up changes, nothing to keep in sync here.
+ *
+ * This specifically imports the "-brand.css" export, not the plain
+ * ./css/volksverpetzer.css one: the plain export has different variable
+ * names (--vvp-primary, not --vvp-color-primary) and no --brand-*
+ * override wrapper at all — it's meant for the other three apps this
+ * package serves, which don't have a WP-admin Global Colors concept.
+ * The --brand-* indirection here is how that WordPress admin UI
+ * overrides these at runtime; it lives in the package now, not here.
+ */
+@import "@volksverpetzer/design-tokens/css/volksverpetzer-brand.css";
+
+/*
+ * Corner-radius scale, from the same package (./css/radius.css).
+ * Not every radius in this codebase maps onto the shared scale — e.g.
+ * 6px/10px have no matching step — those stay as local literals rather
+ * than being force-rounded onto a neighbor.
+ */
+@import "@volksverpetzer/design-tokens/css/radius.css";
+
+/*
+ * Legacy aliases used by existing component styles — kept as-is so
+ * component code didn't need to change, just re-pointed at the shared,
+ * non-duplicated values.
+ */
+:root {
+  /* was its own hardcoded #3893c0 (already vvp_app's primaryMuted) */
+  --vvp-blue-main: var(--vvp-color-primary-muted);
+  /* was its own hardcoded #2563eb, unrelated to the brand palette */
+  --vvp-blue-2: var(--vvp-color-primary);
+  /* was its own hardcoded #dbeafe */
+  --vvp-hellblau: var(--vvp-color-surface);
+  /* was --vvp-cd-pink / --vvp-cp-pink, duplicated under two prefixes */
+  --vvp-pink-main: var(--vvp-color-accent);
+  /* vvp_app's dark-mode accent value, reused as a fixed hover/shadow shade */
+  --vvp-pink-shadow: var(--brand-accent-dark, #d31c74);
+}

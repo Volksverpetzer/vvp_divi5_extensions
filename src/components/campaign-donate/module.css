@@ -1,0 +1,5 @@
+/* Campaign Donate — Visual Builder specific styles */
+.et-fb .vvp-campaign-donate .vvp-cd__preset,
+.et-fb .vvp-campaign-donate .vvp-cd__submit {
+  pointer-events: none;
+}

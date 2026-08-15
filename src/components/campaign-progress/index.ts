@@ -5,8 +5,8 @@ import { CampaignProgressEdit } from "./edit";
 import { type CampaignProgressAttrs } from "./types";
 import { placeholderContent } from "./placeholder-content";
 
-import "./style.scss";
-import "./module.scss";
+import "./style.css";
+import "./module.css";
 
 export const campaignProgress: ModuleLibrary.Module.RegisterDefinition<CampaignProgressAttrs> =
   {

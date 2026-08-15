@@ -3,13 +3,7 @@
    Uses CSS custom properties with fallbacks so the plugin works standalone
    or inherits the Volksverpetzer theme variables.
    ========================================================================= */
-
-:root {
-  --vvp-blue-main: var(--brand-blue-main, #3893c0);
-  --vvp-blue-2: var(--brand-blue-2, #2563eb);
-  --vvp-hellblau: var(--brand-hellblau, #dbeafe);
-}
-
+@import "../../styles/vvp-tokens.css";
 /* ─── Outer wrapper ─────────────────────────────────────────────────────── */
 .vvp-fc__wrapper {
   position: relative;
@@ -28,14 +22,16 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-
-  @media (min-width: 768px) {
+}
+@media (min-width: 768px) {
+  .vvp-fc__bar-inner {
     flex-direction: row;
     align-items: center;
     padding: 0 1.5rem;
   }
-
-  @media (min-width: 1024px) {
+}
+@media (min-width: 1024px) {
+  .vvp-fc__bar-inner {
     padding: 0 2rem;
   }
 }
@@ -46,10 +42,9 @@
   gap: 0.75rem;
   flex-shrink: 0;
   color: rgba(255, 255, 255, 0.8);
-
-  svg {
-    flex-shrink: 0;
-  }
+}
+.vvp-fc__bar-label-group svg {
+  flex-shrink: 0;
 }
 
 .vvp-fc__bar-title {
@@ -72,8 +67,9 @@
   align-items: center;
   gap: 0.5rem;
   width: 100%;
-
-  @media (min-width: 768px) {
+}
+@media (min-width: 768px) {
+  .vvp-fc__bar-actions {
     gap: 0.75rem;
   }
 }
@@ -87,7 +83,7 @@
   padding: 0.75rem 1rem;
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 0.5rem;
+  border-radius: var(--vvp-radius-sm);
   color: rgba(255, 255, 255, 0.7);
   font-size: 1rem;
   text-align: left;
@@ -96,22 +92,19 @@
     background 0.2s ease,
     border-color 0.2s ease,
     color 0.2s ease;
-
-  svg {
-    flex-shrink: 0;
-  }
-
-  span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.6);
-    color: #fff;
-  }
+}
+.vvp-fc__bar-trigger svg {
+  flex-shrink: 0;
+}
+.vvp-fc__bar-trigger span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vvp-fc__bar-trigger:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #fff;
 }
 
 .vvp-fc__bar-btn {
@@ -120,21 +113,21 @@
   padding: 0.75rem 1rem;
   background: #fff;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: var(--vvp-radius-sm);
   color: var(--vvp-blue-main);
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: background 0.2s ease;
-
-  @media (min-width: 640px) {
+}
+@media (min-width: 640px) {
+  .vvp-fc__bar-btn {
     padding: 0.75rem 1.25rem;
   }
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.9);
-  }
+}
+.vvp-fc__bar-btn:hover {
+  background: rgba(255, 255, 255, 0.9);
 }
 
 /* ─── Overlay ───────────────────────────────────────────────────────────── */
@@ -145,10 +138,9 @@
   display: flex;
   flex-direction: column;
   padding-top: 100px;
-
-  &[hidden] {
-    display: none !important;
-  }
+}
+.vvp-fc__overlay[hidden] {
+  display: none !important;
 }
 
 .vvp-fc__backdrop {
@@ -168,17 +160,18 @@
   max-width: 1080px;
   margin: 4rem auto 2rem;
   background: #fff;
-  border-radius: 0.75rem;
+  border-radius: var(--vvp-radius-md);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   border: 1px solid #e5e7eb;
   overflow: hidden;
   max-height: calc(100vh - 8rem);
-
-  @media (max-width: 640px) {
+}
+@media (max-width: 640px) {
+  .vvp-fc__panel {
     width: calc(100% - 2rem);
     margin: 1rem auto;
     max-height: calc(100vh - 2rem);
-    border-radius: 0.5rem;
+    border-radius: var(--vvp-radius-sm);
   }
 }
 
@@ -198,31 +191,29 @@
   gap: 0.5rem;
   flex: 1;
   color: var(--vvp-blue-main);
-
-  span {
-    font-weight: 600;
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #111827;
-  }
+}
+.vvp-fc__panel-title span {
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #111827;
 }
 
 .vvp-fc__close-btn {
   padding: 0.25rem;
   background: none;
   border: none;
-  border-radius: 0.25rem;
+  border-radius: var(--vvp-radius-xs);
   color: #6b7280;
   cursor: pointer;
   transition:
     color 0.15s ease,
     background 0.15s ease;
-
-  &:hover {
-    color: #111827;
-    background: #f3f4f6;
-  }
+}
+.vvp-fc__close-btn:hover {
+  color: #111827;
+  background: #f3f4f6;
 }
 
 /* ─── Search form ───────────────────────────────────────────────────────── */
@@ -247,7 +238,7 @@
   min-width: 0;
   padding: 0.75rem 1rem 0.75rem 1.5rem !important;
   border: 1px solid #d1d5db !important;
-  border-radius: 0.5rem;
+  border-radius: var(--vvp-radius-sm);
   font-size: 1rem;
   color: #111827;
   background: #f9fafb;
@@ -259,17 +250,15 @@
     box-shadow 0.15s ease,
     border-color 0.15s ease,
     background 0.15s ease;
-
-  &::placeholder {
-    color: #9ca3af;
-  }
-
-  &:focus {
-    background: #fff;
-    border-color: var(--vvp-blue-main) !important;
-    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.15) !important;
-    outline: none !important;
-  }
+}
+.vvp-fc__text-input::placeholder {
+  color: #9ca3af;
+}
+.vvp-fc__text-input:focus {
+  background: #fff;
+  border-color: var(--vvp-blue-main) !important;
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.15) !important;
+  outline: none !important;
 }
 
 .vvp-fc__submit-btn {
@@ -288,15 +277,13 @@
   cursor: pointer;
   transition: background 0.15s ease;
   white-space: nowrap;
-
-  &:hover:not(:disabled) {
-    background: var(--vvp-blue-2);
-  }
-
-  &:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
+}
+.vvp-fc__submit-btn:hover:not(:disabled) {
+  background: var(--vvp-blue-2);
+}
+.vvp-fc__submit-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .vvp-fc__url-hint {
@@ -306,10 +293,9 @@
   margin: 0.5rem 0 0;
   font-size: 1rem;
   color: #6b7280;
-
-  &[hidden] {
-    display: none !important;
-  }
+}
+.vvp-fc__url-hint[hidden] {
+  display: none !important;
 }
 
 /* ─── Content area ──────────────────────────────────────────────────────── */
@@ -320,10 +306,8 @@
 }
 
 /* ─── State: idle / examples ────────────────────────────────────────────── */
-.vvp-fc__state {
-  &[hidden] {
-    display: none !important;
-  }
+.vvp-fc__state[hidden] {
+  display: none !important;
 }
 
 .vvp-fc__examples-label {
@@ -348,7 +332,7 @@
   padding: 0.5rem 0.75rem;
   background: none;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: var(--vvp-radius-sm);
   font-size: 1rem;
   color: #6b7280;
   text-align: left;
@@ -356,22 +340,19 @@
   transition:
     background 0.15s ease,
     color 0.15s ease;
-
-  svg {
-    flex-shrink: 0;
-    color: var(--vvp-blue-main);
-    opacity: 0.6;
-    transition: opacity 0.15s ease;
-  }
-
-  &:hover {
-    background: #f3f4f6;
-    color: #111827;
-
-    svg {
-      opacity: 1;
-    }
-  }
+}
+.vvp-fc__example-btn svg {
+  flex-shrink: 0;
+  color: var(--vvp-blue-main);
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+.vvp-fc__example-btn:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+.vvp-fc__example-btn:hover svg {
+  opacity: 1;
 }
 
 /* ─── State: loading ────────────────────────────────────────────────────── */
@@ -382,11 +363,10 @@
   gap: 0.75rem;
   padding: 2rem 0;
   color: #9ca3af;
-
-  p {
-    margin: 0;
-    font-size: 1rem;
-  }
+}
+.vvp-fc__state--loading p {
+  margin: 0;
+  font-size: 1rem;
 }
 
 .vvp-fc__spinner svg {
@@ -402,7 +382,6 @@
     transform: rotate(360deg);
   }
 }
-
 /* ─── State: error ──────────────────────────────────────────────────────── */
 .vvp-fc__state--error {
   display: flex;
@@ -410,16 +389,14 @@
   gap: 0.75rem;
   padding: 1.5rem 0;
   color: #dc2626;
-
-  svg {
-    flex-shrink: 0;
-    margin-top: 0.125rem;
-  }
-
-  p {
-    margin: 0;
-    font-size: 1rem;
-  }
+}
+.vvp-fc__state--error svg {
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+.vvp-fc__state--error p {
+  margin: 0;
+  font-size: 1rem;
 }
 
 /* ─── State: done / results ─────────────────────────────────────────────── */
@@ -448,25 +425,22 @@
   padding: 1rem;
   background: #f9fafb;
   border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
+  border-radius: var(--vvp-radius-sm);
   text-decoration: none;
   color: inherit;
   transition:
     box-shadow 0.15s ease,
     border-color 0.15s ease;
-
-  &:hover {
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-    border-color: #d1d5db;
-
-    .vvp-fc__result-title {
-      color: var(--vvp-blue-main);
-    }
-
-    .vvp-fc__result-ext-icon {
-      opacity: 1;
-    }
-  }
+}
+.vvp-fc__result-card:hover {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  border-color: #d1d5db;
+}
+.vvp-fc__result-card:hover .vvp-fc__result-title {
+  color: var(--vvp-blue-main);
+}
+.vvp-fc__result-card:hover .vvp-fc__result-ext-icon {
+  opacity: 1;
 }
 
 .vvp-fc__result-rank {
@@ -539,7 +513,7 @@
   padding: 0.05rem 0.75rem;
   background: #e5e7eb;
   color: #374151;
-  border-radius: 9999px;
+  border-radius: var(--vvp-radius-full);
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -555,23 +529,21 @@
 .vvp-fc__score-track {
   flex: 1;
   height: 0.25rem;
-  border-radius: 9999px;
+  border-radius: var(--vvp-radius-full);
   background: #e5e7eb;
   overflow: hidden;
 }
 
 .vvp-fc__score-fill {
   height: 100%;
-  border-radius: 9999px;
+  border-radius: var(--vvp-radius-full);
   background: var(--vvp-blue-main);
-
-  &.vvp-fc__score-fill--medium {
-    background: var(--vvp-blue-2);
-  }
-
-  &.vvp-fc__score-fill--low {
-    background: #9ca3af;
-  }
+}
+.vvp-fc__score-fill.vvp-fc__score-fill--medium {
+  background: var(--vvp-blue-2);
+}
+.vvp-fc__score-fill.vvp-fc__score-fill--low {
+  background: #9ca3af;
 }
 
 .vvp-fc__score-label {
@@ -595,7 +567,7 @@
   padding: 0.75rem;
   background: #f3f4f6;
   border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
+  border-radius: var(--vvp-radius-sm);
 }
 
 .vvp-fc__snippet-label {

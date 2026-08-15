@@ -8,8 +8,8 @@ import { FactCheckSearchAttrs } from "./types";
 import { placeholderContent } from "./placeholder-content";
 
 // Styles.
-import "./style.scss";
-import "./module.scss";
+import "./style.css";
+import "./module.css";
 
 export const factCheckSearch: ModuleLibrary.Module.RegisterDefinition<FactCheckSearchAttrs> =
   {
