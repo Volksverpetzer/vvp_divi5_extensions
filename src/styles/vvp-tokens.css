@@ -1,46 +1,26 @@
 /*
- * Brand color tokens, from the published @volksverpetzer/design-tokens
- * package (see vvp_design_system/packages/tokens). The `--brand-*`
- * indirection is how the WordPress site's Divi "Global Colors" admin UI
- * overrides these at runtime; keep it intact when upgrading the package.
+ * Brand color tokens, imported directly from the published
+ * @volksverpetzer/design-tokens package (see vvp_design_system/packages/
+ * tokens) — upgrading the package's version in package.json is enough to
+ * pick up changes, nothing to keep in sync here.
  *
- * This used to be generated via a Sass @import of the package's .scss
- * export, but this repo doesn't use any other Sass feature (see the
- * "drop Sass" commit), so the token values are just copied in directly
- * now. Re-sync by hand from the package's dist/css/volksverpetzer.css
- * when it changes.
+ * This specifically imports the "-brand.css" export, not the plain
+ * ./css/volksverpetzer.css one: the plain export has different variable
+ * names (--vvp-primary, not --vvp-color-primary) and no --brand-*
+ * override wrapper at all — it's meant for the other three apps this
+ * package serves, which don't have a WP-admin Global Colors concept.
+ * The --brand-* indirection here is how that WordPress admin UI
+ * overrides these at runtime; it lives in the package now, not here.
  */
-:root {
-  --vvp-color-background: var(--brand-background, #fff);
-  --vvp-color-surface: var(--brand-surface, #e2f0f5);
-  --vvp-color-surface-input: var(--brand-surface-input, #badde8);
-  --vvp-color-surface-disabled: var(--brand-surface-disabled, #ddd);
-  --vvp-color-surface-error: var(--brand-surface-error, #c62828);
-  --vvp-color-text: var(--brand-text, #111);
-  --vvp-color-text-muted: var(--brand-text-muted, #666);
-  --vvp-color-on-primary: var(--brand-on-primary, #fff);
-  --vvp-color-on-error: var(--brand-on-error, #fff);
-  --vvp-color-primary: var(--brand-primary, #1b7194);
-  --vvp-color-primary-muted: var(--brand-primary-muted, #3893c0);
-  --vvp-color-accent: var(--brand-accent, #db2685);
-  --vvp-color-error: var(--brand-error, #c62828);
-}
+@import "@volksverpetzer/design-tokens/css/volksverpetzer-brand.css";
 
 /*
- * Corner-radius scale, from the same package (dist/css/radius.css).
- * Not every radius in this codebase maps onto this scale — e.g. 6px/10px
- * have no matching step — those stay as local literals rather than being
- * force-rounded onto a neighbor.
+ * Corner-radius scale, from the same package (./css/radius.css).
+ * Not every radius in this codebase maps onto the shared scale — e.g.
+ * 6px/10px have no matching step — those stay as local literals rather
+ * than being force-rounded onto a neighbor.
  */
-:root {
-  --vvp-radius-xs: 4px;
-  --vvp-radius-sm: 8px;
-  --vvp-radius-md: 12px;
-  --vvp-radius-lg: 16px;
-  --vvp-radius-xl: 20px;
-  --vvp-radius-xxl: 24px;
-  --vvp-radius-full: 9999px;
-}
+@import "@volksverpetzer/design-tokens/css/radius.css";
 
 /*
  * Legacy aliases used by existing component styles — kept as-is so

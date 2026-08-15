@@ -1,4 +1,5 @@
 /* Autorenprofil — Frontend styles */
+@import "../../styles/vvp-tokens.css";
 .vvp-author-profile .vvp-ap__container {
   display: flex;
   gap: 1.5rem;
