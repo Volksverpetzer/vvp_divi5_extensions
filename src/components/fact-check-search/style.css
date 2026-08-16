@@ -118,7 +118,7 @@
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--vvp-elevation-xs);
   transition: background 0.2s ease;
 }
 @media (min-width: 640px) {
@@ -433,7 +433,7 @@
     border-color 0.15s ease;
 }
 .vvp-fc__result-card:hover {
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--vvp-elevation-xs);
   border-color: #d1d5db;
 }
 .vvp-fc__result-card:hover .vvp-fc__result-title {
