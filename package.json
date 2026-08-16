@@ -4,7 +4,7 @@
   "description": "DIVI 5 extension for the vvp wordpress site",
   "private": true,
   "license": "GPL-2.0-or-later",
-  "packageManager": "pnpm@11.21.0",
+  "packageManager": "pnpm@11.22.0",
   "author": "Volksverpetzer",
   "engines": {
     "node": ">=24.0.0"
@@ -32,7 +32,7 @@
   "dependencies": {
     "@stripe/stripe-js": "^9.13.0",
     "@volksverpetzer/design-tokens": "0.3.0",
-    "@volksverpetzer/ui-web": "0.2.0",
+    "@volksverpetzer/ui-web": "0.3.0",
     "classnames": "^2.5.1"
   },
   "devDependencies": {
