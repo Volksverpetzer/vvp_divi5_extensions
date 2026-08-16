@@ -118,7 +118,7 @@
   height: 1.125rem;
   background: #fff;
   border-radius: 50%;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--vvp-elevation-xs);
   transition: transform 0.2s ease;
 }
 
@@ -193,7 +193,7 @@
   border: 1px solid #ede9fe;
   border-radius: var(--vvp-radius-md);
   background: linear-gradient(135deg, #faf5ff 0%, #f5f3ff 100%);
-  box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: var(--vvp-elevation-xs);
   overflow: hidden;
 }
 
@@ -228,7 +228,7 @@
   aspect-ratio: 1/1;
   border-radius: var(--vvp-radius-sm);
   object-fit: cover;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--vvp-elevation-sm);
   display: block;
 }
 
@@ -321,7 +321,7 @@
   border: 1px solid #fee2e2;
   border-radius: var(--vvp-radius-md);
   background: linear-gradient(135deg, #fff5f5 0%, #fef2f2 100%);
-  box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: var(--vvp-elevation-xs);
   overflow: hidden;
 }
 
@@ -362,7 +362,7 @@
   overflow: hidden;
   aspect-ratio: 16/9;
   background: #000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--vvp-elevation-sm);
 }
 
 @media (min-width: 700px) {

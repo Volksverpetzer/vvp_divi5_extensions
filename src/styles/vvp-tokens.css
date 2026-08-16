@@ -23,6 +23,14 @@
 @import "@volksverpetzer/design-tokens/css/radius.css";
 
 /*
+ * Shadow scale (--vvp-elevation-xs/sm/md/lg), from the same package
+ * (./css/elevation.css). Same rule as radius above: shadows that don't
+ * reasonably match a step stay as local literals instead of being
+ * force-fit onto the nearest one.
+ */
+@import "@volksverpetzer/design-tokens/css/elevation.css";
+
+/*
  * Legacy aliases used by existing component styles — kept as-is so
  * component code didn't need to change, just re-pointed at the shared,
  * non-duplicated values.
