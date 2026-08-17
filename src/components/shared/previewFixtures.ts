@@ -59,23 +59,23 @@ export const TRENDING_EMPTY: ArticleCardProps[] = [];
 export const TRENDING_LIST_ITEMS = [
   {
     title:
-      "Bärbel Bas hat RECHT: Aber Tagesthemen stimmen NIUS, BILD & AfD zu!?",
+      "Nein, diese Katze hat das Sofa NICHT selbst zerkratzt – der Fell-Check",
     link: "#",
     date: "8. Mai 2026",
-    author: "Thomas Laschyk",
-  },
-  {
-    title: "75 % wollen KEINEN AfD-Kanzler: Wie die WELT für die AfD lügt",
-    link: "#",
-    date: "7. Mai 2026",
-    author: "Thomas Laschyk",
+    authors: ["Whisker Pfotenhauer", "Bella Kratzenbach"],
   },
   {
     title:
-      "Faktencheck: Warum diese Behauptung über Katzen komplett falsch ist",
+      "Schnurren macht NICHT unsterblich: Warum dieser Viral-Post falsch liegt",
+    link: "#",
+    date: "7. Mai 2026",
+    authors: ["Whisker Pfotenhauer"],
+  },
+  {
+    title: "Faktencheck: Warum Katzen Gurken NICHT wirklich hassen",
     link: "#",
     date: "6. Mai 2026",
-    author: "Bella Kratzenbach",
+    authors: ["Bella Kratzenbach"],
   },
 ];
 

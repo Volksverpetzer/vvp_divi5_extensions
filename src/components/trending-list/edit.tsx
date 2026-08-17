@@ -4,6 +4,7 @@ import { type TrendingListEditProps, type TrendingListItem } from "./types";
 import { ModuleStyles } from "./styles";
 import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";
+import { formatAuthors } from "./formatAuthors";
 
 const PLACEHOLDER_ITEMS: TrendingListItem[] = [
   {
@@ -11,19 +12,19 @@ const PLACEHOLDER_ITEMS: TrendingListItem[] = [
       "Bärbel Bas hat RECHT: Aber Tagesthemen stimmen NIUS, BILD & AfD zu!?",
     link: "#",
     date: "8. Mai 2026",
-    author: "Thomas Laschyk",
+    authors: ["Thomas Laschyk", "Bella Kratzenbach"],
   },
   {
     title: "75 % wollen KEINEN AfD-Kanzler: Wie die WELT für die AfD lügt",
     link: "#",
     date: "7. Mai 2026",
-    author: "Thomas Laschyk",
+    authors: ["Thomas Laschyk"],
   },
   {
     title: "Faktencheck: Beispielartikel",
     link: "#",
     date: "6. Mai 2026",
-    author: "Thomas Laschyk",
+    authors: ["Thomas Laschyk"],
   },
 ];
 
@@ -52,7 +53,7 @@ export const TrendingListEdit = (
                 {item.title}
               </a>
               <span className="vvp-tl__meta">
-                von {item.author} | {item.date}
+                von {formatAuthors(item.authors)} | {item.date}
               </span>
             </div>
           ))}
