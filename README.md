@@ -437,6 +437,8 @@ The module reads the author(s) for the current context (PublishPress Authors if 
 
 Both modules read trending data from the WordPress database (populated by `modules/CronManager.php`). The DIVI settings expose a time-range selector (`range`). TrendingItems additionally has a thumbnail toggle.
 
+TrendingList reads each article's author(s) from **PublishPress Authors** (if available) and falls back to the single WordPress core post author, so co-authored posts show all assigned authors (e.g. "von A und B").
+
 ---
 
 ## API Contract

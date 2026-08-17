@@ -62,20 +62,20 @@ export const TRENDING_LIST_ITEMS = [
       "Bärbel Bas hat RECHT: Aber Tagesthemen stimmen NIUS, BILD & AfD zu!?",
     link: "#",
     date: "8. Mai 2026",
-    author: "Thomas Laschyk",
+    authors: ["Thomas Laschyk", "Bella Kratzenbach"],
   },
   {
     title: "75 % wollen KEINEN AfD-Kanzler: Wie die WELT für die AfD lügt",
     link: "#",
     date: "7. Mai 2026",
-    author: "Thomas Laschyk",
+    authors: ["Thomas Laschyk"],
   },
   {
     title:
       "Faktencheck: Warum diese Behauptung über Katzen komplett falsch ist",
     link: "#",
     date: "6. Mai 2026",
-    author: "Bella Kratzenbach",
+    authors: ["Bella Kratzenbach"],
   },
 ];
 

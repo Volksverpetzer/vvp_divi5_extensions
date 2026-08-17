@@ -76,7 +76,7 @@ trait RenderCallbackTrait
     }
 
     /**
-     * @return list<array{title:string,link:string,date:string,author:string}>
+     * @return list<array{title:string,link:string,date:string,authors:list<string>}>
      */
     private static function get_trending_items(int $item_count, string $range): array
     {
@@ -125,7 +125,7 @@ trait RenderCallbackTrait
     }
 
     /**
-     * @return array{title:string,link:string,date:string,author:string}|null
+     * @return array{title:string,link:string,date:string,authors:list<string>}|null
      */
     private static function build_post_data(int $post_id): ?array
     {
@@ -135,10 +135,32 @@ trait RenderCallbackTrait
         }
 
         return [
-            'title'  => html_entity_decode((string) get_the_title($post_id), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-            'link'   => (string) get_permalink($post_id),
-            'date'   => get_the_date('j. F Y', $post_id),
-            'author' => get_the_author_meta('display_name', $post->post_author),
+            'title'   => html_entity_decode((string) get_the_title($post_id), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            'link'    => (string) get_permalink($post_id),
+            'date'    => get_the_date('j. F Y', $post_id),
+            'authors' => self::get_authors_for_post($post),
         ];
+    }
+
+    /**
+     * Reads all co-authors for a post from PublishPress Authors (if active),
+     * falling back to the single WordPress core post author -- see
+     * AuthorProfile::get_authors_for_context() for the same pattern.
+     *
+     * @return list<string>
+     */
+    private static function get_authors_for_post(\WP_Post $post): array
+    {
+        if (function_exists('multiple_authors_get_authors')) {
+            $authors = multiple_authors_get_authors($post->ID);
+            if (!empty($authors)) {
+                return array_values(array_filter(array_map(
+                    static fn ($author) => (string) ($author->display_name ?? ''),
+                    $authors
+                )));
+            }
+        }
+
+        return [get_the_author_meta('display_name', $post->post_author)];
     }
 }
