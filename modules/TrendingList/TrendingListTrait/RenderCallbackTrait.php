@@ -80,7 +80,11 @@ trait RenderCallbackTrait
      */
     private static function get_trending_items(int $item_count, string $range): array
     {
-        $cache_key = 'vvp_tl_' . md5("{$item_count}_{$range}");
+        // "v2" bumps the cache key because the cached item schema changed
+        // from {author: string} to {authors: string[]} -- without this,
+        // pre-existing transients (up to 1h TTL) would serve the old shape
+        // to the new frontend, which expects `authors` and would crash.
+        $cache_key = 'vvp_tl_v2_' . md5("{$item_count}_{$range}");
         $cached    = get_transient($cache_key);
         if ($cached !== false) {
             return $cached;
@@ -144,8 +148,11 @@ trait RenderCallbackTrait
 
     /**
      * Reads all co-authors for a post from PublishPress Authors (if active),
-     * falling back to the single WordPress core post author -- see
-     * AuthorProfile::get_authors_for_context() for the same pattern.
+     * falling back to the single WordPress core post author. AuthorProfile
+     * applies the same PublishPress-or-core-fallback idea, though it reads
+     * the current archive/single context via get_archive_author() rather
+     * than doing a per-post lookup -- see
+     * AuthorProfileTrait/RenderCallbackTrait.php::get_authors_for_context().
      *
      * @return list<string>
      */
@@ -153,11 +160,13 @@ trait RenderCallbackTrait
     {
         if (function_exists('multiple_authors_get_authors')) {
             $authors = multiple_authors_get_authors($post->ID);
-            if (!empty($authors)) {
-                return array_values(array_filter(array_map(
-                    static fn ($author) => (string) ($author->display_name ?? ''),
-                    $authors
-                )));
+            $names   = !empty($authors) ? array_values(array_filter(array_map(
+                static fn ($author) => (string) ($author->display_name ?? ''),
+                $authors
+            ))) : [];
+
+            if (!empty($names)) {
+                return $names;
             }
         }
 
