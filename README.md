@@ -429,6 +429,8 @@ Values are injected by PHP as JSON into a `<script id="vvp-fact-check-search-con
 
 Configured via `modules/ContentOverview/ContentOverviewTrait/RenderCallbackTrait.php` (API endpoints, feed sizes, cache TTL). No DIVI settings panel fields — all configuration is in PHP constants.
 
+For locally-sourced articles, the feed card's author line reads all co-authors from **PublishPress Authors** (if available), falling back to the single WordPress core post author, and joins them the same German-style way as TrendingList (e.g. "A und B").
+
 ### Autorenprofil
 
 The module reads the author(s) for the current context (PublishPress Authors if available) and renders the UI via `scripts/author-profile-frontend.js`. The DIVI settings control the visible parts (avatar/bio/link), layout, avatar size, and font styles.
