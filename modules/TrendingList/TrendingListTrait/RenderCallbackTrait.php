@@ -179,6 +179,7 @@ trait RenderCallbackTrait
             }
         }
 
-        return [get_the_author_meta('display_name', $post->post_author)];
+        $author_name = (string) get_the_author_meta('display_name', $post->post_author);
+        return $author_name !== '' ? [$author_name] : [];
     }
 }
