@@ -6,6 +6,4 @@ nodeLinker: hoisted # see https://pnpm.io/settings#nodelinker
 packages:
   - .
 minimumReleaseAgeExclude:
-  - "@volksverpetzer/design-tokens@0.4.0"
-  - "@volksverpetzer/ui-web@0.4.0"
   - "@types/react-dom@19.2.5"
