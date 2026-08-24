@@ -756,8 +756,8 @@ trait DataFetchTrait
             }
         }
 
-        $author_name = get_the_author_meta('display_name', (int) $wp_post->post_author);
-        return $author_name ? [$author_name] : [];
+        $author_name = (string) get_the_author_meta('display_name', (int) $wp_post->post_author);
+        return $author_name !== '' ? [$author_name] : [];
     }
 
     /**
