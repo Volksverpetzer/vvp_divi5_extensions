@@ -686,9 +686,12 @@ trait DataFetchTrait
             '_vvp_source'     => 'volksverpetzer',
         ];
 
-        $author_name = get_the_author_meta('display_name', (int) $wp_post->post_author);
-        if ($author_name) {
-            $post['_embedded']['author'] = [['name' => $author_name]];
+        $author_names = self::get_author_names($wp_post);
+        if (!empty($author_names)) {
+            $post['_embedded']['author'] = array_map(
+                static fn (string $name): array => ['name' => $name],
+                $author_names
+            );
         }
 
         $categories = get_the_category($id);
@@ -724,6 +727,37 @@ trait DataFetchTrait
         }
 
         return $post;
+    }
+
+    /**
+     * Reads all co-authors for a post from PublishPress Authors (if active),
+     * falling back to the single WordPress core post author -- same pattern
+     * as TrendingList/TrendingListTrait/RenderCallbackTrait.php.
+     *
+     * get_post_authors() is PublishPress Authors' current, non-deprecated
+     * per-post template tag (get_multiple_authors() and
+     * publishpress_authors_get_post_authors() both exist but are marked
+     * @deprecated in favor of it).
+     *
+     * @return list<string>
+     */
+    private static function get_author_names(\WP_Post $wp_post): array
+    {
+        if (function_exists('get_post_authors')) {
+            $authors = get_post_authors($wp_post->ID);
+            $authors = is_array($authors) ? $authors : [];
+            $names   = array_values(array_filter(array_map(
+                static fn ($author) => (string) ($author->display_name ?? ''),
+                $authors
+            )));
+
+            if (!empty($names)) {
+                return $names;
+            }
+        }
+
+        $author_name = get_the_author_meta('display_name', (int) $wp_post->post_author);
+        return $author_name ? [$author_name] : [];
     }
 
     /**

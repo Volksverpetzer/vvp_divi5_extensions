@@ -35,7 +35,7 @@ trait CardRenderTrait
             'date'          => self::format_date($post['date'] ?? ''),
             'image_url'     => self::get_post_image($post, 'medium_large'),
             'excerpt'       => $post['yoast_head_json']['description'] ?? '',
-            'author'        => $post['_embedded']['author'][0]['name'] ?? '',
+            'author'        => self::format_authors($post['_embedded']['author'] ?? []),
             'reading_time'  => (int) ($post['reading_time'] ?? 0),
             'category'      => self::get_post_category($post),
             'category_link' => self::get_post_category_link($post),
@@ -92,6 +92,34 @@ trait CardRenderTrait
         return '<div class="vvp-co-article-mount" data-article-props="'
             . esc_attr(wp_json_encode($props))
             . '">' . $static_html . '</div>';
+    }
+
+    /**
+     * Joins the `name` field of each _embedded.author entry into a
+     * German-style list ("A", "A und B", "A, B und C") for display in the
+     * feed card excerpt. Handles both locally-sourced posts (one entry per
+     * PublishPress co-author, see DataFetchTrait::get_author_names) and
+     * posts fetched from a remote WP REST source, which may embed more
+     * than one author entry too.
+     *
+     * @param array $embedded_authors List of ['name' => string, ...] entries.
+     */
+    private static function format_authors(array $embedded_authors): string
+    {
+        $names = array_values(array_filter(array_map(
+            static fn ($author) => (string) ($author['name'] ?? ''),
+            $embedded_authors
+        )));
+
+        if (empty($names)) {
+            return '';
+        }
+        if (count($names) === 1) {
+            return $names[0];
+        }
+
+        $last = array_pop($names);
+        return implode(', ', $names) . ' und ' . $last;
     }
 
     /**
