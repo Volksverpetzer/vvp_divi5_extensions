@@ -746,10 +746,13 @@ trait DataFetchTrait
         if (function_exists('get_post_authors')) {
             $authors = get_post_authors($wp_post->ID);
             $authors = is_array($authors) ? $authors : [];
-            $names   = array_values(array_filter(array_map(
-                static fn ($author) => (string) ($author->display_name ?? ''),
-                $authors
-            )));
+            $names   = array_values(array_filter(
+                array_map(
+                    static fn ($author) => (string) ($author->display_name ?? ''),
+                    $authors
+                ),
+                static fn (string $name) => $name !== ''
+            ));
 
             if (!empty($names)) {
                 return $names;

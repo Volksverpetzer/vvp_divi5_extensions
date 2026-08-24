@@ -106,10 +106,13 @@ trait CardRenderTrait
      */
     private static function format_authors(array $embedded_authors): string
     {
-        $names = array_values(array_filter(array_map(
-            static fn ($author) => (string) ($author['name'] ?? ''),
-            $embedded_authors
-        )));
+        $names = array_values(array_filter(
+            array_map(
+                static fn ($author) => (string) ($author['name'] ?? ''),
+                $embedded_authors
+            ),
+            static fn (string $name) => $name !== ''
+        ));
 
         if (empty($names)) {
             return '';
