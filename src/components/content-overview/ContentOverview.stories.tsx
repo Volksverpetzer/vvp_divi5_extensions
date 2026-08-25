@@ -8,6 +8,7 @@ import {
   FEED_ARTICLES,
   FEED_IG,
   FEED_YT,
+  FEED_YT_2,
   FEED_PODCAST,
 } from "../shared/previewFixtures";
 
@@ -27,6 +28,12 @@ const ContentOverviewFeed = () => (
         data-co-kind="youtube"
       >
         <YouTubeBanner {...FEED_YT} />
+      </div>
+      <div
+        className="vvp-co__feed-item vvp-co__feed-item--youtube-banner"
+        data-co-kind="youtube"
+      >
+        <YouTubeBanner {...FEED_YT_2} />
       </div>
       {FEED_ARTICLES.slice(3, 6).map((a, i) => (
         <div key={i + 3} className="vvp-co__feed-item" data-co-kind="article">

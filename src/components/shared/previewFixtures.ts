@@ -260,6 +260,15 @@ export const FEED_YT = {
   thumbnailUrl: pimg("katze-yt", 1280, 720),
 };
 
+export const FEED_YT_2 = {
+  videoId: "",
+  title: "Kurzclip: Warum Katzen nicht wirklich neun Leben haben",
+  description:
+    "Ein kurzer Blick auf die Herkunft dieses Mythos und was Tierärzte tatsächlich dazu sagen.",
+  date: "Vor 5 Tagen",
+  thumbnailUrl: pimg("katze-yt2", 1280, 720),
+};
+
 export const FEED_PODCAST = {
   title:
     "Katzenverpetzer Podcast – Folge 47: Rechtsextremismus im Katzeninternet",
