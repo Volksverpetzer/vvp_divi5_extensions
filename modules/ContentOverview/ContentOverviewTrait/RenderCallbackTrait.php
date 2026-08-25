@@ -330,7 +330,7 @@ trait RenderCallbackTrait
                             . '</div>';
                         break;
                     case 'youtube':
-                        $feed_html .= '<div class="vvp-co__feed-item" data-co-kind="' . $kind . '">'
+                        $feed_html .= '<div class="vvp-co__feed-item vvp-co__feed-item--youtube" data-co-kind="' . $kind . '">'
                             . self::render_youtube_card($item['data'])
                             . '</div>';
                         break;

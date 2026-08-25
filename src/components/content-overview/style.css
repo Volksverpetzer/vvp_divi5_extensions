@@ -303,6 +303,26 @@
   grid-column: 1/-1;
 }
 
+/* ---- YouTube card (non-banner, still full-width) ---- */
+.vvp-co__feed-item--youtube {
+  grid-column: 1/-1;
+}
+
+@media (min-width: 640px) {
+  .vvp-co__feed-card--youtube {
+    flex-direction: row;
+  }
+
+  .vvp-co__feed-card--youtube .vvp-co__feed-image-wrap--yt {
+    flex: 0 0 33.333%;
+    aspect-ratio: auto;
+  }
+
+  .vvp-co__feed-card--youtube .vvp-co__feed-body {
+    flex: 1;
+  }
+}
+
 .vvp-co-yt-banner-mount {
   border-radius: var(--vvp-radius-md);
   border: 1px solid #fee2e2;
