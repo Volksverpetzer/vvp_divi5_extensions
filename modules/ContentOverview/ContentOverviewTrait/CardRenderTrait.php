@@ -204,46 +204,6 @@ trait CardRenderTrait
     }
 
     /**
-     * Render a YouTube card for the feed grid.
-     *
-     * @param array $video Normalised YouTube video data (id, title, description, publishedAt, thumbnailUrl).
-     *
-     * @return string HTML.
-     */
-    private static function render_youtube_card($video)
-    {
-        $id          = esc_attr($video['id'] ?? '');
-        $title       = esc_html($video['title'] ?? '');
-        $thumb_url   = esc_url($video['thumbnailUrl'] ?? '');
-        $description = esc_html(self::truncate($video['description'] ?? '', 100));
-        $date        = esc_html(self::format_date($video['publishedAt'] ?? ''));
-        $yt_url      = $id ? esc_url('https://youtube.com/watch?v=' . $id) : '#';
-
-        $image_html = $thumb_url
-            ? '<div class="vvp-co__feed-image-wrap vvp-co__feed-image-wrap--yt">'
-                . '<img src="' . $thumb_url . '" alt="' . esc_attr($title) . '" class="vvp-co__feed-image" loading="lazy" decoding="async">'
-                . '<div class="vvp-co__yt-play-btn" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>'
-                . '</div>'
-            : '';
-
-        $yt_badge = '<span class="vvp-co__badge vvp-co__badge--youtube">'
-            . '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="10" viewBox="0 0 461.001 461.001" fill="currentColor" aria-hidden="true"><path d="M365.257 67.393H95.744C42.866 67.393 0 110.259 0 163.137v134.728c0 52.878 42.866 95.744 95.744 95.744h269.513c52.878 0 95.744-42.866 95.744-95.744V163.137c0-52.878-42.866-95.744-95.744-95.744zm-64.751 169.663l-126.06 60.123c-3.359 1.602-7.239-.847-7.239-4.568V168.607c0-3.774 3.982-6.22 7.348-4.514l126.06 63.943c3.748 1.899 3.683 7.274-.109 9.02z"/></svg>'
-            . 'YouTube</span>';
-
-        return '<a href="' . $yt_url . '" class="vvp-co__feed-card vvp-co__feed-card--youtube" target="_blank" rel="noopener noreferrer">'
-            . $image_html
-            . '<div class="vvp-co__feed-body">'
-            .   '<h3 class="vvp-co__feed-title">' . $title . '</h3>'
-            .   ($description ? '<p class="vvp-co__feed-excerpt">' . $description . '</p>' : '')
-            .   '<div class="vvp-co__feed-footer">'
-            .     $yt_badge
-            .     '<span class="vvp-co__feed-date">' . $date . '</span>'
-            .   '</div>'
-            . '</div>'
-            . '</a>';
-    }
-
-    /**
      * Render the full-width YouTube banner mount point.
      *
      * The React YouTubeBanner component is mounted client-side via

@@ -315,6 +315,7 @@ trait RenderCallbackTrait
                             . '</div>';
                         break;
                     case 'youtube_banner':
+                    case 'youtube':
                         $feed_html .= '<div class="vvp-co__feed-item vvp-co__feed-item--youtube-banner" data-co-kind="youtube">'
                             . self::render_youtube_banner($item['data'])
                             . '</div>';
@@ -327,11 +328,6 @@ trait RenderCallbackTrait
                     case 'insta':
                         $feed_html .= '<div class="vvp-co__feed-item" data-co-kind="' . $kind . '">'
                             . self::render_insta_card($item['data'])
-                            . '</div>';
-                        break;
-                    case 'youtube':
-                        $feed_html .= '<div class="vvp-co__feed-item" data-co-kind="' . $kind . '">'
-                            . self::render_youtube_card($item['data'])
                             . '</div>';
                         break;
                 }
