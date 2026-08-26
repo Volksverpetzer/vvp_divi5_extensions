@@ -31,6 +31,12 @@
 @import "@volksverpetzer/design-tokens/css/elevation.css";
 
 /*
+ * Base font stack (--vvp-font-family), from the same package
+ * (./css/font-family.css).
+ */
+@import "@volksverpetzer/design-tokens/css/font-family.css";
+
+/*
  * Legacy aliases used by existing component styles — kept as-is so
  * component code didn't need to change, just re-pointed at the shared,
  * non-duplicated values.
