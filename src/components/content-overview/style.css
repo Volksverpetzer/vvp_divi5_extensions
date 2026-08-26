@@ -21,7 +21,7 @@
    them.)
    ============================================================ */
 .vvp-co__wrapper {
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: var(--vvp-font-family);
   color: #111827;
 }
 
