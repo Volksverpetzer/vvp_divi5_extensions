@@ -7,4 +7,5 @@ packages:
   - .
 minimumReleaseAgeExclude:
   - "@types/react-dom@19.2.5"
-  - "@volksverpetzer/design-tokens@0.5.0"
+  - "@volksverpetzer/design-tokens@0.5.0 || 0.6.0"
+  - "@volksverpetzer/ui-web@0.5.0"
