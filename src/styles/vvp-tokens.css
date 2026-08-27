@@ -37,6 +37,13 @@
 @import "@volksverpetzer/design-tokens/css/font-family.css";
 
 /*
+ * Spacing scale (--vvp-spacing-xs/sm/md/...), from the same package
+ * (./css/spacing.css). Same rule as radius/elevation above: spacing
+ * that doesn't reasonably match a step stays as a local literal.
+ */
+@import "@volksverpetzer/design-tokens/css/spacing.css";
+
+/*
  * Legacy aliases used by existing component styles — kept as-is so
  * component code didn't need to change, just re-pointed at the shared,
  * non-duplicated values.

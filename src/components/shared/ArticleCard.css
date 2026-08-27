@@ -10,48 +10,6 @@
    card footer-alignment bug) instead of extending them.
    ============================================================ */
 @import "../../styles/vvp-tokens.css";
-/* Badges */
-.vvp-co__badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--vvp-radius-full);
-  font-size: 1rem;
-  font-weight: 600;
-  text-transform: none;
-  letter-spacing: 0;
-  line-height: 1.4;
-  white-space: nowrap;
-}
-
-.vvp-co__badge--pruefpunkt {
-  background: #f6f0fe;
-  color: #442674;
-}
-
-.vvp-co__badge--insta {
-  background: #fce7f3;
-  color: #9d174d;
-}
-
-.vvp-co__badge--youtube {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.vvp-co__badge--podcast {
-  background: #ede9fe;
-  color: #5b21b6;
-}
-
-/* Extra spacing for the YouTube badge icon, on top of the badge flex gap.
-   Replaces an inline style that caused a hydration attribute mismatch
-   between the React component and the PHP-rendered markup. */
-.vvp-co__badge-icon {
-  margin-right: 4px;
-}
-
 /* Category label */
 .vvp-co__category {
   display: inline-block;
@@ -199,7 +157,7 @@
   flex-shrink: 0;
 }
 
-.vvp-co__feed-footer .vvp-co__badge {
+.vvp-co__feed-footer .vvp-ui-badge {
   flex-shrink: 0;
 }
 
