@@ -60,20 +60,20 @@ export const TRENDING_LIST_ITEMS = [
   {
     title:
       "Nein, diese Katze hat das Sofa NICHT selbst zerkratzt – der Fell-Check",
-    link: "#",
+    link: "#sofa-fell-check",
     date: "8. Mai 2026",
     authors: ["Whisker Pfotenhauer", "Bella Kratzenbach"],
   },
   {
     title:
       "Schnurren macht NICHT unsterblich: Warum dieser Viral-Post falsch liegt",
-    link: "#",
+    link: "#schnurren-unsterblich",
     date: "7. Mai 2026",
     authors: ["Whisker Pfotenhauer"],
   },
   {
     title: "Faktencheck: Warum Katzen Gurken NICHT wirklich hassen",
-    link: "#",
+    link: "#gurken-faktencheck",
     date: "6. Mai 2026",
     authors: ["Bella Kratzenbach"],
   },
