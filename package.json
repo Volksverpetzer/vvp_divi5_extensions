@@ -4,7 +4,7 @@
   "description": "DIVI 5 extension for the vvp wordpress site",
   "private": true,
   "license": "GPL-2.0-or-later",
-  "packageManager": "pnpm@11.23.0",
+  "packageManager": "pnpm@11.24.0",
   "author": "Volksverpetzer",
   "engines": {
     "node": ">=24.0.0"
@@ -50,8 +50,8 @@
     "@typescript-eslint/parser": "^8.68.0",
     "@vitejs/plugin-react": "^6.1.0",
     "@vitest/coverage-v8": "^4.1.11",
-    "@wordpress/hooks": "^4.53.0",
-    "@wordpress/i18n": "^6.26.0",
+    "@wordpress/hooks": "^4.54.0",
+    "@wordpress/i18n": "^6.27.0",
     "autoprefixer": "^10.5.4",
     "cspell": "^10.1.1",
     "eslint": "^10.9.1",
@@ -60,7 +60,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.11.0",
-    "happy-dom": "^20.11.6",
+    "happy-dom": "^20.11.8",
     "husky": "^9.1.7",
     "lint-staged": "^17.3.0",
     "lodash": "^4.18.1",
