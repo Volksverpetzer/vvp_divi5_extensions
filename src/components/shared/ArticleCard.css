@@ -10,58 +10,6 @@
    card footer-alignment bug) instead of extending them.
    ============================================================ */
 @import "../../styles/vvp-tokens.css";
-/* Badges */
-.vvp-co__badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--vvp-spacing-xs);
-  padding: var(--vvp-spacing-xs) var(--vvp-spacing-sm);
-  border-radius: var(--vvp-radius-full);
-  font-size: 1rem;
-  font-weight: 600;
-  text-transform: none;
-  letter-spacing: 0;
-  line-height: 1.4;
-  white-space: nowrap;
-}
-
-/*
- * Colors sourced from the shared design tokens, not one-off hex values.
- * Prüfpunkt is Volksverpetzer's own fact-check sub-brand, so it has a
- * dedicated token. YouTube/Instagram/Podcast are third-party platform
- * colors with no reason to become shared tokens themselves, so they map
- * onto the closest existing semantic color instead: error (red) for
- * YouTube, accent (pink) for Instagram, and pruefpunkt (the only purple
- * in the palette) for Podcast. Tints are derived with color-mix() rather
- * than separate "light" tokens, matching @volksverpetzer/ui-web's Badge.
- */
-.vvp-co__badge--pruefpunkt {
-  background: color-mix(in srgb, var(--vvp-color-pruefpunkt) 15%, white);
-  color: var(--vvp-color-pruefpunkt);
-}
-
-.vvp-co__badge--insta {
-  background: color-mix(in srgb, var(--vvp-color-accent) 15%, white);
-  color: var(--vvp-color-accent);
-}
-
-.vvp-co__badge--youtube {
-  background: color-mix(in srgb, var(--vvp-color-error) 15%, white);
-  color: var(--vvp-color-error);
-}
-
-.vvp-co__badge--podcast {
-  background: color-mix(in srgb, var(--vvp-color-pruefpunkt) 15%, white);
-  color: var(--vvp-color-pruefpunkt);
-}
-
-/* Extra spacing for the YouTube badge icon, on top of the badge flex gap.
-   Replaces an inline style that caused a hydration attribute mismatch
-   between the React component and the PHP-rendered markup. */
-.vvp-co__badge-icon {
-  margin-right: 4px;
-}
-
 /* Category label */
 .vvp-co__category {
   display: inline-block;
@@ -209,7 +157,7 @@
   flex-shrink: 0;
 }
 
-.vvp-co__feed-footer .vvp-co__badge {
+.vvp-co__feed-footer .vvp-ui-badge {
   flex-shrink: 0;
 }
 

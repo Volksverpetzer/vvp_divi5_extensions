@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Badge } from "@volksverpetzer/ui-web";
 import classnames from "classnames";
 
 interface Slide {
@@ -685,13 +686,14 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
           style={{ cursor: "pointer" }}
         >
           <div className="vvp-co__feed-footer">
-            <span
-              className="vvp-co__badge vvp-co__badge--insta"
+            <Badge
+              variant="accent"
+              size="md"
+              icon={<InstaIcon />}
               style={{ pointerEvents: "none" }}
             >
-              <InstaIcon />
               {badgeLabel}
-            </span>
+            </Badge>
             {mediaCategory && (
               <span
                 className="vvp-co__category"
@@ -791,10 +793,9 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
                   marginBottom: 15,
                 }}
               >
-                <span className="vvp-co__badge vvp-co__badge--insta">
-                  <InstaIcon />
+                <Badge variant="accent" size="md" icon={<InstaIcon />}>
                   {badgeLabel}
-                </span>
+                </Badge>
 
                 <a
                   href={permalink}
