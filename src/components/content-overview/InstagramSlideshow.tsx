@@ -155,9 +155,9 @@ const InternalSlider = ({
   const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
   const arrowTimeout = React.useRef<NodeJS.Timeout | null>(null);
   // The always-present nav zones below cover the full slide area and sit
-  // above the fallback link, so clicks never reach it — route the center
-  // zone to the permalink instead of the fullscreen overlay while the
-  // active slide is in its failed state, so there's still a way to reach it.
+  // above the fallback link, so clicks never reach it — disable the center
+  // zone while the active slide is failed so clicks fall through to the
+  // fallback link instead of being swallowed here.
   const activeFailed = failedImages.has(activeIndex);
 
   useEffect(() => {
@@ -547,24 +547,21 @@ const InternalSlider = ({
                 </span>
               </button>
 
-              {/* Center zone: open fullscreen overlay, or the Instagram
-                  permalink when the active slide failed to load — it sits
-                  above the fallback link and would otherwise swallow every
-                  click meant for it. */}
-              {(onCenterClick || activeFailed) && (
+              {/* Center zone: open fullscreen overlay. Disabled while the
+                  active slide has failed to load, so clicks (and keyboard
+                  activation) fall through to BrokenImageFallback's own link
+                  underneath instead of being swallowed here — that link is
+                  the single place that handles "open Instagram" for a
+                  failed slide, in both the card and fullscreen views. */}
+              {onCenterClick && (
                 <button
                   type="button"
+                  disabled={activeFailed}
                   onClick={(e) => {
                     e.stopPropagation();
-                    if (activeFailed) {
-                      window.open(permalink, "_blank", "noopener,noreferrer");
-                    } else {
-                      onCenterClick();
-                    }
+                    onCenterClick();
                   }}
-                  aria-label={
-                    activeFailed ? "Auf Instagram ansehen" : "Vollbild öffnen"
-                  }
+                  aria-label="Vollbild öffnen"
                   style={{
                     position: "absolute",
                     top: 0,
@@ -573,8 +570,13 @@ const InternalSlider = ({
                     height: "100%",
                     background: "transparent",
                     border: "none",
-                    cursor: activeFailed ? "pointer" : "zoom-in",
+                    cursor: "zoom-in",
                     zIndex: 9,
+                    // disabled alone only stops the click handler and
+                    // keyboard focus — it does not exempt the element from
+                    // pointer hit-testing, so the click would otherwise
+                    // still land here instead of falling through.
+                    pointerEvents: activeFailed ? "none" : "auto",
                   }}
                 />
               )}
