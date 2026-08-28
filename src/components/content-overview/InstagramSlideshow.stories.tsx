@@ -13,3 +13,13 @@ type Story = StoryObj<typeof InstagramSlideshow>;
 export const Default: Story = {
   args: IG_PROPS,
 };
+
+export const BrokenImage: Story = {
+  args: {
+    ...IG_PROPS,
+    slides: [
+      { thumb: "https://example.invalid/does-not-exist.jpg", video: "" },
+      ...IG_PROPS.slides.slice(1),
+    ],
+  },
+};

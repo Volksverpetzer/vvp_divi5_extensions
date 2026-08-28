@@ -109,6 +109,33 @@ const ArrowRightIcon = () => (
   </svg>
 );
 
+const BrokenImageFallback = ({ permalink }: { permalink: string }) => (
+  <a
+    href={permalink}
+    target="_blank"
+    rel="noopener noreferrer"
+    style={{
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      background: "#f0f0f0",
+      color: "#666",
+      textDecoration: "none",
+      fontSize: 13,
+      textAlign: "center",
+      padding: "0 1rem",
+    }}
+    onClick={(e) => e.stopPropagation()}
+  >
+    <InstaIcon />
+    <span>Bild nicht verfügbar — auf Instagram ansehen ↗</span>
+  </a>
+);
+
 const InternalSlider = ({
   slides,
   activeIndex,
@@ -119,10 +146,12 @@ const InternalSlider = ({
   setPlayingVideos,
   onCenterClick,
   onVideoPlay,
+  permalink,
   fullscreen = false,
 }) => {
   const [showArrows, setShowArrows] = useState(false);
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
+  const [failedImages, setFailedImages] = useState<Set<number>>(new Set());
   const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
   const arrowTimeout = React.useRef<NodeJS.Timeout | null>(null);
 
@@ -156,29 +185,39 @@ const InternalSlider = ({
         imagesToPreload.push(activeIndex + 1);
 
       imagesToPreload.forEach((index) => {
-        if (!loadedImages.has(index) && slides[index]?.thumb) {
+        if (
+          !loadedImages.has(index) &&
+          !failedImages.has(index) &&
+          slides[index]?.thumb
+        ) {
           const img = new Image();
           img.src = slides[index].thumb;
           img.onload = () => {
             setLoadedImages((prev) => new Set(prev).add(index));
+          };
+          img.onerror = () => {
+            setFailedImages((prev) => new Set(prev).add(index));
           };
         }
       });
     };
 
     preloadImages();
-  }, [activeIndex, loadedImages, slides]);
+  }, [activeIndex, loadedImages, failedImages, slides]);
 
   // Preload first slide immediately on mount
   useEffect(() => {
-    if (slides[0]?.thumb && !loadedImages.has(0)) {
+    if (slides[0]?.thumb && !loadedImages.has(0) && !failedImages.has(0)) {
       const img = new Image();
       img.src = slides[0].thumb;
       img.onload = () => {
         setLoadedImages((prev) => new Set(prev).add(0));
       };
+      img.onerror = () => {
+        setFailedImages((prev) => new Set(prev).add(0));
+      };
     }
-  }, [slides, loadedImages]);
+  }, [slides, loadedImages, failedImages]);
 
   const handleNext = (e?: React.MouseEvent) => {
     if (e) {
@@ -334,6 +373,8 @@ const InternalSlider = ({
                               e.currentTarget.style.opacity = "1";
                             }}
                           />
+                        ) : failedImages.has(index) ? (
+                          <BrokenImageFallback permalink={permalink} />
                         ) : (
                           <LoadingPlaceholder />
                         )}
@@ -447,6 +488,8 @@ const InternalSlider = ({
                           e.currentTarget.style.opacity = "1";
                         }}
                       />
+                    ) : failedImages.has(index) ? (
+                      <BrokenImageFallback permalink={permalink} />
                     ) : (
                       <LoadingPlaceholder />
                     )}
@@ -678,6 +721,7 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
             trackInstaView(postId);
           }}
           onVideoPlay={handleVideoPlay}
+          permalink={permalink}
         />
 
         <div
@@ -772,6 +816,7 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
               setPlayingVideos={setPlayingVideos}
               onCenterClick={null}
               onVideoPlay={handleVideoPlay}
+              permalink={permalink}
               fullscreen={true}
             />
 
