@@ -109,6 +109,33 @@ const ArrowRightIcon = () => (
   </svg>
 );
 
+const BrokenImageFallback = ({ permalink }: { permalink: string }) => (
+  <a
+    href={permalink}
+    target="_blank"
+    rel="noopener noreferrer"
+    style={{
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      background: "var(--vvp-surface, #f0f0f0)",
+      color: "var(--vvp-text-muted, #666)",
+      textDecoration: "none",
+      fontSize: 13,
+      textAlign: "center",
+      padding: "0 1rem",
+    }}
+    onClick={(e) => e.stopPropagation()}
+  >
+    <InstaIcon />
+    <span>Bild nicht verfügbar — auf Instagram ansehen ↗</span>
+  </a>
+);
+
 const InternalSlider = ({
   slides,
   activeIndex,
@@ -119,12 +146,19 @@ const InternalSlider = ({
   setPlayingVideos,
   onCenterClick,
   onVideoPlay,
+  permalink,
   fullscreen = false,
 }) => {
   const [showArrows, setShowArrows] = useState(false);
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
+  const [failedImages, setFailedImages] = useState<Set<number>>(new Set());
   const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
   const arrowTimeout = React.useRef<NodeJS.Timeout | null>(null);
+  // The always-present nav zones below cover the full slide area and sit
+  // above the fallback link, so clicks never reach it — disable the center
+  // zone while the active slide is failed so clicks fall through to the
+  // fallback link instead of being swallowed here.
+  const activeFailed = failedImages.has(activeIndex);
 
   useEffect(() => {
     const onFsChange = () => {
@@ -156,29 +190,39 @@ const InternalSlider = ({
         imagesToPreload.push(activeIndex + 1);
 
       imagesToPreload.forEach((index) => {
-        if (!loadedImages.has(index) && slides[index]?.thumb) {
+        if (
+          !loadedImages.has(index) &&
+          !failedImages.has(index) &&
+          slides[index]?.thumb
+        ) {
           const img = new Image();
           img.src = slides[index].thumb;
           img.onload = () => {
             setLoadedImages((prev) => new Set(prev).add(index));
+          };
+          img.onerror = () => {
+            setFailedImages((prev) => new Set(prev).add(index));
           };
         }
       });
     };
 
     preloadImages();
-  }, [activeIndex, loadedImages, slides]);
+  }, [activeIndex, loadedImages, failedImages, slides]);
 
   // Preload first slide immediately on mount
   useEffect(() => {
-    if (slides[0]?.thumb && !loadedImages.has(0)) {
+    if (slides[0]?.thumb && !loadedImages.has(0) && !failedImages.has(0)) {
       const img = new Image();
       img.src = slides[0].thumb;
       img.onload = () => {
         setLoadedImages((prev) => new Set(prev).add(0));
       };
+      img.onerror = () => {
+        setFailedImages((prev) => new Set(prev).add(0));
+      };
     }
-  }, [slides, loadedImages]);
+  }, [slides, loadedImages, failedImages]);
 
   const handleNext = (e?: React.MouseEvent) => {
     if (e) {
@@ -334,6 +378,8 @@ const InternalSlider = ({
                               e.currentTarget.style.opacity = "1";
                             }}
                           />
+                        ) : failedImages.has(index) ? (
+                          <BrokenImageFallback permalink={permalink} />
                         ) : (
                           <LoadingPlaceholder />
                         )}
@@ -447,6 +493,8 @@ const InternalSlider = ({
                           e.currentTarget.style.opacity = "1";
                         }}
                       />
+                    ) : failedImages.has(index) ? (
+                      <BrokenImageFallback permalink={permalink} />
                     ) : (
                       <LoadingPlaceholder />
                     )}
@@ -499,10 +547,16 @@ const InternalSlider = ({
                 </span>
               </button>
 
-              {/* Center zone: open fullscreen overlay */}
+              {/* Center zone: open fullscreen overlay. Disabled while the
+                  active slide has failed to load, so clicks (and keyboard
+                  activation) fall through to BrokenImageFallback's own link
+                  underneath instead of being swallowed here — that link is
+                  the single place that handles "open Instagram" for a
+                  failed slide, in both the card and fullscreen views. */}
               {onCenterClick && (
                 <button
                   type="button"
+                  disabled={activeFailed}
                   onClick={(e) => {
                     e.stopPropagation();
                     onCenterClick();
@@ -518,6 +572,11 @@ const InternalSlider = ({
                     border: "none",
                     cursor: "zoom-in",
                     zIndex: 9,
+                    // disabled alone only stops the click handler and
+                    // keyboard focus — it does not exempt the element from
+                    // pointer hit-testing, so the click would otherwise
+                    // still land here instead of falling through.
+                    pointerEvents: activeFailed ? "none" : "auto",
                   }}
                 />
               )}
@@ -678,6 +737,7 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
             trackInstaView(postId);
           }}
           onVideoPlay={handleVideoPlay}
+          permalink={permalink}
         />
 
         <div
@@ -772,6 +832,7 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
               setPlayingVideos={setPlayingVideos}
               onCenterClick={null}
               onVideoPlay={handleVideoPlay}
+              permalink={permalink}
               fullscreen={true}
             />
 
