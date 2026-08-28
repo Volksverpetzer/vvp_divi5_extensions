@@ -155,9 +155,9 @@ const InternalSlider = ({
   const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
   const arrowTimeout = React.useRef<NodeJS.Timeout | null>(null);
   // The always-present nav zones below cover the full slide area and sit
-  // above the fallback link, making it unclickable — route the center zone
-  // to the permalink instead of the fullscreen overlay while the active
-  // slide is in its failed state, so there's still a way to reach it.
+  // above the fallback link, so clicks never reach it — route the center
+  // zone to the permalink instead of the fullscreen overlay while the
+  // active slide is in its failed state, so there's still a way to reach it.
   const activeFailed = failedImages.has(activeIndex);
 
   useEffect(() => {
