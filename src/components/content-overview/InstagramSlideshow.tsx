@@ -122,8 +122,8 @@ const BrokenImageFallback = ({ permalink }: { permalink: string }) => (
       alignItems: "center",
       justifyContent: "center",
       gap: 8,
-      background: "#f0f0f0",
-      color: "#666",
+      background: "var(--vvp-surface, #f0f0f0)",
+      color: "var(--vvp-text-muted, #666)",
       textDecoration: "none",
       fontSize: 13,
       textAlign: "center",
@@ -154,6 +154,11 @@ const InternalSlider = ({
   const [failedImages, setFailedImages] = useState<Set<number>>(new Set());
   const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
   const arrowTimeout = React.useRef<NodeJS.Timeout | null>(null);
+  // The always-present nav zones below cover the full slide area and sit
+  // above the fallback link, making it unclickable — route the center zone
+  // to the permalink instead of the fullscreen overlay while the active
+  // slide is in its failed state, so there's still a way to reach it.
+  const activeFailed = failedImages.has(activeIndex);
 
   useEffect(() => {
     const onFsChange = () => {
@@ -542,15 +547,24 @@ const InternalSlider = ({
                 </span>
               </button>
 
-              {/* Center zone: open fullscreen overlay */}
-              {onCenterClick && (
+              {/* Center zone: open fullscreen overlay, or the Instagram
+                  permalink when the active slide failed to load — it sits
+                  above the fallback link and would otherwise swallow every
+                  click meant for it. */}
+              {(onCenterClick || activeFailed) && (
                 <button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onCenterClick();
+                    if (activeFailed) {
+                      window.open(permalink, "_blank", "noopener,noreferrer");
+                    } else {
+                      onCenterClick();
+                    }
                   }}
-                  aria-label="Vollbild öffnen"
+                  aria-label={
+                    activeFailed ? "Auf Instagram ansehen" : "Vollbild öffnen"
+                  }
                   style={{
                     position: "absolute",
                     top: 0,
@@ -559,7 +573,7 @@ const InternalSlider = ({
                     height: "100%",
                     background: "transparent",
                     border: "none",
-                    cursor: "zoom-in",
+                    cursor: activeFailed ? "pointer" : "zoom-in",
                     zIndex: 9,
                   }}
                 />
