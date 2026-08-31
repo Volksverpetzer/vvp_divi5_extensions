@@ -53,7 +53,7 @@ trait RenderCallbackTrait
         $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
         $parent_attrs = $parent->attrs ?? [];
 
-        $html = self::build_overview_html();
+        $html = self::build_overview_html($attrs);
 
         return Module::render([
             'orderIndex'          => $block->parsed_block['orderIndex'],
@@ -88,17 +88,33 @@ trait RenderCallbackTrait
     /**
      * Fetch all data sources and assemble the complete overview HTML.
      *
+     * @param array $attrs Block attributes saved by Visual Builder.
+     *
      * @return string HTML markup.
      */
-    private static function build_overview_html()
+    private static function build_overview_html($attrs = [])
     {
+        // "contentTypes" is declared with attrName "contentTypes.innerContent" in
+        // module.json, so it's stored under attrs.contentTypes.innerContent.<bp>.value.
+        // An empty/missing selection means "show everything" (backward compatible
+        // with modules saved before this setting existed).
+        $selected_types = $attrs['contentTypes']['innerContent']['desktop']['value'] ?? [];
+        if (!is_array($selected_types) || empty($selected_types)) {
+            $selected_types = ['articles-volksverpetzer', 'articles-pruefpunkt', 'instagram', 'youtube', 'podcast'];
+        }
+        $show_vvp_articles = in_array('articles-volksverpetzer', $selected_types, true);
+        $show_pp_articles  = in_array('articles-pruefpunkt', $selected_types, true);
+        $show_instagram    = in_array('instagram', $selected_types, true);
+        $show_youtube      = in_array('youtube', $selected_types, true);
+        $show_podcast      = in_array('podcast', $selected_types, true);
+
         // 1. Fetch -----------------------------------------------------------
 
-        $vp_posts = self::fetch_volksverpetzer_articles();
-        $pp_posts = self::fetch_pruefpunkt_articles();
+        $vp_posts = $show_vvp_articles ? self::fetch_volksverpetzer_articles() : [];
+        $pp_posts = $show_pp_articles ? self::fetch_pruefpunkt_articles() : [];
 
-        $insta_posts    = self::fetch_insta_feed('volksverpetzer');
-        $insta_pp_posts = self::fetch_insta_feed('pruefpunkt');
+        $insta_posts    = $show_instagram ? self::fetch_insta_feed('volksverpetzer') : [];
+        $insta_pp_posts = $show_instagram ? self::fetch_insta_feed('pruefpunkt') : [];
 
         // Merge both accounts' Instagram posts. Dedupe by post ID: the proxy may
         // serve the same posts for both accounts (e.g. while the Prüfpunkt token
@@ -117,10 +133,10 @@ trait RenderCallbackTrait
             return (int) strtotime($b['timestamp'] ?? '') - (int) strtotime($a['timestamp'] ?? '');
         });
 
-        $yt_videos = self::fetch_yt_feed();
+        $yt_videos = $show_youtube ? self::fetch_yt_feed() : [];
 
-        $podcast_xml   = self::fetch_podcast_xml();
-        $podcast_data  = self::parse_podcast_feed($podcast_xml);
+        $podcast_xml   = $show_podcast ? self::fetch_podcast_xml() : '';
+        $podcast_data  = $show_podcast ? self::parse_podcast_feed($podcast_xml) : [];
         $podcast_items = $podcast_data['items'] ?? [];
         $channel_image = $podcast_data['channel_image'] ?? '';
 

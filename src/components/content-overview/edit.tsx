@@ -47,9 +47,9 @@ const MOCK_ARTICLES = [
     image_url: img("katze2"),
   },
   {
-    title: "Katzenfutter: Was stimmt wirklich an den Nährwerten?",
+    title: "Delfinfutter: Was stimmt wirklich an den Nährwerten?",
     excerpt:
-      "Der Fell-Check zur aktuellen Debatte über Trocken- versus Nassfutter. Trotz eindeutiger Datenlage werden die Zahlen regelmäßig falsch interpretiert oder bewusst aus dem Napf gerissen.",
+      "Der Flossen-Check zur aktuellen Debatte über Fisch- versus Krillfutter. Trotz eindeutiger Datenlage werden die Zahlen regelmäßig falsch interpretiert oder bewusst durchs Blasloch gejagt.",
     link: "#",
     date: "15.05.2026",
     reading_time: 3,
@@ -83,9 +83,9 @@ const MOCK_ARTICLES = [
     image_url: img("katze5"),
   },
   {
-    title: "Impfmythen im Fell-Check 2026",
+    title: "Impfmythen im Flossen-Check 2026",
     excerpt:
-      "Welche Falschbehauptungen über Katzenimpfungen kursieren aktuell und was sagen Tierärzte dazu? Wir haben die häufigsten Behauptungen geprüft und eingeordnet.",
+      "Welche Falschbehauptungen über Delfin-Impfungen kursieren aktuell und was sagen Meeresbiologinnen dazu? Wir haben die häufigsten Behauptungen geprüft und eingeordnet.",
     link: "#",
     date: "12.05.2026",
     reading_time: 4,

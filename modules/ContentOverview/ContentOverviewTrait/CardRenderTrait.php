@@ -48,8 +48,12 @@ trait CardRenderTrait
             . '</div>'
             : '';
 
+        // Class names must byte-match ui-web's <Badge variant="pruefpunkt" size="md">
+        // (see ArticleCard.tsx's PruefpunktBadge) — the hydration guardrail above
+        // requires it, and it's also what actually carries the badge's styling
+        // (Badge.css), unlike the old vvp-co__badge classes which were never styled.
         $source_badge = $props['source'] === 'pruefpunkt'
-            ? '<span class="vvp-co__badge vvp-co__badge--pruefpunkt">Prüfpunkt</span>'
+            ? '<span class="vvp-ui-badge vvp-ui-badge--pruefpunkt vvp-ui-badge--size-md">Prüfpunkt</span>'
             : '';
 
         $category_html = '';
@@ -229,7 +233,7 @@ trait CardRenderTrait
         $yt_desc  = esc_html($props['description']);
         $yt_date  = esc_html($props['date']);
 
-        $yt_youtube_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="10" viewBox="0 0 461 461" fill="currentColor" aria-hidden="true" class="vvp-co__badge-icon">'
+        $yt_youtube_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="10" viewBox="0 0 461 461" fill="currentColor" aria-hidden="true">'
             . '<path d="M365.257 67.393H95.744C42.866 67.393 0 110.259 0 163.137v134.728c0 52.878 42.866 95.744 95.744 95.744h269.513c52.878 0 95.744-42.866 95.744-95.744V163.137c0-52.878-42.866-95.744-95.744-95.744zm-64.751 169.663l-126.06 60.123c-3.359 1.602-7.239-.847-7.239-4.568V168.607c0-3.774 3.982-6.22 7.348-4.514l126.06 63.943c3.748 1.899 3.683 7.274-.109 9.02z"/>'
             . '</svg>';
         $yt_play_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="white">'
@@ -246,7 +250,7 @@ trait CardRenderTrait
             .     '</div>'
             .     '<div class="vvp-co__yt-banner-content">'
             .       '<div class="vvp-co__yt-banner-label">'
-            .         '<span class="vvp-co__badge vvp-co__badge--youtube">' . $yt_youtube_icon . 'YouTube</span>'
+            .         '<span class="vvp-ui-badge vvp-ui-badge--error vvp-ui-badge--size-md"><span class="vvp-ui-badge__icon" aria-hidden="true">' . $yt_youtube_icon . '</span>YouTube</span>'
             .       '</div>'
             .       '<a href="' . $yt_url . '" class="vvp-co__yt-banner-title" target="_blank" rel="noopener noreferrer">' . $yt_title . '</a>'
             .       ($yt_desc ? '<p class="vvp-co__yt-banner-description">' . $yt_desc . '</p>' : '')
@@ -304,7 +308,7 @@ trait CardRenderTrait
                     : '')
             .     '<div class="vvp-co__podcast-content">'
             .       '<div class="vvp-co__podcast-label">'
-            .         '<span class="vvp-co__badge vvp-co__badge--podcast">' . $podcast_icon . 'Podcast</span>'
+            .         '<span class="vvp-ui-badge vvp-ui-badge--pruefpunkt vvp-ui-badge--size-md"><span class="vvp-ui-badge__icon" aria-hidden="true">' . $podcast_icon . '</span>Podcast</span>'
             .       '</div>'
             .       '<a href="' . $pod_link . '" class="vvp-co__podcast-title" target="_blank" rel="noopener noreferrer">' . $pod_title . '</a>'
             .       ($props['summary'] ? '<p class="vvp-co__podcast-summary">' . $pod_summary . '</p>' : '')
