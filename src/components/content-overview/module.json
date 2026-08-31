@@ -137,7 +137,7 @@
     },
     "metaFont": {
       "type": "object",
-      "selector": "{{selector}} .vvp-co__feed-date, {{selector}} .vvp-co__category, {{selector}} .vvp-co__feed-heading, {{selector}} .vvp-co__podcast-date, {{selector}} .vvp-co__podcast-duration, {{selector}} .vvp-co__badge",
+      "selector": "{{selector}} .vvp-co__feed-date, {{selector}} .vvp-co__category, {{selector}} .vvp-co__feed-heading, {{selector}} .vvp-co__podcast-date, {{selector}} .vvp-co__podcast-duration, {{selector}} .vvp-ui-badge",
       "settings": {
         "font": {
           "groupType": "group-item",
@@ -159,7 +159,7 @@
       },
       "styleProps": {
         "font": {
-          "selector": "{{selector}} .vvp-co__feed-date, {{selector}} .vvp-co__category, {{selector}} .vvp-co__feed-heading, {{selector}} .vvp-co__podcast-date, {{selector}} .vvp-co__podcast-duration, {{selector}} .vvp-co__badge"
+          "selector": "{{selector}} .vvp-co__feed-date, {{selector}} .vvp-co__category, {{selector}} .vvp-co__feed-heading, {{selector}} .vvp-co__podcast-date, {{selector}} .vvp-co__podcast-duration, {{selector}} .vvp-ui-badge"
         }
       }
     }
