@@ -12,11 +12,11 @@ importers:
         specifier: ^9.14.0
         version: 9.14.0
       '@volksverpetzer/design-tokens':
-        specifier: 0.7.0
-        version: 0.7.0
+        specifier: 0.8.0
+        version: 0.8.0
       '@volksverpetzer/ui-web':
-        specifier: 0.12.0
-        version: 0.12.0(react@19.2.8)
+        specifier: 0.12.1
+        version: 0.12.1(react@19.2.8)
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -1467,11 +1467,11 @@ packages:
   '@vitest/utils@4.1.11':
     resolution: {integrity: sha512-zTCVGpyFsGWBhllOyKlTw/vnr6D9qxsfSDyfbyZmTyjHw5N/VuvzHpHoQjm2ZJzn4RJgx5w4r7V0er69CmLgPQ==}
 
-  '@volksverpetzer/design-tokens@0.7.0':
-    resolution: {integrity: sha512-HTyICGyw4yP1BKHK2FIYa9TjdoYP1Gq0bdxyLcrg1ZLgF82dyeGIs4s7Q9f6NOO54MnwA21qt7rozQDMWosd6A==}
+  '@volksverpetzer/design-tokens@0.8.0':
+    resolution: {integrity: sha512-EeS9p5W6MKB8aGlHzZi5NzH30XCzj8UweIZ706sft9nNTc7yM0DoIbVUiPDuo8NrKtmr7lsDa7uZheXlbrkhdA==}
 
-  '@volksverpetzer/ui-web@0.12.0':
-    resolution: {integrity: sha512-ncdb8WHnxcSDmcwKVbZ+UzCqZqa1K+/xkxGEfUHV7+SJsU58RdwbY9i5HKrCGjW3LL4Yhdpclj81MITZyPIWpg==}
+  '@volksverpetzer/ui-web@0.12.1':
+    resolution: {integrity: sha512-zm/CaL5pbD1FCdhrMDG7rtH75LW8MRuHpavGpbfOz3doq6bxoTI3GFYYsY5Jnpbei7APw1WJMgyq6yafsexUcQ==}
     peerDependencies:
       react: '>=19'
 
@@ -4754,9 +4754,9 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.1
 
-  '@volksverpetzer/design-tokens@0.7.0': {}
+  '@volksverpetzer/design-tokens@0.8.0': {}
 
-  '@volksverpetzer/ui-web@0.12.0(react@19.2.8)':
+  '@volksverpetzer/ui-web@0.12.1(react@19.2.8)':
     dependencies:
       react: 19.2.8
 

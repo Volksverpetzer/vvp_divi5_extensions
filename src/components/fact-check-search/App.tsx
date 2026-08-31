@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { InputButton } from "@volksverpetzer/ui-web";
 import { trackEvent } from "../../utils/plausible";
 import { createPortal } from "react-dom";
 
@@ -239,27 +240,21 @@ export const FactCheckSearchApp: React.FC<FactCheckSearchAppProps> = ({
                 className="vvp-fc__search-form js-vvp-fc-form"
                 onSubmit={handleSubmit}
               >
-                <div className="vvp-fc__input-row">
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    className="vvp-fc__text-input js-vvp-fc-input"
-                    placeholder="URL oder Text zum Fake eingeben"
-                    autoComplete="off"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                  />
-                  <button
-                    type="submit"
-                    className="vvp-fc__submit-btn js-vvp-fc-submit"
-                    disabled={disableSubmit}
-                  >
-                    <span className="vvp-fc__submit-icon">
+                <InputButton
+                  ref={inputRef}
+                  type="text"
+                  placeholder="URL oder Text zum Fake eingeben"
+                  autoComplete="off"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  buttonDisabled={disableSubmit}
+                  buttonLabel={
+                    <>
                       <IconSearch size={14} />
-                    </span>
-                    <span>Prüfen</span>
-                  </button>
-                </div>
+                      <span>Prüfen</span>
+                    </>
+                  }
+                />
                 <p
                   className="vvp-fc__url-hint js-vvp-fc-url-hint"
                   hidden={!isUrlQuery}
