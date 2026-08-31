@@ -1,27 +1,6 @@
 import React, { type ReactElement } from "react";
 import { type CtaBoxAppProps, type CtaBoxIcon } from "./types";
 
-// buttonUrl round-trips through a data-* DOM attribute (see frontend.tsx)
-// before landing here, so it must be treated as untrusted: a "javascript:"
-// URL would otherwise execute on click. Parse it and only ever pass the
-// re-serialized URL object's .href (never the raw tainted string) into the
-// href sink, gated on an allowlisted protocol — the pattern CodeQL's
-// js/xss-through-dom query recognizes as clearing the taint, unlike a plain
-// prefix/regex check on the original string.
-const SAFE_PROTOCOLS = new Set(["http:", "https:", "mailto:", "tel:"]);
-
-const getSafeButtonUrl = (url: string): string | null => {
-  const trimmed = url.trim();
-  if (trimmed.startsWith("/") || trimmed.startsWith("#")) return trimmed;
-
-  try {
-    const parsed = new URL(trimmed, window.location.origin);
-    return SAFE_PROTOCOLS.has(parsed.protocol) ? parsed.href : null;
-  } catch {
-    return null;
-  }
-};
-
 const ICONS: Record<Exclude<CtaBoxIcon, "none">, ReactElement> = {
   star: (
     <path d="M12 2.5l2.9 6.6 7.1.7-5.4 4.8 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.8l7.1-.7L12 2.5z" />
@@ -64,8 +43,26 @@ export const CtaBoxApp = ({
   buttonNewTab,
   variant,
 }: CtaBoxAppProps): ReactElement => {
-  const safeButtonUrl = getSafeButtonUrl(buttonUrl);
-  const hasButton = buttonLabel.trim() !== "" && safeButtonUrl !== null;
+  // buttonUrl round-trips through a data-* DOM attribute (frontend.tsx)
+  // before reaching here, so it must be treated as untrusted: a
+  // "javascript:" URL would otherwise execute on click. Blank it out
+  // unless it matches an allowlisted scheme, right here in the same scope
+  // as the href sink below — a helper function returning a new value
+  // (tried in an earlier commit, using both a regex .test() and a
+  // new URL().protocol check) was not recognized by CodeQL's
+  // js/xss-through-dom sanitizer detection and kept the alert open.
+  let safeButtonUrl = buttonUrl.trim();
+  if (
+    !/^https?:\/\//i.test(safeButtonUrl) &&
+    !/^mailto:/i.test(safeButtonUrl) &&
+    !/^tel:/i.test(safeButtonUrl) &&
+    !safeButtonUrl.startsWith("/") &&
+    !safeButtonUrl.startsWith("#")
+  ) {
+    safeButtonUrl = "";
+  }
+
+  const hasButton = buttonLabel.trim() !== "" && safeButtonUrl !== "";
 
   return (
     <div className={`vvp-cta-box vvp-cta-box--${variant}`}>
@@ -77,7 +74,7 @@ export const CtaBoxApp = ({
       {hasButton && (
         <a
           className="vvp-cta-box__button"
-          href={safeButtonUrl as string}
+          href={safeButtonUrl}
           target={buttonNewTab ? "_blank" : undefined}
           rel={buttonNewTab ? "noopener noreferrer" : undefined}
         >
