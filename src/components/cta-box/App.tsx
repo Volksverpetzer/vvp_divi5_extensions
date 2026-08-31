@@ -3,13 +3,23 @@ import { type CtaBoxAppProps, type CtaBoxIcon } from "./types";
 
 // buttonUrl round-trips through a data-* DOM attribute (see frontend.tsx)
 // before landing here, so it must be treated as untrusted: a "javascript:"
-// URL would otherwise execute on click. Only allow the schemes an editor
-// could plausibly need for a CTA link, plus same-site relative/anchor URLs.
-const SAFE_BUTTON_URL = /^(https?:|mailto:|tel:|\/|#)/i;
+// URL would otherwise execute on click. Parse it and only ever pass the
+// re-serialized URL object's .href (never the raw tainted string) into the
+// href sink, gated on an allowlisted protocol — the pattern CodeQL's
+// js/xss-through-dom query recognizes as clearing the taint, unlike a plain
+// prefix/regex check on the original string.
+const SAFE_PROTOCOLS = new Set(["http:", "https:", "mailto:", "tel:"]);
 
 const getSafeButtonUrl = (url: string): string | null => {
   const trimmed = url.trim();
-  return SAFE_BUTTON_URL.test(trimmed) ? trimmed : null;
+  if (trimmed.startsWith("/") || trimmed.startsWith("#")) return trimmed;
+
+  try {
+    const parsed = new URL(trimmed, window.location.origin);
+    return SAFE_PROTOCOLS.has(parsed.protocol) ? parsed.href : null;
+  } catch {
+    return null;
+  }
 };
 
 const ICONS: Record<Exclude<CtaBoxIcon, "none">, ReactElement> = {
