@@ -104,10 +104,6 @@
   min-height: 45px;
   overflow: hidden;
 }
-.vvp-campaign-donate .vvp-cd__error {
-  color: var(--vvp-pink-main);
-  font-size: 0.9rem;
-}
 .vvp-campaign-donate .vvp-cd__checkout {
   min-height: 500px;
   width: 100%;
