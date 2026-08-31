@@ -44,6 +44,38 @@
 @import "@volksverpetzer/design-tokens/css/spacing.css";
 
 /*
+ * Font-size scale (--vvp-font-size-xs/sm/base/...), from the same
+ * package (./css/font-size.css). @volksverpetzer/ui-web's component CSS
+ * reads these directly; without this import they silently fall back to
+ * their own hardcoded literals.
+ */
+@import "@volksverpetzer/design-tokens/css/font-size.css";
+
+/*
+ * Un-prefixed aliases for @volksverpetzer/ui-web's component CSS (Button,
+ * Badge, Card, ProgressBar, Alert, Input, InputButton, ...): that package's
+ * own stylesheets read --vvp-primary, --vvp-surface, etc. (the plain
+ * ./css/volksverpetzer.css naming), not the --vvp-color-* names the brand
+ * import above defines. Without these, every ui-web component silently
+ * runs on its own internal `var(--vvp-x, #fallback)` literal instead of
+ * the live, WP-admin-overridable brand token.
+ */
+:root {
+  --vvp-background: var(--vvp-color-background);
+  --vvp-surface: var(--vvp-color-surface);
+  --vvp-surface-input: var(--vvp-color-surface-input);
+  --vvp-surface-disabled: var(--vvp-color-surface-disabled);
+  --vvp-text: var(--vvp-color-text);
+  --vvp-text-muted: var(--vvp-color-text-muted);
+  --vvp-on-primary: var(--vvp-color-on-primary);
+  --vvp-primary: var(--vvp-color-primary);
+  --vvp-primary-muted: var(--vvp-color-primary-muted);
+  --vvp-accent: var(--vvp-color-accent);
+  --vvp-error: var(--vvp-color-error);
+  --vvp-pruefpunkt: var(--vvp-color-pruefpunkt);
+}
+
+/*
  * Legacy aliases used by existing component styles — kept as-is so
  * component code didn't need to change, just re-pointed at the shared,
  * non-duplicated values.
