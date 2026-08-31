@@ -8,6 +8,45 @@
   "moduleOrderClassName": "content_overview",
   "category": "module",
   "attributes": {
+    "contentTypes": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 10,
+            "render": true,
+            "attrName": "contentTypes.innerContent",
+            "label": "Inhaltstypen",
+            "description": "Welche Inhaltstypen sollen angezeigt werden? Ohne Auswahl werden alle angezeigt.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/checkboxes",
+              "type": "field",
+              "props": {
+                "options": [
+                  {
+                    "value": "articles-volksverpetzer",
+                    "label": "Artikel (Volksverpetzer)"
+                  },
+                  {
+                    "value": "articles-pruefpunkt",
+                    "label": "Artikel (Prüfpunkt)"
+                  },
+                  { "value": "instagram", "label": "Instagram" },
+                  { "value": "youtube", "label": "YouTube" },
+                  { "value": "podcast", "label": "Podcast" }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
     "module": {
       "type": "object",
       "selector": "{{selector}}",
@@ -98,7 +137,7 @@
     },
     "metaFont": {
       "type": "object",
-      "selector": "{{selector}} .vvp-co__feed-date, {{selector}} .vvp-co__category, {{selector}} .vvp-co__feed-heading, {{selector}} .vvp-co__podcast-date, {{selector}} .vvp-co__podcast-duration, {{selector}} .vvp-co__badge",
+      "selector": "{{selector}} .vvp-co__feed-date, {{selector}} .vvp-co__category, {{selector}} .vvp-co__feed-heading, {{selector}} .vvp-co__podcast-date, {{selector}} .vvp-co__podcast-duration, {{selector}} .vvp-ui-badge",
       "settings": {
         "font": {
           "groupType": "group-item",
@@ -120,7 +159,7 @@
       },
       "styleProps": {
         "font": {
-          "selector": "{{selector}} .vvp-co__feed-date, {{selector}} .vvp-co__category, {{selector}} .vvp-co__feed-heading, {{selector}} .vvp-co__podcast-date, {{selector}} .vvp-co__podcast-duration, {{selector}} .vvp-co__badge"
+          "selector": "{{selector}} .vvp-co__feed-date, {{selector}} .vvp-co__category, {{selector}} .vvp-co__feed-heading, {{selector}} .vvp-co__podcast-date, {{selector}} .vvp-co__podcast-duration, {{selector}} .vvp-ui-badge"
         }
       }
     }

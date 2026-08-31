@@ -16,10 +16,12 @@ import { InstagramSlideshow } from "./InstagramSlideshow";
 import { PodcastBanner } from "./PodcastBanner";
 import { YouTubeBanner } from "./YouTubeBanner";
 import { catPlaceholderImage } from "../shared/catPlaceholder";
+import { beardPlaceholderImage } from "../shared/beardPlaceholder";
 
 // ── Example data ─────────────────────────────────────────────────────────────
 
 const img = catPlaceholderImage;
+const beardImg = beardPlaceholderImage;
 
 const MOCK_ARTICLES = [
   {
@@ -47,16 +49,16 @@ const MOCK_ARTICLES = [
     image_url: img("katze2"),
   },
   {
-    title: "Katzenfutter: Was stimmt wirklich an den Nährwerten?",
+    title: "Bartöl-Mythen: Was stimmt wirklich an den Wirkstoffen?",
     excerpt:
-      "Der Fell-Check zur aktuellen Debatte über Trocken- versus Nassfutter. Trotz eindeutiger Datenlage werden die Zahlen regelmäßig falsch interpretiert oder bewusst aus dem Napf gerissen.",
+      "Der Stoppel-Check zur aktuellen Debatte über Öl- versus Wachspflege. Trotz eindeutiger Datenlage werden die Zahlen regelmäßig falsch interpretiert oder bewusst durchs Kinnhaar gezogen.",
     link: "#",
     date: "15.05.2026",
     reading_time: 3,
     category: "Faktencheck",
     category_link: "#",
     source: "pruefpunkt" as const,
-    image_url: img("katze3"),
+    image_url: beardImg(640, 360),
   },
   {
     title: "Soziale Kratzbäume und politische Polarisierung",
@@ -83,16 +85,16 @@ const MOCK_ARTICLES = [
     image_url: img("katze5"),
   },
   {
-    title: "Impfmythen im Fell-Check 2026",
+    title: "Wachstumsmythen im Stoppel-Check 2026",
     excerpt:
-      "Welche Falschbehauptungen über Katzenimpfungen kursieren aktuell und was sagen Tierärzte dazu? Wir haben die häufigsten Behauptungen geprüft und eingeordnet.",
+      "Welche Falschbehauptungen über Bartwuchsmittel kursieren aktuell und was sagen Dermatologinnen dazu? Wir haben die häufigsten Behauptungen geprüft und eingeordnet.",
     link: "#",
     date: "12.05.2026",
     reading_time: 4,
     category: "Gesundheit",
     category_link: "#",
     source: "pruefpunkt" as const,
-    image_url: img("katze6"),
+    image_url: beardImg(641, 360),
   },
 ];
 
