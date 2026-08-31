@@ -1,6 +1,17 @@
 import React, { type ReactElement } from "react";
 import { type CtaBoxAppProps, type CtaBoxIcon } from "./types";
 
+// buttonUrl round-trips through a data-* DOM attribute (see frontend.tsx)
+// before landing here, so it must be treated as untrusted: a "javascript:"
+// URL would otherwise execute on click. Only allow the schemes an editor
+// could plausibly need for a CTA link, plus same-site relative/anchor URLs.
+const SAFE_BUTTON_URL = /^(https?:|mailto:|tel:|\/|#)/i;
+
+const getSafeButtonUrl = (url: string): string | null => {
+  const trimmed = url.trim();
+  return SAFE_BUTTON_URL.test(trimmed) ? trimmed : null;
+};
+
 const ICONS: Record<Exclude<CtaBoxIcon, "none">, ReactElement> = {
   star: (
     <path d="M12 2.5l2.9 6.6 7.1.7-5.4 4.8 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.8l7.1-.7L12 2.5z" />
@@ -43,7 +54,8 @@ export const CtaBoxApp = ({
   buttonNewTab,
   variant,
 }: CtaBoxAppProps): ReactElement => {
-  const hasButton = buttonLabel.trim() !== "" && buttonUrl.trim() !== "";
+  const safeButtonUrl = getSafeButtonUrl(buttonUrl);
+  const hasButton = buttonLabel.trim() !== "" && safeButtonUrl !== null;
 
   return (
     <div className={`vvp-cta-box vvp-cta-box--${variant}`}>
@@ -55,7 +67,7 @@ export const CtaBoxApp = ({
       {hasButton && (
         <a
           className="vvp-cta-box__button"
-          href={buttonUrl}
+          href={safeButtonUrl as string}
           target={buttonNewTab ? "_blank" : undefined}
           rel={buttonNewTab ? "noopener noreferrer" : undefined}
         >
