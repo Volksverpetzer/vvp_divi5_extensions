@@ -69,3 +69,15 @@ jobs:
             --data-urlencode "url=https://volksverpetzer.de/wp-content/plugins/vvp-divi5-extensions-prod/*" \
             "https://api.bunny.net/purge" \
             -H "AccessKey: ${{ secrets.BUNNY_API_KEY }}"
+
+      - name: 🧹 Clear Divi's static CSS cache
+        # Divi generates each page's module CSS (including this plugin's
+        # module decoration styles) once and caches it as static files under
+        # wp-content/et-cache/. That cache isn't tied to the plugin files we
+        # just rsynced, so a PHP-side style change can deploy successfully
+        # and still appear to do nothing until the stale et-cache entries are
+        # cleared — Divi regenerates them lazily on next page view.
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            "rm -rf et-cache/*"
