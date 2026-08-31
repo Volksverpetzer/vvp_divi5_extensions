@@ -2,6 +2,7 @@
 // module's example content stays visually consistent and non-empty.
 import { type ArticleCardProps } from "./ArticleCard";
 import { catPlaceholderImage as pimg } from "./catPlaceholder";
+import { beardPlaceholderImage as bimg } from "./beardPlaceholder";
 
 export const TRENDING_ALL: ArticleCardProps[] = [
   {
@@ -158,16 +159,16 @@ export const FEED_ARTICLES: ArticleCardProps[] = [
     image_url: pimg("katze2"),
   },
   {
-    title: "Delfinfutter: Was stimmt wirklich an den Nährwerten?",
+    title: "Bartöl-Mythen: Was stimmt wirklich an den Wirkstoffen?",
     excerpt:
-      "Der Flossen-Check zur aktuellen Debatte über Fisch- versus Krillfutter. Trotz eindeutiger Datenlage werden die Zahlen regelmäßig falsch interpretiert oder bewusst durchs Blasloch gejagt.",
+      "Der Stoppel-Check zur aktuellen Debatte über Öl- versus Wachspflege. Trotz eindeutiger Datenlage werden die Zahlen regelmäßig falsch interpretiert oder bewusst durchs Kinnhaar gezogen.",
     link: "#",
     date: "15.05.2026",
     reading_time: 3,
     category: "Faktencheck",
     category_link: "#",
     source: "pruefpunkt",
-    image_url: pimg("katze3"),
+    image_url: bimg(640, 360),
   },
   {
     title: "Soziale Kratzbäume und politische Polarisierung",
@@ -194,16 +195,16 @@ export const FEED_ARTICLES: ArticleCardProps[] = [
     image_url: pimg("katze5"),
   },
   {
-    title: "Impfmythen im Flossen-Check 2026",
+    title: "Wachstumsmythen im Stoppel-Check 2026",
     excerpt:
-      "Welche Falschbehauptungen über Delfin-Impfungen kursieren aktuell und was sagen Meeresbiologinnen dazu? Wir haben die häufigsten Behauptungen geprüft und eingeordnet.",
+      "Welche Falschbehauptungen über Bartwuchsmittel kursieren aktuell und was sagen Dermatologinnen dazu? Wir haben die häufigsten Behauptungen geprüft und eingeordnet.",
     link: "#",
     date: "12.05.2026",
     reading_time: 4,
     category: "Gesundheit",
     category_link: "#",
     source: "pruefpunkt",
-    image_url: pimg("katze6"),
+    image_url: bimg(641, 360),
   },
 ];
 
