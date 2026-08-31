@@ -1,0 +1,246 @@
+{
+  "name": "vvp/cta-box",
+  "d4Shortcode": "",
+  "title": "CTA-Box",
+  "titles": "CTA-Boxen",
+  "moduleIcon": "vvp/cta-box-icon",
+  "moduleClassName": "cta_box",
+  "moduleOrderClassName": "cta_box",
+  "category": "module",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "styleProps": {
+        "border": {
+          "important": true
+        }
+      },
+      "settings": {
+        "meta": {
+          "adminLabel": {}
+        },
+        "advanced": {
+          "link": {},
+          "text": {},
+          "htmlAttributes": {}
+        },
+        "decoration": {
+          "attributes": {},
+          "background": {},
+          "sizing": {},
+          "spacing": {},
+          "border": {},
+          "boxShadow": {},
+          "filters": {},
+          "transform": {},
+          "animation": {},
+          "overflow": {},
+          "disabledOn": {},
+          "transition": {},
+          "position": {},
+          "zIndex": {},
+          "scroll": {},
+          "sticky": {}
+        }
+      }
+    },
+    "icon": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 10,
+            "render": true,
+            "attrName": "icon.innerContent",
+            "label": "Icon",
+            "description": "Symbol links neben dem Text.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/select",
+              "type": "field",
+              "props": {
+                "options": [
+                  { "value": "none", "label": "Kein Icon" },
+                  { "value": "star", "label": "Stern" },
+                  { "value": "bookmark", "label": "Lesezeichen" },
+                  { "value": "bell", "label": "Glocke" },
+                  { "value": "newspaper", "label": "Zeitung" },
+                  { "value": "heart", "label": "Herz" },
+                  { "value": "check", "label": "Häkchen" }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "heading": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 20,
+            "render": true,
+            "attrName": "heading.innerContent",
+            "label": "Überschrift",
+            "description": "Kurze, fett gesetzte Überschrift der Box.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": true
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "text": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 30,
+            "render": true,
+            "attrName": "text.innerContent",
+            "label": "Text",
+            "description": "Kurzer Fließtext unterhalb der Überschrift.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": true
+            },
+            "component": {
+              "name": "divi/textarea",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "buttonLabel": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 40,
+            "render": true,
+            "attrName": "buttonLabel.innerContent",
+            "label": "Button-Text",
+            "description": "Leer lassen, um den Button auszublenden.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": true
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "buttonUrl": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 50,
+            "render": true,
+            "attrName": "buttonUrl.innerContent",
+            "label": "Button-URL",
+            "description": "Ziel-Link des Buttons.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": true
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "buttonNewTab": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 60,
+            "render": true,
+            "attrName": "buttonNewTab.innerContent",
+            "label": "In neuem Tab öffnen",
+            "description": "Den Button-Link in einem neuen Tab öffnen.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/toggle",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "variant": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "design",
+            "priority": 10,
+            "render": true,
+            "attrName": "variant.innerContent",
+            "label": "Darstellung",
+            "description": "Visueller Stil der Box.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/select",
+              "type": "field",
+              "props": {
+                "options": [
+                  {
+                    "value": "accent",
+                    "label": "Akzent (gefüllter Hintergrund)"
+                  },
+                  { "value": "outline", "label": "Outline (nur Rahmen)" },
+                  {
+                    "value": "subtle",
+                    "label": "Dezent (leichter Hintergrund)"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "content": "auto",
+    "design": "auto",
+    "advanced": "auto"
+  }
+}

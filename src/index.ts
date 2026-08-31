@@ -11,6 +11,7 @@ import { trendingList } from "./components/trending-list";
 import { relatedItems } from "./components/related-items";
 import { campaignProgress } from "./components/campaign-progress";
 import { campaignDonate } from "./components/campaign-donate";
+import { ctaBox } from "./components/cta-box";
 
 // Import icons.
 import "./module-icons";
@@ -87,5 +88,14 @@ addAction(
   "vvp/campaignDonate",
   () => {
     registerModule(campaignDonate.metadata, omit(campaignDonate, "metadata"));
+  },
+);
+
+// Register CTA Box module with DIVI.
+addAction(
+  "divi.moduleLibrary.registerModuleLibraryStore.after",
+  "vvp/ctaBox",
+  () => {
+    registerModule(ctaBox.metadata, omit(ctaBox, "metadata"));
   },
 );

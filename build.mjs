@@ -107,6 +107,10 @@ const frontends = [
     name: "campaign-donate-frontend",
     entry: "./src/components/campaign-donate/frontend.tsx",
   },
+  {
+    name: "cta-box-frontend",
+    entry: "./src/components/cta-box/frontend.tsx",
+  },
 ];
 
 for (const dir of ["./scripts", "./styles"]) {

@@ -8,6 +8,7 @@ import "../src/components/trending-list/style.css";
 import "../src/components/related-items/style.css";
 import "../src/components/campaign-progress/style.css";
 import "../src/components/campaign-donate/style.css";
+import "../src/components/cta-box/style.css";
 
 const preview: Preview = {
   parameters: {
