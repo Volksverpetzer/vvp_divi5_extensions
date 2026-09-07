@@ -78,15 +78,18 @@ jobs:
         # and still appear to do nothing until the stale et-cache entries are
         # cleared — Divi regenerates them lazily on next page view.
         #
-        # Absolute path, not one relative to the deploy user's login home
-        # (/home/deploy) — that's a different directory than the WP install
-        # root (/var/www/html), so a bare "et-cache/*" would silently no-op.
-        #
-        # `rm -rf` on a missing directory exits 0 either way, so a wrong
-        # path here would fail exactly as silently as the bug this step
-        # fixes — the test -d guard turns that into a loud CI failure
-        # instead of another "deploy succeeded, nothing happened" trap.
+        # The deploy key is locked to rrsync — confirmed by the first real
+        # run of this step failing with "SSH_ORIGINAL_COMMAND does not run
+        # rsync" — so it can only speak the rsync protocol, not run
+        # arbitrary shell commands like `rm -rf`. Clear the cache the same
+        # way: rsync an empty directory over it with --delete, exactly like
+        # the deploy step above, and at the same relative path convention
+        # (rooted wherever rrsync's forced command scopes it — proven by
+        # "plugins/..." above landing in wp-content/plugins/ — not the
+        # deploy user's shell $HOME).
         run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "test -d /var/www/html/wp-content/et-cache || { echo '::error::et-cache directory not found at /var/www/html/wp-content/et-cache'; exit 1; }; rm -rf /var/www/html/wp-content/et-cache/*"
+          mkdir -p /tmp/empty
+          rsync -av --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
+            /tmp/empty/ \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:et-cache/
