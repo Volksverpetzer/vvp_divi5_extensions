@@ -104,9 +104,26 @@ jobs:
         # --delete'd *into* et-cache/ instead of clearing it). Flags mirror
         # the deploy step above exactly rather than a fresh guess, since
         # this rrsync setup's accepted option set is otherwise unknown.
+        #
+        # --exclude='.*' preserves `rm -rf et-cache/*`'s original semantics
+        # (a shell glob doesn't match dotfiles either) — rsync --delete has
+        # no such exception by default and would otherwise remove something
+        # like a stray .htaccess in there too.
+        #
+        # If "et-cache/" is the wrong relative path under rrsync's forced
+        # root, rsync happily creates it as a new empty directory and exits
+        # 0 — the exact "deploy succeeded, nothing actually happened" trap
+        # this whole fix chain keeps running into, just one level deeper.
+        # --stats reports whether the destination had to be newly created;
+        # fail loudly instead of reporting a false "cleared" here too.
         run: |
           EMPTY_DIR=$(mktemp -d)
-          rsync -avzO --no-perms --delete \
+          STATS=$(rsync -avzO --no-perms --delete --exclude='.*' --stats \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
             "$EMPTY_DIR/" \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:et-cache/
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:et-cache/)
+          echo "$STATS"
+          if echo "$STATS" | grep -qE '^Number of created files: [1-9]'; then
+            echo "::error::et-cache/ did not exist before this sync (rsync had to create it) — the target path is likely wrong under rrsync's forced root, and Divi's cache was not actually cleared"
+            exit 1
+          fi
