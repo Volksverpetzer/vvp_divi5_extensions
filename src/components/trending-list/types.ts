@@ -12,5 +12,5 @@ export interface TrendingListItem {
   title: string;
   link: string;
   date: string;
-  author: string;
+  authors: string[];
 }

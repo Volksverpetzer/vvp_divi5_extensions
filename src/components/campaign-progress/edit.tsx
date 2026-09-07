@@ -36,7 +36,7 @@ export const CampaignProgressEdit = (
           its own outer element — in the Visual Builder editor that outer
           class is unreliable, sometimes replaced by an auto-generated
           "preset--group--...--divi-background--default" class instead, so
-          .vvp-campaign-progress-scoped selectors in style.scss never matched. */}
+          .vvp-campaign-progress-scoped selectors in style.css never matched. */}
       <div className="vvp-campaign-progress">
         {/* Preview: static placeholder values, no live network call in the builder. */}
         <CampaignProgressApp total={Math.round(goal * 0.5)} goal={goal} />

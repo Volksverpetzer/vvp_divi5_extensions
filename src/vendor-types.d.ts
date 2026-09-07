@@ -1,5 +1,4 @@
-// Wildcard declarations so TS6 bundler mode accepts side-effect SCSS imports.
-declare module "*.scss" {}
+// Wildcard declaration so TS6 bundler mode accepts side-effect CSS imports.
 declare module "*.css" {}
 
 // @divi/types ships .ts source files that reference the global JSX namespace,

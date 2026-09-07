@@ -1,0 +1,51 @@
+/* Autorenprofil — Frontend styles */
+@import "../../styles/vvp-tokens.css";
+.vvp-author-profile .vvp-ap__container {
+  display: flex;
+  gap: 1.5rem;
+}
+.vvp-author-profile .vvp-ap__container.vvp-ap__layout--vertical {
+  flex-direction: column;
+}
+.vvp-author-profile .vvp-ap__container.vvp-ap__layout--horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.vvp-author-profile .vvp-ap__author {
+  display: grid;
+  grid-template-columns: auto 70%;
+  gap: 1.5rem;
+  align-items: start;
+}
+.vvp-author-profile .vvp-ap__avatar {
+  width: 200px; /* fallback — overridden by inline style from avatarSize attr */
+  height: auto;
+  display: block;
+  border-radius: var(--vvp-radius-xs);
+}
+.vvp-author-profile .vvp-ap__info {
+  min-width: 0;
+}
+.vvp-author-profile .vvp-ap__name {
+  font-weight: 700;
+  font-size: 1.0625rem;
+  line-height: 1.3;
+  margin-bottom: 0.375rem;
+}
+.vvp-author-profile .vvp-ap__name-link {
+  color: inherit;
+  text-decoration: none;
+}
+.vvp-author-profile .vvp-ap__name-link:hover {
+  text-decoration: underline;
+}
+.vvp-author-profile .vvp-ap__bio {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: inherit;
+}
+.vvp-author-profile .vvp-ap__empty {
+  color: #6b7280;
+  font-size: 0.875rem;
+}

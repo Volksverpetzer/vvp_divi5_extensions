@@ -76,11 +76,16 @@ trait RenderCallbackTrait
     }
 
     /**
-     * @return list<array{title:string,link:string,date:string,author:string}>
+     * @return list<array{title:string,link:string,date:string,authors:list<string>}>
      */
     private static function get_trending_items(int $item_count, string $range): array
     {
-        $cache_key = 'vvp_tl_' . md5("{$item_count}_{$range}");
+        // Bump this prefix whenever the cached item shape OR the author
+        // lookup logic changes -- v3 fixes get_authors_for_post() calling a
+        // PublishPress function name that didn't exist, so v2-cached items
+        // hold co-authored posts' data with only the single fallback author
+        // baked in and must not be served after this fix (up to 1h TTL).
+        $cache_key = 'vvp_tl_v3_' . md5("{$item_count}_{$range}");
         $cached    = get_transient($cache_key);
         if ($cached !== false) {
             return $cached;
@@ -125,7 +130,7 @@ trait RenderCallbackTrait
     }
 
     /**
-     * @return array{title:string,link:string,date:string,author:string}|null
+     * @return array{title:string,link:string,date:string,authors:list<string>}|null
      */
     private static function build_post_data(int $post_id): ?array
     {
@@ -135,10 +140,49 @@ trait RenderCallbackTrait
         }
 
         return [
-            'title'  => html_entity_decode((string) get_the_title($post_id), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-            'link'   => (string) get_permalink($post_id),
-            'date'   => get_the_date('j. F Y', $post_id),
-            'author' => get_the_author_meta('display_name', $post->post_author),
+            'title'   => html_entity_decode((string) get_the_title($post_id), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            'link'    => (string) get_permalink($post_id),
+            'date'    => get_the_date('j. F Y', $post_id),
+            'authors' => self::get_authors_for_post($post),
         ];
+    }
+
+    /**
+     * Reads all co-authors for a post from PublishPress Authors (if active),
+     * falling back to the single WordPress core post author. AuthorProfile
+     * applies the same PublishPress-or-core-fallback idea, though it reads
+     * the current archive/single context via get_archive_author() rather
+     * than doing a per-post lookup -- see
+     * AuthorProfileTrait/RenderCallbackTrait.php::get_authors_for_context().
+     *
+     * Uses get_post_authors() -- the current, non-deprecated template tag
+     * (get_multiple_authors() and publishpress_authors_get_post_authors()
+     * are both marked @deprecated in favor of it) -- and NOT
+     * multiple_authors_get_authors(), which doesn't exist in this plugin at
+     * all (function_exists() silently evaluated to false, so every post
+     * always fell through to the single-author fallback below).
+     *
+     * @return list<string>
+     */
+    private static function get_authors_for_post(\WP_Post $post): array
+    {
+        if (function_exists('get_post_authors')) {
+            $authors = get_post_authors($post->ID);
+            $authors = is_array($authors) ? $authors : [];
+            $names   = array_values(array_filter(
+                array_map(
+                    static fn ($author) => (string) ($author->display_name ?? ''),
+                    $authors
+                ),
+                static fn (string $name) => $name !== ''
+            ));
+
+            if (!empty($names)) {
+                return $names;
+            }
+        }
+
+        $author_name = (string) get_the_author_meta('display_name', $post->post_author);
+        return $author_name !== '' ? [$author_name] : [];
     }
 }

@@ -35,7 +35,7 @@ trait CardRenderTrait
             'date'          => self::format_date($post['date'] ?? ''),
             'image_url'     => self::get_post_image($post, 'medium_large'),
             'excerpt'       => $post['yoast_head_json']['description'] ?? '',
-            'author'        => $post['_embedded']['author'][0]['name'] ?? '',
+            'author'        => self::format_authors($post['_embedded']['author'] ?? []),
             'reading_time'  => (int) ($post['reading_time'] ?? 0),
             'category'      => self::get_post_category($post),
             'category_link' => self::get_post_category_link($post),
@@ -48,8 +48,12 @@ trait CardRenderTrait
             . '</div>'
             : '';
 
+        // Class names must byte-match ui-web's <Badge variant="pruefpunkt" size="md">
+        // (see ArticleCard.tsx's PruefpunktBadge) — the hydration guardrail above
+        // requires it, and it's also what actually carries the badge's styling
+        // (Badge.css), unlike the old vvp-co__badge classes which were never styled.
         $source_badge = $props['source'] === 'pruefpunkt'
-            ? '<span class="vvp-co__badge vvp-co__badge--pruefpunkt">Prüfpunkt</span>'
+            ? '<span class="vvp-ui-badge vvp-ui-badge--pruefpunkt vvp-ui-badge--size-md">Prüfpunkt</span>'
             : '';
 
         $category_html = '';
@@ -92,6 +96,37 @@ trait CardRenderTrait
         return '<div class="vvp-co-article-mount" data-article-props="'
             . esc_attr(wp_json_encode($props))
             . '">' . $static_html . '</div>';
+    }
+
+    /**
+     * Joins the `name` field of each _embedded.author entry into a
+     * German-style list ("A", "A und B", "A, B und C") for display in the
+     * feed card excerpt. Handles both locally-sourced posts (one entry per
+     * PublishPress co-author, see DataFetchTrait::get_author_names) and
+     * posts fetched from a remote WP REST source, which may embed more
+     * than one author entry too.
+     *
+     * @param array $embedded_authors List of ['name' => string, ...] entries.
+     */
+    private static function format_authors(array $embedded_authors): string
+    {
+        $names = array_values(array_filter(
+            array_map(
+                static fn ($author) => (string) ($author['name'] ?? ''),
+                $embedded_authors
+            ),
+            static fn (string $name) => $name !== ''
+        ));
+
+        if (empty($names)) {
+            return '';
+        }
+        if (count($names) === 1) {
+            return $names[0];
+        }
+
+        $last = array_pop($names);
+        return implode(', ', $names) . ' und ' . $last;
     }
 
     /**
@@ -173,46 +208,6 @@ trait CardRenderTrait
     }
 
     /**
-     * Render a YouTube card for the feed grid.
-     *
-     * @param array $video Normalised YouTube video data (id, title, description, publishedAt, thumbnailUrl).
-     *
-     * @return string HTML.
-     */
-    private static function render_youtube_card($video)
-    {
-        $id          = esc_attr($video['id'] ?? '');
-        $title       = esc_html($video['title'] ?? '');
-        $thumb_url   = esc_url($video['thumbnailUrl'] ?? '');
-        $description = esc_html(self::truncate($video['description'] ?? '', 100));
-        $date        = esc_html(self::format_date($video['publishedAt'] ?? ''));
-        $yt_url      = $id ? esc_url('https://youtube.com/watch?v=' . $id) : '#';
-
-        $image_html = $thumb_url
-            ? '<div class="vvp-co__feed-image-wrap vvp-co__feed-image-wrap--yt">'
-                . '<img src="' . $thumb_url . '" alt="' . esc_attr($title) . '" class="vvp-co__feed-image" loading="lazy" decoding="async">'
-                . '<div class="vvp-co__yt-play-btn" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>'
-                . '</div>'
-            : '';
-
-        $yt_badge = '<span class="vvp-co__badge vvp-co__badge--youtube">'
-            . '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="10" viewBox="0 0 461.001 461.001" fill="currentColor" aria-hidden="true"><path d="M365.257 67.393H95.744C42.866 67.393 0 110.259 0 163.137v134.728c0 52.878 42.866 95.744 95.744 95.744h269.513c52.878 0 95.744-42.866 95.744-95.744V163.137c0-52.878-42.866-95.744-95.744-95.744zm-64.751 169.663l-126.06 60.123c-3.359 1.602-7.239-.847-7.239-4.568V168.607c0-3.774 3.982-6.22 7.348-4.514l126.06 63.943c3.748 1.899 3.683 7.274-.109 9.02z"/></svg>'
-            . 'YouTube</span>';
-
-        return '<a href="' . $yt_url . '" class="vvp-co__feed-card vvp-co__feed-card--youtube" target="_blank" rel="noopener noreferrer">'
-            . $image_html
-            . '<div class="vvp-co__feed-body">'
-            .   '<h3 class="vvp-co__feed-title">' . $title . '</h3>'
-            .   ($description ? '<p class="vvp-co__feed-excerpt">' . $description . '</p>' : '')
-            .   '<div class="vvp-co__feed-footer">'
-            .     $yt_badge
-            .     '<span class="vvp-co__feed-date">' . $date . '</span>'
-            .   '</div>'
-            . '</div>'
-            . '</a>';
-    }
-
-    /**
      * Render the full-width YouTube banner mount point.
      *
      * The React YouTubeBanner component is mounted client-side via
@@ -238,7 +233,7 @@ trait CardRenderTrait
         $yt_desc  = esc_html($props['description']);
         $yt_date  = esc_html($props['date']);
 
-        $yt_youtube_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="10" viewBox="0 0 461 461" fill="currentColor" aria-hidden="true" class="vvp-co__badge-icon">'
+        $yt_youtube_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="10" viewBox="0 0 461 461" fill="currentColor" aria-hidden="true">'
             . '<path d="M365.257 67.393H95.744C42.866 67.393 0 110.259 0 163.137v134.728c0 52.878 42.866 95.744 95.744 95.744h269.513c52.878 0 95.744-42.866 95.744-95.744V163.137c0-52.878-42.866-95.744-95.744-95.744zm-64.751 169.663l-126.06 60.123c-3.359 1.602-7.239-.847-7.239-4.568V168.607c0-3.774 3.982-6.22 7.348-4.514l126.06 63.943c3.748 1.899 3.683 7.274-.109 9.02z"/>'
             . '</svg>';
         $yt_play_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="white">'
@@ -255,7 +250,7 @@ trait CardRenderTrait
             .     '</div>'
             .     '<div class="vvp-co__yt-banner-content">'
             .       '<div class="vvp-co__yt-banner-label">'
-            .         '<span class="vvp-co__badge vvp-co__badge--youtube">' . $yt_youtube_icon . 'YouTube</span>'
+            .         '<span class="vvp-ui-badge vvp-ui-badge--error vvp-ui-badge--size-md"><span class="vvp-ui-badge__icon" aria-hidden="true">' . $yt_youtube_icon . '</span>YouTube</span>'
             .       '</div>'
             .       '<a href="' . $yt_url . '" class="vvp-co__yt-banner-title" target="_blank" rel="noopener noreferrer">' . $yt_title . '</a>'
             .       ($yt_desc ? '<p class="vvp-co__yt-banner-description">' . $yt_desc . '</p>' : '')
@@ -313,7 +308,7 @@ trait CardRenderTrait
                     : '')
             .     '<div class="vvp-co__podcast-content">'
             .       '<div class="vvp-co__podcast-label">'
-            .         '<span class="vvp-co__badge vvp-co__badge--podcast">' . $podcast_icon . 'Podcast</span>'
+            .         '<span class="vvp-ui-badge vvp-ui-badge--pruefpunkt vvp-ui-badge--size-md"><span class="vvp-ui-badge__icon" aria-hidden="true">' . $podcast_icon . '</span>Podcast</span>'
             .       '</div>'
             .       '<a href="' . $pod_link . '" class="vvp-co__podcast-title" target="_blank" rel="noopener noreferrer">' . $pod_title . '</a>'
             .       ($props['summary'] ? '<p class="vvp-co__podcast-summary">' . $pod_summary . '</p>' : '')

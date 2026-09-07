@@ -2,6 +2,7 @@
 // module's example content stays visually consistent and non-empty.
 import { type ArticleCardProps } from "./ArticleCard";
 import { catPlaceholderImage as pimg } from "./catPlaceholder";
+import { beardPlaceholderImage as bimg } from "./beardPlaceholder";
 
 export const TRENDING_ALL: ArticleCardProps[] = [
   {
@@ -59,23 +60,23 @@ export const TRENDING_EMPTY: ArticleCardProps[] = [];
 export const TRENDING_LIST_ITEMS = [
   {
     title:
-      "Bärbel Bas hat RECHT: Aber Tagesthemen stimmen NIUS, BILD & AfD zu!?",
-    link: "#",
+      "Nein, diese Katze hat das Sofa NICHT selbst zerkratzt – der Fell-Check",
+    link: "#sofa-fell-check",
     date: "8. Mai 2026",
-    author: "Thomas Laschyk",
-  },
-  {
-    title: "75 % wollen KEINEN AfD-Kanzler: Wie die WELT für die AfD lügt",
-    link: "#",
-    date: "7. Mai 2026",
-    author: "Thomas Laschyk",
+    authors: ["Whisker Pfotenhauer", "Bella Kratzenbach"],
   },
   {
     title:
-      "Faktencheck: Warum diese Behauptung über Katzen komplett falsch ist",
-    link: "#",
+      "Schnurren macht NICHT unsterblich: Warum dieser Viral-Post falsch liegt",
+    link: "#schnurren-unsterblich",
+    date: "7. Mai 2026",
+    authors: ["Whisker Pfotenhauer"],
+  },
+  {
+    title: "Faktencheck: Warum Katzen Gurken NICHT wirklich hassen",
+    link: "#gurken-faktencheck",
     date: "6. Mai 2026",
-    author: "Bella Kratzenbach",
+    authors: ["Bella Kratzenbach"],
   },
 ];
 
@@ -158,16 +159,16 @@ export const FEED_ARTICLES: ArticleCardProps[] = [
     image_url: pimg("katze2"),
   },
   {
-    title: "Katzenfutter: Was stimmt wirklich an den Nährwerten?",
+    title: "Bartöl-Mythen: Was stimmt wirklich an den Wirkstoffen?",
     excerpt:
-      "Der Fell-Check zur aktuellen Debatte über Trocken- versus Nassfutter. Trotz eindeutiger Datenlage werden die Zahlen regelmäßig falsch interpretiert oder bewusst aus dem Napf gerissen.",
+      "Der Stoppel-Check zur aktuellen Debatte über Öl- versus Wachspflege. Trotz eindeutiger Datenlage werden die Zahlen regelmäßig falsch interpretiert oder bewusst durchs Kinnhaar gezogen.",
     link: "#",
     date: "15.05.2026",
     reading_time: 3,
     category: "Faktencheck",
     category_link: "#",
     source: "pruefpunkt",
-    image_url: pimg("katze3"),
+    image_url: bimg(640, 360),
   },
   {
     title: "Soziale Kratzbäume und politische Polarisierung",
@@ -194,16 +195,16 @@ export const FEED_ARTICLES: ArticleCardProps[] = [
     image_url: pimg("katze5"),
   },
   {
-    title: "Impfmythen im Fell-Check 2026",
+    title: "Wachstumsmythen im Stoppel-Check 2026",
     excerpt:
-      "Welche Falschbehauptungen über Katzenimpfungen kursieren aktuell und was sagen Tierärzte dazu? Wir haben die häufigsten Behauptungen geprüft und eingeordnet.",
+      "Welche Falschbehauptungen über Bartwuchsmittel kursieren aktuell und was sagen Dermatologinnen dazu? Wir haben die häufigsten Behauptungen geprüft und eingeordnet.",
     link: "#",
     date: "12.05.2026",
     reading_time: 4,
     category: "Gesundheit",
     category_link: "#",
     source: "pruefpunkt",
-    image_url: pimg("katze6"),
+    image_url: bimg(641, 360),
   },
 ];
 
@@ -258,6 +259,15 @@ export const FEED_YT = {
     "In diesem Video beleuchten wir die meistgeteilten Falschinformationen über Katzen der letzten Woche und erklären, was wirklich dahintersteckt. Mit konkreten Quellen und verständlichen Schnurr-Erklärungen.",
   date: "Vor 2 Tagen",
   thumbnailUrl: pimg("katze-yt", 1280, 720),
+};
+
+export const FEED_YT_2 = {
+  videoId: "",
+  title: "Kurzclip: Warum Katzen nicht wirklich neun Leben haben",
+  description:
+    "Ein kurzer Blick auf die Herkunft dieses Mythos und was Tierärzte tatsächlich dazu sagen.",
+  date: "Vor 5 Tagen",
+  thumbnailUrl: pimg("katze-yt2", 1280, 720),
 };
 
 export const FEED_PODCAST = {

@@ -10,6 +10,7 @@ import {
   type Stripe,
   type StripeEmbeddedCheckout,
 } from "@stripe/stripe-js";
+import { Alert, Button } from "@volksverpetzer/ui-web";
 import { type CampaignDonateAppProps } from "./types";
 
 // Inline (not delegated to an imported helper) so static analysis tracking
@@ -387,14 +388,16 @@ export const CampaignDonateApp = ({
 
         <div className="vvp-cd__methods">
           {hasStripe && (
-            <button
+            <Button
+              variant="accent"
+              size="lg"
               className="vvp-cd__submit"
               type="button"
               disabled={loading || amount <= 0}
               onClick={handleStripeSubmit}
             >
               {loading ? "Lädt…" : "Mit Karte/SEPA spenden"}
-            </button>
+            </Button>
           )}
 
           {hasStripe && hasPaypal && (
@@ -412,7 +415,7 @@ export const CampaignDonateApp = ({
           )}
         </div>
 
-        {error && <p className="vvp-cd__error">{error}</p>}
+        {error && <Alert variant="error">{error}</Alert>}
       </div>
     </div>
   );

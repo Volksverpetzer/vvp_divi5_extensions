@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Badge } from "@volksverpetzer/ui-web";
 import { trackEvent } from "../../utils/plausible";
 
 interface PodcastBannerProps {
@@ -55,10 +56,9 @@ export const PodcastBanner: React.FC<PodcastBannerProps> = ({
 
         <div className="vvp-co__podcast-content">
           <div className="vvp-co__podcast-label">
-            <span className="vvp-co__badge vvp-co__badge--podcast">
-              <PodcastIcon />
+            <Badge variant="pruefpunkt" size="md" icon={<PodcastIcon />}>
               Podcast
-            </span>
+            </Badge>
           </div>
 
           <a

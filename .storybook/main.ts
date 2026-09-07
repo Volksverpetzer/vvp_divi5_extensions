@@ -7,16 +7,6 @@ const config: StorybookConfig = {
     name: "@storybook/react-vite",
     options: {},
   },
-  viteFinal: async (config) => {
-    config.css ??= {};
-    config.css.preprocessorOptions = {
-      scss: {
-        // silence deprecation warnings from legacy sass API
-        silenceDeprecations: ["legacy-js-api"],
-      },
-    };
-    return config;
-  },
 };
 
 export default config;

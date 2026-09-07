@@ -5,7 +5,7 @@ import { ModuleStyles } from "./styles";
 import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";
 import { CampaignDonateApp } from "./App";
-import "./style.scss";
+import "./style.css";
 
 const parsePresets = (input: string): number[] => {
   const values = input
@@ -53,7 +53,7 @@ export const CampaignDonateEdit = (
           its own outer element — in the Visual Builder editor that outer
           class is unreliable, sometimes replaced by an auto-generated
           "preset--group--...--divi-background--default" class instead, so
-          .vvp-campaign-donate-scoped selectors in style.scss never matched. */}
+          .vvp-campaign-donate-scoped selectors in style.css never matched. */}
       <div className="vvp-campaign-donate">
         {/* Preview: inert form, no network calls in the builder. */}
         <CampaignDonateApp

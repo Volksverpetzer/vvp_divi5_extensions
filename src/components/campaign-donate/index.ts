@@ -5,8 +5,8 @@ import { CampaignDonateEdit } from "./edit";
 import { type CampaignDonateAttrs } from "./types";
 import { placeholderContent } from "./placeholder-content";
 
-import "./style.scss";
-import "./module.scss";
+import "./style.css";
+import "./module.css";
 
 export const campaignDonate: ModuleLibrary.Module.RegisterDefinition<CampaignDonateAttrs> =
   {

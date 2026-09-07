@@ -1,5 +1,6 @@
 import * as React from "react";
 import { type TrendingListItem } from "./types";
+import { formatAuthors } from "./formatAuthors";
 
 interface TrendingListAppProps {
   items: TrendingListItem[];
@@ -40,7 +41,7 @@ export const TrendingListApp: React.FC<TrendingListAppProps> = ({ items }) => {
             {item.title}
           </a>
           <span className="vvp-tl__meta">
-            von {item.author} | {item.date}
+            von {formatAuthors(item.authors)} | {item.date}
           </span>
         </div>
       ))}

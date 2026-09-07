@@ -1,0 +1,14 @@
+/* Related Items — frontend styles */
+.vvp-related-items .vvp-ri__list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+@media (max-width: 640px) {
+  .vvp-related-items .vvp-ri__list {
+    grid-template-columns: 1fr;
+  }
+}
+.vvp-related-items .vvp-ri__item {
+  min-width: 0;
+}

@@ -107,6 +107,10 @@ const frontends = [
     name: "campaign-donate-frontend",
     entry: "./src/components/campaign-donate/frontend.tsx",
   },
+  {
+    name: "cta-box-frontend",
+    entry: "./src/components/cta-box/frontend.tsx",
+  },
 ];
 
 for (const dir of ["./scripts", "./styles"]) {
@@ -129,11 +133,6 @@ await Promise.all([
       alias: {
         "react/jsx-runtime": resolve("./src/jsx-runtime-shim.ts"),
         "react/jsx-dev-runtime": resolve("./src/jsx-runtime-shim.ts"),
-      },
-    },
-    css: {
-      preprocessorOptions: {
-        scss: { silenceDeprecations: ["legacy-js-api"] },
       },
     },
     build: {

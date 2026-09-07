@@ -1,0 +1,12 @@
+/* Campaign Progress — frontend styles */
+@import "../../styles/vvp-tokens.css";
+
+/*
+ * The bar itself (amounts, track, fill) is now rendered by
+ * @volksverpetzer/ui-web's <ProgressBar>, styled off --vvp-accent — see
+ * vvp_design_system/packages/ui-web/src/ProgressBar.css. Nothing left to
+ * style locally.
+ */
+.vvp-campaign-progress {
+  text-align: center;
+}

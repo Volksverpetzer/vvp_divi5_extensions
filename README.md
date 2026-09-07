@@ -191,8 +191,8 @@ Renders a compact numbered list of trending article titles and authors within a 
 │   │   │   ├── styles.tsx
 │   │   │   ├── module-classnames.ts
 │   │   │   ├── module-script-data.tsx
-│   │   │   ├── style.scss         # Frontend styles
-│   │   │   └── module.scss        # VB editor styles
+│   │   │   ├── style.css         # Frontend styles
+│   │   │   └── module.css        # VB editor styles
 │   │   ├── content-overview/
 │   │   │   ├── module.json
 │   │   │   ├── edit.tsx           # DIVI VB preview (skeleton + example cards)
@@ -207,8 +207,8 @@ Renders a compact numbered list of trending article titles and authors within a 
 │   │   │   ├── styles.tsx
 │   │   │   ├── module-classnames.ts
 │   │   │   ├── module-script-data.tsx
-│   │   │   ├── style.scss
-│   │   │   └── module.scss
+│   │   │   ├── style.css
+│   │   │   └── module.css
 │   │   ├── author-profile/
 │   │   │   ├── module.json        # DIVI attribute schema
 │   │   │   ├── App.tsx            # Standalone React author UI
@@ -220,8 +220,8 @@ Renders a compact numbered list of trending article titles and authors within a 
 │   │   │   ├── styles.tsx
 │   │   │   ├── module-classnames.ts
 │   │   │   ├── module-script-data.tsx
-│   │   │   ├── style.scss         # Frontend styles
-│   │   │   └── module.scss        # VB editor styles
+│   │   │   ├── style.css         # Frontend styles
+│   │   │   └── module.css        # VB editor styles
 │   │   ├── trending-items/
 │   │   │   ├── module.json
 │   │   │   ├── App.tsx
@@ -233,8 +233,8 @@ Renders a compact numbered list of trending article titles and authors within a 
 │   │   │   ├── styles.tsx
 │   │   │   ├── module-classnames.ts
 │   │   │   ├── module-script-data.tsx
-│   │   │   ├── style.scss
-│   │   │   └── module.scss
+│   │   │   ├── style.css
+│   │   │   └── module.css
 │   │   └── trending-list/
 │   │       ├── module.json
 │   │       ├── App.tsx
@@ -246,8 +246,8 @@ Renders a compact numbered list of trending article titles and authors within a 
 │   │       ├── styles.tsx
 │   │       ├── module-classnames.ts
 │   │       ├── module-script-data.tsx
-│   │       ├── style.scss
-│   │       └── module.scss
+│   │       ├── style.css
+│   │       └── module.css
 │   └── icons/
 │       ├── fact-check-search/index.tsx
 │       ├── content-overview/index.tsx
@@ -429,6 +429,8 @@ Values are injected by PHP as JSON into a `<script id="vvp-fact-check-search-con
 
 Configured via `modules/ContentOverview/ContentOverviewTrait/RenderCallbackTrait.php` (API endpoints, feed sizes, cache TTL). No DIVI settings panel fields — all configuration is in PHP constants.
 
+For locally-sourced articles, the feed card's author line reads all co-authors from **PublishPress Authors** (if available), falling back to the single WordPress core post author, and joins them the same German-style way as TrendingList (e.g. "A und B").
+
 ### Autorenprofil
 
 The module reads the author(s) for the current context (PublishPress Authors if available) and renders the UI via `scripts/author-profile-frontend.js`. The DIVI settings control the visible parts (avatar/bio/link), layout, avatar size, and font styles.
@@ -436,6 +438,8 @@ The module reads the author(s) for the current context (PublishPress Authors if 
 ### Trending Beiträge / Trending Liste
 
 Both modules read trending data from the WordPress database (populated by `modules/CronManager.php`). The DIVI settings expose a time-range selector (`range`). TrendingItems additionally has a thumbnail toggle.
+
+TrendingList reads each article's author(s) from **PublishPress Authors** (if available) and falls back to the single WordPress core post author, so co-authored posts show all assigned authors (e.g. "von A und B").
 
 ---
 
@@ -500,7 +504,7 @@ Copy `src/components/fact-check-search/` to `src/components/your-module/`. Updat
 | `constants.ts` | Default values                                         |
 | `edit.tsx`     | DIVI VB preview React component (static, no API calls) |
 | `frontend.tsx` | Vite entry: mounts your React app                      |
-| `style.scss`   | Component CSS                                          |
+| `style.css`    | Component CSS                                          |
 
 Available DIVI attribute components: `divi/text`, `divi/select`, `divi/toggle`, `divi/color-picker`.
 

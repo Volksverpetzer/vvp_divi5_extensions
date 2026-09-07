@@ -3,7 +3,7 @@
 Plugin Name: Volksverpetzer DIVI 5 extensions
 Plugin URI:  https://github.com/Volksverpetzer/vvp_divi5_extensions
 Description: Adds the custom DIVI 5 extensions for Volksverpetzer.de to the site
-Version:     1.2.0
+Version:     1.3.0
 Author:      Volksverpetzer
 Author URI:  https://volksverpetzer.de
 License:     GPLv2 or later
@@ -33,7 +33,7 @@ if ( defined( 'VVP_DIVI5_PATH' ) ) {
 
 define( 'VVP_DIVI5_PATH', plugin_dir_path( __FILE__ ) );
 define( 'VVP_DIVI5_URL', plugin_dir_url( __FILE__ ) );
-define( 'VVP_DIVI5_VERSION', '1.2.0' );
+define( 'VVP_DIVI5_VERSION', '1.3.0' );
 define( 'VVP_DIVI5_JSON_PATH', VVP_DIVI5_PATH . 'modules-json/' );
 
 /**
@@ -80,7 +80,7 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 /**
  * Performance caches for Divi builder-5 render-path queries (uncached
  * Dynamic Content lookups that exhausted PHP-FPM). The attachment-URL
- * cache lives in the vvp_site_patches plugin (it patches WP core, not Divi).
+ * cache lives in the vvp_wp_patches plugin (it patches WP core, not Divi).
  */
 require_once VVP_DIVI5_PATH . 'includes/class-vvp-block-render-cache.php';
 require_once VVP_DIVI5_PATH . 'includes/class-vvp-dynamic-content-meta-keys-cache.php';
@@ -214,6 +214,19 @@ function VVP_DIVI5_enqueue_vb_scripts() {
 				],
 			]
 		);
+
+		\ET\Builder\VisualBuilder\Assets\PackageBuildManager::register_package_build(
+			[
+				'name'    => 'vvp-cta-box-frontend-vb',
+				'version' => VVP_DIVI5_VERSION,
+				'script'  => [
+					'src'                => VVP_DIVI5_URL . 'scripts/cta-box-frontend.js',
+					'deps'               => [],
+					'enqueue_top_window' => false,
+					'enqueue_app_window' => true,
+				],
+			]
+		);
 	}
 }
 add_action( 'divi_visual_builder_assets_before_enqueue_scripts', 'VVP_DIVI5_enqueue_vb_scripts' );
@@ -316,6 +329,17 @@ function VVP_DIVI5_enqueue_frontend_scripts() {
 		VVP_DIVI5_URL . 'scripts/campaign-donate-frontend.js',
 		array(),
 		$cd_frontend_ver,
+		true
+	);
+
+	$cb_frontend_path = VVP_DIVI5_PATH . 'scripts/cta-box-frontend.js';
+	$cb_frontend_ver  = file_exists( $cb_frontend_path ) ? filemtime( $cb_frontend_path ) : VVP_DIVI5_VERSION;
+
+	wp_enqueue_script(
+		'vvp-cta-box-frontend',
+		VVP_DIVI5_URL . 'scripts/cta-box-frontend.js',
+		array(),
+		$cb_frontend_ver,
 		true
 	);
 }
