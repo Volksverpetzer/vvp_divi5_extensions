@@ -77,7 +77,11 @@ jobs:
         # just rsynced, so a PHP-side style change can deploy successfully
         # and still appear to do nothing until the stale et-cache entries are
         # cleared — Divi regenerates them lazily on next page view.
+        #
+        # Absolute path, not one relative to the deploy user's login home
+        # (/home/deploy) — that's a different directory than the WP install
+        # root (/var/www/html), so a bare "et-cache/*" would silently no-op.
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "rm -rf et-cache/*"
+            "rm -rf /var/www/html/wp-content/et-cache/*"
