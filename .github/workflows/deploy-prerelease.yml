@@ -94,14 +94,19 @@ jobs:
         # run of this step failing with "SSH_ORIGINAL_COMMAND does not run
         # rsync" — so it can only speak the rsync protocol, not run
         # arbitrary shell commands like `rm -rf`. Clear the cache the same
-        # way: rsync an empty directory over it with --delete, exactly like
-        # the deploy step above, and at the same relative path convention
-        # (rooted wherever rrsync's forced command scopes it — proven by
-        # "plugins/..." above landing in wp-content/plugins/ — not the
-        # deploy user's shell $HOME).
+        # way: rsync an empty directory over it with --delete, at the same
+        # relative path convention (rooted wherever rrsync's forced command
+        # scopes it — proven by "plugins/..." above landing in
+        # wp-content/plugins/ — not the deploy user's shell $HOME).
+        #
+        # mktemp -d, not a fixed path, so the "empty" source directory is
+        # guaranteed to actually be empty (a stale fixed path could get
+        # --delete'd *into* et-cache/ instead of clearing it). Flags mirror
+        # the deploy step above exactly rather than a fresh guess, since
+        # this rrsync setup's accepted option set is otherwise unknown.
         run: |
-          mkdir -p /tmp/empty
-          rsync -av --delete \
+          EMPTY_DIR=$(mktemp -d)
+          rsync -avzO --no-perms --delete \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
-            /tmp/empty/ \
+            "$EMPTY_DIR/" \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:et-cache/
