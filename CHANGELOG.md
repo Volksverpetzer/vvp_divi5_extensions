@@ -6,6 +6,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-09-07
+
+### Added
+
+- **CTA Box** Divi 5 module ([#167](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/167)), with a follow-up fix for decoration styles (max-width, spacing, border, etc.) being ignored ([#171](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/171)).
+- ContentOverview: content-type filter, plus a fix for Prüfpunkt badge styling ([#168](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/168)).
+- Trending Liste now shows co-authors via PublishPress Authors ([#150](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/150)).
+
+### Changed
+
+- Adopted the shared Volksverpetzer design system across components — CampaignProgress's ProgressBar, badge category colors, Card/Alert, InputButton for fact-check search — with several `design-tokens`/`ui-web` bumps along the way ([#147](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/147), [#148](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/148), [#149](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/149), [#160](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/160), [#162](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/162), [#166](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/166), [#170](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/170)).
+- ContentOverview's YouTube feed cards now stretch full width ([#159](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/159)).
+- Bumped dependencies and upgraded the build toolchain to Node 24 ([#145](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/145)).
+
+### Fixed
+
+- Fixed multi-author display in TrendingList and ContentOverview ([#157](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/157)).
+- Fixed a duplicate React key in the TrendingList "Three Entries" story ([#163](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/163)).
+- Fixed the Instagram carousel getting stuck on an infinite loading shimmer ([#165](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/165)).
+- Fixed ui-web components silently ignoring brand color tokens ([#169](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/169)).
+
 ## [1.2.0] - 2026-08-04
 
 ### Added
