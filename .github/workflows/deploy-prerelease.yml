@@ -93,7 +93,12 @@ jobs:
         # Absolute path, not one relative to the deploy user's login home
         # (/home/deploy) — that's a different directory than the WP install
         # root (/var/www/html), so a bare "et-cache/*" would silently no-op.
+        #
+        # `rm -rf` on a missing directory exits 0 either way, so a wrong
+        # path here would fail exactly as silently as the bug this step
+        # fixes — the test -d guard turns that into a loud CI failure
+        # instead of another "deploy succeeded, nothing happened" trap.
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "rm -rf /var/www/html/wp-content/et-cache/*"
+            "test -d /var/www/html/wp-content/et-cache || { echo '::error::et-cache directory not found at /var/www/html/wp-content/et-cache'; exit 1; }; rm -rf /var/www/html/wp-content/et-cache/*"
