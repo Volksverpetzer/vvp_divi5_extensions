@@ -78,15 +78,40 @@ jobs:
         # and still appear to do nothing until the stale et-cache entries are
         # cleared — Divi regenerates them lazily on next page view.
         #
-        # Absolute path, not one relative to the deploy user's login home
-        # (/home/deploy) — that's a different directory than the WP install
-        # root (/var/www/html), so a bare "et-cache/*" would silently no-op.
+        # The deploy key is locked to rrsync — confirmed by the first real
+        # run of this step failing with "SSH_ORIGINAL_COMMAND does not run
+        # rsync" — so it can only speak the rsync protocol, not run
+        # arbitrary shell commands like `rm -rf`. Clear the cache the same
+        # way: rsync an empty directory over it with --delete, at the same
+        # relative path convention (rooted wherever rrsync's forced command
+        # scopes it — proven by "plugins/..." above landing in
+        # wp-content/plugins/ — not the deploy user's shell $HOME).
         #
-        # `rm -rf` on a missing directory exits 0 either way, so a wrong
-        # path here would fail exactly as silently as the bug this step
-        # fixes — the test -d guard turns that into a loud CI failure
-        # instead of another "deploy succeeded, nothing happened" trap.
+        # mktemp -d, not a fixed path, so the "empty" source directory is
+        # guaranteed to actually be empty (a stale fixed path could get
+        # --delete'd *into* et-cache/ instead of clearing it). Flags mirror
+        # the deploy step above exactly rather than a fresh guess, since
+        # this rrsync setup's accepted option set is otherwise unknown.
+        #
+        # --exclude='.*' preserves `rm -rf et-cache/*`'s original semantics
+        # (a shell glob doesn't match dotfiles either) — rsync --delete has
+        # no such exception by default and would otherwise remove something
+        # like a stray .htaccess in there too.
+        #
+        # If "et-cache/" is the wrong relative path under rrsync's forced
+        # root, rsync happily creates it as a new empty directory and exits
+        # 0 — the exact "deploy succeeded, nothing actually happened" trap
+        # this whole fix chain keeps running into, just one level deeper.
+        # --stats reports whether the destination had to be newly created;
+        # fail loudly instead of reporting a false "cleared" here too.
         run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "test -d /var/www/html/wp-content/et-cache || { echo '::error::et-cache directory not found at /var/www/html/wp-content/et-cache'; exit 1; }; rm -rf /var/www/html/wp-content/et-cache/*"
+          EMPTY_DIR=$(mktemp -d)
+          STATS=$(rsync -avzO --no-perms --delete --exclude='.*' --stats \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
+            "$EMPTY_DIR/" \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:et-cache/)
+          echo "$STATS"
+          if echo "$STATS" | grep -qE '^Number of created files: [1-9]'; then
+            echo "::error::et-cache/ did not exist before this sync (rsync had to create it) — the target path is likely wrong under rrsync's forced root, and Divi's cache was not actually cleared"
+            exit 1
+          fi
