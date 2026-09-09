@@ -115,13 +115,15 @@ Embeds the [vvp_wp_audio_converter](https://github.com/Volksverpetzer/vvp_wp_aud
 **Settings (DIVI):**
 
 - Audio-Basis-URL (`audioBaseUrl`): base URL of the vvp_wp_audio_converter deployment, e.g. `https://audio.volksverpetzer-app.de/audio/`. Leave empty for the default.
+- Fehlerkarte anzeigen (`showErrorCard`): off by default, so an article with no audio yet stays fully invisible (no gap). Turn on to show visitors a visible "Audio nicht verfügbar" card instead of nothing — appends `?showError=1` to the embed URL, which vvp_wp_audio_converter's `AudioPage` reads per-request (see that repo's `components/audio-not-found.tsx`).
 - Width/max-width: standard DIVI sizing controls (Design tab) — no custom width setting.
 
 **Architecture:**
 
 - PHP resolves the current article's slug and server-renders a mount point + a real `<noscript>` fallback link (`modules/AudioEmbed/AudioEmbedTrait/RenderCallbackTrait.php`). Uses `get_queried_object_id()`, not `get_the_ID()`/`get_post()` — inside a Theme Builder template those resolve to the template's own post, not the actual article being viewed (same issue documented on `RelatedItems::current_post_id()`).
-- React app (`src/components/audio-embed/App.tsx`) is mounted by `scripts/audio-embed-frontend.js`. It renders the iframe at height `0` and listens for a `postMessage` of `{ type: "vvp-audio-embed-resize", height }` from vvp_wp_audio_converter's `EmbedHeightReporter` component, validating `event.source` against the iframe's own `contentWindow` before trusting it (the page can carry other third-party iframes).
-- DIVI Visual Builder preview: `src/components/audio-embed/edit.tsx` — reuses the real `AudioEmbedApp` against an example slug (same live-iframe approach as ContentOverview's PodcastBanner/YouTubeBanner), since no single article slug applies while editing a shared template.
+- React app (`src/components/audio-embed/App.tsx`) is mounted by `scripts/audio-embed-frontend.js`. It renders the iframe at height `0` and listens for a `postMessage` of `{ type: "vvp-audio-embed-resize", height }` from vvp_wp_audio_converter's `EmbedHeightReporter` component, validating both `event.source` (against the iframe's own `contentWindow`) and `event.origin` before trusting it — the page can carry other third-party iframes, and the embedded iframe could in principle navigate elsewhere.
+- `audioBaseUrl` and `slug` are resolved into the iframe `src` via the `URL` API (`new URL(slug, audioBaseUrl)`, checking `.protocol`) rather than string concatenation — both round-trip through DOM `data-*` attributes before reaching React, so both are treated as untrusted.
+- DIVI Visual Builder preview: `src/components/audio-embed/edit.tsx` renders a static mockup (`App.tsx`'s `preview` prop) instead of a live iframe — no real article slug exists while editing a shared Theme Builder template, and a fake slug would just resolve to vvp_wp_audio_converter's silent "not yet available" state, leaving the module looking completely empty in the builder.
 
 ---
 

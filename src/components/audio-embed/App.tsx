@@ -12,7 +12,9 @@ import { type AudioEmbedAppProps } from "./types";
 export const AudioEmbedApp = ({
   slug,
   audioBaseUrl,
+  showErrorCard = false,
   preview = false,
+  errorCard = false,
 }: AudioEmbedAppProps): ReactElement | null => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [height, setHeight] = useState(0);
@@ -43,6 +45,12 @@ export const AudioEmbedApp = ({
     } catch {
       url = null;
     }
+  }
+
+  // Ask vvp_wp_audio_converter to show its visible error card instead of
+  // silently collapsing, per the Divi "Fehlerkarte anzeigen" setting.
+  if (url && showErrorCard) {
+    url.searchParams.set("showError", "1");
   }
 
   // handleMessage below reads this ref rather than closing over `url`
@@ -108,6 +116,40 @@ export const AudioEmbedApp = ({
           <span className="vvp-audio-embed__preview-label">
             Audio-Player (Vorschau)
           </span>
+        </div>
+      </div>
+    );
+  }
+
+  // Storybook-only: a static mockup of the *visible* error card
+  // vvp_wp_audio_converter renders when showErrorCard/?showError=1 is
+  // honored. Not used by edit.tsx or frontend.tsx -- the real thing only
+  // ever comes from the live iframe (see showErrorCard above); this just
+  // lets that state be demonstrated without a live cross-origin fetch.
+  if (errorCard) {
+    return (
+      <div className="vvp-audio-embed__frame vvp-audio-embed__error">
+        <span className="vvp-audio-embed__error-icon" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+        </span>
+        <div className="vvp-audio-embed__error-text">
+          <p className="vvp-audio-embed__error-title">Audio nicht verfügbar</p>
+          <p className="vvp-audio-embed__error-subtitle">
+            Für diesen Artikel wurde noch keine Audioversion erstellt.
+          </p>
         </div>
       </div>
     );

@@ -78,3 +78,49 @@
   font-size: var(--vvp-font-size-sm, 13px);
   color: var(--vvp-text-muted, #667);
 }
+
+/*
+ * Storybook-only mockup of vvp_wp_audio_converter's *visible* error card
+ * (App.tsx's `errorCard` prop) -- never rendered by edit.tsx or
+ * frontend.tsx. The real card only ever comes from the live iframe once
+ * showErrorCard/?showError=1 is honored there.
+ */
+.vvp-audio-embed__error {
+  display: flex;
+  align-items: center;
+  gap: var(--vvp-spacing-md, 12px);
+  padding: var(--vvp-spacing-md, 12px) var(--vvp-spacing-lg, 16px);
+  border: 1px solid var(--vvp-surface-input, #badde8);
+  border-radius: var(--vvp-radius-md, 12px);
+}
+
+.vvp-audio-embed__error-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--vvp-radius-full, 9999px);
+  background: var(--vvp-surface, #e2f0f5);
+  color: var(--vvp-text-muted, #667);
+}
+
+.vvp-audio-embed__error-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.vvp-audio-embed__error-text p {
+  margin: 0;
+}
+
+.vvp-audio-embed__error-title {
+  font-size: var(--vvp-font-size-sm, 14px);
+  font-weight: 600;
+}
+
+.vvp-audio-embed__error-subtitle {
+  font-size: var(--vvp-font-size-xs, 12px);
+  color: var(--vvp-text-muted, #667);
+}

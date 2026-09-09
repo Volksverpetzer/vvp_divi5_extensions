@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Audio-Player** (`vvp/audio-embed`) Divi 5 module, replacing the hand-written Code module (`<iframe height="100">`) previously used in the article Theme Builder template. Sizes itself to the actual vvp_wp_audio_converter player height via `postMessage`, so an article with no audio yet leaves no visible gap instead of a fixed empty box.
+- Audio-Player: static placeholder mockup in the Visual Builder instead of a live iframe against a fake slug, which used to leave the module looking completely empty while editing.
+- Audio-Player: "Fehlerkarte anzeigen" setting — opt individual embeds into a visible "Audio nicht verfügbar" card for visitors when an article has no audio yet, instead of the default silent collapse (requires [vvp_wp_audio_converter#44](https://github.com/Volksverpetzer/vvp_wp_audio_converter/pull/44)).
 
 ### Fixed
 
