@@ -18,7 +18,7 @@ type Story = StoryObj<typeof AudioEmbedApp>;
 // module over the old fixed-height Code embed.
 export const NoAudioYet: Story = {
   args: {
-    slug: "beispiel-artikel-ohne-audio",
+    slug: "sachsen-anhalt-nicht-allein",
     audioBaseUrl: DEFAULT_AUDIO_BASE_URL,
   },
 };
