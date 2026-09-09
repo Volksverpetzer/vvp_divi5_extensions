@@ -42,7 +42,16 @@ export const AudioEmbedApp = ({
 
   if (!slug) return null;
 
-  const base = (audioBaseUrl || DEFAULT_AUDIO_BASE_URL).replace(/\/?$/, "/");
+  // audioBaseUrl round-trips through a data-* DOM attribute (frontend.tsx)
+  // before reaching here, so it must be treated as untrusted: a
+  // "javascript:" value would otherwise execute in the iframe's initial
+  // same-origin context. Fall back to the known-good default unless it's
+  // actually http(s) — same reasoning as CtaBox's safeButtonUrl allowlist
+  // for its buttonUrl, which goes through the identical round-trip.
+  let base = (audioBaseUrl || DEFAULT_AUDIO_BASE_URL).replace(/\/?$/, "/");
+  if (!/^https?:\/\//i.test(base)) {
+    base = DEFAULT_AUDIO_BASE_URL;
+  }
   const src = `${base}${encodeURIComponent(slug)}`;
 
   return (

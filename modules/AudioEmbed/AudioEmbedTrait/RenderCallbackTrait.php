@@ -53,7 +53,11 @@ trait RenderCallbackTrait
         $mount_attrs = [
             'class'               => 'vvp-audio-embed__mount',
             'data-slug'           => esc_attr($slug),
-            'data-audio-base-url' => esc_attr($base_url),
+            // esc_url() (not esc_attr()) so a "javascript:" or other
+            // disallowed-scheme value saved into this field is stripped
+            // server-side too, not just by the client-side allowlist in
+            // App.tsx — same reasoning as CtaBox's data-button-url.
+            'data-audio-base-url' => esc_url($base_url),
         ];
 
         $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
