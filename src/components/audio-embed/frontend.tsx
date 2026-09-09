@@ -13,9 +13,14 @@ const initAll = () => {
     const slug = mount.getAttribute("data-slug") || "";
     const audioBaseUrl =
       mount.getAttribute("data-audio-base-url") || DEFAULT_AUDIO_BASE_URL;
+    const showErrorCard = mount.getAttribute("data-show-error-card") === "true";
 
     createRoot(mount).render(
-      <AudioEmbedApp slug={slug} audioBaseUrl={audioBaseUrl} />,
+      <AudioEmbedApp
+        slug={slug}
+        audioBaseUrl={audioBaseUrl}
+        showErrorCard={showErrorCard}
+      />,
     );
   });
 };

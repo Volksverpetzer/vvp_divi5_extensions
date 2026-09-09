@@ -48,7 +48,12 @@ trait RenderCallbackTrait
         $base_url = '' !== $base_url ? $base_url : self::DEFAULT_BASE_URL;
         $base_url = rtrim($base_url, '/') . '/';
 
+        $show_error_card = ($attrs['showErrorCard']['innerContent']['desktop']['value'] ?? 'off') !== 'off';
+
         $src = $base_url . rawurlencode($slug);
+        if ($show_error_card) {
+            $src = add_query_arg('showError', '1', $src);
+        }
 
         $mount_attrs = [
             'class'               => 'vvp-audio-embed__mount',
@@ -57,7 +62,8 @@ trait RenderCallbackTrait
             // disallowed-scheme value saved into this field is stripped
             // server-side too, not just by the client-side allowlist in
             // App.tsx — same reasoning as CtaBox's data-button-url.
-            'data-audio-base-url' => esc_url($base_url),
+            'data-audio-base-url'  => esc_url($base_url),
+            'data-show-error-card' => $show_error_card ? 'true' : 'false',
         ];
 
         $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);

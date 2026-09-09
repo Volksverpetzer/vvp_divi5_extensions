@@ -5,4 +5,7 @@ export const placeholderContent = {
   audioBaseUrl: {
     innerContent: { desktop: { value: DEFAULT_AUDIO_BASE_URL } },
   },
+  showErrorCard: {
+    innerContent: { desktop: { value: "off" } },
+  },
 };

@@ -68,6 +68,30 @@
           }
         }
       }
+    },
+    "showErrorCard": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 20,
+            "render": true,
+            "attrName": "showErrorCard.innerContent",
+            "label": "Fehlerkarte anzeigen",
+            "description": "Auch Besuchern eine sichtbare \"Audio nicht verfügbar\"-Karte zeigen, statt den Player unsichtbar zu lassen, wenn für diesen Artikel noch keine Audioversion existiert.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/toggle",
+              "type": "field"
+            }
+          }
+        }
+      }
     }
   },
   "settings": {
