@@ -66,6 +66,14 @@ export const AudioEmbedApp = ({
   }, [expectedOrigin]);
 
   useEffect(() => {
+    // preview/errorCard never render a real iframe, so there's nothing to
+    // receive a resize postMessage from -- skip registering the listener
+    // at all rather than adding a global one per instance that can only
+    // ever no-op (handleMessage's iframeRef.current check would always
+    // fail anyway, but a Theme Builder template can render several
+    // placeholders at once, and each would otherwise still add one).
+    if (preview || errorCard) return;
+
     function handleMessage(event: MessageEvent) {
       // Trust a message only if it came from this component's own iframe
       // window AND that window's current document is still on the origin
@@ -93,7 +101,7 @@ export const AudioEmbedApp = ({
 
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, []);
+  }, [preview, errorCard]);
 
   // No real article slug exists while editing a shared Theme Builder
   // template, and vvp_wp_audio_converter's "not yet available" state

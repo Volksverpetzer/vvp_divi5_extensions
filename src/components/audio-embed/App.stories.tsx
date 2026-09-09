@@ -40,9 +40,8 @@ export const Placeholder: Story = {
 // The *visible* error card vvp_wp_audio_converter renders for a site
 // visitor when "Fehlerkarte anzeigen" is on and this article has no audio
 // yet (ordinarily nothing renders at all -- see NoAudioYet below). Static
-// mockup, not a live fetch: showErrorCard only takes effect once
-// vvp_wp_audio_converter#44 is deployed, and Storybook needs to render
-// deterministically regardless.
+// mockup rather than a live fetch through showErrorCard, since Storybook
+// needs to render this deterministically regardless of what's deployed.
 export const ErrorCard: Story = {
   args: {
     slug: "no-audio-yet",
@@ -51,11 +50,14 @@ export const ErrorCard: Story = {
   },
 };
 
-// Points at a slug that (most likely) has no generated audio yet, so this
-// renders the collapsed / no-visible-gap state -- the whole point of this
-// module over the old fixed-height Code embed. This is what visitors
-// actually see by default (showErrorCard off) when an article has no
-// audio -- contrast with ErrorCard above.
+// "no-audio-yet" is a synthetic slug, not a real WordPress post -- and
+// that's fine: vvp_wp_audio_converter has no concept of WordPress posts at
+// all, it only checks whether a matching mp3 exists in Bunny storage, so
+// any slug without one (real article yet to be converted, or no article at
+// all) exercises the exact same "not yet available" code path. Renders the
+// collapsed / no-visible-gap state -- the whole point of this module over
+// the old fixed-height Code embed, and what visitors actually see by
+// default (showErrorCard off) -- contrast with ErrorCard above.
 export const NoAudioYet: Story = {
   args: {
     slug: "no-audio-yet",
