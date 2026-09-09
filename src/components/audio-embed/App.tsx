@@ -42,22 +42,26 @@ export const AudioEmbedApp = ({
 
   if (!slug) return null;
 
-  // audioBaseUrl round-trips through a data-* DOM attribute (frontend.tsx)
-  // before reaching here, so it must be treated as untrusted: a
-  // "javascript:" value would otherwise execute in the iframe's initial
-  // same-origin context. Guard the exact value passed to the sink below,
-  // right here in the same scope, and blank it out (suppressing the
-  // iframe via the early return) rather than deriving a "safe"
-  // replacement into a separately-named variable — CodeQL's
-  // js/xss-through-dom sanitizer detection only recognizes a guard that
-  // covers the literal sink-bound variable, same lesson already learned
-  // for CtaBox's buttonUrl/safeButtonUrl.
-  const base = (audioBaseUrl || DEFAULT_AUDIO_BASE_URL).replace(/\/?$/, "/");
-  let src = `${base}${encodeURIComponent(slug)}`;
-  if (!/^https?:\/\//i.test(src)) {
-    src = "";
+  // Both audioBaseUrl and slug round-trip through data-* DOM attributes
+  // (frontend.tsx) before reaching here, so both must be treated as
+  // untrusted -- a "javascript:" value for either would otherwise execute
+  // in the iframe's initial same-origin context. Resolve them through the
+  // URL API instead of concatenating raw strings: a manually-concatenated
+  // guard only covers whichever piece the regex happens to anchor on
+  // (CodeQL's js/xss-through-dom kept flagging that), whereas checking
+  // .protocol on the URL object both sources actually resolve to is a
+  // single barrier that covers all of it.
+  let url: URL;
+  try {
+    url = new URL(
+      encodeURIComponent(slug),
+      (audioBaseUrl || DEFAULT_AUDIO_BASE_URL).replace(/\/?$/, "/"),
+    );
+  } catch {
+    return null;
   }
-  if (!src) return null;
+  if (url.protocol !== "https:" && url.protocol !== "http:") return null;
+  const src = url.href;
 
   return (
     <div className="vvp-audio-embed__frame" style={{ height }}>
