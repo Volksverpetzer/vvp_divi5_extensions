@@ -45,14 +45,19 @@ export const AudioEmbedApp = ({
   // audioBaseUrl round-trips through a data-* DOM attribute (frontend.tsx)
   // before reaching here, so it must be treated as untrusted: a
   // "javascript:" value would otherwise execute in the iframe's initial
-  // same-origin context. Fall back to the known-good default unless it's
-  // actually http(s) — same reasoning as CtaBox's safeButtonUrl allowlist
-  // for its buttonUrl, which goes through the identical round-trip.
-  let base = (audioBaseUrl || DEFAULT_AUDIO_BASE_URL).replace(/\/?$/, "/");
-  if (!/^https?:\/\//i.test(base)) {
-    base = DEFAULT_AUDIO_BASE_URL;
+  // same-origin context. Guard the exact value passed to the sink below,
+  // right here in the same scope, and blank it out (suppressing the
+  // iframe via the early return) rather than deriving a "safe"
+  // replacement into a separately-named variable — CodeQL's
+  // js/xss-through-dom sanitizer detection only recognizes a guard that
+  // covers the literal sink-bound variable, same lesson already learned
+  // for CtaBox's buttonUrl/safeButtonUrl.
+  const base = (audioBaseUrl || DEFAULT_AUDIO_BASE_URL).replace(/\/?$/, "/");
+  let src = `${base}${encodeURIComponent(slug)}`;
+  if (!/^https?:\/\//i.test(src)) {
+    src = "";
   }
-  const src = `${base}${encodeURIComponent(slug)}`;
+  if (!src) return null;
 
   return (
     <div className="vvp-audio-embed__frame" style={{ height }}>
