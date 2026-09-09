@@ -30,7 +30,11 @@ export const AudioEmbedApp = ({
     try {
       const candidate = new URL(
         encodeURIComponent(slug),
-        (audioBaseUrl || DEFAULT_AUDIO_BASE_URL).replace(/\/?$/, "/"),
+        // trim() so a whitespace-only Divi field value (truthy, so `||`
+        // alone won't fall back to the default) doesn't reach new URL()
+        // as an invalid base and make the whole embed disappear -- the
+        // PHP render_callback already trims for the same reason.
+        (audioBaseUrl.trim() || DEFAULT_AUDIO_BASE_URL).replace(/\/?$/, "/"),
       );
       if (candidate.protocol === "https:" || candidate.protocol === "http:") {
         url = candidate;
@@ -89,10 +93,10 @@ export const AudioEmbedApp = ({
       <iframe
         ref={iframeRef}
         src={url.href}
-        title="Audio player"
+        title="Audio-Player"
         loading="lazy"
         allow="autoplay; encrypted-media; clipboard-write"
-        aria-label="Audio player for this page"
+        aria-label="Audio-Player für diesen Artikel"
         className="vvp-audio-embed__iframe"
       />
     </div>
