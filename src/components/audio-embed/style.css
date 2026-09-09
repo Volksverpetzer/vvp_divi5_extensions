@@ -21,3 +21,60 @@
   border: 0;
   border-radius: var(--vvp-radius-md, 6px);
 }
+
+/*
+ * Static placeholder shown instead of the real iframe while editing a
+ * Theme Builder template (App.tsx's `preview` prop) -- no real article
+ * slug exists there, and the real embed's "not yet available" state
+ * deliberately renders nothing visible, so without this the module just
+ * looked empty in the Visual Builder. Unused on the real frontend (it
+ * never renders with preview=true) but kept unscoped rather than under
+ * .et-fb so it also renders correctly in Storybook.
+ */
+.vvp-audio-embed__preview {
+  display: flex;
+  align-items: center;
+  gap: var(--vvp-spacing-md, 12px);
+  padding: var(--vvp-spacing-md, 12px) var(--vvp-spacing-lg, 16px);
+  border: 1px solid var(--vvp-surface-input, #badde8);
+  border-radius: var(--vvp-radius-md, 12px);
+}
+
+.vvp-audio-embed__preview-play {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--vvp-radius-full, 9999px);
+  background: var(--vvp-primary, #1b7194);
+  color: var(--vvp-on-primary, #fff);
+}
+
+.vvp-audio-embed__preview-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vvp-audio-embed__preview-track {
+  height: 4px;
+  border-radius: var(--vvp-radius-full, 9999px);
+  background: var(--vvp-surface, #e2f0f5);
+  overflow: hidden;
+}
+
+.vvp-audio-embed__preview-track-fill {
+  display: block;
+  width: 35%;
+  height: 100%;
+  background: var(--vvp-primary, #1b7194);
+}
+
+.vvp-audio-embed__preview-label {
+  font-size: var(--vvp-font-size-sm, 13px);
+  color: var(--vvp-text-muted, #667);
+}

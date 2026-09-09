@@ -12,6 +12,7 @@ import { type AudioEmbedAppProps } from "./types";
 export const AudioEmbedApp = ({
   slug,
   audioBaseUrl,
+  preview = false,
 }: AudioEmbedAppProps): ReactElement | null => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [height, setHeight] = useState(0);
@@ -85,6 +86,32 @@ export const AudioEmbedApp = ({
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
   }, []);
+
+  // No real article slug exists while editing a shared Theme Builder
+  // template, and vvp_wp_audio_converter's "not yet available" state
+  // deliberately renders nothing visible (just sr-only text) -- so a live
+  // iframe here would leave the module looking empty in the Visual
+  // Builder with no indication it's even there. Show a static mockup
+  // instead of depending on a network call succeeding at all.
+  if (preview) {
+    return (
+      <div className="vvp-audio-embed__frame vvp-audio-embed__preview">
+        <span className="vvp-audio-embed__preview-play" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </span>
+        <div className="vvp-audio-embed__preview-body">
+          <div className="vvp-audio-embed__preview-track">
+            <span className="vvp-audio-embed__preview-track-fill" />
+          </div>
+          <span className="vvp-audio-embed__preview-label">
+            Audio-Player (Vorschau)
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   if (!url) return null;
 

@@ -5,17 +5,9 @@ import { ModuleStyles } from "./styles";
 import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";
 import { AudioEmbedApp } from "./App";
-import { DEFAULT_AUDIO_BASE_URL } from "./constants";
 
 export const AudioEmbedEdit = (props: AudioEmbedEditProps): ReactElement => {
   const { attrs, elements, id, name } = props;
-
-  // Fields declared with attrName "<name>.innerContent" in module.json store
-  // their value under attrs.<name>.innerContent.desktop.value, not
-  // attrs.<name>.desktop.value — see PR #105.
-  const audioBaseUrl =
-    (attrs as any).audioBaseUrl?.innerContent?.desktop?.value ||
-    DEFAULT_AUDIO_BASE_URL;
 
   return (
     <ModuleContainer
@@ -31,12 +23,15 @@ export const AudioEmbedEdit = (props: AudioEmbedEditProps): ReactElement => {
 
       {/*
         No real per-post slug is available while editing a Theme Builder
-        template (it isn't bound to one specific article) -- this example
-        slug shows the real not-found/player behavior against whichever
-        base URL is configured, same live-iframe approach ContentOverview's
-        PodcastBanner/YouTubeBanner already use in the editor.
+        template (it isn't bound to one specific article), and
+        vvp_wp_audio_converter's "not yet available" state deliberately
+        renders nothing visible -- a live iframe against a fake slug here
+        just left the module looking empty with no indication it's even
+        there. Static preview mockup instead (see App.tsx), same "preview"
+        prop convention CampaignDonate/CampaignProgress use for the same
+        no-real-data-in-the-builder problem.
       */}
-      <AudioEmbedApp slug="beispiel-artikel" audioBaseUrl={audioBaseUrl} />
+      <AudioEmbedApp slug="" audioBaseUrl="" preview />
     </ModuleContainer>
   );
 };

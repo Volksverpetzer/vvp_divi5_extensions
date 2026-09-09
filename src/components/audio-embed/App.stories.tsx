@@ -29,3 +29,14 @@ export const EmptySlug: Story = {
     audioBaseUrl: DEFAULT_AUDIO_BASE_URL,
   },
 };
+
+// What editors see in the Divi Visual Builder: no real article slug exists
+// there, so this renders a static mockup instead of attempting a live
+// iframe against a fake slug (which used to just look empty).
+export const Preview: Story = {
+  args: {
+    slug: "",
+    audioBaseUrl: "",
+    preview: true,
+  },
+};
