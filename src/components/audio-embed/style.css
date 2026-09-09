@@ -1,0 +1,23 @@
+/* Audio-Player — frontend styles */
+@import "../../styles/vvp-tokens.css";
+
+.vvp-audio-embed__frame {
+  /*
+   * No max-width here: the module's outer wrapper now carries Divi's
+   * Sizing-panel width/max-width via ModuleStylesTrait (see #171 for why
+   * that wiring matters), so this inner frame just fills whatever width
+   * the module wrapper ends up with instead of fighting it with its own
+   * fixed cap.
+   */
+  width: 100%;
+  overflow: hidden;
+  transition: height 200ms ease;
+}
+
+.vvp-audio-embed__iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: var(--vvp-radius-md, 6px);
+}

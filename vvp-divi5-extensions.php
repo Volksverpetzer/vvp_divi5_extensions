@@ -227,6 +227,19 @@ function VVP_DIVI5_enqueue_vb_scripts() {
 				],
 			]
 		);
+
+		\ET\Builder\VisualBuilder\Assets\PackageBuildManager::register_package_build(
+			[
+				'name'    => 'vvp-audio-embed-frontend-vb',
+				'version' => VVP_DIVI5_VERSION,
+				'script'  => [
+					'src'                => VVP_DIVI5_URL . 'scripts/audio-embed-frontend.js',
+					'deps'               => [],
+					'enqueue_top_window' => false,
+					'enqueue_app_window' => true,
+				],
+			]
+		);
 	}
 }
 add_action( 'divi_visual_builder_assets_before_enqueue_scripts', 'VVP_DIVI5_enqueue_vb_scripts' );
@@ -340,6 +353,17 @@ function VVP_DIVI5_enqueue_frontend_scripts() {
 		VVP_DIVI5_URL . 'scripts/cta-box-frontend.js',
 		array(),
 		$cb_frontend_ver,
+		true
+	);
+
+	$ae_frontend_path = VVP_DIVI5_PATH . 'scripts/audio-embed-frontend.js';
+	$ae_frontend_ver  = file_exists( $ae_frontend_path ) ? filemtime( $ae_frontend_path ) : VVP_DIVI5_VERSION;
+
+	wp_enqueue_script(
+		'vvp-audio-embed-frontend',
+		VVP_DIVI5_URL . 'scripts/audio-embed-frontend.js',
+		array(),
+		$ae_frontend_ver,
 		true
 	);
 }

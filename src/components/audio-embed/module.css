@@ -1,0 +1,4 @@
+/* Audio-Player — Visual Builder specific styles */
+.et-fb .vvp-audio-embed__iframe {
+  pointer-events: none;
+}
