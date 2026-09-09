@@ -9,6 +9,7 @@ A WordPress plugin that adds custom modules to the **DIVI 5 Visual Builder** for
 | **Autorenprofil**     | `vvp/author-profile`    | Displays the current post author(s) with avatar, name link, and bio           |
 | **Trending Beiträge** | `vvp/trending-items`    | Card grid of trending articles with thumbnails, configurable time range       |
 | **Trending Liste**    | `vvp/trending-list`     | Compact list of trending article titles and authors, configurable time range  |
+| **Audio-Player**      | `vvp/audio-embed`       | Embeds the vvp_wp_audio_converter player for the current article              |
 
 ---
 
@@ -106,6 +107,21 @@ Renders a compact numbered list of trending article titles and authors within a 
 - PHP fetches trending data and server-renders the module (`modules/TrendingList/TrendingListTrait/RenderCallbackTrait.php`)
 - React app (`src/components/trending-list/App.tsx`) is mounted by `scripts/trending-list-frontend.js`
 - DIVI Visual Builder preview: `src/components/trending-list/edit.tsx` (placeholder list items)
+
+### Audio-Player (`vvp/audio-embed`)
+
+Embeds the [vvp_wp_audio_converter](https://github.com/Volksverpetzer/vvp_wp_audio_converter) player for the current article in an iframe, sized to its actual content instead of a fixed height. Replaces the hand-written Code module previously used in the article Theme Builder template, which hardcoded `<iframe height="100">` with no way to collapse itself when an article has no audio yet.
+
+**Settings (DIVI):**
+
+- Audio-Basis-URL (`audioBaseUrl`): base URL of the vvp_wp_audio_converter deployment, e.g. `https://audio.volksverpetzer-app.de/audio/`. Leave empty for the default.
+- Width/max-width: standard DIVI sizing controls (Design tab) — no custom width setting.
+
+**Architecture:**
+
+- PHP resolves the current article's slug and server-renders a mount point + a real `<noscript>` fallback link (`modules/AudioEmbed/AudioEmbedTrait/RenderCallbackTrait.php`). Uses `get_queried_object_id()`, not `get_the_ID()`/`get_post()` — inside a Theme Builder template those resolve to the template's own post, not the actual article being viewed (same issue documented on `RelatedItems::current_post_id()`).
+- React app (`src/components/audio-embed/App.tsx`) is mounted by `scripts/audio-embed-frontend.js`. It renders the iframe at height `0` and listens for a `postMessage` of `{ type: "vvp-audio-embed-resize", height }` from vvp_wp_audio_converter's `EmbedHeightReporter` component, validating `event.source` against the iframe's own `contentWindow` before trusting it (the page can carry other third-party iframes).
+- DIVI Visual Builder preview: `src/components/audio-embed/edit.tsx` — reuses the real `AudioEmbedApp` against an example slug (same live-iframe approach as ContentOverview's PodcastBanner/YouTubeBanner), since no single article slug applies while editing a shared template.
 
 ---
 

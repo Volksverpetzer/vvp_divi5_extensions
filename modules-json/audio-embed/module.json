@@ -1,0 +1,78 @@
+{
+  "name": "vvp/audio-embed",
+  "d4Shortcode": "",
+  "title": "Audio-Player",
+  "titles": "Audio-Player",
+  "moduleIcon": "vvp/audio-embed-icon",
+  "moduleClassName": "audio_embed",
+  "moduleOrderClassName": "audio_embed",
+  "category": "module",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "styleProps": {
+        "border": {
+          "important": true
+        }
+      },
+      "settings": {
+        "meta": {
+          "adminLabel": {}
+        },
+        "advanced": {
+          "link": {},
+          "text": {},
+          "htmlAttributes": {}
+        },
+        "decoration": {
+          "attributes": {},
+          "background": {},
+          "sizing": {},
+          "spacing": {},
+          "border": {},
+          "boxShadow": {},
+          "filters": {},
+          "transform": {},
+          "animation": {},
+          "overflow": {},
+          "disabledOn": {},
+          "transition": {},
+          "position": {},
+          "zIndex": {},
+          "scroll": {},
+          "sticky": {}
+        }
+      }
+    },
+    "audioBaseUrl": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 10,
+            "render": true,
+            "attrName": "audioBaseUrl.innerContent",
+            "label": "Audio-Basis-URL",
+            "description": "Basis-URL des vvp_wp_audio_converter-Deployments, gefolgt vom Artikel-Slug (z.B. https://audio.volksverpetzer-app.de/audio/). Leer lassen für den Standard.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "content": "auto",
+    "design": "auto",
+    "advanced": "auto"
+  }
+}
