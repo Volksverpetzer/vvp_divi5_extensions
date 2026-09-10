@@ -89,6 +89,19 @@ add_action( 'plugins_loaded', [ 'VVP_Block_Render_Cache', 'init' ] );
 add_action( 'plugins_loaded', [ 'VVP_Dynamic_Content_Meta_Keys_Cache', 'init' ] );
 
 /**
+ * Pre-warms Divi's per-post dynamic CSS cache (et-cache) right after a post
+ * is published or edited, instead of leaving that first (expensive) compile
+ * to whichever visitor's request happens to hit the post first. Originally
+ * drafted in vvp_wp_patches; belongs here instead since it depends directly
+ * on Divi's own et_core_is_fb_enabled() and exists solely to warm Divi's own
+ * et-cache output -- this plugin's scope, per vvp_wp_patches' README (fixes
+ * not specific to Divi belong there; Divi-internal behavior belongs here).
+ */
+require_once VVP_DIVI5_PATH . 'includes/class-vvp-divi-cache-prewarm.php';
+
+add_action( 'plugins_loaded', [ 'VVP_Divi_Cache_Prewarm', 'init' ] );
+
+/**
  * Enqueue Visual Builder assets for DIVI 5.
  *
  * @since 1.0.0
