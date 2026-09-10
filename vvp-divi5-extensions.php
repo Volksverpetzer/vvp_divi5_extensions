@@ -89,6 +89,15 @@ add_action( 'plugins_loaded', [ 'VVP_Block_Render_Cache', 'init' ] );
 add_action( 'plugins_loaded', [ 'VVP_Dynamic_Content_Meta_Keys_Cache', 'init' ] );
 
 /**
+ * REST endpoint the deploy workflow calls to clear Divi's et-cache after a
+ * deploy -- see the class docblock for why this has to run as PHP (www-data)
+ * rather than over the SSH/rrsync deploy key.
+ */
+require_once VVP_DIVI5_PATH . 'includes/class-vvp-et-cache-clear-endpoint.php';
+
+add_action( 'plugins_loaded', [ 'VVP_Et_Cache_Clear_Endpoint', 'init' ] );
+
+/**
  * Pre-warms Divi's per-post dynamic CSS cache (et-cache) right after a post
  * is published or edited, instead of leaving that first (expensive) compile
  * to whichever visitor's request happens to hit the post first. Originally
