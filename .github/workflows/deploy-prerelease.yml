@@ -90,40 +90,24 @@ jobs:
         # and still appear to do nothing until the stale et-cache entries are
         # cleared — Divi regenerates them lazily on next page view.
         #
-        # The deploy key is locked to rrsync — confirmed by the first real
-        # run of this step failing with "SSH_ORIGINAL_COMMAND does not run
-        # rsync" — so it can only speak the rsync protocol, not run
-        # arbitrary shell commands like `rm -rf`. Clear the cache the same
-        # way: rsync an empty directory over it with --delete, at the same
-        # relative path convention (rooted wherever rrsync's forced command
-        # scopes it — proven by "plugins/..." above landing in
-        # wp-content/plugins/ — not the deploy user's shell $HOME).
+        # Every prior attempt at clearing this over the SSH/rrsync deploy key
+        # (a plain `rm -rf`, then an rsync --delete trick once rrsync turned
+        # out to reject arbitrary shell commands) failed: Divi recreates each
+        # et-cache/{id}/ subdirectory as www-data with mode 0755 on the next
+        # page view, and POSIX resets that directory's ACL mask to the
+        # requested mode's group bits on every mkdir()/chmod() it does — so
+        # no ACL grant or group membership handed to the deploy account
+        # survives past the first cache rebuild; only the owning user
+        # (www-data) ever has write access. Confirmed against the actual
+        # server: a `setfacl -R` grant showed `rwx` on et-cache/ itself but
+        # was already capped back down to effective `r-x` on subdirectories
+        # Divi had recreated since.
         #
-        # mktemp -d, not a fixed path, so the "empty" source directory is
-        # guaranteed to actually be empty (a stale fixed path could get
-        # --delete'd *into* et-cache/ instead of clearing it). Flags mirror
-        # the deploy step above exactly rather than a fresh guess, since
-        # this rrsync setup's accepted option set is otherwise unknown.
-        #
-        # --exclude='.*' preserves `rm -rf et-cache/*`'s original semantics
-        # (a shell glob doesn't match dotfiles either) — rsync --delete has
-        # no such exception by default and would otherwise remove something
-        # like a stray .htaccess in there too.
-        #
-        # If "et-cache/" is the wrong relative path under rrsync's forced
-        # root, rsync happily creates it as a new empty directory and exits
-        # 0 — the exact "deploy succeeded, nothing actually happened" trap
-        # this whole fix chain keeps running into, just one level deeper.
-        # --stats reports whether the destination had to be newly created;
-        # fail loudly instead of reporting a false "cleared" here too.
+        # So this now asks PHP to delete its own cache files instead of
+        # trying to do it over SSH — see includes/class-vvp-et-cache-clear-endpoint.php.
+        # PHP runs as www-data (the files' owner), which isn't subject to
+        # the mask/group-bits ceiling that blocks every non-owner approach.
         run: |
-          EMPTY_DIR=$(mktemp -d)
-          STATS=$(rsync -avzO --no-perms --delete --exclude='.*' --stats \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
-            "$EMPTY_DIR/" \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:et-cache/)
-          echo "$STATS"
-          if echo "$STATS" | grep -qE '^Number of created files: [1-9]'; then
-            echo "::error::et-cache/ did not exist before this sync (rsync had to create it) — the target path is likely wrong under rrsync's forced root, and Divi's cache was not actually cleared"
-            exit 1
-          fi
+          curl -sS --fail -X POST \
+            "https://volksverpetzer.de/wp-json/vvp-divi5/v1/clear-et-cache" \
+            -H "X-VVP-Cache-Clear-Secret: ${{ secrets.VVP_CACHE_CLEAR_SECRET }}"
