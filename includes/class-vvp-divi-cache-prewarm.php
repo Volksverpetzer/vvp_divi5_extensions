@@ -64,10 +64,11 @@ class VVP_Divi_Cache_Prewarm {
 
 	/**
 	 * @param string  $new_status
-	 * @param string  $old_status
+	 * @param string  $_old_status Unused -- every 'publish' transition needs a warm
+	 *                             request regardless of where the post came from.
 	 * @param WP_Post $post
 	 */
-	public static function maybe_schedule_prewarm( $new_status, $old_status, $post ) {
+	public static function maybe_schedule_prewarm( $new_status, $_old_status, $post ) {
 		// Revisions/autosaves never reach here (transition_post_status isn't fired for
 		// them), but skip explicitly for clarity and in case of a future WP core change.
 		if ( wp_is_post_revision( $post ) || wp_is_post_autosave( $post ) ) {
@@ -142,8 +143,9 @@ class VVP_Divi_Cache_Prewarm {
 		wp_remote_get(
 			$permalink,
 			array(
-				'timeout'  => 0.5,
-				'blocking' => false,
+				'timeout'    => 0.5,
+				'blocking'   => false,
+				'user-agent' => 'VVP-DiviCachePrewarm/1.0',
 			)
 		);
 	}
