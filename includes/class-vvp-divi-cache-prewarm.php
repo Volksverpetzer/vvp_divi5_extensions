@@ -151,9 +151,12 @@ class VVP_Divi_Cache_Prewarm {
 	}
 
 	private static function unschedule( $post_id ) {
-		$pending = wp_next_scheduled( self::CRON_HOOK, array( $post_id ) );
-		if ( $pending ) {
-			wp_unschedule_event( $pending, self::CRON_HOOK, array( $post_id ) );
-		}
+		// wp_clear_scheduled_hook(), not wp_next_scheduled() + wp_unschedule_event():
+		// the latter only removes a single matching event, so if two concurrent saves
+		// of the same post ever raced past the check-then-schedule below without
+		// seeing each other's event, one duplicate would survive every future
+		// unschedule() call and still fire. Clearing all matching events closes that
+		// gap regardless of how many ended up queued.
+		wp_clear_scheduled_hook( self::CRON_HOOK, array( $post_id ) );
 	}
 }
