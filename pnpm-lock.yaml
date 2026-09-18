@@ -110,8 +110,8 @@ importers:
   .:
     dependencies:
       '@stripe/stripe-js':
-        specifier: ^9.15.0
-        version: 9.15.0
+        specifier: ^9.16.0
+        version: 9.16.0
       '@volksverpetzer/design-tokens':
         specifier: 0.8.0
         version: 0.8.0
@@ -1284,8 +1284,8 @@ packages:
       typescript:
         optional: true
 
-  '@stripe/stripe-js@9.15.0':
-    resolution: {integrity: sha512-0ySfsYH9XzfEspNS6MXMU2cjGsxNXWDQT9JxS43nOAatj6jDEP0fLBm2BanfblzU/GL/kDjFFcKmGInHmrASeg==}
+  '@stripe/stripe-js@9.16.0':
+    resolution: {integrity: sha512-PNZmy9hbuiuiyjAsigMlQChzJqrNEzQUtYIL/z5w0dsx27Ha69SBTYa2o8/M0Hbfiz9V2qctqX2DBd5sa57qoA==}
     engines: {node: '>=12.16'}
 
   '@tannin/compile@1.1.0':
@@ -4413,7 +4413,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@stripe/stripe-js@9.15.0': {}
+  '@stripe/stripe-js@9.16.0': {}
 
   '@tannin/compile@1.1.0':
     dependencies:
