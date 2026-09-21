@@ -89,7 +89,7 @@ add_action( 'plugins_loaded', [ 'VVP_Block_Render_Cache', 'init' ] );
 add_action( 'plugins_loaded', [ 'VVP_Dynamic_Content_Meta_Keys_Cache', 'init' ] );
 
 /**
- * REST endpoint the deploy workflow calls to clear Divi's et-cache after a
+ * admin-ajax endpoint the deploy workflow calls to clear Divi's et-cache after a
  * deploy -- see the class docblock for why this has to run as PHP (www-data)
  * rather than over the SSH/rrsync deploy key.
  */

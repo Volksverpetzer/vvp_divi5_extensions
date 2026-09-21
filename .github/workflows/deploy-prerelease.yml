@@ -107,7 +107,12 @@ jobs:
         # trying to do it over SSH — see includes/class-vvp-et-cache-clear-endpoint.php.
         # PHP runs as www-data (the files' owner), which isn't subject to
         # the mask/group-bits ceiling that blocks every non-owner approach.
+        #
+        # Via admin-ajax.php, not the REST API: the site answers anonymous
+        # REST requests with 401 (rest_cannot_access) for every route.
+        # --fail-with-body so a failed clear shows the endpoint's reason.
         run: |
-          curl -sS --fail -X POST \
-            "https://volksverpetzer.de/wp-json/vvp-divi5/v1/clear-et-cache" \
-            -H "X-VVP-Cache-Clear-Secret: ${{ secrets.VVP_CACHE_CLEAR_SECRET }}"
+          curl -sS --fail-with-body \
+            -H "X-VVP-Cache-Clear-Secret: ${{ secrets.VVP_CACHE_CLEAR_SECRET }}" \
+            --data-urlencode "action=vvp_clear_et_cache" \
+            "https://volksverpetzer.de/wp-admin/admin-ajax.php"
