@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Audio-Player: "Fehlerkarte anzeigen" setting — opt individual embeds into a visible "Audio nicht verfügbar" card for visitors when an article has no audio yet, instead of the default silent collapse (requires [vvp_wp_audio_converter#44](https://github.com/Volksverpetzer/vvp_wp_audio_converter/pull/44)).
 - `VVP_Divi_Cache_Prewarm`: pre-warms Divi's per-post et-cache (dynamic CSS) right after a post is published or edited, instead of leaving that first, more expensive compile to whichever visitor's request happens to hit it first. Fires one non-blocking internal request to the post's permalink from a short-delayed `wp_schedule_single_event()`, so a save-time Bunny edge cache purge has time to propagate before the warm request lands.
 - ContentOverview: "Anzahl der Einträge" setting controls how many items show initially (and the "Load more" batch size, default 24); a "Mehr laden" button reveals more pre-rendered items client-side. Podcast episodes beyond the latest one now render as their own feed items instead of only ever showing one, and the "Nur Artikel" filter toggle auto-hides when the module is configured to show just a single content type (e.g. a podcast-only page).
+- ContentOverview: "\"Mehr laden\" anzeigen" setting to toggle the "Load more" button off entirely, e.g. for a page that only ever wants a fixed-size feed.
 
 ### Fixed
 
