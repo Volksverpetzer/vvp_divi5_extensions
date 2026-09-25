@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Badge } from "@volksverpetzer/ui-web";
 import { trackEvent } from "../../utils/plausible";
+import { CopyLinkButton } from "./CopyLinkButton";
 import "./ArticleCard.css";
 
 export interface ArticleCardProps {
@@ -177,6 +178,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           )}
         </div>
       </div>
+      <CopyLinkButton link={link} />
     </a>
   );
 };

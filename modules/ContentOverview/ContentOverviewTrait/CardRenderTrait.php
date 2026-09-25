@@ -79,6 +79,13 @@ trait CardRenderTrait
             $excerpt_html .= '</p>';
         }
 
+        // Class name and markup must byte-match CopyLinkButton.tsx's default
+        // (not-yet-copied) render — see the hydration guardrail there.
+        $copy_link_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+            . '<path d="M15 7h3a5 5 0 0 1 0 10h-3m-6 0H6a5 5 0 0 1 0-10h3"></path><line x1="8" y1="12" x2="16" y2="12"></line>'
+            . '</svg>';
+        $copy_link_html = '<span role="button" tabindex="0" class="vvp-co__copy-link-btn" aria-label="Link kopieren">' . $copy_link_svg . '</span>';
+
         $static_html = '<a href="' . esc_url($props['link']) . '" class="vvp-co__feed-card vvp-co__feed-card--article" target="_blank" rel="noopener noreferrer">'
             . $image_html
             . '<div class="vvp-co__feed-body">'
@@ -91,6 +98,7 @@ trait CardRenderTrait
             .     $reading_time_html
             .   '</div>'
             . '</div>'
+            . $copy_link_html
             . '</a>';
 
         return '<div class="vvp-co-article-mount" data-article-props="'
