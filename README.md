@@ -397,12 +397,17 @@ Deployment is automated via GitHub Actions and SSH/rsync. Push to the relevant b
 
 ### Required GitHub secrets
 
-| Secret           | Description                         |
-| ---------------- | ----------------------------------- |
-| `SSH_DEPLOY_KEY` | Private SSH key for the deploy user |
-| `SSH_HOST_KEY`   | Host key entry for `known_hosts`    |
-| `SSH_USER`       | SSH username on the target server   |
-| `SSH_HOST`       | Target server hostname              |
+| Secret                   | Description                                                  |
+| ------------------------ | ------------------------------------------------------------ |
+| `SSH_DEPLOY_KEY`         | Private SSH key for the deploy user                          |
+| `SSH_HOST_KEY`           | Host key entry for `known_hosts`                             |
+| `SSH_USER`               | SSH username on the target server                            |
+| `SSH_HOST`               | Target server hostname                                       |
+| `VVP_CACHE_CLEAR_SECRET` | Shared secret for the post-deploy et-cache clear (see below) |
+
+Both `prerelease` and `main` deploy to the same WordPress install (only the plugin subdirectory differs — `-dev` vs `-prod`), so all of the above are shared between the two workflows.
+
+`VVP_CACHE_CLEAR_SECRET` also requires a matching server-side constant, since it authenticates a call _into_ WordPress rather than _onto_ the server: add `define( 'VVP_ET_CACHE_CLEAR_SECRET', '<same value>' );` to `wp-config.php` on the target server. Set the server-side constant **before** adding this GitHub secret — the deploy workflow can only skip its cache-clear step gracefully when its own secret is unset, not when the server-side half is still missing, so setting the server up first avoids a window where the step fails.
 
 ### Branch → environment
 
@@ -445,7 +450,12 @@ Values are injected by PHP as JSON into a `<script id="vvp-fact-check-search-con
 
 ### Inhaltsübersicht
 
-Configured via `modules/ContentOverview/ContentOverviewTrait/RenderCallbackTrait.php` (API endpoints, feed sizes, cache TTL). No DIVI settings panel fields — all configuration is in PHP constants.
+| Setting             | Default                                     | Description                                                                                       |
+| ------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Inhaltstypen        | all (articles, Instagram, YouTube, podcast) | Which content types appear in the feed; empty selection means "show everything" (`contentTypes`). |
+| Anzahl der Einträge | `24`                                        | Items visible on first load, and the "Load more" batch size (`itemsToShow`, clamped 1–60).        |
+
+The "Nur Artikel" filter toggle auto-hides when `Inhaltstypen` resolves to a single content type (e.g. a podcast-only page) — there is nothing to filter. "Load more" reveals pre-rendered, initially-hidden items client-side; no AJAX endpoint is involved. API endpoints, per-source fetch caps and cache TTLs are otherwise configured via `modules/ContentOverview/ContentOverviewTrait/RenderCallbackTrait.php` and `DataFetchTrait.php`.
 
 For locally-sourced articles, the feed card's author line reads all co-authors from **PublishPress Authors** (if available), falling back to the single WordPress core post author, and joins them the same German-style way as TrendingList (e.g. "A und B").
 
