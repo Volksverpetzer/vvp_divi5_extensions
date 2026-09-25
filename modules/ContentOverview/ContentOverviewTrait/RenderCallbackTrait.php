@@ -278,7 +278,10 @@ trait RenderCallbackTrait
         // reserving the *entire* podcast_feed (which can itself be as large
         // as $render_cap) would let a long back-catalogue consume the whole
         // cap and push every other selected source off the page, and could
-        // push total render size past $render_cap.
+        // push total render size past $render_cap. The podcast reservation
+        // itself is further bounded by whatever the YouTube banner's own
+        // guaranteed slot leaves behind, so podcast + banner together can
+        // never exceed $render_cap either.
 
         $other_items = array_merge($article_items, $yt_items);
         usort($other_items, function ($a, $b) {
@@ -286,7 +289,8 @@ trait RenderCallbackTrait
         });
         $other_items = array_slice($other_items, 0, $render_cap);
 
-        $podcast_reserved = array_slice($podcast_feed, 0, min($items_to_show, count($podcast_feed)));
+        $podcast_budget   = max(0, min($items_to_show, $render_cap - count($yt_banner_feed)));
+        $podcast_reserved = array_slice($podcast_feed, 0, min($podcast_budget, count($podcast_feed)));
         $podcast_extra    = array_slice($podcast_feed, count($podcast_reserved));
 
         $always_include = array_merge($podcast_reserved, $yt_banner_feed);
