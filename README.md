@@ -450,7 +450,12 @@ Values are injected by PHP as JSON into a `<script id="vvp-fact-check-search-con
 
 ### Inhaltsübersicht
 
-Configured via `modules/ContentOverview/ContentOverviewTrait/RenderCallbackTrait.php` (API endpoints, feed sizes, cache TTL). No DIVI settings panel fields — all configuration is in PHP constants.
+| Setting             | Default                                     | Description                                                                                       |
+| ------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Inhaltstypen        | all (articles, Instagram, YouTube, podcast) | Which content types appear in the feed; empty selection means "show everything" (`contentTypes`). |
+| Anzahl der Einträge | `24`                                        | Items visible on first load, and the "Load more" batch size (`itemsToShow`, clamped 1–60).        |
+
+The "Nur Artikel" filter toggle auto-hides when `Inhaltstypen` resolves to a single content type (e.g. a podcast-only page) — there is nothing to filter. "Load more" reveals pre-rendered, initially-hidden items client-side; no AJAX endpoint is involved. API endpoints, per-source fetch caps and cache TTLs are otherwise configured via `modules/ContentOverview/ContentOverviewTrait/RenderCallbackTrait.php` and `DataFetchTrait.php`.
 
 For locally-sourced articles, the feed card's author line reads all co-authors from **PublishPress Authors** (if available), falling back to the single WordPress core post author, and joins them the same German-style way as TrendingList (e.g. "A und B").
 

@@ -108,6 +108,29 @@ trait RenderCallbackTrait
         $show_youtube      = in_array('youtube', $selected_types, true);
         $show_podcast      = in_array('podcast', $selected_types, true);
 
+        // The filter toggle only makes sense when the feed actually mixes
+        // article and non-article content — hide it when the editor narrowed
+        // the selection down to only article sources, only non-article
+        // sources, or a single content type (e.g. a podcast-only page).
+        $has_articles     = $show_vvp_articles || $show_pp_articles;
+        $has_non_articles = $show_instagram || $show_youtube || $show_podcast;
+        $show_filter_toggle = $has_articles && $has_non_articles;
+
+        // "itemsToShow" is the number of items visible on first load and the
+        // batch size "Load more" reveals at a time. $render_cap bounds how
+        // many items are fetched/pre-rendered in total (hidden until
+        // revealed) so a large upstream feed (e.g. dozens of podcast
+        // episodes) can't bloat the page. Kept tight (2x, capped at 60) since
+        // every pre-rendered-but-hidden item still costs a full HTML+JSON
+        // payload on every page view — one "Load more" batch's worth of
+        // headroom is enough; a visitor who wants more can click again.
+        $items_to_show = (int) ($attrs['itemsToShow']['innerContent']['desktop']['value'] ?? 0);
+        if ($items_to_show <= 0) {
+            $items_to_show = 24;
+        }
+        $items_to_show = max(1, min($items_to_show, 60));
+        $render_cap    = min($items_to_show * 2, 60);
+
         // 1. Fetch -----------------------------------------------------------
 
         $vp_posts = $show_vvp_articles ? self::fetch_volksverpetzer_articles() : [];
@@ -179,7 +202,7 @@ trait RenderCallbackTrait
             $dt = self::parse_datetime($post['timestamp'] ?? '');
             if ($dt) {
                 $insta_items[] = ['kind' => 'insta', 'date' => $dt, 'data' => $post];
-                if (++$insta_added >= 12) {
+                if (++$insta_added >= $render_cap) {
                     break;
                 }
             }
@@ -214,16 +237,24 @@ trait RenderCallbackTrait
                 'thumbnailUrl' => $thumb_url,
             ]];
 
-            if (++$yt_added >= 20) {
+            if (++$yt_added >= $render_cap) {
                 break;
             }
         }
 
+        // Every podcast episode becomes its own full-width banner card (not
+        // just the latest one) — capped by $render_cap since the RSS feed can
+        // carry a station's entire back catalogue. An episode with a missing
+        // or unparseable pubDate still gets shown (falling back to the same
+        // epoch placeholder the single-episode code used before), sorted to
+        // the end, rather than silently disappearing.
         $podcast_feed = [];
-        $episode      = $podcast_items[0] ?? null;
-        if ($episode) {
-            $episode_dt     = self::parse_datetime($episode['pubDate'] ?? '') ?? new \DateTime('1970-01-01');
-            $podcast_feed[] = ['kind' => 'podcast_banner', 'date' => $episode_dt, 'data' => $episode];
+        foreach ($podcast_items as $episode) {
+            $dt             = self::parse_datetime($episode['pubDate'] ?? '') ?? new \DateTime('1970-01-01');
+            $podcast_feed[] = ['kind' => 'podcast_banner', 'date' => $dt, 'data' => $episode];
+            if (count($podcast_feed) >= $render_cap) {
+                break;
+            }
         }
 
         // Extract the latest YouTube video as an always-shown banner.
@@ -237,23 +268,47 @@ trait RenderCallbackTrait
         }
 
         // 4. Merge, sort, cap ------------------------------------------------
-        // Articles + remaining YouTube share a combined cap of 12 (newest first).
-        // Instagram gets its own 12. Podcast banner and YouTube banner always included.
+        // The YouTube banner (always exactly 0 or 1 item) is always
+        // included, never dropped by the cap. Podcast episodes get a
+        // bounded reservation instead of an unlimited one: up to
+        // $items_to_show of the newest episodes are always included too
+        // (so a podcast-heavy or podcast-only page reliably shows its
+        // first page of episodes), but any episodes beyond that compete in
+        // the normal capped pool alongside articles/YouTube/Instagram —
+        // reserving the *entire* podcast_feed (which can itself be as large
+        // as $render_cap) would let a long back-catalogue consume the whole
+        // cap and push every other selected source off the page, and could
+        // push total render size past $render_cap. The podcast reservation
+        // itself is further bounded by whatever the YouTube banner's own
+        // guaranteed slot leaves behind, so podcast + banner together can
+        // never exceed $render_cap either.
 
         $other_items = array_merge($article_items, $yt_items);
         usort($other_items, function ($a, $b) {
             return $b['date']->getTimestamp() - $a['date']->getTimestamp();
         });
-        $other_items = array_slice($other_items, 0, 12);
+        $other_items = array_slice($other_items, 0, $render_cap);
 
-        $merged = array_merge($insta_items, $other_items, $podcast_feed, $yt_banner_feed);
+        $podcast_budget   = max(0, min($items_to_show, $render_cap - count($yt_banner_feed)));
+        $podcast_reserved = array_slice($podcast_feed, 0, min($podcast_budget, count($podcast_feed)));
+        $podcast_extra    = array_slice($podcast_feed, count($podcast_reserved));
+
+        $always_include = array_merge($podcast_reserved, $yt_banner_feed);
+
+        $cappable = array_merge($insta_items, $other_items, $podcast_extra);
+        usort($cappable, function ($a, $b) {
+            return $b['date']->getTimestamp() - $a['date']->getTimestamp();
+        });
+        $cappable = array_slice($cappable, 0, max(0, $render_cap - count($always_include)));
+
+        $merged = array_merge($cappable, $always_include);
         usort($merged, function ($a, $b) {
             return $b['date']->getTimestamp() - $a['date']->getTimestamp();
         });
 
         // 5. Render ----------------------------------------------------------
 
-        return self::render_overview($merged, $channel_image);
+        return self::render_overview($merged, $channel_image, $items_to_show, $show_filter_toggle);
     }
 
     /**
@@ -311,60 +366,97 @@ trait RenderCallbackTrait
     /**
      * Render the grouped feed grid from a flat sorted item list.
      *
-     * @param array  $feed_items    Flat list of typed feed items.
-     * @param string $channel_image Podcast channel artwork URL.
+     * @param array  $feed_items         Flat list of typed feed items.
+     * @param string $channel_image      Podcast channel artwork URL.
+     * @param int    $items_to_show      Items visible on first load; also the
+     *                                   "Load more" batch size.
+     * @param bool   $show_filter_toggle Whether to render the "Nur Artikel" toggle.
      *
      * @return string HTML.
      */
-    private static function render_overview($feed_items, $channel_image)
+    private static function render_overview($feed_items, $channel_image, $items_to_show, $show_filter_toggle)
     {
-        $rows      = self::group_feed_rows($feed_items, 3);
-        $feed_html = '';
+        // Decide visibility from each item's rank in $feed_items — the
+        // original, flat, date-sorted order — before group_feed_rows()
+        // re-groups items into display rows below. Row-grouping can locally
+        // reorder items (e.g. batching Instagram posts into groups of 3, or
+        // delaying a partial row), so computing "hidden" from the
+        // post-grouping iteration order would make "items shown" diverge
+        // from "the N most recent items". The YouTube banner is additionally
+        // always visible, regardless of rank, since it predates (and keeps)
+        // an unconditional "always-shown" guarantee.
+        foreach ($feed_items as $rank => &$item) {
+            $item['_visible'] = ('youtube_banner' === $item['kind']) || $rank < $items_to_show;
+        }
+        unset($item);
+
+        $rows         = self::group_feed_rows($feed_items, 3);
+        $feed_html    = '';
+        $index        = 0;
+        $hidden_count = 0;
 
         foreach ($rows as $row) {
             foreach ($row['items'] as $item) {
-                $kind = esc_attr($item['kind']);
+                $kind       = esc_attr($item['kind']);
+                $is_hidden  = empty($item['_visible']);
+                $item_attrs = ' data-co-index="' . $index . '"' . ($is_hidden ? ' hidden' : '');
                 switch ($item['kind']) {
                     case 'podcast_banner':
-                        $feed_html .= '<div class="vvp-co__feed-item vvp-co__feed-item--podcast" data-co-kind="' . $kind . '">'
+                        $feed_html .= '<div class="vvp-co__feed-item vvp-co__feed-item--podcast" data-co-kind="' . $kind . '"' . $item_attrs . '>'
                             . self::render_podcast_banner($item['data'], $channel_image)
                             . '</div>';
                         break;
                     case 'youtube_banner':
                     case 'youtube':
-                        $feed_html .= '<div class="vvp-co__feed-item vvp-co__feed-item--youtube-banner" data-co-kind="youtube">'
+                        $feed_html .= '<div class="vvp-co__feed-item vvp-co__feed-item--youtube-banner" data-co-kind="youtube"' . $item_attrs . '>'
                             . self::render_youtube_banner($item['data'])
                             . '</div>';
                         break;
                     case 'article':
-                        $feed_html .= '<div class="vvp-co__feed-item" data-co-kind="' . $kind . '">'
+                        $feed_html .= '<div class="vvp-co__feed-item" data-co-kind="' . $kind . '"' . $item_attrs . '>'
                             . self::render_featured_card($item['data'])
                             . '</div>';
                         break;
                     case 'insta':
-                        $feed_html .= '<div class="vvp-co__feed-item" data-co-kind="' . $kind . '">'
+                        $feed_html .= '<div class="vvp-co__feed-item" data-co-kind="' . $kind . '"' . $item_attrs . '>'
                             . self::render_insta_card($item['data'])
                             . '</div>';
                         break;
+                    default:
+                        // Unknown kind: don't advance the visible-item index for it.
+                        continue 2;
+                }
+                $index++;
+                if ($is_hidden) {
+                    $hidden_count++;
                 }
             }
         }
 
+        $filter_toggle_html = '';
+        if ($show_filter_toggle) {
+            $filter_toggle_html = '<label class="vvp-co__filter-toggle" for="vvp-co-filter-articles">'
+                .   '<span class="vvp-co__filter-toggle-label">Nur Artikel</span>'
+                .   '<span class="vvp-co__toggle-track">'
+                .     '<input type="checkbox" class="vvp-co__toggle-input" id="vvp-co-filter-articles">'
+                .     '<span class="vvp-co__toggle-thumb"></span>'
+                .   '</span>'
+                . '</label>';
+        }
+
         $section_header = '<div class="vvp-co__section-header">'
             . '<h2 class="vvp-co__section-title">Das Neueste</h2>'
-            . '<label class="vvp-co__filter-toggle" for="vvp-co-filter-articles">'
-            .   '<span class="vvp-co__filter-toggle-label">Nur Artikel</span>'
-            .   '<span class="vvp-co__toggle-track">'
-            .     '<input type="checkbox" class="vvp-co__toggle-input" id="vvp-co-filter-articles">'
-            .     '<span class="vvp-co__toggle-thumb"></span>'
-            .   '</span>'
-            . '</label>'
+            . $filter_toggle_html
             . '</div>';
+
+        $load_more_html = '<button type="button" class="vvp-co__load-more-btn" data-co-load-more data-co-batch-size="'
+            . (int) $items_to_show . '"' . ($hidden_count > 0 ? '' : ' hidden') . '>Mehr laden</button>';
 
         return '<div class="vvp-co__wrapper">'
             . '<div class="vvp-co__feed-section">'
             .   $section_header
             .   '<div class="vvp-co__feed-grid">' . $feed_html . '</div>'
+            .   $load_more_html
             . '</div>'
             . '</div>';
     }
