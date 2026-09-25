@@ -129,7 +129,13 @@ trait RenderCallbackTrait
             $items_to_show = 24;
         }
         $items_to_show = max(1, min($items_to_show, 60));
-        $render_cap    = min($items_to_show * 2, 60);
+
+        // "showLoadMore" toggles the "Mehr laden" button. When off, there is
+        // no reason to fetch/render anything past what's shown — cap the
+        // render budget at exactly $items_to_show instead of leaving
+        // headroom for a button that won't exist.
+        $show_load_more = ($attrs['showLoadMore']['innerContent']['desktop']['value'] ?? 'on') !== 'off';
+        $render_cap     = $show_load_more ? min($items_to_show * 2, 60) : $items_to_show;
 
         // 1. Fetch -----------------------------------------------------------
 
@@ -243,18 +249,19 @@ trait RenderCallbackTrait
         }
 
         // Every podcast episode becomes its own full-width banner card (not
-        // just the latest one) — capped by $render_cap since the RSS feed can
-        // carry a station's entire back catalogue. An episode with a missing
-        // or unparseable pubDate still gets shown (falling back to the same
-        // epoch placeholder the single-episode code used before), sorted to
-        // the end, rather than silently disappearing.
+        // just the latest one). An episode with a missing or unparseable
+        // pubDate still gets shown (falling back to the same epoch
+        // placeholder the single-episode code used before), sorted to the
+        // end, rather than silently disappearing. Not capped here — the
+        // whole feed is already fully parsed in memory by
+        // parse_podcast_feed(), so truncating this list before picking the
+        // pinned latest episode below could exclude the true latest episode
+        // if the feed isn't strictly newest-first. Capped further down,
+        // after the pinned episode has been chosen from the complete list.
         $podcast_feed = [];
         foreach ($podcast_items as $episode) {
             $dt             = self::parse_datetime($episode['pubDate'] ?? '') ?? new \DateTime('1970-01-01');
             $podcast_feed[] = ['kind' => 'podcast_banner', 'date' => $dt, 'data' => $episode];
-            if (count($podcast_feed) >= $render_cap) {
-                break;
-            }
         }
 
         // Extract the latest YouTube video as an always-shown banner.
@@ -267,21 +274,58 @@ trait RenderCallbackTrait
             $yt_banner_feed[] = ['kind' => 'youtube_banner', 'date' => $latest_yt['date'], 'data' => $latest_yt['data']];
         }
 
+        // Extract the latest podcast episode as an always-shown banner too —
+        // same treatment as the YouTube banner, and deliberately NOT a
+        // bigger reservation: podcast episodes publish far less often than
+        // articles, so reserving many of them (by rank) meant on a mixed
+        // page they were almost always older than a full day's worth of
+        // articles/Instagram — landing entirely in the hidden/"Load
+        // more"-only bucket while eating the budget those faster-moving
+        // sources needed to stay visible themselves (clicking "Load more"
+        // then revealed only podcast episodes, since nothing else was left
+        // in the buffer). One pinned episode is enough to guarantee a
+        // podcast-only page never shows zero episodes; every other episode
+        // now competes in the normal capped pool like everything else.
+        $podcast_banner_feed = [];
+        if (!empty($podcast_feed)) {
+            // Sort by parsed date rather than trusting RSS feed order — the
+            // pre-existing single-episode code assumed $podcast_items[0] was
+            // always the newest, which isn't guaranteed for every feed.
+            usort($podcast_feed, function ($a, $b) {
+                return $b['date']->getTimestamp() - $a['date']->getTimestamp();
+            });
+            $podcast_banner_feed[] = array_shift($podcast_feed);
+        }
+
+        // Cap the *remaining* competitive pool now that the pinned episode
+        // has been chosen from the complete, unsorted-by-rank list above —
+        // the RSS feed can carry a station's entire back catalogue, and
+        // there's no reason to sort/merge/render more of it below than
+        // $render_cap could ever keep visible anyway.
+        $podcast_feed = array_slice($podcast_feed, 0, $render_cap);
+
+        // Pinned items are always included AND always visible on first
+        // load, regardless of their date rank — see render_overview().
+        foreach ($yt_banner_feed as &$item) {
+            $item['_pinned'] = true;
+        }
+        unset($item);
+        foreach ($podcast_banner_feed as &$item) {
+            $item['_pinned'] = true;
+        }
+        unset($item);
+
         // 4. Merge, sort, cap ------------------------------------------------
-        // The YouTube banner (always exactly 0 or 1 item) is always
-        // included, never dropped by the cap. Podcast episodes get a
-        // bounded reservation instead of an unlimited one: up to
-        // $items_to_show of the newest episodes are always included too
-        // (so a podcast-heavy or podcast-only page reliably shows its
-        // first page of episodes), but any episodes beyond that compete in
-        // the normal capped pool alongside articles/YouTube/Instagram —
-        // reserving the *entire* podcast_feed (which can itself be as large
-        // as $render_cap) would let a long back-catalogue consume the whole
-        // cap and push every other selected source off the page, and could
-        // push total render size past $render_cap. The podcast reservation
-        // itself is further bounded by whatever the YouTube banner's own
-        // guaranteed slot leaves behind, so podcast + banner together can
-        // never exceed $render_cap either.
+        // The pinned YouTube and podcast banners (at most one of each) are
+        // always included, never dropped by the cap. Articles, remaining
+        // YouTube, Instagram, and every other podcast episode share
+        // $render_cap (newest first). Pinned items are added ON TOP of that
+        // cap rather than sharing its budget — subtracting their count first
+        // could shrink the cappable slice below zero and, worse, let a tiny
+        // $render_cap (e.g. itemsToShow=1 with "Load more" off) squeeze a
+        // pinned item out entirely, breaking the one guarantee pinning
+        // exists for. At most 2 extra items (one podcast, one YouTube) is a
+        // small, predictable, worthwhile trade-off.
 
         $other_items = array_merge($article_items, $yt_items);
         usort($other_items, function ($a, $b) {
@@ -289,17 +333,13 @@ trait RenderCallbackTrait
         });
         $other_items = array_slice($other_items, 0, $render_cap);
 
-        $podcast_budget   = max(0, min($items_to_show, $render_cap - count($yt_banner_feed)));
-        $podcast_reserved = array_slice($podcast_feed, 0, min($podcast_budget, count($podcast_feed)));
-        $podcast_extra    = array_slice($podcast_feed, count($podcast_reserved));
+        $always_include = array_merge($podcast_banner_feed, $yt_banner_feed);
 
-        $always_include = array_merge($podcast_reserved, $yt_banner_feed);
-
-        $cappable = array_merge($insta_items, $other_items, $podcast_extra);
+        $cappable = array_merge($insta_items, $other_items, $podcast_feed);
         usort($cappable, function ($a, $b) {
             return $b['date']->getTimestamp() - $a['date']->getTimestamp();
         });
-        $cappable = array_slice($cappable, 0, max(0, $render_cap - count($always_include)));
+        $cappable = array_slice($cappable, 0, $render_cap);
 
         $merged = array_merge($cappable, $always_include);
         usort($merged, function ($a, $b) {
@@ -308,7 +348,7 @@ trait RenderCallbackTrait
 
         // 5. Render ----------------------------------------------------------
 
-        return self::render_overview($merged, $channel_image, $items_to_show, $show_filter_toggle);
+        return self::render_overview($merged, $channel_image, $items_to_show, $show_filter_toggle, $show_load_more);
     }
 
     /**
@@ -371,10 +411,11 @@ trait RenderCallbackTrait
      * @param int    $items_to_show      Items visible on first load; also the
      *                                   "Load more" batch size.
      * @param bool   $show_filter_toggle Whether to render the "Nur Artikel" toggle.
+     * @param bool   $show_load_more     Whether to render the "Mehr laden" button.
      *
      * @return string HTML.
      */
-    private static function render_overview($feed_items, $channel_image, $items_to_show, $show_filter_toggle)
+    private static function render_overview($feed_items, $channel_image, $items_to_show, $show_filter_toggle, $show_load_more)
     {
         // Decide visibility from each item's rank in $feed_items — the
         // original, flat, date-sorted order — before group_feed_rows()
@@ -382,11 +423,11 @@ trait RenderCallbackTrait
         // reorder items (e.g. batching Instagram posts into groups of 3, or
         // delaying a partial row), so computing "hidden" from the
         // post-grouping iteration order would make "items shown" diverge
-        // from "the N most recent items". The YouTube banner is additionally
-        // always visible, regardless of rank, since it predates (and keeps)
-        // an unconditional "always-shown" guarantee.
+        // from "the N most recent items". Pinned items (the YouTube and
+        // podcast banners) are additionally always visible regardless of
+        // rank — see the "_pinned" tagging in build_overview_html().
         foreach ($feed_items as $rank => &$item) {
-            $item['_visible'] = ('youtube_banner' === $item['kind']) || $rank < $items_to_show;
+            $item['_visible'] = !empty($item['_pinned']) || $rank < $items_to_show;
         }
         unset($item);
 
@@ -449,8 +490,11 @@ trait RenderCallbackTrait
             . $filter_toggle_html
             . '</div>';
 
-        $load_more_html = '<button type="button" class="vvp-co__load-more-btn" data-co-load-more data-co-batch-size="'
-            . (int) $items_to_show . '"' . ($hidden_count > 0 ? '' : ' hidden') . '>Mehr laden</button>';
+        $load_more_html = '';
+        if ($show_load_more) {
+            $load_more_html = '<button type="button" class="vvp-co__load-more-btn" data-co-load-more data-co-batch-size="'
+                . (int) $items_to_show . '"' . ($hidden_count > 0 ? '' : ' hidden') . '>Mehr laden</button>';
+        }
 
         return '<div class="vvp-co__wrapper">'
             . '<div class="vvp-co__feed-section">'

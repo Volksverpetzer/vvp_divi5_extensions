@@ -71,6 +71,30 @@
         }
       }
     },
+    "showLoadMore": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 30,
+            "render": true,
+            "attrName": "showLoadMore.innerContent",
+            "label": "\"Mehr laden\" anzeigen",
+            "description": "Einen Button zum Nachladen weiterer Einträge anzeigen. Bei \"Aus\" werden nur die \"Anzahl der Einträge\" Einträge geladen, ohne Möglichkeit zum Nachladen.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/toggle",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
     "module": {
       "type": "object",
       "selector": "{{selector}}",
