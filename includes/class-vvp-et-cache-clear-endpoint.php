@@ -123,10 +123,18 @@ class VVP_Et_Cache_Clear_Endpoint {
 			if ( is_dir( $path ) && ! is_link( $path ) ) {
 				$count += self::clear_directory( $path, false, $failed );
 
-				// A failed rmdir() is deliberately not counted: "not empty" here means
-				// Divi wrote a fresh file after our scan, which is harmless. Real
-				// permission problems surface as failed unlink()s above instead.
-				rmdir( $path );
+				if ( ! rmdir( $path ) && is_dir( $path ) ) {
+					// Every entry rmdir() could have seen was either deleted above or
+					// already counted into $failed, so a non-empty result here can only
+					// mean Divi wrote a fresh file into it concurrently (harmless --
+					// newly-built CSS from after this deploy, not stale content we
+					// failed to remove). Only count it if it's genuinely empty and
+					// rmdir() still refused -- an actual permission problem.
+					$remaining = scandir( $path );
+					if ( is_array( $remaining ) && 2 === count( $remaining ) ) {
+						++$failed;
+					}
+				}
 			} elseif ( unlink( $path ) ) {
 				++$count;
 			} elseif ( file_exists( $path ) || is_link( $path ) ) {
