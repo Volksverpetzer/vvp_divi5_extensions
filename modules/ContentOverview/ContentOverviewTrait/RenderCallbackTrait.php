@@ -267,42 +267,21 @@ trait RenderCallbackTrait
             $yt_banner_feed[] = ['kind' => 'youtube_banner', 'date' => $latest_yt['date'], 'data' => $latest_yt['data']];
         }
 
-        // Extract the latest podcast episode as an always-shown banner too —
-        // same treatment as the YouTube banner, and deliberately NOT a
-        // bigger reservation: podcast episodes publish far less often than
-        // articles, so reserving many of them (by rank) meant on a mixed
-        // page they were almost always older than a full day's worth of
-        // articles/Instagram — landing entirely in the hidden/"Load
-        // more"-only bucket while eating the budget those faster-moving
-        // sources needed to stay visible themselves (clicking "Load more"
-        // then revealed only podcast episodes, since nothing else was left
-        // in the buffer). One pinned episode is enough to guarantee a
-        // podcast-only page never shows zero episodes; every other episode
-        // now competes in the normal capped pool like everything else.
-        $podcast_banner_feed = [];
-        if (!empty($podcast_feed)) {
-            // $podcast_feed preserves the RSS feed's own (newest-first)
-            // order, same assumption the pre-existing single-episode code
-            // already relied on ($podcast_items[0]).
-            $podcast_banner_feed[] = array_shift($podcast_feed);
-        }
-
-        // Pinned items are always included AND always visible on first
-        // load, regardless of their date rank — see render_overview().
-        foreach ($yt_banner_feed as &$item) {
-            $item['_pinned'] = true;
-        }
-        unset($item);
-        foreach ($podcast_banner_feed as &$item) {
-            $item['_pinned'] = true;
-        }
-        unset($item);
-
         // 4. Merge, sort, cap ------------------------------------------------
-        // The pinned YouTube and podcast banners (at most one of each) are
-        // always included, never dropped by the cap. Articles, remaining
-        // YouTube, Instagram, and every other podcast episode share the
-        // rest of $render_cap (newest first).
+        // The YouTube banner (always exactly 0 or 1 item) is always
+        // included, never dropped by the cap. Podcast episodes get a
+        // bounded reservation instead of an unlimited one: up to
+        // $items_to_show of the newest episodes are always included too
+        // (so a podcast-heavy or podcast-only page reliably shows its
+        // first page of episodes), but any episodes beyond that compete in
+        // the normal capped pool alongside articles/YouTube/Instagram —
+        // reserving the *entire* podcast_feed (which can itself be as large
+        // as $render_cap) would let a long back-catalogue consume the whole
+        // cap and push every other selected source off the page, and could
+        // push total render size past $render_cap. The podcast reservation
+        // itself is further bounded by whatever the YouTube banner's own
+        // guaranteed slot leaves behind, so podcast + banner together can
+        // never exceed $render_cap either.
 
         $other_items = array_merge($article_items, $yt_items);
         usort($other_items, function ($a, $b) {
@@ -310,9 +289,13 @@ trait RenderCallbackTrait
         });
         $other_items = array_slice($other_items, 0, $render_cap);
 
-        $always_include = array_merge($podcast_banner_feed, $yt_banner_feed);
+        $podcast_budget   = max(0, min($items_to_show, $render_cap - count($yt_banner_feed)));
+        $podcast_reserved = array_slice($podcast_feed, 0, min($podcast_budget, count($podcast_feed)));
+        $podcast_extra    = array_slice($podcast_feed, count($podcast_reserved));
 
-        $cappable = array_merge($insta_items, $other_items, $podcast_feed);
+        $always_include = array_merge($podcast_reserved, $yt_banner_feed);
+
+        $cappable = array_merge($insta_items, $other_items, $podcast_extra);
         usort($cappable, function ($a, $b) {
             return $b['date']->getTimestamp() - $a['date']->getTimestamp();
         });
@@ -399,11 +382,11 @@ trait RenderCallbackTrait
         // reorder items (e.g. batching Instagram posts into groups of 3, or
         // delaying a partial row), so computing "hidden" from the
         // post-grouping iteration order would make "items shown" diverge
-        // from "the N most recent items". Pinned items (the YouTube and
-        // podcast banners) are additionally always visible regardless of
-        // rank — see the "_pinned" tagging in build_overview_html().
+        // from "the N most recent items". The YouTube banner is additionally
+        // always visible, regardless of rank, since it predates (and keeps)
+        // an unconditional "always-shown" guarantee.
         foreach ($feed_items as $rank => &$item) {
-            $item['_visible'] = !empty($item['_pinned']) || $rank < $items_to_show;
+            $item['_visible'] = ('youtube_banner' === $item['kind']) || $rank < $items_to_show;
         }
         unset($item);
 
