@@ -159,13 +159,31 @@ const initLoadMoreButton = (button: HTMLButtonElement) => {
   const batchSize = parseInt(button.dataset.coBatchSize || "", 10) || 12;
 
   button.addEventListener("click", () => {
+    // While "Nur Artikel" is active, non-article items stay CSS-hidden
+    // (applyArticlesFilter) even after their `hidden` attribute is
+    // removed — revealing a batch that happens to be all non-article
+    // items would otherwise make the click look like it did nothing.
+    // Keep revealing items until `batchSize` of them actually become
+    // visible under the current filter, or nothing is left to reveal.
+    const isFiltered = grid.classList.contains(
+      "vvp-co__feed-grid--articles-only",
+    );
     const hiddenItems = Array.from(
       grid.querySelectorAll<HTMLElement>(".vvp-co__feed-item[hidden]"),
     );
-    hiddenItems.slice(0, batchSize).forEach((item) => {
+
+    let revealed = 0;
+    let consumed = 0;
+    while (consumed < hiddenItems.length && revealed < batchSize) {
+      const item = hiddenItems[consumed];
       item.removeAttribute("hidden");
-    });
-    if (hiddenItems.length <= batchSize) {
+      consumed++;
+      if (!isFiltered || item.dataset.coKind === "article") {
+        revealed++;
+      }
+    }
+
+    if (consumed >= hiddenItems.length) {
       button.hidden = true;
     }
   });

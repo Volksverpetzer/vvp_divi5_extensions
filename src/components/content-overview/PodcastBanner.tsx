@@ -1,6 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useId, useState } from "react";
 import { Badge } from "@volksverpetzer/ui-web";
 import { trackEvent } from "../../utils/plausible";
+
+// This PR started rendering one PodcastBanner per episode instead of a
+// single one per page, so without cross-instance coordination two "Anhören"
+// clicks would play two episodes' audio at once. Broadcasting a play event
+// lets every other mounted instance stop itself, independent of how many
+// are on the page.
+const PLAY_EVENT = "vvp-co-podcast-play";
 
 interface PodcastBannerProps {
   title: string;
@@ -38,6 +45,24 @@ export const PodcastBanner: React.FC<PodcastBannerProps> = ({
   artworkUrl,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const instanceId = useId();
+
+  useEffect(() => {
+    const handlePlay = (event: Event) => {
+      const otherId = (event as CustomEvent<string>).detail;
+      if (otherId !== instanceId) {
+        setIsPlaying(false);
+      }
+    };
+    window.addEventListener(PLAY_EVENT, handlePlay);
+    return () => window.removeEventListener(PLAY_EVENT, handlePlay);
+  }, [instanceId]);
+
+  const startPlaying = () => {
+    window.dispatchEvent(new CustomEvent(PLAY_EVENT, { detail: instanceId }));
+    setIsPlaying(true);
+    trackEvent("Podcast Play");
+  };
 
   return (
     <div className="vvp-co__podcast-banner">
@@ -91,10 +116,7 @@ export const PodcastBanner: React.FC<PodcastBannerProps> = ({
               <button
                 type="button"
                 className="vvp-co__podcast-listen-btn"
-                onClick={() => {
-                  setIsPlaying(true);
-                  trackEvent("Podcast Play");
-                }}
+                onClick={startPlaying}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
