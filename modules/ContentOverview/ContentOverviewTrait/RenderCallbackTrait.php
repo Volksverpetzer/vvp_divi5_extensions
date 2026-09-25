@@ -129,7 +129,13 @@ trait RenderCallbackTrait
             $items_to_show = 24;
         }
         $items_to_show = max(1, min($items_to_show, 60));
-        $render_cap    = min($items_to_show * 2, 60);
+
+        // "showLoadMore" toggles the "Mehr laden" button. When off, there is
+        // no reason to fetch/render anything past what's shown — cap the
+        // render budget at exactly $items_to_show instead of leaving
+        // headroom for a button that won't exist.
+        $show_load_more = ($attrs['showLoadMore']['innerContent']['desktop']['value'] ?? 'on') !== 'off';
+        $render_cap     = $show_load_more ? min($items_to_show * 2, 60) : $items_to_show;
 
         // 1. Fetch -----------------------------------------------------------
 
@@ -325,7 +331,7 @@ trait RenderCallbackTrait
 
         // 5. Render ----------------------------------------------------------
 
-        return self::render_overview($merged, $channel_image, $items_to_show, $show_filter_toggle);
+        return self::render_overview($merged, $channel_image, $items_to_show, $show_filter_toggle, $show_load_more);
     }
 
     /**
@@ -388,10 +394,11 @@ trait RenderCallbackTrait
      * @param int    $items_to_show      Items visible on first load; also the
      *                                   "Load more" batch size.
      * @param bool   $show_filter_toggle Whether to render the "Nur Artikel" toggle.
+     * @param bool   $show_load_more     Whether to render the "Mehr laden" button.
      *
      * @return string HTML.
      */
-    private static function render_overview($feed_items, $channel_image, $items_to_show, $show_filter_toggle)
+    private static function render_overview($feed_items, $channel_image, $items_to_show, $show_filter_toggle, $show_load_more)
     {
         // Decide visibility from each item's rank in $feed_items — the
         // original, flat, date-sorted order — before group_feed_rows()
@@ -466,8 +473,11 @@ trait RenderCallbackTrait
             . $filter_toggle_html
             . '</div>';
 
-        $load_more_html = '<button type="button" class="vvp-co__load-more-btn" data-co-load-more data-co-batch-size="'
-            . (int) $items_to_show . '"' . ($hidden_count > 0 ? '' : ' hidden') . '>Mehr laden</button>';
+        $load_more_html = '';
+        if ($show_load_more) {
+            $load_more_html = '<button type="button" class="vvp-co__load-more-btn" data-co-load-more data-co-batch-size="'
+                . (int) $items_to_show . '"' . ($hidden_count > 0 ? '' : ' hidden') . '>Mehr laden</button>';
+        }
 
         return '<div class="vvp-co__wrapper">'
             . '<div class="vvp-co__feed-section">'

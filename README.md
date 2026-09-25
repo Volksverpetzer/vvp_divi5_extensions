@@ -450,10 +450,11 @@ Values are injected by PHP as JSON into a `<script id="vvp-fact-check-search-con
 
 ### Inhaltsübersicht
 
-| Setting             | Default                                     | Description                                                                                       |
-| ------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| Inhaltstypen        | all (articles, Instagram, YouTube, podcast) | Which content types appear in the feed; empty selection means "show everything" (`contentTypes`). |
-| Anzahl der Einträge | `24`                                        | Items visible on first load, and the "Load more" batch size (`itemsToShow`, clamped 1–60).        |
+| Setting               | Default                                     | Description                                                                                                                                            |
+| --------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Inhaltstypen          | all (articles, Instagram, YouTube, podcast) | Which content types appear in the feed; empty selection means "show everything" (`contentTypes`).                                                      |
+| Anzahl der Einträge   | `24`                                        | Items visible on first load, and the "Load more" batch size (`itemsToShow`, clamped 1–60).                                                             |
+| "Mehr laden" anzeigen | on                                          | Toggles the "Load more" button (`showLoadMore`). When off, only `itemsToShow` items are ever rendered — no extra hidden items are pre-rendered either. |
 
 The "Nur Artikel" filter toggle auto-hides when `Inhaltstypen` resolves to a single content type (e.g. a podcast-only page) — there is nothing to filter. "Load more" reveals pre-rendered, initially-hidden items client-side; no AJAX endpoint is involved. API endpoints, per-source fetch caps and cache TTLs are otherwise configured via `modules/ContentOverview/ContentOverviewTrait/RenderCallbackTrait.php` and `DataFetchTrait.php`.
 
