@@ -128,10 +128,10 @@ class VVP_Et_Cache_Clear_Endpoint {
 					// already counted into $failed, so a non-empty result here can only
 					// mean Divi wrote a fresh file into it concurrently (harmless --
 					// newly-built CSS from after this deploy, not stale content we
-					// failed to remove). Only count it if it's genuinely empty and
-					// rmdir() still refused -- an actual permission problem.
+					// failed to remove). Only skip it if it's genuinely empty-but-new;
+					// a directory that's become unreadable is not that -- count it too.
 					$remaining = scandir( $path );
-					if ( is_array( $remaining ) && 2 === count( $remaining ) ) {
+					if ( false === $remaining || 2 === count( $remaining ) ) {
 						++$failed;
 					}
 				}

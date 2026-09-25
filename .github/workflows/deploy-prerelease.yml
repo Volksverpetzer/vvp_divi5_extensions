@@ -116,12 +116,19 @@ jobs:
         # yet -- see PR #186's setup steps -- so this doesn't turn every
         # deploy red for the gap between merging and finishing that setup;
         # once it's set, the endpoint's own failure modes apply as normal.
+        #
+        # Passed through env, not interpolated into the script text: a
+        # ${{ secrets.X }} expression is substituted into run: *before* bash
+        # ever parses it, so a secret value containing $(), backticks, or
+        # quotes would otherwise be interpreted as shell syntax.
+        env:
+          VVP_CACHE_CLEAR_SECRET: ${{ secrets.VVP_CACHE_CLEAR_SECRET }}
         run: |
-          if [ -z "${{ secrets.VVP_CACHE_CLEAR_SECRET }}" ]; then
+          if [ -z "$VVP_CACHE_CLEAR_SECRET" ]; then
             echo "::warning::VVP_CACHE_CLEAR_SECRET is not configured yet -- skipping et-cache clear. Stale Divi CSS may persist until it's set (see PR #186)."
             exit 0
           fi
           curl -sS --fail-with-body \
-            -H "X-VVP-Cache-Clear-Secret: ${{ secrets.VVP_CACHE_CLEAR_SECRET }}" \
+            -H "X-VVP-Cache-Clear-Secret: $VVP_CACHE_CLEAR_SECRET" \
             --data-urlencode "action=vvp_clear_et_cache" \
             "https://volksverpetzer.de/wp-admin/admin-ajax.php"
