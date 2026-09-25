@@ -1,11 +1,5 @@
 import * as React from "react";
 
-/**
- * HYDRATION GUARDRAIL: the markup this renders (in its default, not-yet-copied
- * state) is mirrored by hand in CardRenderTrait.php's render_featured_card, so
- * ArticleCard's usage of it can hydrate over PHP's static HTML. Keep the two
- * sides in sync — see the guardrail comment in frontend.tsx for the full rules.
- */
 export interface CopyLinkButtonProps {
   link: string;
   className?: string;
