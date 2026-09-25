@@ -110,8 +110,11 @@ trait RenderCallbackTrait
 
         // The filter toggle only makes sense when the feed actually mixes
         // article and non-article content — hide it when the editor narrowed
-        // the module down to a single content type (e.g. a podcast-only page).
-        $show_filter_toggle = count($selected_types) > 1;
+        // the selection down to only article sources, only non-article
+        // sources, or a single content type (e.g. a podcast-only page).
+        $has_articles     = $show_vvp_articles || $show_pp_articles;
+        $has_non_articles = $show_instagram || $show_youtube || $show_podcast;
+        $show_filter_toggle = $has_articles && $has_non_articles;
 
         // "itemsToShow" is the number of items visible on first load and the
         // batch size "Load more" reveals at a time. $render_cap bounds how
@@ -264,9 +267,10 @@ trait RenderCallbackTrait
         // 4. Merge, sort, cap ------------------------------------------------
         // Articles + remaining YouTube share a combined cap of $render_cap
         // (newest first). Instagram and podcast episodes get their own
-        // $render_cap each. YouTube banner is always included. The merged
-        // total is then capped again at $render_cap — comfortably more than
-        // $items_to_show so "Load more" has several batches to reveal.
+        // $render_cap each. The YouTube banner is always included, so it's
+        // reserved a slot and capped separately from the rest of the pool —
+        // otherwise enough newer items in the other sources could push it
+        // past the final $render_cap slice and silently drop it.
 
         $other_items = array_merge($article_items, $yt_items);
         usort($other_items, function ($a, $b) {
@@ -274,11 +278,16 @@ trait RenderCallbackTrait
         });
         $other_items = array_slice($other_items, 0, $render_cap);
 
-        $merged = array_merge($insta_items, $other_items, $podcast_feed, $yt_banner_feed);
+        $cappable = array_merge($insta_items, $other_items, $podcast_feed);
+        usort($cappable, function ($a, $b) {
+            return $b['date']->getTimestamp() - $a['date']->getTimestamp();
+        });
+        $cappable = array_slice($cappable, 0, max(0, $render_cap - count($yt_banner_feed)));
+
+        $merged = array_merge($cappable, $yt_banner_feed);
         usort($merged, function ($a, $b) {
             return $b['date']->getTimestamp() - $a['date']->getTimestamp();
         });
-        $merged = array_slice($merged, 0, $render_cap);
 
         // 5. Render ----------------------------------------------------------
 
