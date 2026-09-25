@@ -151,12 +151,44 @@ const initToggles = () => {
     });
 };
 
+const initLoadMoreButton = (button: HTMLButtonElement) => {
+  const wrapper = button.closest(".vvp-co__wrapper");
+  const grid = wrapper?.querySelector<HTMLElement>(".vvp-co__feed-grid");
+  if (!grid) return;
+
+  const batchSize = parseInt(button.dataset.coBatchSize || "", 10) || 12;
+
+  button.addEventListener("click", () => {
+    const hiddenItems = Array.from(
+      grid.querySelectorAll<HTMLElement>(".vvp-co__feed-item[hidden]"),
+    );
+    hiddenItems.slice(0, batchSize).forEach((item) => {
+      item.removeAttribute("hidden");
+    });
+    if (hiddenItems.length <= batchSize) {
+      button.hidden = true;
+    }
+  });
+};
+
+const initLoadMore = () => {
+  document
+    .querySelectorAll<HTMLButtonElement>(
+      ".vvp-co__load-more-btn:not([data-load-more-initialized])",
+    )
+    .forEach((button) => {
+      button.setAttribute("data-load-more-initialized", "true");
+      initLoadMoreButton(button);
+    });
+};
+
 const initAll = () => {
   initArticleCards();
   initInstagramSlideshows();
   initPodcastBanners();
   initYouTubeBanners();
   initToggles();
+  initLoadMore();
 };
 
 if (document.readyState === "loading") {
