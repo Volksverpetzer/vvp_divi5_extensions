@@ -249,18 +249,19 @@ trait RenderCallbackTrait
         }
 
         // Every podcast episode becomes its own full-width banner card (not
-        // just the latest one) — capped by $render_cap since the RSS feed can
-        // carry a station's entire back catalogue. An episode with a missing
-        // or unparseable pubDate still gets shown (falling back to the same
-        // epoch placeholder the single-episode code used before), sorted to
-        // the end, rather than silently disappearing.
+        // just the latest one). An episode with a missing or unparseable
+        // pubDate still gets shown (falling back to the same epoch
+        // placeholder the single-episode code used before), sorted to the
+        // end, rather than silently disappearing. Not capped here — the
+        // whole feed is already fully parsed in memory by
+        // parse_podcast_feed(), so truncating this list before picking the
+        // pinned latest episode below could exclude the true latest episode
+        // if the feed isn't strictly newest-first. Capped further down,
+        // after the pinned episode has been chosen from the complete list.
         $podcast_feed = [];
         foreach ($podcast_items as $episode) {
             $dt             = self::parse_datetime($episode['pubDate'] ?? '') ?? new \DateTime('1970-01-01');
             $podcast_feed[] = ['kind' => 'podcast_banner', 'date' => $dt, 'data' => $episode];
-            if (count($podcast_feed) >= $render_cap) {
-                break;
-            }
         }
 
         // Extract the latest YouTube video as an always-shown banner.
@@ -295,6 +296,13 @@ trait RenderCallbackTrait
             });
             $podcast_banner_feed[] = array_shift($podcast_feed);
         }
+
+        // Cap the *remaining* competitive pool now that the pinned episode
+        // has been chosen from the complete, unsorted-by-rank list above —
+        // the RSS feed can carry a station's entire back catalogue, and
+        // there's no reason to sort/merge/render more of it below than
+        // $render_cap could ever keep visible anyway.
+        $podcast_feed = array_slice($podcast_feed, 0, $render_cap);
 
         // Pinned items are always included AND always visible on first
         // load, regardless of their date rank — see render_overview().
