@@ -287,9 +287,12 @@ trait RenderCallbackTrait
         // now competes in the normal capped pool like everything else.
         $podcast_banner_feed = [];
         if (!empty($podcast_feed)) {
-            // $podcast_feed preserves the RSS feed's own (newest-first)
-            // order, same assumption the pre-existing single-episode code
-            // already relied on ($podcast_items[0]).
+            // Sort by parsed date rather than trusting RSS feed order — the
+            // pre-existing single-episode code assumed $podcast_items[0] was
+            // always the newest, which isn't guaranteed for every feed.
+            usort($podcast_feed, function ($a, $b) {
+                return $b['date']->getTimestamp() - $a['date']->getTimestamp();
+            });
             $podcast_banner_feed[] = array_shift($podcast_feed);
         }
 
@@ -307,8 +310,14 @@ trait RenderCallbackTrait
         // 4. Merge, sort, cap ------------------------------------------------
         // The pinned YouTube and podcast banners (at most one of each) are
         // always included, never dropped by the cap. Articles, remaining
-        // YouTube, Instagram, and every other podcast episode share the
-        // rest of $render_cap (newest first).
+        // YouTube, Instagram, and every other podcast episode share
+        // $render_cap (newest first). Pinned items are added ON TOP of that
+        // cap rather than sharing its budget — subtracting their count first
+        // could shrink the cappable slice below zero and, worse, let a tiny
+        // $render_cap (e.g. itemsToShow=1 with "Load more" off) squeeze a
+        // pinned item out entirely, breaking the one guarantee pinning
+        // exists for. At most 2 extra items (one podcast, one YouTube) is a
+        // small, predictable, worthwhile trade-off.
 
         $other_items = array_merge($article_items, $yt_items);
         usort($other_items, function ($a, $b) {
@@ -322,7 +331,7 @@ trait RenderCallbackTrait
         usort($cappable, function ($a, $b) {
             return $b['date']->getTimestamp() - $a['date']->getTimestamp();
         });
-        $cappable = array_slice($cappable, 0, max(0, $render_cap - count($always_include)));
+        $cappable = array_slice($cappable, 0, $render_cap);
 
         $merged = array_merge($cappable, $always_include);
         usort($merged, function ($a, $b) {
