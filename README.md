@@ -397,12 +397,17 @@ Deployment is automated via GitHub Actions and SSH/rsync. Push to the relevant b
 
 ### Required GitHub secrets
 
-| Secret           | Description                         |
-| ---------------- | ----------------------------------- |
-| `SSH_DEPLOY_KEY` | Private SSH key for the deploy user |
-| `SSH_HOST_KEY`   | Host key entry for `known_hosts`    |
-| `SSH_USER`       | SSH username on the target server   |
-| `SSH_HOST`       | Target server hostname              |
+| Secret                   | Description                                                  |
+| ------------------------ | ------------------------------------------------------------ |
+| `SSH_DEPLOY_KEY`         | Private SSH key for the deploy user                          |
+| `SSH_HOST_KEY`           | Host key entry for `known_hosts`                             |
+| `SSH_USER`               | SSH username on the target server                            |
+| `SSH_HOST`               | Target server hostname                                       |
+| `VVP_CACHE_CLEAR_SECRET` | Shared secret for the post-deploy et-cache clear (see below) |
+
+Both `prerelease` and `main` deploy to the same WordPress install (only the plugin subdirectory differs — `-dev` vs `-prod`), so all of the above are shared between the two workflows.
+
+`VVP_CACHE_CLEAR_SECRET` also requires a matching server-side constant, since it authenticates a call _into_ WordPress rather than _onto_ the server: add `define( 'VVP_ET_CACHE_CLEAR_SECRET', '<same value>' );` to `wp-config.php` on the target server. Set the server-side constant **before** adding this GitHub secret — the deploy workflow can only skip its cache-clear step gracefully when its own secret is unset, not when the server-side half is still missing, so setting the server up first avoids a window where the step fails.
 
 ### Branch → environment
 
