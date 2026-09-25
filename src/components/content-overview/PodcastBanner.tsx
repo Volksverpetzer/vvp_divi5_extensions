@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Badge } from "@volksverpetzer/ui-web";
 import { trackEvent } from "../../utils/plausible";
 
@@ -45,11 +45,18 @@ export const PodcastBanner: React.FC<PodcastBannerProps> = ({
   artworkUrl,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const instanceId = useId();
+  // A plain module-scoped React useId() collides across instances here:
+  // each PodcastBanner hydrates through its own separate hydrateRoot()
+  // call (frontend.tsx), and React's id generator is scoped per root, so
+  // two independent roots can generate the same id without an explicit
+  // identifierPrefix. A Symbol is unique by construction regardless of
+  // how many roots exist, and never needs to leave this JS realm (it's
+  // only compared in-memory via the CustomEvent, never serialized).
+  const [instanceId] = useState(() => Symbol("podcast-banner"));
 
   useEffect(() => {
     const handlePlay = (event: Event) => {
-      const otherId = (event as CustomEvent<string>).detail;
+      const otherId = (event as CustomEvent<symbol>).detail;
       if (otherId !== instanceId) {
         setIsPlaying(false);
       }

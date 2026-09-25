@@ -268,15 +268,17 @@ trait RenderCallbackTrait
         }
 
         // 4. Merge, sort, cap ------------------------------------------------
-        // Podcast episodes and the YouTube banner are always included, never
-        // dropped by the cap: they're this module's headline full-width
-        // content (the whole point of this feature is a podcast page
-        // reliably showing its episodes), so a busy Instagram/article feed
-        // must not be able to push them out entirely. Articles, remaining
-        // YouTube, and Instagram share the rest of $render_cap (newest
-        // first). This is one general "reserve" partition rather than a
-        // one-off special case, so a future always-included kind doesn't
-        // need its own bespoke reservation.
+        // The YouTube banner (always exactly 0 or 1 item) is always
+        // included, never dropped by the cap. Podcast episodes get a
+        // bounded reservation instead of an unlimited one: up to
+        // $items_to_show of the newest episodes are always included too
+        // (so a podcast-heavy or podcast-only page reliably shows its
+        // first page of episodes), but any episodes beyond that compete in
+        // the normal capped pool alongside articles/YouTube/Instagram —
+        // reserving the *entire* podcast_feed (which can itself be as large
+        // as $render_cap) would let a long back-catalogue consume the whole
+        // cap and push every other selected source off the page, and could
+        // push total render size past $render_cap.
 
         $other_items = array_merge($article_items, $yt_items);
         usort($other_items, function ($a, $b) {
@@ -284,9 +286,12 @@ trait RenderCallbackTrait
         });
         $other_items = array_slice($other_items, 0, $render_cap);
 
-        $always_include = array_merge($podcast_feed, $yt_banner_feed);
+        $podcast_reserved = array_slice($podcast_feed, 0, min($items_to_show, count($podcast_feed)));
+        $podcast_extra    = array_slice($podcast_feed, count($podcast_reserved));
 
-        $cappable = array_merge($insta_items, $other_items);
+        $always_include = array_merge($podcast_reserved, $yt_banner_feed);
+
+        $cappable = array_merge($insta_items, $other_items, $podcast_extra);
         usort($cappable, function ($a, $b) {
             return $b['date']->getTimestamp() - $a['date']->getTimestamp();
         });
