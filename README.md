@@ -9,6 +9,7 @@ A WordPress plugin that adds custom modules to the **DIVI 5 Visual Builder** for
 | **Autorenprofil**     | `vvp/author-profile`    | Displays the current post author(s) with avatar, name link, and bio           |
 | **Trending Beiträge** | `vvp/trending-items`    | Card grid of trending articles with thumbnails, configurable time range       |
 | **Trending Liste**    | `vvp/trending-list`     | Compact list of trending article titles and authors, configurable time range  |
+| **Audio-Player**      | `vvp/audio-embed`       | Embeds the vvp_wp_audio_converter player for the current article              |
 
 ---
 
@@ -106,6 +107,23 @@ Renders a compact numbered list of trending article titles and authors within a 
 - PHP fetches trending data and server-renders the module (`modules/TrendingList/TrendingListTrait/RenderCallbackTrait.php`)
 - React app (`src/components/trending-list/App.tsx`) is mounted by `scripts/trending-list-frontend.js`
 - DIVI Visual Builder preview: `src/components/trending-list/edit.tsx` (placeholder list items)
+
+### Audio-Player (`vvp/audio-embed`)
+
+Embeds the [vvp_wp_audio_converter](https://github.com/Volksverpetzer/vvp_wp_audio_converter) player for the current article in an iframe, sized to its actual content instead of a fixed height. Replaces the hand-written Code module previously used in the article Theme Builder template, which hardcoded `<iframe height="100">` with no way to collapse itself when an article has no audio yet.
+
+**Settings (DIVI):**
+
+- Audio-Basis-URL (`audioBaseUrl`): base URL of the vvp_wp_audio_converter deployment, e.g. `https://audio.volksverpetzer-app.de/audio/`. Leave empty for the default.
+- Fehlerkarte anzeigen (`showErrorCard`): off by default, so an article with no audio yet stays fully invisible (no gap). Turn on to show visitors a visible "Audio nicht verfügbar" card instead of nothing — appends `?showError=1` to the embed URL, which vvp_wp_audio_converter's `AudioPage` reads per-request (see that repo's `components/audio-not-found.tsx`).
+- Width/max-width: standard DIVI sizing controls (Design tab) — no custom width setting.
+
+**Architecture:**
+
+- PHP resolves the current article's slug and server-renders a mount point + a real `<noscript>` fallback link (`modules/AudioEmbed/AudioEmbedTrait/RenderCallbackTrait.php`). Uses `get_queried_object_id()`, not `get_the_ID()`/`get_post()` — inside a Theme Builder template those resolve to the template's own post, not the actual article being viewed (same issue documented on `RelatedItems::current_post_id()`).
+- React app (`src/components/audio-embed/App.tsx`) is mounted by `scripts/audio-embed-frontend.js`. It renders the iframe at height `0` and listens for a `postMessage` of `{ type: "vvp-audio-embed-resize", height }` from vvp_wp_audio_converter's `EmbedHeightReporter` component, validating both `event.source` (against the iframe's own `contentWindow`) and `event.origin` before trusting it — the page can carry other third-party iframes, and the embedded iframe could in principle navigate elsewhere.
+- `audioBaseUrl` and `slug` are resolved into the iframe `src` via the `URL` API (`new URL(slug, audioBaseUrl)`, checking `.protocol`) rather than string concatenation — both round-trip through DOM `data-*` attributes before reaching React, so both are treated as untrusted.
+- DIVI Visual Builder preview: `src/components/audio-embed/edit.tsx` renders a static mockup (`App.tsx`'s `preview` prop) instead of a live iframe — no real article slug exists while editing a shared Theme Builder template, and a fake slug would just resolve to vvp_wp_audio_converter's silent "not yet available" state, leaving the module looking completely empty in the builder.
 
 ---
 
@@ -379,12 +397,17 @@ Deployment is automated via GitHub Actions and SSH/rsync. Push to the relevant b
 
 ### Required GitHub secrets
 
-| Secret           | Description                         |
-| ---------------- | ----------------------------------- |
-| `SSH_DEPLOY_KEY` | Private SSH key for the deploy user |
-| `SSH_HOST_KEY`   | Host key entry for `known_hosts`    |
-| `SSH_USER`       | SSH username on the target server   |
-| `SSH_HOST`       | Target server hostname              |
+| Secret                   | Description                                                  |
+| ------------------------ | ------------------------------------------------------------ |
+| `SSH_DEPLOY_KEY`         | Private SSH key for the deploy user                          |
+| `SSH_HOST_KEY`           | Host key entry for `known_hosts`                             |
+| `SSH_USER`               | SSH username on the target server                            |
+| `SSH_HOST`               | Target server hostname                                       |
+| `VVP_CACHE_CLEAR_SECRET` | Shared secret for the post-deploy et-cache clear (see below) |
+
+Both `prerelease` and `main` deploy to the same WordPress install (only the plugin subdirectory differs — `-dev` vs `-prod`), so all of the above are shared between the two workflows.
+
+`VVP_CACHE_CLEAR_SECRET` also requires a matching server-side constant, since it authenticates a call _into_ WordPress rather than _onto_ the server: add `define( 'VVP_ET_CACHE_CLEAR_SECRET', '<same value>' );` to `wp-config.php` on the target server. Set the server-side constant **before** adding this GitHub secret — the deploy workflow can only skip its cache-clear step gracefully when its own secret is unset, not when the server-side half is still missing, so setting the server up first avoids a window where the step fails.
 
 ### Branch → environment
 
@@ -427,7 +450,13 @@ Values are injected by PHP as JSON into a `<script id="vvp-fact-check-search-con
 
 ### Inhaltsübersicht
 
-Configured via `modules/ContentOverview/ContentOverviewTrait/RenderCallbackTrait.php` (API endpoints, feed sizes, cache TTL). No DIVI settings panel fields — all configuration is in PHP constants.
+| Setting               | Default                                     | Description                                                                                                                                                                                                                    |
+| --------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Inhaltstypen          | all (articles, Instagram, YouTube, podcast) | Which content types appear in the feed; empty selection means "show everything" (`contentTypes`).                                                                                                                              |
+| Anzahl der Einträge   | `24`                                        | Items visible on first load, and the "Load more" batch size (`itemsToShow`, clamped 1–60).                                                                                                                                     |
+| "Mehr laden" anzeigen | on                                          | Toggles the "Load more" button (`showLoadMore`). When off, no hidden items are ever pre-rendered — only `itemsToShow`, plus the always-pinned YouTube/podcast banners if present (at most 2 extra), are rendered, all visible. |
+
+The "Nur Artikel" filter toggle auto-hides when `Inhaltstypen` resolves to a single content type (e.g. a podcast-only page) — there is nothing to filter. "Load more" reveals pre-rendered, initially-hidden items client-side; no AJAX endpoint is involved. API endpoints, per-source fetch caps and cache TTLs are otherwise configured via `modules/ContentOverview/ContentOverviewTrait/RenderCallbackTrait.php` and `DataFetchTrait.php`.
 
 For locally-sourced articles, the feed card's author line reads all co-authors from **PublishPress Authors** (if available), falling back to the single WordPress core post author, and joins them the same German-style way as TrendingList (e.g. "A und B").
 

@@ -47,6 +47,54 @@
         }
       }
     },
+    "itemsToShow": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 20,
+            "render": true,
+            "attrName": "itemsToShow.innerContent",
+            "label": "Anzahl der Einträge",
+            "description": "Wie viele Einträge werden initial angezeigt? Weitere werden über \"Mehr laden\" nachgeladen. Standard: 24.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "showLoadMore": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 30,
+            "render": true,
+            "attrName": "showLoadMore.innerContent",
+            "label": "\"Mehr laden\" anzeigen",
+            "description": "Einen Button zum Nachladen weiterer Einträge anzeigen. Bei \"Aus\" werden nur die \"Anzahl der Einträge\" Einträge geladen, ohne Möglichkeit zum Nachladen.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/toggle",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
     "module": {
       "type": "object",
       "selector": "{{selector}}",

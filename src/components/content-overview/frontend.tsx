@@ -151,12 +151,62 @@ const initToggles = () => {
     });
 };
 
+const initLoadMoreButton = (button: HTMLButtonElement) => {
+  const wrapper = button.closest(".vvp-co__wrapper");
+  const grid = wrapper?.querySelector<HTMLElement>(".vvp-co__feed-grid");
+  if (!grid) return;
+
+  const batchSize = parseInt(button.dataset.coBatchSize || "", 10) || 12;
+
+  button.addEventListener("click", () => {
+    // While "Nur Artikel" is active, non-article items stay CSS-hidden
+    // (applyArticlesFilter) even after their `hidden` attribute is
+    // removed — revealing a batch that happens to be all non-article
+    // items would otherwise make the click look like it did nothing.
+    // Keep revealing items until `batchSize` of them actually become
+    // visible under the current filter, or nothing is left to reveal.
+    const isFiltered = grid.classList.contains(
+      "vvp-co__feed-grid--articles-only",
+    );
+    const hiddenItems = Array.from(
+      grid.querySelectorAll<HTMLElement>(".vvp-co__feed-item[hidden]"),
+    );
+
+    let revealed = 0;
+    let consumed = 0;
+    while (consumed < hiddenItems.length && revealed < batchSize) {
+      const item = hiddenItems[consumed];
+      item.removeAttribute("hidden");
+      consumed++;
+      if (!isFiltered || item.dataset.coKind === "article") {
+        revealed++;
+      }
+    }
+
+    if (consumed >= hiddenItems.length) {
+      button.hidden = true;
+    }
+  });
+};
+
+const initLoadMore = () => {
+  document
+    .querySelectorAll<HTMLButtonElement>(
+      ".vvp-co__load-more-btn:not([data-load-more-initialized])",
+    )
+    .forEach((button) => {
+      button.setAttribute("data-load-more-initialized", "true");
+      initLoadMoreButton(button);
+    });
+};
+
 const initAll = () => {
   initArticleCards();
   initInstagramSlideshows();
   initPodcastBanners();
   initYouTubeBanners();
   initToggles();
+  initLoadMore();
 };
 
 if (document.readyState === "loading") {

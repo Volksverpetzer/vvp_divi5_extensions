@@ -59,7 +59,7 @@ trait RenderCallbackTrait
             // esc_url() (not esc_attr()) so a "javascript:" or other
             // disallowed-scheme URL saved into this field is stripped
             // server-side too, not just by the client-side allowlist in
-            // App.tsx's getSafeButtonUrl().
+            // App.tsx's inline safeButtonUrl logic.
             'data-button-url'    => esc_url($button_url),
             'data-button-new-tab' => $button_new_tab ? 'true' : 'false',
             'data-variant'       => esc_attr($variant),

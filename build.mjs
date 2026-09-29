@@ -111,6 +111,10 @@ const frontends = [
     name: "cta-box-frontend",
     entry: "./src/components/cta-box/frontend.tsx",
   },
+  {
+    name: "audio-embed-frontend",
+    entry: "./src/components/audio-embed/frontend.tsx",
+  },
 ];
 
 for (const dir of ["./scripts", "./styles"]) {

@@ -281,3 +281,15 @@ export const FEED_PODCAST = {
     "Wie radikalisieren sich Katzen online, und was können Dosenöffner dagegen tun? Wir sprechen mit Expert:innen über Prävention, Kratzbaum-Verantwortung und die Rolle der Zivilgesellschaft.",
   artworkUrl: pimg("katze-pod", 100, 100),
 };
+
+export const FEED_PODCAST_2 = {
+  title:
+    "Katzenverpetzer Podcast – Folge 46: Verschwörungsmythen im Katzenkorb",
+  link: "#",
+  enclosure: "",
+  date: "26. April 2026",
+  duration: "48 Min.",
+  summary:
+    "Welche Erzählmuster tauchen in Katzenforen immer wieder auf, und woran erkennt man sie? Ein Gespräch über Quellenkritik, Prebunking und die Grenzen des Schnurr-Faktenchecks.",
+  artworkUrl: pimg("katze-pod2", 100, 100),
+};

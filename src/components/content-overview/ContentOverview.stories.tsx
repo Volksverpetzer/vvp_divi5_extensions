@@ -10,12 +10,45 @@ import {
   FEED_YT,
   FEED_YT_2,
   FEED_PODCAST,
+  FEED_PODCAST_2,
 } from "../shared/previewFixtures";
+
+// Mirrors PHP's "Nur Artikel" toggle markup (RenderCallbackTrait::render_overview),
+// only rendered when the real module would show more than one content type.
+const FilterToggle = () => (
+  <label className="vvp-co__filter-toggle" htmlFor="vvp-co-filter-articles">
+    <span className="vvp-co__filter-toggle-label">Nur Artikel</span>
+    <span className="vvp-co__toggle-track">
+      <input
+        type="checkbox"
+        className="vvp-co__toggle-input"
+        id="vvp-co-filter-articles"
+      />
+      <span className="vvp-co__toggle-thumb"></span>
+    </span>
+  </label>
+);
+
+// Mirrors PHP's "Mehr laden" button markup — real interactivity (revealing
+// hidden `.vvp-co__feed-item`s) comes from frontend.tsx's initLoadMore(),
+// which isn't wired up in Storybook, so this is a static visual only.
+const LoadMoreButton = ({ hidden }: { hidden?: boolean }) => (
+  <button
+    type="button"
+    className="vvp-co__load-more-btn"
+    data-co-load-more
+    data-co-batch-size="12"
+    hidden={hidden}
+  >
+    Mehr laden
+  </button>
+);
 
 const ContentOverviewFeed = () => (
   <div className="vvp-co__wrapper">
     <div className="vvp-co__section-header">
       <h2 className="vvp-co__section-title">Das Neueste</h2>
+      <FilterToggle />
     </div>
     <div className="vvp-co__feed-grid">
       {FEED_ARTICLES.slice(0, 3).map((a, i) => (
@@ -51,11 +84,40 @@ const ContentOverviewFeed = () => (
       ))}
       <div
         className="vvp-co__feed-item vvp-co__feed-item--podcast"
-        data-co-kind="podcast"
+        data-co-kind="podcast_banner"
       >
         <PodcastBanner {...FEED_PODCAST} />
       </div>
     </div>
+    {/* Nothing hidden in this mixed-feed example, so no more to load. */}
+    <LoadMoreButton hidden />
+  </div>
+);
+
+// Content type narrowed to "podcast" only, as on /podcast/ — the filter
+// toggle auto-hides (nothing to filter) and every episode gets its own
+// full-width banner, with older episodes hidden behind "Mehr laden".
+const PodcastOnlyFeed = () => (
+  <div className="vvp-co__wrapper">
+    <div className="vvp-co__section-header">
+      <h2 className="vvp-co__section-title">Das Neueste</h2>
+    </div>
+    <div className="vvp-co__feed-grid">
+      <div
+        className="vvp-co__feed-item vvp-co__feed-item--podcast"
+        data-co-kind="podcast_banner"
+      >
+        <PodcastBanner {...FEED_PODCAST} />
+      </div>
+      <div
+        className="vvp-co__feed-item vvp-co__feed-item--podcast"
+        data-co-kind="podcast_banner"
+        hidden
+      >
+        <PodcastBanner {...FEED_PODCAST_2} />
+      </div>
+    </div>
+    <LoadMoreButton />
   </div>
 );
 
@@ -68,3 +130,7 @@ export default meta;
 type Story = StoryObj<typeof ContentOverviewFeed>;
 
 export const Full: Story = {};
+
+export const PodcastOnly: Story = {
+  render: () => <PodcastOnlyFeed />,
+};

@@ -588,6 +588,32 @@ video:-moz-full-screen {
     font-size: 1rem;
   }
 }
+/* ---- Load more ---- */
+.vvp-co__load-more-btn {
+  display: flex;
+  margin: 2rem auto 0;
+  padding: 0.625rem 1.75rem;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: var(--vvp-radius-full);
+  color: #111827;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.vvp-co__load-more-btn:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.vvp-co__load-more-btn[hidden] {
+  display: none;
+}
+
 /* Hero image — reserve space while lazy image loads to prevent CLS */
 .vvp-co__hero-image-wrap {
   aspect-ratio: 350/183;

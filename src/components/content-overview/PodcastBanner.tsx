@@ -1,6 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Badge } from "@volksverpetzer/ui-web";
 import { trackEvent } from "../../utils/plausible";
+
+// This PR started rendering one PodcastBanner per episode instead of a
+// single one per page, so without cross-instance coordination two "Anhören"
+// clicks would play two episodes' audio at once. Broadcasting a play event
+// lets every other mounted instance stop itself, independent of how many
+// are on the page.
+const PLAY_EVENT = "vvp-co-podcast-play";
 
 interface PodcastBannerProps {
   title: string;
@@ -38,6 +45,31 @@ export const PodcastBanner: React.FC<PodcastBannerProps> = ({
   artworkUrl,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  // A plain module-scoped React useId() collides across instances here:
+  // each PodcastBanner hydrates through its own separate hydrateRoot()
+  // call (frontend.tsx), and React's id generator is scoped per root, so
+  // two independent roots can generate the same id without an explicit
+  // identifierPrefix. A Symbol is unique by construction regardless of
+  // how many roots exist, and never needs to leave this JS realm (it's
+  // only compared in-memory via the CustomEvent, never serialized).
+  const [instanceId] = useState(() => Symbol("podcast-banner"));
+
+  useEffect(() => {
+    const handlePlay = (event: Event) => {
+      const otherId = (event as CustomEvent<symbol>).detail;
+      if (otherId !== instanceId) {
+        setIsPlaying(false);
+      }
+    };
+    window.addEventListener(PLAY_EVENT, handlePlay);
+    return () => window.removeEventListener(PLAY_EVENT, handlePlay);
+  }, [instanceId]);
+
+  const startPlaying = () => {
+    window.dispatchEvent(new CustomEvent(PLAY_EVENT, { detail: instanceId }));
+    setIsPlaying(true);
+    trackEvent("Podcast Play");
+  };
 
   return (
     <div className="vvp-co__podcast-banner">
@@ -91,10 +123,7 @@ export const PodcastBanner: React.FC<PodcastBannerProps> = ({
               <button
                 type="button"
                 className="vvp-co__podcast-listen-btn"
-                onClick={() => {
-                  setIsPlaying(true);
-                  trackEvent("Podcast Play");
-                }}
+                onClick={startPlaying}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

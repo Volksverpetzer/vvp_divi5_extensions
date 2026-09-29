@@ -6,6 +6,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-09-29
+
+### Added
+
+- **Audio-Player** (`vvp/audio-embed`) Divi 5 module, replacing the hand-written Code module (`<iframe height="100">`) previously used in the article Theme Builder template. Sizes itself to the actual vvp_wp_audio_converter player height via `postMessage`, so an article with no audio yet leaves no visible gap instead of a fixed empty box.
+- Audio-Player: static placeholder mockup in the Visual Builder instead of a live iframe against a fake slug, which used to leave the module looking completely empty while editing.
+- Audio-Player: "Fehlerkarte anzeigen" setting — opt individual embeds into a visible "Audio nicht verfügbar" card for visitors when an article has no audio yet, instead of the default silent collapse (requires [vvp_wp_audio_converter#44](https://github.com/Volksverpetzer/vvp_wp_audio_converter/pull/44)).
+- `VVP_Divi_Cache_Prewarm`: pre-warms Divi's per-post et-cache (dynamic CSS) right after a post is published or edited, instead of leaving that first, more expensive compile to whichever visitor's request happens to hit it first. Fires one non-blocking internal request to the post's permalink from a short-delayed `wp_schedule_single_event()`, so a save-time Bunny edge cache purge has time to propagate before the warm request lands.
+- ContentOverview: "Anzahl der Einträge" setting controls how many items show initially (and the "Load more" batch size, default 24); a "Mehr laden" button reveals more pre-rendered items client-side. Podcast episodes beyond the latest one now render as their own feed items instead of only ever showing one, and the "Nur Artikel" filter toggle auto-hides when the module is configured to show just a single content type (e.g. a podcast-only page).
+- ContentOverview: "\"Mehr laden\" anzeigen" setting to toggle the "Load more" button off entirely, e.g. for a page that only ever wants a fixed-size feed.
+
+### Fixed
+
+- Author Profile, Campaign Donate, Campaign Progress, ContentOverview, Fact Check Search, Related Items, and Trending Items were all silently ignoring their Design-tab decoration settings (Sizing, Spacing, Border, Background, etc.) — the same bug already fixed for CTA Box in [#171](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/171), which had never been applied to the other modules. `ModuleStylesTrait::module_styles()` and the Visual Builder `styles.tsx` now actually render those styles for all of them.
+
+## [1.3.0] - 2026-09-07
+
+### Added
+
+- **CTA Box** Divi 5 module ([#167](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/167)), with a follow-up fix for decoration styles (max-width, spacing, border, etc.) being ignored ([#171](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/171)).
+- ContentOverview: content-type filter, plus a fix for Prüfpunkt badge styling ([#168](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/168)).
+- Trending Liste now shows co-authors via PublishPress Authors ([#150](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/150)).
+
+### Changed
+
+- Adopted the shared Volksverpetzer design system across components — CampaignProgress's ProgressBar, badge category colors, Card/Alert, InputButton for fact-check search — with several `design-tokens`/`ui-web` bumps along the way ([#147](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/147), [#148](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/148), [#149](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/149), [#160](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/160), [#162](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/162), [#166](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/166), [#170](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/170)).
+- ContentOverview's YouTube feed cards now stretch full width ([#159](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/159)).
+- Bumped dependencies and upgraded the build toolchain to Node 24 ([#145](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/145)).
+
+### Fixed
+
+- Fixed multi-author display in TrendingList and ContentOverview ([#157](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/157)).
+- Fixed a duplicate React key in the TrendingList "Three Entries" story ([#163](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/163)).
+- Fixed the Instagram carousel getting stuck on an infinite loading shimmer ([#165](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/165)).
+- Fixed ui-web components silently ignoring brand color tokens ([#169](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/169)).
+
 ## [1.2.0] - 2026-08-04
 
 ### Added

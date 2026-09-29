@@ -3,7 +3,7 @@
 Plugin Name: Volksverpetzer DIVI 5 extensions
 Plugin URI:  https://github.com/Volksverpetzer/vvp_divi5_extensions
 Description: Adds the custom DIVI 5 extensions for Volksverpetzer.de to the site
-Version:     1.3.0
+Version:     1.4.0
 Author:      Volksverpetzer
 Author URI:  https://volksverpetzer.de
 License:     GPLv2 or later
@@ -33,7 +33,7 @@ if ( defined( 'VVP_DIVI5_PATH' ) ) {
 
 define( 'VVP_DIVI5_PATH', plugin_dir_path( __FILE__ ) );
 define( 'VVP_DIVI5_URL', plugin_dir_url( __FILE__ ) );
-define( 'VVP_DIVI5_VERSION', '1.3.0' );
+define( 'VVP_DIVI5_VERSION', '1.4.0' );
 define( 'VVP_DIVI5_JSON_PATH', VVP_DIVI5_PATH . 'modules-json/' );
 
 /**
@@ -87,6 +87,28 @@ require_once VVP_DIVI5_PATH . 'includes/class-vvp-dynamic-content-meta-keys-cach
 
 add_action( 'plugins_loaded', [ 'VVP_Block_Render_Cache', 'init' ] );
 add_action( 'plugins_loaded', [ 'VVP_Dynamic_Content_Meta_Keys_Cache', 'init' ] );
+
+/**
+ * admin-ajax endpoint the deploy workflow calls to clear Divi's et-cache after a
+ * deploy -- see the class docblock for why this has to run as PHP (www-data)
+ * rather than over the SSH/rrsync deploy key.
+ */
+require_once VVP_DIVI5_PATH . 'includes/class-vvp-et-cache-clear-endpoint.php';
+
+add_action( 'plugins_loaded', [ 'VVP_Et_Cache_Clear_Endpoint', 'init' ] );
+
+/**
+ * Pre-warms Divi's per-post dynamic CSS cache (et-cache) right after a post
+ * is published or edited, instead of leaving that first (expensive) compile
+ * to whichever visitor's request happens to hit the post first. Originally
+ * drafted in vvp_wp_patches; belongs here instead since it depends directly
+ * on Divi's own et_core_is_fb_enabled() and exists solely to warm Divi's own
+ * et-cache output -- this plugin's scope, per vvp_wp_patches' README (fixes
+ * not specific to Divi belong there; Divi-internal behavior belongs here).
+ */
+require_once VVP_DIVI5_PATH . 'includes/class-vvp-divi-cache-prewarm.php';
+
+add_action( 'plugins_loaded', [ 'VVP_Divi_Cache_Prewarm', 'init' ] );
 
 /**
  * Enqueue Visual Builder assets for DIVI 5.
@@ -227,6 +249,19 @@ function VVP_DIVI5_enqueue_vb_scripts() {
 				],
 			]
 		);
+
+		\ET\Builder\VisualBuilder\Assets\PackageBuildManager::register_package_build(
+			[
+				'name'    => 'vvp-audio-embed-frontend-vb',
+				'version' => VVP_DIVI5_VERSION,
+				'script'  => [
+					'src'                => VVP_DIVI5_URL . 'scripts/audio-embed-frontend.js',
+					'deps'               => [],
+					'enqueue_top_window' => false,
+					'enqueue_app_window' => true,
+				],
+			]
+		);
 	}
 }
 add_action( 'divi_visual_builder_assets_before_enqueue_scripts', 'VVP_DIVI5_enqueue_vb_scripts' );
@@ -340,6 +375,17 @@ function VVP_DIVI5_enqueue_frontend_scripts() {
 		VVP_DIVI5_URL . 'scripts/cta-box-frontend.js',
 		array(),
 		$cb_frontend_ver,
+		true
+	);
+
+	$ae_frontend_path = VVP_DIVI5_PATH . 'scripts/audio-embed-frontend.js';
+	$ae_frontend_ver  = file_exists( $ae_frontend_path ) ? filemtime( $ae_frontend_path ) : VVP_DIVI5_VERSION;
+
+	wp_enqueue_script(
+		'vvp-audio-embed-frontend',
+		VVP_DIVI5_URL . 'scripts/audio-embed-frontend.js',
+		array(),
+		$ae_frontend_ver,
 		true
 	);
 }
