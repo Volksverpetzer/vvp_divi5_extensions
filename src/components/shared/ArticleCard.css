@@ -194,7 +194,9 @@ button.vvp-co__category--btn:hover,
 }
 
 /* Copy-link button — a footer flex item, pushed to the row's end and
-   vertically centered with the badge/date alongside it. */
+   vertically centered with the badge/date alongside it. Colors/radius
+   are the same tokens @volksverpetzer/ui-web's ghost Button hovers with
+   (see .vvp-ui-btn--ghost in Button.css). */
 .vvp-co__copy-link-btn {
   display: inline-flex;
   align-items: center;
@@ -203,9 +205,9 @@ button.vvp-co__category--btn:hover,
   margin-left: auto;
   width: 1.75rem;
   height: 1.75rem;
-  border-radius: 9999px;
+  border-radius: var(--vvp-radius-full);
   background: transparent;
-  color: #6b7280;
+  color: var(--vvp-text-muted);
   cursor: pointer;
   transition:
     color 0.15s ease,
@@ -213,13 +215,13 @@ button.vvp-co__category--btn:hover,
 }
 
 .vvp-co__copy-link-btn:hover {
-  color: #111827;
-  background: rgba(0, 0, 0, 0.06);
+  color: var(--vvp-text);
+  background: var(--vvp-surface);
 }
 
 .vvp-co__copy-link-btn svg {
-  width: 0.875rem;
-  height: 0.875rem;
+  width: var(--vvp-icon-size-xs);
+  height: var(--vvp-icon-size-xs);
 }
 
 /* YouTube play button overlay */

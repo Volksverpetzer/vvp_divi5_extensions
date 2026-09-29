@@ -7,11 +7,13 @@ export interface CopyLinkButtonProps {
 
 // Octicons "link-external" — same icon the app uses for Bluesky links
 // (see ExternalLinkIcon in vvp_app's Icons.tsx).
+// Sized to match --vvp-icon-size-xs (16px); actual rendered size is set
+// by the .vvp-co__copy-link-btn svg CSS rule off that same token.
 const CopyIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="14"
-    height="14"
+    width="16"
+    height="16"
     viewBox="0 0 16 16"
     fill="currentColor"
     aria-hidden="true"
@@ -23,8 +25,8 @@ const CopyIcon = () => (
 const CheckIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="14"
-    height="14"
+    width="16"
+    height="16"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
