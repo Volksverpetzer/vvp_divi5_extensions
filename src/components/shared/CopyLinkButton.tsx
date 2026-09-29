@@ -5,21 +5,18 @@ export interface CopyLinkButtonProps {
   className?: string;
 }
 
+// Octicons "link-external" — same icon the app uses for Bluesky links
+// (see ExternalLinkIcon in vvp_app's Icons.tsx).
 const CopyIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="14"
     height="14"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
+    viewBox="0 0 16 16"
+    fill="currentColor"
     aria-hidden="true"
   >
-    <path d="M15 7h3a5 5 0 0 1 0 10h-3m-6 0H6a5 5 0 0 1 0-10h3"></path>
-    <line x1="8" y1="12" x2="16" y2="12"></line>
+    <path d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.75.75 0 0 1-1.06-1.06l3.75-3.75-1.543-1.543a.25.25 0 0 1 .177-.427ZM3.75 2A1.75 1.75 0 0 0 2 3.75v8.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0 0 14 12.25v-3.5a.75.75 0 0 0-1.5 0v3.5a.25.25 0 0 1-.25.25h-8.5a.25.25 0 0 1-.25-.25v-8.5a.25.25 0 0 1 .25-.25h3.5a.75.75 0 0 0 0-1.5h-3.5Z"></path>
   </svg>
 );
 

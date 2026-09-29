@@ -208,21 +208,17 @@ button.vvp-co__category--btn:hover,
   width: 1.75rem;
   height: 1.75rem;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid #e5e7eb;
+  background: transparent;
   color: #6b7280;
   cursor: pointer;
-  box-shadow: var(--vvp-elevation-xs);
   transition:
     color 0.15s ease,
-    background 0.15s ease,
-    box-shadow 0.15s ease;
+    background 0.15s ease;
 }
 
 .vvp-co__copy-link-btn:hover {
   color: #111827;
-  background: #fff;
-  box-shadow: var(--vvp-elevation-md);
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .vvp-co__copy-link-btn svg {
