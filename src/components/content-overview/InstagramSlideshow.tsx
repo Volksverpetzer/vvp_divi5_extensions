@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Badge } from "@volksverpetzer/ui-web";
 import classnames from "classnames";
+import { CopyLinkButton } from "../shared/CopyLinkButton";
 
 interface Slide {
   thumb: string;
@@ -768,6 +769,7 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
             >
               {date}
             </span>
+            <CopyLinkButton link={permalink} />
           </div>
         </div>
       </div>
