@@ -3,7 +3,7 @@
  * Module: AudioEmbed class.
  *
  * @package VVP\Divi5\AudioEmbed
- * @since 1.5.0
+ * @since 1.4.0
  */
 
 namespace VVP\Divi5\AudioEmbed;
@@ -23,7 +23,7 @@ use ET\Builder\Packages\ModuleLibrary\ModuleRegistration;
  * used in the article Theme Builder template, which had no way to collapse
  * itself when an article has no audio yet.
  *
- * @since 1.5.0
+ * @since 1.4.0
  */
 class AudioEmbed implements DependencyInterface
 {
@@ -35,7 +35,7 @@ class AudioEmbed implements DependencyInterface
     /**
      * Loads `AudioEmbed` and registers Front-End render callback.
      *
-     * @since 1.5.0
+     * @since 1.4.0
      *
      * @return void
      */
