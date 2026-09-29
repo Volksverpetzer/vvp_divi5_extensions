@@ -3,7 +3,7 @@
  * AudioEmbed::module_classnames()
  *
  * @package VVP\Divi5\AudioEmbed
- * @since 1.5.0
+ * @since 1.4.0
  */
 
 namespace VVP\Divi5\AudioEmbed\AudioEmbedTrait;
@@ -17,7 +17,7 @@ trait ModuleClassnamesTrait
     /**
      * Module classnames generation.
      *
-     * @since 1.5.0
+     * @since 1.4.0
      *
      * @param array $args Module classnames arguments.
      *

@@ -3,7 +3,7 @@
  * AudioEmbed::render_callback()
  *
  * @package VVP\Divi5\AudioEmbed
- * @since 1.5.0
+ * @since 1.4.0
  */
 
 namespace VVP\Divi5\AudioEmbed\AudioEmbedTrait;
@@ -25,7 +25,7 @@ trait RenderCallbackTrait
     /**
      * AudioEmbed render callback for server-side rendering.
      *
-     * @since 1.5.0
+     * @since 1.4.0
      *
      * @param array          $attrs    Block attributes saved by Visual Builder.
      * @param string         $content  Block content.

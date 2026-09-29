@@ -3,7 +3,7 @@
  * AudioEmbed::module_styles()
  *
  * @package VVP\Divi5\AudioEmbed
- * @since 1.5.0
+ * @since 1.4.0
  */
 
 namespace VVP\Divi5\AudioEmbed\AudioEmbedTrait;
@@ -19,7 +19,7 @@ trait ModuleStylesTrait
     /**
      * Module styles generation.
      *
-     * @since 1.5.0
+     * @since 1.4.0
      *
      * @param array $args Module styles arguments.
      *
