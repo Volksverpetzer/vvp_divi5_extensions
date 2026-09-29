@@ -769,9 +769,9 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
             >
               {date}
             </span>
+            <CopyLinkButton link={permalink} />
           </div>
         </div>
-        <CopyLinkButton link={permalink} />
       </div>
 
       {isFullscreen && (
