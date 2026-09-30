@@ -43,7 +43,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #6b7280;
+  color: var(--vvp-text-muted, #666);
   white-space: nowrap;
 }
 
@@ -84,7 +84,7 @@
 .vvp-co__filter-toggle-label {
   font-size: 0.8125rem;
   font-weight: 500;
-  color: #6b7280;
+  color: var(--vvp-text-muted, #666);
 }
 
 .vvp-co__toggle-track {
@@ -305,7 +305,7 @@
 
 .vvp-co__podcast-date {
   font-size: 1rem;
-  color: #6b7280;
+  color: var(--vvp-text-muted, #666);
 }
 
 .vvp-co__podcast-listen-btn {
@@ -498,7 +498,7 @@
 
 .vvp-co__yt-banner-date {
   font-size: 1rem;
-  color: #6b7280;
+  color: var(--vvp-text-muted, #666);
 }
 
 /* ===== Instagram card — Divi slider wrapper ===== */
@@ -637,7 +637,7 @@ video:-moz-full-screen {
 
 .vvp-co__load-more-btn:hover {
   background: var(--vvp-background, #fff);
-  border-color: #9ca3af;
+  border-color: var(--vvp-text-muted, #666);
 }
 
 .vvp-co__load-more-btn[hidden] {

@@ -50,7 +50,7 @@
   cursor: text;
 }
 .vvp-campaign-donate .vvp-cd__preset-input::placeholder {
-  color: #9ca3af;
+  color: var(--vvp-text-muted, #666);
   font-weight: 400;
 }
 .vvp-campaign-donate .vvp-cd__preset-input:focus {
