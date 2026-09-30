@@ -44,10 +44,16 @@ const LoadMoreButton = ({ hidden }: { hidden?: boolean }) => (
   </button>
 );
 
-const ContentOverviewFeed = () => (
+const ContentOverviewFeed = ({
+  headline = "Das Neueste",
+  showHeadline = true,
+}: {
+  headline?: string;
+  showHeadline?: boolean;
+}) => (
   <div className="vvp-co__wrapper">
     <div className="vvp-co__section-header">
-      <h2 className="vvp-co__section-title">Das Neueste</h2>
+      {showHeadline && <h2 className="vvp-co__section-title">{headline}</h2>}
       <FilterToggle />
     </div>
     <div className="vvp-co__feed-grid">
@@ -130,6 +136,14 @@ export default meta;
 type Story = StoryObj<typeof ContentOverviewFeed>;
 
 export const Full: Story = {};
+
+export const CustomHeadline: Story = {
+  args: { headline: "Frisch aus der Redaktion" },
+};
+
+export const NoHeadline: Story = {
+  args: { showHeadline: false },
+};
 
 export const PodcastOnly: Story = {
   render: () => <PodcastOnlyFeed />,

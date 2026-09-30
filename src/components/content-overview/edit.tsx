@@ -163,11 +163,79 @@ const MOCK_PODCAST = {
   artworkUrl: img("katze-pod", 100, 100),
 };
 
+// ── Reading attrs ────────────────────────────────────────────────────────────
+//
+// Fields declared with attrName "<name>.innerContent" in module.json store
+// their value under attrs.<name>.innerContent.desktop.value, not
+// attrs.<name>.desktop.value (same convention every other module's edit.tsx
+// uses, e.g. AuthorProfile's showAvatar). Each attr is typed as bare `object`
+// in ContentOverviewAttrs, so reading the nested value needs `as any`.
+
+const ALL_CONTENT_TYPES = [
+  "articles-volksverpetzer",
+  "articles-pruefpunkt",
+  "instagram",
+  "youtube",
+  "podcast",
+];
+
+/**
+ * Mirrors RenderCallbackTrait::build_overview_html()'s attribute reads, so
+ * the Visual Builder preview reflects the same settings the live page uses —
+ * without reproducing the server's actual fetch/rank/pin/cap pipeline, which
+ * would be overkill for a representative mockup.
+ */
+const readSettings = (attrs: ContentOverviewEditProps["attrs"]) => {
+  const a = attrs as any;
+
+  const rawTypes = a.contentTypes?.innerContent?.desktop?.value;
+  const selectedTypes: string[] =
+    Array.isArray(rawTypes) && rawTypes.length > 0
+      ? rawTypes
+      : ALL_CONTENT_TYPES;
+
+  const showVvpArticles = selectedTypes.includes("articles-volksverpetzer");
+  const showPpArticles = selectedTypes.includes("articles-pruefpunkt");
+  const showInstagram = selectedTypes.includes("instagram");
+  const showYoutube = selectedTypes.includes("youtube");
+  const showPodcast = selectedTypes.includes("podcast");
+  const hasArticles = showVvpArticles || showPpArticles;
+  const hasNonArticles = showInstagram || showYoutube || showPodcast;
+
+  const rawItemsToShow = parseInt(
+    a.itemsToShow?.innerContent?.desktop?.value ?? "",
+    10,
+  );
+  const itemsToShow =
+    Number.isFinite(rawItemsToShow) && rawItemsToShow > 0
+      ? Math.max(1, Math.min(rawItemsToShow, 60))
+      : 24;
+
+  const showLoadMore = a.showLoadMore?.innerContent?.desktop?.value !== "off";
+  const showHeadline = a.showHeadline?.innerContent?.desktop?.value !== "off";
+  const headlineText: string =
+    a.headline?.innerContent?.desktop?.value || "Das Neueste";
+
+  return {
+    showVvpArticles,
+    showPpArticles,
+    showInstagram,
+    showYoutube,
+    showPodcast,
+    showFilterToggle: hasArticles && hasNonArticles,
+    itemsToShow,
+    showLoadMore,
+    showHeadline,
+    headlineText,
+  };
+};
+
 // ── Main edit component ───────────────────────────────────────────────────────
 
 /**
  * ContentOverview edit component for the Divi Visual Builder.
- * Shows representative example cards so the editor can see the real layout.
+ * Shows representative example cards, filtered and capped to match the
+ * module's own content-type/count/headline settings.
  *
  * @since 1.0.0
  */
@@ -175,6 +243,75 @@ export const ContentOverviewEdit = (
   props: ContentOverviewEditProps,
 ): ReactElement => {
   const { attrs, elements, id, name } = props;
+  const settings = readSettings(attrs);
+
+  const articles = MOCK_ARTICLES.filter((article) =>
+    article.source === "volksverpetzer"
+      ? settings.showVvpArticles
+      : settings.showPpArticles,
+  );
+
+  const blocks: { key: string; node: ReactElement }[] = [];
+
+  articles.slice(0, 3).forEach((article, i) => {
+    blocks.push({
+      key: `article-${i}`,
+      node: (
+        <div className="vvp-co__feed-item">
+          <ArticleCard {...article} />
+        </div>
+      ),
+    });
+  });
+
+  if (settings.showYoutube) {
+    blocks.push({
+      key: "youtube-banner",
+      node: (
+        <div className="vvp-co__feed-item vvp-co__feed-item--youtube-banner">
+          <YouTubeBanner {...MOCK_YT} />
+        </div>
+      ),
+    });
+  }
+
+  articles.slice(3, 6).forEach((article, i) => {
+    blocks.push({
+      key: `article-${i + 3}`,
+      node: (
+        <div className="vvp-co__feed-item">
+          <ArticleCard {...article} />
+        </div>
+      ),
+    });
+  });
+
+  if (settings.showInstagram) {
+    MOCK_IG_ITEMS.forEach((ig, i) => {
+      blocks.push({
+        key: `ig-${i}`,
+        node: (
+          <div className="vvp-co__feed-item">
+            <InstagramSlideshow {...ig} />
+          </div>
+        ),
+      });
+    });
+  }
+
+  if (settings.showPodcast) {
+    blocks.push({
+      key: "podcast-banner",
+      node: (
+        <div className="vvp-co__feed-item vvp-co__feed-item--podcast">
+          <PodcastBanner {...MOCK_PODCAST} />
+        </div>
+      ),
+    });
+  }
+
+  const visibleBlocks = blocks.slice(0, settings.itemsToShow);
+  const hasMoreBlocks = blocks.length > settings.itemsToShow;
 
   return (
     <ModuleContainer
@@ -189,42 +326,42 @@ export const ContentOverviewEdit = (
       {elements.styleComponents({ attrName: "module" })}
 
       <div className="vvp-co__wrapper">
-        <div className="vvp-co__section-header">
-          <h2 className="vvp-co__section-title">Das Neueste</h2>
-        </div>
+        {(settings.showHeadline || settings.showFilterToggle) && (
+          <div className="vvp-co__section-header">
+            {settings.showHeadline && (
+              <h2 className="vvp-co__section-title">{settings.headlineText}</h2>
+            )}
+            {settings.showFilterToggle && (
+              <label
+                className="vvp-co__filter-toggle"
+                htmlFor="vvp-co-filter-articles-preview"
+              >
+                <span className="vvp-co__filter-toggle-label">Nur Artikel</span>
+                <span className="vvp-co__toggle-track">
+                  <input
+                    type="checkbox"
+                    className="vvp-co__toggle-input"
+                    id="vvp-co-filter-articles-preview"
+                    disabled
+                  />
+                  <span className="vvp-co__toggle-thumb"></span>
+                </span>
+              </label>
+            )}
+          </div>
+        )}
 
         <div className="vvp-co__feed-grid">
-          {/* Row 1: articles */}
-          {MOCK_ARTICLES.slice(0, 3).map((a, i) => (
-            <div key={i} className="vvp-co__feed-item">
-              <ArticleCard {...a} />
-            </div>
+          {visibleBlocks.map((block) => (
+            <React.Fragment key={block.key}>{block.node}</React.Fragment>
           ))}
-
-          {/* YouTube banner */}
-          <div className="vvp-co__feed-item vvp-co__feed-item--youtube-banner">
-            <YouTubeBanner {...MOCK_YT} />
-          </div>
-
-          {/* Row 2: articles */}
-          {MOCK_ARTICLES.slice(3, 6).map((a, i) => (
-            <div key={i + 3} className="vvp-co__feed-item">
-              <ArticleCard {...a} />
-            </div>
-          ))}
-
-          {/* Row 3: Instagram carousels */}
-          {MOCK_IG_ITEMS.map((ig, i) => (
-            <div key={i} className="vvp-co__feed-item">
-              <InstagramSlideshow {...ig} />
-            </div>
-          ))}
-
-          {/* Podcast banner */}
-          <div className="vvp-co__feed-item vvp-co__feed-item--podcast">
-            <PodcastBanner {...MOCK_PODCAST} />
-          </div>
         </div>
+
+        {settings.showLoadMore && hasMoreBlocks && (
+          <button type="button" className="vvp-co__load-more-btn" disabled>
+            Mehr laden
+          </button>
+        )}
       </div>
     </ModuleContainer>
   );

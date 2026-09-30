@@ -95,6 +95,54 @@
         }
       }
     },
+    "headline": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 40,
+            "render": true,
+            "attrName": "headline.innerContent",
+            "label": "Überschrift",
+            "description": "Eigener Text für die Überschrift. Leer lassen für \"Das Neueste\".",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "showHeadline": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 50,
+            "render": true,
+            "attrName": "showHeadline.innerContent",
+            "label": "Überschrift anzeigen",
+            "description": "Die Abschnitts-Überschrift oberhalb des Feeds einblenden.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/toggle",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
     "module": {
       "type": "object",
       "selector": "{{selector}}",

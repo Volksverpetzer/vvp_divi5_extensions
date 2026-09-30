@@ -116,6 +116,15 @@ trait RenderCallbackTrait
         $has_non_articles = $show_instagram || $show_youtube || $show_podcast;
         $show_filter_toggle = $has_articles && $has_non_articles;
 
+        // "headline" lets editors replace "Das Neueste"; "showHeadline"
+        // hides it entirely (e.g. when the surrounding page already has its
+        // own section heading above the module).
+        $headline_text  = trim($attrs['headline']['innerContent']['desktop']['value'] ?? '');
+        $show_headline  = ($attrs['showHeadline']['innerContent']['desktop']['value'] ?? 'on') !== 'off';
+        if ('' === $headline_text) {
+            $headline_text = 'Das Neueste';
+        }
+
         // "itemsToShow" is the number of items visible on first load and the
         // batch size "Load more" reveals at a time. $render_cap bounds how
         // many items are fetched/pre-rendered in total (hidden until
@@ -348,7 +357,7 @@ trait RenderCallbackTrait
 
         // 5. Render ----------------------------------------------------------
 
-        return self::render_overview($merged, $channel_image, $items_to_show, $show_filter_toggle, $show_load_more);
+        return self::render_overview($merged, $channel_image, $items_to_show, $show_filter_toggle, $show_load_more, $headline_text, $show_headline);
     }
 
     /**
@@ -412,10 +421,12 @@ trait RenderCallbackTrait
      *                                   "Load more" batch size.
      * @param bool   $show_filter_toggle Whether to render the "Nur Artikel" toggle.
      * @param bool   $show_load_more     Whether to render the "Mehr laden" button.
+     * @param string $headline_text      Section heading text.
+     * @param bool   $show_headline      Whether to render the section heading at all.
      *
      * @return string HTML.
      */
-    private static function render_overview($feed_items, $channel_image, $items_to_show, $show_filter_toggle, $show_load_more)
+    private static function render_overview($feed_items, $channel_image, $items_to_show, $show_filter_toggle, $show_load_more, $headline_text, $show_headline)
     {
         // Decide visibility from each item's rank in $feed_items — the
         // original, flat, date-sorted order — before group_feed_rows()
@@ -485,10 +496,20 @@ trait RenderCallbackTrait
                 . '</label>';
         }
 
-        $section_header = '<div class="vvp-co__section-header">'
-            . '<h2 class="vvp-co__section-title">Das Neueste</h2>'
-            . $filter_toggle_html
-            . '</div>';
+        $headline_html = $show_headline
+            ? '<h2 class="vvp-co__section-title">' . esc_html($headline_text) . '</h2>'
+            : '';
+
+        // Skip the wrapping div entirely when there's nothing in it — no
+        // headline and no filter toggle — rather than leaving an empty
+        // flex container in the markup.
+        $section_header = '';
+        if ($headline_html || $filter_toggle_html) {
+            $section_header = '<div class="vvp-co__section-header">'
+                . $headline_html
+                . $filter_toggle_html
+                . '</div>';
+        }
 
         $load_more_html = '';
         if ($show_load_more) {
