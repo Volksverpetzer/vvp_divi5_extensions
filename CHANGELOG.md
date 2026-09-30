@@ -6,10 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-09-30
+
 ### Added
 
 - ContentOverview: "Überschrift" setting for custom heading text (replacing "Das Neueste"), and "Überschrift anzeigen" to hide the heading entirely.
 - ContentOverview: the Visual Builder editor preview now reflects the module's own settings (content types, item count, load-more, headline) against representative mock data, instead of always showing the same fixed layout.
+
+### Changed
+
+- Bumped dependencies (`@storybook/react-vite`, `storybook`, `vitest`, `@vitest/coverage-v8`, `cspell`, `pnpm`); `eslint` and `typescript` were left as-is, and `@divi/module`/`@divi/module-library`/`@divi/types` stay pinned since their latest patch ships type declarations that fail `tsc --noEmit` (missing `@langchain/*` exports, duplicate `EtAiAppData`/`DiviDevFlags` declarations).
 
 ## [1.4.0] - 2026-09-29
 
