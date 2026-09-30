@@ -7,7 +7,7 @@ import { IG_PROPS } from "../shared/previewFixtures";
 const meta: Meta<typeof InstagramSlideshow> = {
   title: "Modules/ContentOverview/InstagramSlideshow",
   component: InstagramSlideshow,
-  decorators: [(Story) => <PreviewCard maxWidth={360}>{Story()}</PreviewCard>],
+  decorators: [(Story) => <PreviewCard>{Story()}</PreviewCard>],
 };
 
 export default meta;
