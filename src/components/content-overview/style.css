@@ -240,8 +240,7 @@
 .vvp-co__podcast-artwork {
   width: 100%;
   height: auto;
-  max-width: 190px;
-  max-height: 190px;
+  max-width: 100%;
   aspect-ratio: 1/1;
   border-radius: var(--vvp-radius-sm);
   object-fit: cover;
@@ -251,8 +250,6 @@
 
 @media (max-width: 699px) {
   .vvp-co__podcast-artwork {
-    max-width: none;
-    max-height: none;
     aspect-ratio: 16/9;
     border-radius: 0;
     box-shadow: none;

@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - ContentOverview: the Podcast card's artwork was squeezed into a small column on mobile instead of spanning the card, unlike every other full-width feed card. Below 700px it now stacks the artwork as a full-width 16:9 image above the title/summary, matching the Instagram card's layout.
+- ContentOverview: the Podcast card's artwork was capped at a fixed 190px regardless of how wide its column grew, leaving a visible gap of empty padding next to the image on wider viewports (e.g. ~1000px). It now scales to fill its column.
 
 ## [1.4.0] - 2026-09-29
 
