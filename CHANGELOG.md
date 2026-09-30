@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ContentOverview: "Überschrift" setting for custom heading text (replacing "Das Neueste"), and "Überschrift anzeigen" to hide the heading entirely.
 - ContentOverview: the Visual Builder editor preview now reflects the module's own settings (content types, item count, load-more, headline) against representative mock data, instead of always showing the same fixed layout.
 
+### Fixed
+
+- ContentOverview: the Podcast card's artwork was squeezed into a small column on mobile instead of spanning the card, unlike every other full-width feed card. Below 700px it now stacks the artwork as a full-width 16:9 image above the title/summary, matching the Instagram card's layout.
+
 ## [1.4.0] - 2026-09-29
 
 ### Added
