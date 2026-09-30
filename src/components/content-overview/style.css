@@ -50,7 +50,11 @@
 .vvp-co__feed-divider {
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, #e5e7eb 0%, transparent 100%);
+  background: linear-gradient(
+    90deg,
+    var(--vvp-surface, #e2f0f5) 0%,
+    transparent 100%
+  );
 }
 
 /* ---- Section heading + filter toggle ---- */
@@ -104,7 +108,7 @@
 .vvp-co__toggle-thumb {
   position: absolute;
   inset: 0;
-  background: #d1d5db;
+  background: var(--vvp-surface-disabled, #ddd);
   border-radius: var(--vvp-radius-full);
   transition: background 0.2s ease;
 }
@@ -164,8 +168,8 @@
 .vvp-co-article-mount,
 .vvp-co-ig-mount {
   border-radius: 0.625rem;
-  border: 1px solid #e5e7eb;
-  background: #f3f4f6;
+  border: 1px solid var(--vvp-surface, #e2f0f5);
+  background: var(--vvp-surface, #e2f0f5);
 }
 
 .vvp-co-article-mount {
@@ -580,7 +584,7 @@ video:-moz-full-screen {
 
 /* Instagram card styling */
 .vvp-co__feed-card--insta {
-  background-color: #fcfcfc;
+  background-color: var(--vvp-background, #fff);
 }
 
 /* Instagram feed meta and date row */
@@ -620,7 +624,7 @@ video:-moz-full-screen {
   margin: 2rem auto 0;
   padding: 0.625rem 1.75rem;
   background: var(--vvp-background, #fff);
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--vvp-surface-disabled, #ddd);
   border-radius: var(--vvp-radius-full);
   color: #111827;
   font-size: 0.9375rem;
@@ -632,7 +636,7 @@ video:-moz-full-screen {
 }
 
 .vvp-co__load-more-btn:hover {
-  background: #f9fafb;
+  background: var(--vvp-background, #fff);
   border-color: #9ca3af;
 }
 
@@ -644,7 +648,7 @@ video:-moz-full-screen {
 .vvp-co__hero-image-wrap {
   aspect-ratio: 350/183;
   overflow: hidden;
-  background: #f3f4f6;
+  background: var(--vvp-surface, #e2f0f5);
 }
 
 .vvp-co__hero-image {

@@ -6,7 +6,7 @@
 }
 .vvp-trending-list .vvp-tl__item {
   padding: var(--vvp-spacing-xl, 20px) 0;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--vvp-surface, #e2f0f5);
 }
 .vvp-trending-list .vvp-tl__item:first-child {
   padding-top: 0;

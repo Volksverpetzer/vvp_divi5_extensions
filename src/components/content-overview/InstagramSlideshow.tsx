@@ -72,7 +72,7 @@ const LoadingPlaceholder = () => (
       width: "100%",
       height: "100%",
       background:
-        "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%)",
+        "linear-gradient(90deg, var(--vvp-surface, #e2f0f5) 25%, var(--vvp-surface-disabled, #ddd) 37%, var(--vvp-surface, #e2f0f5) 63%)",
       backgroundSize: "600px 100%",
       borderRadius: "0.25rem",
     }}
