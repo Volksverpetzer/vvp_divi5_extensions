@@ -213,8 +213,11 @@ const readSettings = (attrs: ContentOverviewEditProps["attrs"]) => {
 
   const showLoadMore = a.showLoadMore?.innerContent?.desktop?.value !== "off";
   const showHeadline = a.showHeadline?.innerContent?.desktop?.value !== "off";
+  // Trim before falling back, matching RenderCallbackTrait.php's
+  // trim()+empty-check — otherwise a whitespace-only value renders as-is
+  // here while the live page falls back to "Das Neueste".
   const headlineText: string =
-    a.headline?.innerContent?.desktop?.value || "Das Neueste";
+    (a.headline?.innerContent?.desktop?.value ?? "").trim() || "Das Neueste";
 
   return {
     showVvpArticles,
@@ -244,6 +247,10 @@ export const ContentOverviewEdit = (
 ): ReactElement => {
   const { attrs, elements, id, name } = props;
   const settings = readSettings(attrs);
+  // Scoped to the module's own id — a fixed id here would duplicate across
+  // every ContentOverview instance in the Visual Builder, breaking each
+  // label's for/id association.
+  const filterToggleId = `vvp-co-filter-articles-preview-${id}`;
 
   const articles = MOCK_ARTICLES.filter((article) =>
     article.source === "volksverpetzer"
@@ -332,16 +339,13 @@ export const ContentOverviewEdit = (
               <h2 className="vvp-co__section-title">{settings.headlineText}</h2>
             )}
             {settings.showFilterToggle && (
-              <label
-                className="vvp-co__filter-toggle"
-                htmlFor="vvp-co-filter-articles-preview"
-              >
+              <label className="vvp-co__filter-toggle" htmlFor={filterToggleId}>
                 <span className="vvp-co__filter-toggle-label">Nur Artikel</span>
                 <span className="vvp-co__toggle-track">
                   <input
                     type="checkbox"
                     className="vvp-co__toggle-input"
-                    id="vvp-co-filter-articles-preview"
+                    id={filterToggleId}
                     disabled
                   />
                   <span className="vvp-co__toggle-thumb"></span>
