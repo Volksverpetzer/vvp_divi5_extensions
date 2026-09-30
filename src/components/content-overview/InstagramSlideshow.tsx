@@ -538,7 +538,7 @@ const InternalSlider = ({
                     alignItems: "center",
                     justifyContent: "center",
                     background: "rgba(255,255,255,0.8)",
-                    color: "#000",
+                    color: "var(--vvp-text, #111)",
                     borderRadius: "50%",
                     width: 36,
                     height: 36,
@@ -612,7 +612,7 @@ const InternalSlider = ({
                     alignItems: "center",
                     justifyContent: "center",
                     background: "rgba(255,255,255,0.8)",
-                    color: "#000",
+                    color: "var(--vvp-text, #111)",
                     borderRadius: "50%",
                     width: 36,
                     height: 36,
@@ -843,7 +843,7 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
 
             <div
               style={{
-                background: "#111",
+                background: "var(--vvp-text, #111)",
                 padding: "25px 20px",
                 borderRadius: 12,
                 color: "white",
