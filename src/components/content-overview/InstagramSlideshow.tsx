@@ -39,7 +39,10 @@ const parseCaption = (text: string): React.ReactNode[] => {
         href={part}
         target="_blank"
         rel="noopener noreferrer"
-        style={{ color: "#3893C0", wordBreak: "break-all" }}
+        style={{
+          color: "var(--vvp-primary-muted, #3893c0)",
+          wordBreak: "break-all",
+        }}
       >
         {part}
       </a>
@@ -865,7 +868,7 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
-                    color: "#3893C0",
+                    color: "var(--vvp-primary-muted, #3893c0)",
                     textDecoration: "none",
                     fontSize: 13,
                     fontWeight: "bold",
@@ -885,7 +888,13 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
               >
                 {parseCaption(caption)}
               </p>
-              <div style={{ marginTop: 20, color: "#666", fontSize: 13 }}>
+              <div
+                style={{
+                  marginTop: 20,
+                  color: "var(--vvp-text-muted, #666)",
+                  fontSize: 13,
+                }}
+              >
                 {date}
               </div>
             </div>

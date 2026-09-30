@@ -312,7 +312,7 @@
   background: #5b21b6;
   border: none;
   border-radius: var(--vvp-radius-full);
-  color: #fff;
+  color: var(--vvp-on-primary, #fff);
   font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
@@ -619,7 +619,7 @@ video:-moz-full-screen {
   display: flex;
   margin: 2rem auto 0;
   padding: 0.625rem 1.75rem;
-  background: #fff;
+  background: var(--vvp-background, #fff);
   border: 1px solid #d1d5db;
   border-radius: var(--vvp-radius-full);
   color: #111827;

@@ -42,7 +42,7 @@
 .vvp-co__feed-card:hover {
   box-shadow: var(--vvp-elevation-md);
   border-color: #d1d5db;
-  background: #fff;
+  background: var(--vvp-background, #fff);
 }
 
 .vvp-co__feed-image-wrap {
