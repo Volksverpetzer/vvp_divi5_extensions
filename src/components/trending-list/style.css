@@ -1,10 +1,11 @@
 /* Trending List — frontend styles */
+@import "../../styles/vvp-tokens.css";
 .vvp-trending-list .vvp-tl__list {
   display: flex;
   flex-direction: column;
 }
 .vvp-trending-list .vvp-tl__item {
-  padding: 1.25rem 0;
+  padding: var(--vvp-spacing-xl, 20px) 0;
   border-bottom: 1px solid #e5e7eb;
 }
 .vvp-trending-list .vvp-tl__item:first-child {

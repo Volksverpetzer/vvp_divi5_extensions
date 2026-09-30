@@ -1,8 +1,9 @@
 /* Trending Items — frontend styles */
+@import "../../styles/vvp-tokens.css";
 .vvp-trending-items .vvp-ti__list {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.25rem;
+  gap: var(--vvp-spacing-xl, 20px);
 }
 @media (max-width: 640px) {
   .vvp-trending-items .vvp-ti__list {
