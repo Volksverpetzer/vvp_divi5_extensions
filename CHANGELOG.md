@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- ContentOverview: "Überschrift" setting for custom heading text (replacing "Das Neueste"), and "Überschrift anzeigen" to hide the heading entirely.
+- ContentOverview: the Visual Builder editor preview now reflects the module's own settings (content types, item count, load-more, headline) against representative mock data, instead of always showing the same fixed layout.
+
 ## [1.4.0] - 2026-09-29
 
 ### Added
