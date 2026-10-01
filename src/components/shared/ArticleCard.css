@@ -124,9 +124,11 @@
   -webkit-line-clamp: 3;
 }
 
-.vvp-co__feed-date {
+.vvp-co__feed-date.vvp-ui-meta-text {
   font-size: 1rem;
-  color: var(--vvp-text-muted, #666);
+}
+
+.vvp-co__feed-date {
   margin-top: auto;
   padding-top: 0.375rem;
 }
@@ -148,7 +150,6 @@
 }
 
 .vvp-co__feed-footer .vvp-co__feed-reading-time {
-  color: var(--vvp-text-muted, #666);
   font-size: 1rem;
   display: inline-flex;
   align-items: center;

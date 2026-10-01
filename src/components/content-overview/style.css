@@ -201,7 +201,14 @@
   overflow: hidden;
 }
 
-.vvp-co__podcast-inner {
+/*
+ * Shared "banner card" layout (artwork/thumb + content, stacks on mobile)
+ * used by both the podcast and YouTube banners — grouped here as one
+ * source of truth so the two can't drift out of sync with each other,
+ * as happened before this comment was added.
+ */
+.vvp-co__podcast-inner,
+.vvp-co__yt-banner-inner {
   display: flex;
   gap: var(--vvp-spacing-xl, 20px);
   padding: var(--vvp-spacing-xl, 20px);
@@ -209,25 +216,29 @@
 }
 
 @media (max-width: 699px) {
-  .vvp-co__podcast-inner {
+  .vvp-co__podcast-inner,
+  .vvp-co__yt-banner-inner {
     flex-direction: column;
     align-items: stretch;
     gap: 0;
     padding: 0;
   }
-  .vvp-co__podcast-artwork-wrap {
+  .vvp-co__podcast-artwork-wrap,
+  .vvp-co__yt-banner-thumb-wrap {
     width: 100% !important;
     margin: 0 auto;
     border-radius: 0;
     box-shadow: none;
   }
-  .vvp-co__podcast-content {
+  .vvp-co__podcast-content,
+  .vvp-co__yt-banner-content {
     padding: var(--vvp-spacing-lg, 16px) var(--vvp-spacing-xl, 20px)
       var(--vvp-spacing-xl, 20px);
   }
 }
 @media (min-width: 700px) {
-  .vvp-co__podcast-inner {
+  .vvp-co__podcast-inner,
+  .vvp-co__yt-banner-inner {
     align-items: center;
   }
 }
@@ -303,9 +314,8 @@
   flex-wrap: wrap;
 }
 
-.vvp-co__podcast-date {
+.vvp-co__podcast-date.vvp-ui-meta-text {
   font-size: 1rem;
-  color: var(--vvp-text-muted, #666);
 }
 
 .vvp-co__podcast-listen-btn {
@@ -354,36 +364,7 @@
   overflow: hidden;
 }
 
-.vvp-co__yt-banner-inner {
-  display: flex;
-  gap: var(--vvp-spacing-xl, 20px);
-  padding: var(--vvp-spacing-xl, 20px);
-  align-items: flex-start;
-}
-
-@media (max-width: 699px) {
-  .vvp-co__yt-banner-inner {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-    padding: 0;
-  }
-  .vvp-co__yt-banner-thumb-wrap {
-    width: 100% !important;
-    margin: 0 auto;
-    border-radius: 0;
-    box-shadow: none;
-  }
-  .vvp-co__yt-banner-content {
-    padding: var(--vvp-spacing-lg, 16px) var(--vvp-spacing-xl, 20px)
-      var(--vvp-spacing-xl, 20px);
-  }
-}
-@media (min-width: 700px) {
-  .vvp-co__yt-banner-inner {
-    align-items: center;
-  }
-}
+/* .vvp-co__yt-banner-inner's shared layout lives with .vvp-co__podcast-inner above. */
 .vvp-co__yt-banner-thumb-wrap {
   position: relative;
   flex-shrink: 0;
@@ -496,9 +477,8 @@
   flex-wrap: wrap;
 }
 
-.vvp-co__yt-banner-date {
+.vvp-co__yt-banner-date.vvp-ui-meta-text {
   font-size: 1rem;
-  color: var(--vvp-text-muted, #666);
 }
 
 /* ===== Instagram card — Divi slider wrapper ===== */
