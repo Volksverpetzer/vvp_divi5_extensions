@@ -9,18 +9,16 @@ import { Card } from "@volksverpetzer/ui-web";
  */
 export const PreviewCard = ({
   children,
-  maxWidth,
   moduleClass,
 }: {
   children: React.ReactNode;
-  maxWidth?: number | string;
   moduleClass?: string;
 }) => (
   <Card
     className={moduleClass}
     style={{
       width: "100%",
-      maxWidth: maxWidth ?? "100%",
+      maxWidth: "100%",
       boxSizing: "border-box",
     }}
   >

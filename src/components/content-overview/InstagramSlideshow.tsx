@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Badge } from "@volksverpetzer/ui-web";
+import { Badge, MetaText } from "@volksverpetzer/ui-web";
 import classnames from "classnames";
 import { CopyLinkButton } from "../shared/CopyLinkButton";
 
@@ -39,7 +39,10 @@ const parseCaption = (text: string): React.ReactNode[] => {
         href={part}
         target="_blank"
         rel="noopener noreferrer"
-        style={{ color: "#3893C0", wordBreak: "break-all" }}
+        style={{
+          color: "var(--vvp-primary-muted, #307ea4)",
+          wordBreak: "break-all",
+        }}
       >
         {part}
       </a>
@@ -69,7 +72,7 @@ const LoadingPlaceholder = () => (
       width: "100%",
       height: "100%",
       background:
-        "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%)",
+        "linear-gradient(90deg, var(--vvp-surface, #e2f0f5) 25%, var(--vvp-surface-disabled, #ddd) 37%, var(--vvp-surface, #e2f0f5) 63%)",
       backgroundSize: "600px 100%",
       borderRadius: "0.25rem",
     }}
@@ -535,7 +538,7 @@ const InternalSlider = ({
                     alignItems: "center",
                     justifyContent: "center",
                     background: "rgba(255,255,255,0.8)",
-                    color: "#000",
+                    color: "var(--vvp-text, #111)",
                     borderRadius: "50%",
                     width: 36,
                     height: 36,
@@ -609,7 +612,7 @@ const InternalSlider = ({
                     alignItems: "center",
                     justifyContent: "center",
                     background: "rgba(255,255,255,0.8)",
-                    color: "#000",
+                    color: "var(--vvp-text, #111)",
                     borderRadius: "50%",
                     width: 36,
                     height: 36,
@@ -763,12 +766,12 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
                 {mediaCategory}
               </span>
             )}
-            <span
+            <MetaText
               className="vvp-co__feed-date"
               style={{ pointerEvents: "none" }}
             >
               {date}
-            </span>
+            </MetaText>
             <CopyLinkButton link={permalink} />
           </div>
         </div>
@@ -840,7 +843,7 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
 
             <div
               style={{
-                background: "#111",
+                background: "var(--vvp-text, #111)",
                 padding: "25px 20px",
                 borderRadius: 12,
                 color: "white",
@@ -865,7 +868,7 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
-                    color: "#3893C0",
+                    color: "var(--vvp-primary-muted, #307ea4)",
                     textDecoration: "none",
                     fontSize: 13,
                     fontWeight: "bold",
@@ -885,7 +888,13 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
               >
                 {parseCaption(caption)}
               </p>
-              <div style={{ marginTop: 20, color: "#666", fontSize: 13 }}>
+              <div
+                style={{
+                  marginTop: 20,
+                  color: "var(--vvp-text-muted, #666)",
+                  fontSize: 13,
+                }}
+              >
                 {date}
               </div>
             </div>

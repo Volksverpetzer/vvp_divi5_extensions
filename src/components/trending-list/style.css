@@ -1,11 +1,12 @@
 /* Trending List — frontend styles */
+@import "../../styles/vvp-tokens.css";
 .vvp-trending-list .vvp-tl__list {
   display: flex;
   flex-direction: column;
 }
 .vvp-trending-list .vvp-tl__item {
-  padding: 1.25rem 0;
-  border-bottom: 1px solid #e5e7eb;
+  padding: var(--vvp-spacing-xl, 20px) 0;
+  border-bottom: 1px solid var(--vvp-surface, #e2f0f5);
 }
 .vvp-trending-list .vvp-tl__item:first-child {
   padding-top: 0;
@@ -28,13 +29,10 @@
 }
 .vvp-trending-list .vvp-tl__meta {
   display: block;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  color: #6b7280;
   margin-bottom: 0;
   padding-top: 0.375rem;
 }
 .vvp-trending-list .vvp-tl__empty {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--vvp-text-muted, #666);
 }

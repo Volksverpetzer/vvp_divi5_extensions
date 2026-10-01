@@ -23,15 +23,15 @@
 .vvp-campaign-donate .vvp-cd__presets {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: var(--vvp-spacing-md, 10px);
   width: 100%;
 }
 .vvp-campaign-donate .vvp-cd__preset {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--vvp-surface, #e2f0f5);
   border-radius: var(--vvp-radius-sm);
-  background: #fff;
+  background: var(--vvp-background, #fff);
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
@@ -42,15 +42,15 @@
 }
 .vvp-campaign-donate .vvp-cd__preset-input {
   padding: 0.75rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--vvp-surface, #e2f0f5);
   border-radius: var(--vvp-radius-sm);
-  background: #fff;
+  background: var(--vvp-background, #fff);
   font-weight: 700;
   font-size: 1rem;
   cursor: text;
 }
 .vvp-campaign-donate .vvp-cd__preset-input::placeholder {
-  color: #9ca3af;
+  color: var(--vvp-text-muted, #666);
   font-weight: 400;
 }
 .vvp-campaign-donate .vvp-cd__preset-input:focus {
@@ -66,7 +66,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
-  margin-top: 0.25rem;
+  margin-top: var(--vvp-spacing-xs, 4px);
   width: 100%;
 }
 .vvp-campaign-donate .vvp-cd__submit,
@@ -77,7 +77,7 @@
 }
 .vvp-campaign-donate .vvp-cd__input {
   padding: 0.75rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--vvp-surface, #e2f0f5);
   border-radius: var(--vvp-radius-sm);
   font-size: 1rem;
   width: 100%;
@@ -86,7 +86,7 @@
   display: flex;
   align-items: center;
   text-align: center;
-  color: #e5e7eb;
+  color: var(--vvp-surface, #e2f0f5);
   font-size: 0.85rem;
   width: 100%;
   max-width: 50%;
@@ -95,7 +95,7 @@
 .vvp-campaign-donate .vvp-cd__divider::after {
   content: "";
   flex: 1;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--vvp-surface, #e2f0f5);
 }
 .vvp-campaign-donate .vvp-cd__divider span {
   padding: 0 0.75rem;
@@ -111,16 +111,16 @@
 }
 .vvp-campaign-donate .vvp-cd__thanks {
   text-align: center;
-  padding: 2rem 1rem;
+  padding: 2rem var(--vvp-spacing-lg, 16px);
 }
 .vvp-campaign-donate .vvp-cd__thanks strong {
   display: block;
   font-size: 1.25rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--vvp-spacing-sm, 8px);
 }
 .vvp-campaign-donate .vvp-cd__certificate {
   display: inline-block;
-  margin-top: 1rem;
+  margin-top: var(--vvp-spacing-lg, 16px);
   color: var(--vvp-pink-main);
   font-weight: 700;
 }

@@ -2,7 +2,7 @@
 @import "../../styles/vvp-tokens.css";
 .vvp-author-profile .vvp-ap__container {
   display: flex;
-  gap: 1.5rem;
+  gap: var(--vvp-spacing-xxl, 24px);
 }
 .vvp-author-profile .vvp-ap__container.vvp-ap__layout--vertical {
   flex-direction: column;
@@ -14,7 +14,7 @@
 .vvp-author-profile .vvp-ap__author {
   display: grid;
   grid-template-columns: auto 70%;
-  gap: 1.5rem;
+  gap: var(--vvp-spacing-xxl, 24px);
   align-items: start;
 }
 .vvp-author-profile .vvp-ap__avatar {
@@ -46,6 +46,6 @@
   color: inherit;
 }
 .vvp-author-profile .vvp-ap__empty {
-  color: #6b7280;
+  color: var(--vvp-text-muted, #666);
   font-size: 0.875rem;
 }

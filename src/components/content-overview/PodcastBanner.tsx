@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Badge } from "@volksverpetzer/ui-web";
+import { Badge, MetaText } from "@volksverpetzer/ui-web";
 import { trackEvent } from "../../utils/plausible";
 
 // This PR started rendering one PodcastBanner per episode instead of a
@@ -117,7 +117,7 @@ export const PodcastBanner: React.FC<PodcastBannerProps> = ({
           ) : null}
 
           <div className="vvp-co__podcast-footer">
-            <span className="vvp-co__podcast-date">{date}</span>
+            <MetaText className="vvp-co__podcast-date">{date}</MetaText>
 
             {enclosure && !isPlaying && (
               <button

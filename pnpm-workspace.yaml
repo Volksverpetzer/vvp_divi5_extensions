@@ -12,6 +12,38 @@ minimumReleaseAgeExclude:
   - "@typescript-eslint/typescript-estree@8.71.0"
   - "@typescript-eslint/utils@8.71.0"
   - "@typescript-eslint/visitor-keys@8.71.0"
+  - "@cspell/cspell-bundled-dicts@10.3.6"
+  - "@cspell/cspell-json-reporter@10.3.6"
+  - "@cspell/cspell-performance-monitor@10.3.6"
+  - "@cspell/cspell-pipe@10.3.6"
+  - "@cspell/cspell-resolver@10.3.6"
+  - "@cspell/cspell-service-bus@10.3.6"
+  - "@cspell/cspell-types@10.3.6"
+  - "@cspell/cspell-worker@10.3.6"
+  - "@cspell/dynamic-import@10.3.6"
+  - "@cspell/filetypes@10.3.6"
+  - "@cspell/rpc@10.3.6"
+  - "@cspell/strong-weak-map@10.3.6"
+  - "@cspell/url@10.3.6"
+  - "@storybook/builder-vite@10.6.1"
+  - "@storybook/react-dom-shim@10.6.1"
+  - "@storybook/react-vite@10.6.1"
+  - "@storybook/react@10.6.1"
+  - "@vitest/coverage-v8@5.0.3"
+  - "@vitest/mocker@5.0.3"
+  - "@vitest/spy@5.0.3"
+  - cspell-config-lib@10.3.6
+  - cspell-dictionary@10.3.6
+  - cspell-gitignore@10.3.6
+  - cspell-glob@10.3.6
+  - cspell-grammar@10.3.6
+  - cspell-io@10.3.6
+  - cspell-lib@10.3.6
+  - cspell-trie-lib@10.3.6
+  - cspell@10.3.6
+  - storybook@10.6.1
+  - vitest@5.0.3
+  - "@volksverpetzer/ui-web@0.14.0"
 nodeLinker: hoisted # see https://pnpm.io/settings#nodelinker
 packages:
   - .
