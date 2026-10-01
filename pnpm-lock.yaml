@@ -173,8 +173,8 @@ importers:
         specifier: 0.8.0
         version: 0.8.0
       '@volksverpetzer/ui-web':
-        specifier: 0.13.1
-        version: 0.13.1(react@19.3.0)
+        specifier: 0.14.0
+        version: 0.14.0(react@19.3.0)
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -1603,8 +1603,8 @@ packages:
   '@volksverpetzer/design-tokens@0.8.0':
     resolution: {integrity: sha512-EeS9p5W6MKB8aGlHzZi5NzH30XCzj8UweIZ706sft9nNTc7yM0DoIbVUiPDuo8NrKtmr7lsDa7uZheXlbrkhdA==}
 
-  '@volksverpetzer/ui-web@0.13.1':
-    resolution: {integrity: sha512-R5tZwGce4884O1huAGR+8wdp0IXnYrogqPi7Oie3pQWMl24NKofs1MJ5HPn7VUw/y3nkxjv2xwlBNMvarOTgZA==}
+  '@volksverpetzer/ui-web@0.14.0':
+    resolution: {integrity: sha512-Zm/xwaI4xZoFUenQDCidmu8S4famTp7J2qMQAt1ZT0F21SKvcwMlu7DGy2KZYrdksYI1v2e8/NrbAcDLJvz9bA==}
     peerDependencies:
       react: '>=19'
 
@@ -4764,7 +4764,7 @@ snapshots:
 
   '@volksverpetzer/design-tokens@0.8.0': {}
 
-  '@volksverpetzer/ui-web@0.13.1(react@19.3.0)':
+  '@volksverpetzer/ui-web@0.14.0(react@19.3.0)':
     dependencies:
       react: 19.3.0
 

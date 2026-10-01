@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Badge } from "@volksverpetzer/ui-web";
+import { Badge, MetaText } from "@volksverpetzer/ui-web";
 import { trackEvent } from "../../utils/plausible";
 import "./ArticleCard.css";
 
@@ -150,9 +150,9 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             ) : (
               <span className="vvp-co__category">{category}</span>
             ))}
-          <span className="vvp-co__feed-date">{date}</span>
+          <MetaText className="vvp-co__feed-date">{date}</MetaText>
           {!!reading_time && (
-            <span className="vvp-co__feed-reading-time">
+            <MetaText className="vvp-co__feed-reading-time">
               <svg
                 aria-hidden="true"
                 focusable="false"
@@ -173,7 +173,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
                 ></path>
               </svg>
               {`${reading_time} Min.`}
-            </span>
+            </MetaText>
           )}
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Badge } from "@volksverpetzer/ui-web";
+import { Badge, MetaText } from "@volksverpetzer/ui-web";
 import classnames from "classnames";
 import { CopyLinkButton } from "../shared/CopyLinkButton";
 
@@ -766,12 +766,12 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
                 {mediaCategory}
               </span>
             )}
-            <span
+            <MetaText
               className="vvp-co__feed-date"
               style={{ pointerEvents: "none" }}
             >
               {date}
-            </span>
+            </MetaText>
             <CopyLinkButton link={permalink} />
           </div>
         </div>

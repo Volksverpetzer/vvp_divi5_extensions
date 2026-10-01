@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Badge } from "@volksverpetzer/ui-web";
+import { Badge, MetaText } from "@volksverpetzer/ui-web";
 
 export interface YouTubeBannerProps {
   videoId: string;
@@ -99,7 +99,7 @@ export const YouTubeBanner: React.FC<YouTubeBannerProps> = ({
           )}
 
           <div className="vvp-co__yt-banner-footer">
-            <span className="vvp-co__yt-banner-date">{date}</span>
+            <MetaText className="vvp-co__yt-banner-date">{date}</MetaText>
           </div>
         </div>
       </div>
