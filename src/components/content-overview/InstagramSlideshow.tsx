@@ -651,7 +651,7 @@ const InternalSlider = ({
                   borderRadius: "50%",
                   background:
                     index === activeIndex
-                      ? "var(--vvp-text-subtle, #8b8b8b)"
+                      ? "var(--vvp-icon-subtle, #8b8b8b)"
                       : "rgba(128, 128, 128, 0.5)",
                   display: "inline-block",
                   flexShrink: 0,
