@@ -255,7 +255,7 @@
 .vvp-fc__examples-label {
   margin: 0 0 0.75rem;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--vvp-text-muted, #666);
@@ -457,7 +457,7 @@
   color: #374151;
   border-radius: var(--vvp-radius-full);
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.02em;
 }
 
@@ -515,7 +515,7 @@
 .vvp-fc__snippet-label {
   margin: 0 0 var(--vvp-spacing-sm, 8px);
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--vvp-text-muted, #666);
