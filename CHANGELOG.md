@@ -15,10 +15,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Bumped dependencies (`@storybook/react-vite`, `storybook`, `vitest`, `@vitest/coverage-v8`, `cspell`, `pnpm`, `@volksverpetzer/ui-web`); `eslint`, `typescript`, and the `@divi/*` packages were left as-is (the latter's latest patch ships broken type declarations).
+- Migrated hardcoded CSS spacing and color values across ContentOverview, ArticleCard, and several other modules onto the shared `@volksverpetzer/design-tokens` custom properties, so they track brand/theme changes instead of drifting independently.
+- Date/reading-time/author meta text now renders via `@volksverpetzer/ui-web`'s new `MetaText` component instead of a plain styled `<span>`, so it looks the same everywhere that role appears.
+- Storybook: `ArticleCard` and `InstagramSlideshow` stories no longer force a 360px max-width, so they render at the same full-grid-cell width they actually have in production.
+
 ### Fixed
 
 - ContentOverview: the Podcast card's artwork was squeezed into a small column on mobile instead of spanning the card, unlike every other full-width feed card. Below 700px it now stacks the artwork as a full-width 16:9 image above the title/summary, matching the Instagram card's layout.
 - ContentOverview: the Podcast card's artwork was capped at a fixed 190px regardless of how wide its column grew, leaving a visible gap of empty padding next to the image on wider viewports (e.g. ~1000px). It now scales to fill its column.
+- ContentOverview: the Podcast card's mobile layout fix above had a gap at 640–699px wide, where a pre-existing desktop rule re-centered the content instead of leaving it stretched full-width. That rule now only applies at ≥700px, matching the mobile breakpoint.
 
 ## [1.4.0] - 2026-09-29
 

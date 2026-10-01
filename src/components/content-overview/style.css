@@ -226,7 +226,7 @@
       var(--vvp-spacing-xl, 20px);
   }
 }
-@media (min-width: 640px) {
+@media (min-width: 700px) {
   .vvp-co__podcast-inner {
     align-items: center;
   }
