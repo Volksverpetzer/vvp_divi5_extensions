@@ -385,19 +385,19 @@ namespace {
     $body  = $section_label . 'Fact Check Search Module</h2>';
     $body .= '<div class="vvp-fc__mount" data-search-url="" data-import-url="" style="margin-bottom: 2rem;"></div>';
 
-    $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #e5e7eb;">';
+    $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #eee;">';
     $body .= $section_label . 'Author Profile Module</h2>';
     $body .= '<div style="max-width:640px;padding:1.5rem;background:#fff;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08)">';
     $body .= $author_html;
     $body .= '</div></div>';
 
-    $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #e5e7eb;">';
+    $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #eee;">';
     $body .= $section_label . 'Trending Items Module</h2>';
     $body .= '<p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin:0 0 .75rem;">Meistgelesene Artikel (letzte 7 Tage)</p>';
     $body .= '<div class="vvp-trending-items">' . $trending_top . '</div>';
     $body .= '</div>';
 
-    $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #e5e7eb;">';
+    $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #eee;">';
     $body .= $overview;
     $body .= '</div>';
 
@@ -444,7 +444,7 @@ namespace {
           <script src="/scripts/trending-items-frontend.js" defer></script>
           <style>
             *, *::before, *::after { box-sizing: border-box; }
-            body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9fafb; color: #111827; }
+            body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #eee; color: #111827; }
             .pv-bar { background: #111827; color: #9ca3af; font-size: 11px; padding: 6px 24px; display: flex; align-items: center; gap: 8px; }
             .pv-bar strong { color: #fff; }
             .pv-bar code { background: #1f2937; padding: 1px 5px; border-radius: 3px; font-size: 10px; }
