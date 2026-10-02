@@ -17,3 +17,12 @@
   color: var(--vvp-text-muted, #666);
   font-size: 0.875rem;
 }
+
+/* Same look as ContentOverview's .vvp-co__section-title */
+.vvp-trending-items .vvp-ti__section-title {
+  margin: 0 0 var(--vvp-spacing-xl, 20px);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--vvp-text, #111);
+  line-height: 1.2;
+}

@@ -48,6 +48,12 @@ export const TrendingItemsEdit = (
   props: TrendingItemsEditProps,
 ): ReactElement => {
   const { attrs, elements, id, name } = props;
+  const a = attrs as any;
+  // Mirror RenderCallbackTrait.php: off unless explicitly "on", and trim
+  // before falling back to "Trending".
+  const showHeadline = a.showHeadline?.innerContent?.desktop?.value === "on";
+  const headlineText =
+    (a.headline?.innerContent?.desktop?.value ?? "").trim() || "Trending";
 
   return (
     <ModuleContainer
@@ -62,6 +68,9 @@ export const TrendingItemsEdit = (
       {elements.styleComponents({ attrName: "module" })}
 
       <div className="vvp-trending-items">
+        {showHeadline && (
+          <h2 className="vvp-ti__section-title">{headlineText}</h2>
+        )}
         <div className="vvp-ti__list">
           {PLACEHOLDER_ARTICLES.map((article) => (
             <div key={article.link + article.title} className="vvp-ti__item">

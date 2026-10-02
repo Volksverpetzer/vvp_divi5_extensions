@@ -38,6 +38,16 @@ trait RenderCallbackTrait
         $show_thumb = ($attrs['showThumbnail']['innerContent']['desktop']['value'] ?? 'on') !== 'off';
         $range      = $attrs['range']['innerContent']['desktop']['value'] ?? 'last7days';
 
+        // "headline" lets editors replace "Trending"; "showHeadline" toggles
+        // it. Unlike ContentOverview this defaults to off: existing
+        // instances already sit under a separate Divi heading block, so an
+        // unset attribute must not suddenly add a second heading.
+        $headline_text = trim($attrs['headline']['innerContent']['desktop']['value'] ?? '');
+        $show_headline = ($attrs['showHeadline']['innerContent']['desktop']['value'] ?? 'off') === 'on';
+        if ('' === $headline_text) {
+            $headline_text = 'Trending';
+        }
+
         $items = self::get_trending_items(3, $range);
 
         if (!$show_thumb) {
@@ -71,6 +81,14 @@ trait RenderCallbackTrait
                     'orderIndex'    => $block->parsed_block['orderIndex'],
                     'storeInstance' => $block->parsed_block['storeInstance'],
                 ]),
+                $show_headline
+                    ? HTMLUtility::render([
+                        'tag'               => 'h2',
+                        'attributes'        => ['class' => 'vvp-ti__section-title'],
+                        'childrenSanitizer' => 'esc_html',
+                        'children'          => $headline_text,
+                    ])
+                    : '',
                 HTMLUtility::render([
                     'tag'               => 'div',
                     'attributes'        => [
