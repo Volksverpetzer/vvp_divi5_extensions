@@ -39,7 +39,7 @@
     "@cspell/dict-de-de": "^4.1.2",
     "@divi/module": "^1.0.13",
     "@divi/module-library": "^1.0.14",
-    "@divi/types": "^1.0.12",
+    "@divi/types": "^1.0.13",
     "@eslint/js": "^10.0.1",
     "@storybook/react-vite": "^10.6.1",
     "@testing-library/react": "^16.3.3",

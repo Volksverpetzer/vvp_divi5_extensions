@@ -189,8 +189,8 @@ importers:
         specifier: ^1.0.14
         version: 1.0.14
       '@divi/types':
-        specifier: ^1.0.12
-        version: 1.0.12
+        specifier: ^1.0.13
+        version: 1.0.13
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.11.0(supports-color@7.2.0))
@@ -656,8 +656,8 @@ packages:
   '@divi/types-external@1.0.1':
     resolution: {integrity: sha512-HGT31EWhcdJDTjHjc1QdD2ypzVlonHVZaGl6+6cH/jtO5bkXMIUajjsp3t4iOmAe2Vq+BRWHu0jfNq+TS1Caaw==}
 
-  '@divi/types@1.0.12':
-    resolution: {integrity: sha512-NYKa2n5oJByUhE7Q8+fC6vVDxYJwZpySBD7cMlxhFAuksycLbIF2Qq3QT6lXIFzHVXf3wY5BKyjE0u7atFn6ag==}
+  '@divi/types@1.0.13':
+    resolution: {integrity: sha512-QQXhYWfjWSzfTgVuy9YFkkjMpo3LAiZDsGp0/ZW12klxxpL/8gBm9LorhCMzKYiJBTPQ8cn+ei7HMTcJ/zMbOA==}
 
   '@emnapi/core@1.11.0':
     resolution: {integrity: sha512-l9Oo58x0HOP5znGzVhYW9U3e5wVuA4LAZU2AGezTmkhO1CgQRFDhDg4nneHsu/t3WniXg9QrG2nIXL/ZS8ln8Q==}
@@ -3892,19 +3892,19 @@ snapshots:
 
   '@divi/context-library@1.0.3':
     dependencies:
-      '@divi/types': 1.0.12
+      '@divi/types': 1.0.13
       react: 18.2.0
 
   '@divi/conversion@1.0.4(react@18.2.0)':
     dependencies:
-      '@divi/types': 1.0.12
+      '@divi/types': 1.0.13
       '@wordpress/blocks': 12.19.13(react@18.2.0)
     transitivePeerDependencies:
       - react
 
   '@divi/data@1.0.1':
     dependencies:
-      '@divi/types': 1.0.12
+      '@divi/types': 1.0.13
       '@wordpress/data': 9.20.0(react@18.2.0)
       react: 18.2.0
 
@@ -3918,7 +3918,7 @@ snapshots:
       '@divi/icon-library': 1.0.1
       '@divi/script-library': 1.0.11
       '@divi/style-library': 1.0.9
-      '@divi/types': 1.0.12
+      '@divi/types': 1.0.13
       '@divi/types-external': 1.0.1
       '@types/codemirror': 5.60.18
       '@types/css-tree': 2.3.11
@@ -3937,14 +3937,14 @@ snapshots:
 
   '@divi/icon-library@1.0.1':
     dependencies:
-      '@divi/types': 1.0.12
+      '@divi/types': 1.0.13
       react: 18.2.0
 
   '@divi/modal@1.0.6':
     dependencies:
       '@divi/draggable': 1.0.1
       '@divi/hooks': 1.0.1
-      '@divi/types': 1.0.12
+      '@divi/types': 1.0.13
       '@types/seamless-immutable': 7.1.19
       react: 18.2.0
 
@@ -3953,7 +3953,7 @@ snapshots:
       '@divi/module': 1.0.13
       '@divi/module-utils': 1.0.13
       '@divi/style-library': 1.0.9
-      '@divi/types': 1.0.12
+      '@divi/types': 1.0.13
       '@divi/types-external': 1.0.1
       '@types/seamless-immutable': 7.1.19
       '@wordpress/blocks': 12.19.13(react@18.2.0)
@@ -3965,7 +3965,7 @@ snapshots:
   '@divi/module-utils@1.0.13':
     dependencies:
       '@divi/data': 1.0.1
-      '@divi/types': 1.0.12
+      '@divi/types': 1.0.13
       '@divi/types-external': 1.0.1
       '@types/seamless-immutable': 7.1.19
       react: 18.2.0
@@ -3980,7 +3980,7 @@ snapshots:
       '@divi/right-click-options': 1.0.8
       '@divi/script-library': 1.0.11
       '@divi/style-library': 1.0.9
-      '@divi/types': 1.0.12
+      '@divi/types': 1.0.13
       '@divi/types-external': 1.0.1
       '@types/seamless-immutable': 7.1.19
       react: 18.2.0
@@ -3988,23 +3988,23 @@ snapshots:
   '@divi/right-click-options@1.0.8':
     dependencies:
       '@divi/module-utils': 1.0.13
-      '@divi/types': 1.0.12
+      '@divi/types': 1.0.13
       '@types/seamless-immutable': 7.1.19
       react: 18.2.0
 
   '@divi/script-library@1.0.11':
     dependencies:
-      '@divi/types': 1.0.12
+      '@divi/types': 1.0.13
       react: 18.2.0
 
   '@divi/style-library@1.0.9':
     dependencies:
       '@divi/module': 1.0.13
-      '@divi/types': 1.0.12
+      '@divi/types': 1.0.13
 
   '@divi/types-external@1.0.1': {}
 
-  '@divi/types@1.0.12':
+  '@divi/types@1.0.13':
     dependencies:
       '@wordpress/blocks': 12.19.13(react@18.2.0)
       react: 18.2.0
