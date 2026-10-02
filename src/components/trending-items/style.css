@@ -26,3 +26,13 @@
   color: var(--vvp-text, #111);
   line-height: 1.2;
 }
+.vvp-trending-items .vvp-ti__section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--vvp-spacing-sm, 8px);
+}
+.vvp-trending-items .vvp-ti__section-icon {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}

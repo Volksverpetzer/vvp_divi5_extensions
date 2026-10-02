@@ -30,6 +30,12 @@ trait RenderCallbackTrait
      */
     private const EMPTY_RESULT_CACHE_TTL = 5 * \MINUTE_IN_SECONDS;
 
+    /**
+     * Lucide "arrow-up-right", shown next to the headline. Keep in sync with
+     * the markup in src/components/trending-items/edit.tsx.
+     */
+    private const HEADLINE_ICON = '<svg class="vvp-ti__section-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>';
+
     public static function render_callback($attrs, $content, $block, $elements)
     {
         // Fields declared with attrName "<name>.innerContent" in module.json
@@ -81,13 +87,13 @@ trait RenderCallbackTrait
                     'orderIndex'    => $block->parsed_block['orderIndex'],
                     'storeInstance' => $block->parsed_block['storeInstance'],
                 ]),
+                // Built by hand (not HTMLUtility) because the heading holds
+                // an inline SVG, which HTMLUtility's esc_html would escape.
                 $show_headline
-                    ? HTMLUtility::render([
-                        'tag'               => 'h2',
-                        'attributes'        => ['class' => 'vvp-ti__section-title'],
-                        'childrenSanitizer' => 'esc_html',
-                        'children'          => $headline_text,
-                    ])
+                    ? '<h2 class="vvp-ti__section-title">'
+                        . esc_html($headline_text)
+                        . self::HEADLINE_ICON
+                        . '</h2>'
                     : '',
                 HTMLUtility::render([
                     'tag'               => 'div',
