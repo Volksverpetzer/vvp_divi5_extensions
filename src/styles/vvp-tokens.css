@@ -23,6 +23,14 @@
 @import "@volksverpetzer/design-tokens/css/radius.css";
 
 /*
+ * Icon sizes (--vvp-icon-size-xs/sm/md/...), from the same package
+ * (./css/icon-size.css). ArticleCard.css sizes the copy-link icon off
+ * --vvp-icon-size-xs; without this import the variable was undefined and
+ * the SVG only kept its width/height attributes.
+ */
+@import "@volksverpetzer/design-tokens/css/icon-size.css";
+
+/*
  * Shadow scale (--vvp-elevation-xs/sm/md/lg), from the same package
  * (./css/elevation.css). Same rule as radius above: shadows that don't
  * reasonably match a step stay as local literals instead of being
