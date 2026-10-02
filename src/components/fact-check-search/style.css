@@ -197,7 +197,7 @@
   font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #111827;
+  color: var(--vvp-text, #111);
 }
 
 .vvp-fc__close-btn {
@@ -212,7 +212,7 @@
     background 0.15s ease;
 }
 .vvp-fc__close-btn:hover {
-  color: #111827;
+  color: var(--vvp-text, #111);
   background: var(--vvp-surface, #e2f0f5);
 }
 
@@ -291,7 +291,7 @@
 }
 .vvp-fc__example-btn:hover {
   background: var(--vvp-surface, #e2f0f5);
-  color: #111827;
+  color: var(--vvp-text, #111);
 }
 .vvp-fc__example-btn:hover svg {
   opacity: 1;
@@ -425,7 +425,7 @@
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--vvp-text, #111);
   line-height: 1.35;
   transition: color 0.15s ease;
 }
@@ -524,7 +524,7 @@
 .vvp-fc__snippet-text {
   margin: 0;
   font-size: 1rem;
-  color: #111827;
+  color: var(--vvp-text, #111);
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 3;

@@ -96,7 +96,7 @@
   font-size: 1.125rem;
   font-weight: 600;
   line-height: 1.35;
-  color: #111827;
+  color: var(--vvp-text, #111);
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;

@@ -380,24 +380,24 @@ namespace {
     $author_html   = \VVP\Divi5\AuthorProfile\AuthorProfilePreview::render_with_mock();
     $trending_top  = \VVP\Divi5\TrendingItems\TrendingItemsPreview::render();
 
-    $section_label = '<h2 style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6b7280;margin-bottom:1.5rem;">';
+    $section_label = '<h2 style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--vvp-text-muted,#666);margin-bottom:1.5rem;">';
 
     $body  = $section_label . 'Fact Check Search Module</h2>';
     $body .= '<div class="vvp-fc__mount" data-search-url="" data-import-url="" style="margin-bottom: 2rem;"></div>';
 
-    $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #e5e7eb;">';
+    $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #eee;">';
     $body .= $section_label . 'Author Profile Module</h2>';
-    $body .= '<div style="max-width:640px;padding:1.5rem;background:#fff;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08)">';
+    $body .= '<div style="max-width:640px;padding:1.5rem;background:var(--vvp-background,#fff);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08)">';
     $body .= $author_html;
     $body .= '</div></div>';
 
-    $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #e5e7eb;">';
+    $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #eee;">';
     $body .= $section_label . 'Trending Items Module</h2>';
-    $body .= '<p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin:0 0 .75rem;">Meistgelesene Artikel (letzte 7 Tage)</p>';
+    $body .= '<p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--vvp-text-muted,#666);margin:0 0 .75rem;">Meistgelesene Artikel (letzte 7 Tage)</p>';
     $body .= '<div class="vvp-trending-items">' . $trending_top . '</div>';
     $body .= '</div>';
 
-    $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #e5e7eb;">';
+    $body .= '<div style="margin: 3rem 0; padding-top: 3rem; border-top: 2px dashed #eee;">';
     $body .= $overview;
     $body .= '</div>';
 
@@ -444,12 +444,12 @@ namespace {
           <script src="/scripts/trending-items-frontend.js" defer></script>
           <style>
             *, *::before, *::after { box-sizing: border-box; }
-            body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9fafb; color: #111827; }
-            .pv-bar { background: #111827; color: #9ca3af; font-size: 11px; padding: 6px 24px; display: flex; align-items: center; gap: 8px; }
-            .pv-bar strong { color: #fff; }
-            .pv-bar code { background: #1f2937; padding: 1px 5px; border-radius: 3px; font-size: 10px; }
-            .pv-flush { position: fixed; top: 10px; right: 12px; z-index: 9999; padding: 5px 13px; background: #1e40af; color: #fff; border-radius: 6px; font: 600 11px/1 sans-serif; text-decoration: none; }
-            .pv-flush:hover { background: #1d4ed8; }
+            body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #eee; color: var(--vvp-text, #111); }
+            .pv-bar { background: var(--vvp-text, #111); color: var(--vvp-surface-disabled, #ddd); font-size: 11px; padding: 6px 24px; display: flex; align-items: center; gap: 8px; }
+            .pv-bar strong { color: var(--vvp-background, #fff); }
+            .pv-bar code { background: var(--vvp-text-muted, #666); padding: 1px 5px; border-radius: 3px; font-size: 10px; }
+            .pv-flush { position: fixed; top: 10px; right: 12px; z-index: 9999; padding: 5px 13px; background: var(--vvp-primary, #1b7194); color: var(--vvp-on-primary, #fff); border-radius: 6px; font: 600 11px/1 sans-serif; text-decoration: none; }
+            .pv-flush:hover { background: var(--vvp-primary-muted, #307ea4); }
             .pv-wrap { width: 100%; margin: 0; padding: 2rem 0; }
           </style>
         </head>

@@ -67,6 +67,7 @@
   --vvp-surface-disabled: var(--vvp-color-surface-disabled);
   --vvp-text: var(--vvp-color-text);
   --vvp-text-muted: var(--vvp-color-text-muted);
+  --vvp-icon-subtle: var(--vvp-color-icon-subtle);
   --vvp-on-primary: var(--vvp-color-on-primary);
   --vvp-primary: var(--vvp-color-primary);
   --vvp-primary-muted: var(--vvp-color-primary-muted);
