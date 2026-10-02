@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- TrendingItems: optional section heading ("Überschrift" text, default "Trending", and "Überschrift anzeigen" toggle, off by default), styled like the ContentOverview heading, with a Lucide arrow-up-right icon next to it.
+
 ## [1.5.0] - 2026-09-30
 
 ### Added

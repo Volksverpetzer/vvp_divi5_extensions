@@ -30,6 +30,12 @@ trait RenderCallbackTrait
      */
     private const EMPTY_RESULT_CACHE_TTL = 5 * \MINUTE_IN_SECONDS;
 
+    /**
+     * Lucide "arrow-up-right", shown next to the headline. Keep in sync with
+     * the markup in src/components/trending-items/edit.tsx.
+     */
+    private const HEADLINE_ICON = '<svg class="vvp-ti__section-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>';
+
     public static function render_callback($attrs, $content, $block, $elements)
     {
         // Fields declared with attrName "<name>.innerContent" in module.json
@@ -37,6 +43,16 @@ trait RenderCallbackTrait
         // attrs.<name>.<bp>.value — see PR #105.
         $show_thumb = ($attrs['showThumbnail']['innerContent']['desktop']['value'] ?? 'on') !== 'off';
         $range      = $attrs['range']['innerContent']['desktop']['value'] ?? 'last7days';
+
+        // "headline" lets editors replace "Trending"; "showHeadline" toggles
+        // it. Unlike ContentOverview this defaults to off: existing
+        // instances already sit under a separate Divi heading block, so an
+        // unset attribute must not suddenly add a second heading.
+        $headline_text = trim($attrs['headline']['innerContent']['desktop']['value'] ?? '');
+        $show_headline = ($attrs['showHeadline']['innerContent']['desktop']['value'] ?? 'off') === 'on';
+        if ('' === $headline_text) {
+            $headline_text = 'Trending';
+        }
 
         $items = self::get_trending_items(3, $range);
 
@@ -71,6 +87,14 @@ trait RenderCallbackTrait
                     'orderIndex'    => $block->parsed_block['orderIndex'],
                     'storeInstance' => $block->parsed_block['storeInstance'],
                 ]),
+                // Built by hand (not HTMLUtility) because the heading holds
+                // an inline SVG, which HTMLUtility's esc_html would escape.
+                $show_headline
+                    ? '<h2 class="vvp-ti__section-title">'
+                        . esc_html($headline_text)
+                        . self::HEADLINE_ICON
+                        . '</h2>'
+                    : '',
                 HTMLUtility::render([
                     'tag'               => 'div',
                     'attributes'        => [
