@@ -170,8 +170,8 @@ importers:
         specifier: ^9.17.0
         version: 9.17.0
       '@volksverpetzer/design-tokens':
-        specifier: 0.8.0
-        version: 0.8.0
+        specifier: 0.9.0
+        version: 0.9.0
       '@volksverpetzer/ui-web':
         specifier: 0.14.0
         version: 0.14.0(react@19.3.0)
@@ -1600,8 +1600,8 @@ packages:
   '@vitest/utils@3.2.4':
     resolution: {integrity: sha512-fB2V0JFrQSMsCo9HiSq3Ezpdv4iYaXRG1Sx8edX3MwxfyNn83mKiGzOcH+Fkxt4MHxr3y42fQi1oeAInqgX2QA==}
 
-  '@volksverpetzer/design-tokens@0.8.0':
-    resolution: {integrity: sha512-EeS9p5W6MKB8aGlHzZi5NzH30XCzj8UweIZ706sft9nNTc7yM0DoIbVUiPDuo8NrKtmr7lsDa7uZheXlbrkhdA==}
+  '@volksverpetzer/design-tokens@0.9.0':
+    resolution: {integrity: sha512-k0RT+pQzUbgSdYofV5319r+l+AlGRBks9Bq33jMrLZvYXo7uggwKrJPKRwehCEGDgXsd7SuN16p10Ic1QkqoYg==}
 
   '@volksverpetzer/ui-web@0.14.0':
     resolution: {integrity: sha512-Zm/xwaI4xZoFUenQDCidmu8S4famTp7J2qMQAt1ZT0F21SKvcwMlu7DGy2KZYrdksYI1v2e8/NrbAcDLJvz9bA==}
@@ -4762,7 +4762,7 @@ snapshots:
       loupe: 3.2.1
       tinyrainbow: 2.0.0
 
-  '@volksverpetzer/design-tokens@0.8.0': {}
+  '@volksverpetzer/design-tokens@0.9.0': {}
 
   '@volksverpetzer/ui-web@0.14.0(react@19.3.0)':
     dependencies:
