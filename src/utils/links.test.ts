@@ -14,6 +14,11 @@ describe("isExternalUrl", () => {
     );
   });
 
+  it("ignores a www. prefix", () => {
+    const bare = host.replace(/^www\./, "");
+    expect(isExternalUrl(`https://www.${bare}/foo/`)).toBe(false);
+  });
+
   it("treats other hosts as external", () => {
     expect(isExternalUrl("https://pruefpunkt.org/article/")).toBe(true);
     expect(isExternalUrl("https://www.youtube.com/watch?v=abc")).toBe(true);

@@ -29,7 +29,7 @@ trait RenderCallbackTrait
      */
     public static function render_callback($attrs, $content, $block, $elements)
     {
-        $post = self::get_post_for_context();
+        $post = self::get_post_for_context($block);
         if (!$post) {
             return '';
         }
@@ -67,19 +67,37 @@ trait RenderCallbackTrait
      * The post this card represents: the current loop iteration's post when
      * rendered inside a Divi Loop, otherwise the page's own post.
      *
-     * Only published posts of type "post" are rendered — the card's mapping
-     * (Yoast description, reading time, category) only makes sense for
-     * articles, and a template rendered on a page or other post type should
-     * output nothing rather than a half-empty card.
+     * Candidates, first match wins:
+     *  1. The global post — what a loop that iterates with the_post() sets.
+     *  2. The block's `postId` context (declared via usesContext in
+     *     module.json) — for render paths that pass the loop item as context
+     *     instead of switching the global.
+     *
+     * Only published posts of type "post" qualify. Besides limiting the card
+     * to articles (its Yoast/reading-time/category mapping only makes sense
+     * there), this also rejects the Theme Builder template's own post, which
+     * is what the global resolves to inside a template outside a loop — see
+     * RelatedItems::current_post_id(). Renders nothing rather than the wrong
+     * post when neither candidate qualifies.
+     *
+     * @param \WP_Block $block Block being rendered.
      */
-    private static function get_post_for_context(): ?\WP_Post
+    private static function get_post_for_context($block): ?\WP_Post
     {
-        $post = get_post();
+        $candidates = [get_post()];
 
-        if (!$post instanceof \WP_Post || 'post' !== $post->post_type || 'publish' !== $post->post_status) {
-            return null;
+        // Guard the ID: get_post(0) would fall back to the global again.
+        $context_id = (int) ($block->context['postId'] ?? 0);
+        if ($context_id > 0) {
+            $candidates[] = get_post($context_id);
         }
 
-        return $post;
+        foreach ($candidates as $post) {
+            if ($post instanceof \WP_Post && 'post' === $post->post_type && 'publish' === $post->post_status) {
+                return $post;
+            }
+        }
+
+        return null;
     }
 }

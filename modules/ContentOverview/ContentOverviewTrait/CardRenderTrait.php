@@ -105,7 +105,9 @@ trait CardRenderTrait
 
     /**
      * Whether a URL points to another host than this site — mirrors
-     * isExternalUrl() in src/utils/links.ts. Relative URLs are internal.
+     * isExternalUrl() in src/utils/links.ts. Relative URLs are internal, and
+     * "www." is ignored so www/non-www variants of our domain stay internal
+     * (same normalization as RelatedItems::normalize_host()).
      *
      * @param string $url URL to check.
      */
@@ -116,7 +118,9 @@ trait CardRenderTrait
             return false;
         }
 
-        return strtolower($host) !== strtolower((string) wp_parse_url(home_url(), PHP_URL_HOST));
+        $normalize = static fn (string $h): string => preg_replace('/^www\./i', '', strtolower($h));
+
+        return $normalize($host) !== $normalize((string) wp_parse_url(home_url(), PHP_URL_HOST));
     }
 
     /**
