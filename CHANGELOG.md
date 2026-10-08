@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Bumped dependencies (`@storybook/react-vite`, `storybook`, `vitest`, `@vitest/coverage-v8`, `cspell`, `pnpm`, `@volksverpetzer/ui-web`); `eslint`, `typescript`, and the `@divi/*` packages were left as-is (the latter's latest patch ships broken type declarations).
+- Bumped runtime and development dependencies (including `@volksverpetzer/design-tokens`, `@volksverpetzer/ui-web`, `eslint`, Storybook, Vite, and Vitest); the `@divi/*` packages were left as-is.
 - Migrated hardcoded CSS spacing and color values across ContentOverview, ArticleCard, and several other modules onto the shared `@volksverpetzer/design-tokens` custom properties, so they track brand/theme changes instead of drifting independently.
 - Date/reading-time/author meta text now renders via `@volksverpetzer/ui-web`'s new `MetaText` component instead of a plain styled `<span>`, so it looks the same everywhere that role appears.
 - Storybook: `ArticleCard` and `InstagramSlideshow` stories no longer force a 360px max-width, so they render at the same full-grid-cell width they actually have in production.
