@@ -6,14 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-10-08
+
 ### Added
 
 - TrendingItems: optional section heading ("Überschrift" text, default "Trending", and "Überschrift anzeigen" toggle, off by default), styled like the ContentOverview heading, with a Lucide arrow-up-right icon next to it.
-
-## [1.5.0] - 2026-09-30
-
-### Added
-
 - ContentOverview: "Überschrift" setting for custom heading text (replacing "Das Neueste"), and "Überschrift anzeigen" to hide the heading entirely.
 - ContentOverview: the Visual Builder editor preview now reflects the module's own settings (content types, item count, load-more, headline) against representative mock data, instead of always showing the same fixed layout.
 
