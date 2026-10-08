@@ -14,7 +14,7 @@
   margin-bottom: 1.25rem;
   color: var(--vvp-blue-main);
   font-size: 0.8125rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 .et-fb .vvp-content-overview .vvp-co__preview-header svg {
   flex-shrink: 0;
@@ -27,13 +27,18 @@
 .et-fb .vvp-content-overview .vvp-co__skeleton--feed .vvp-co__skeleton-img,
 .et-fb .vvp-content-overview .vvp-co__skeleton--compact .vvp-co__skeleton-thumb,
 .et-fb .vvp-content-overview .vvp-co__skeleton--hero .vvp-co__skeleton-img {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background: linear-gradient(
+    90deg,
+    var(--vvp-surface, #e2f0f5) 25%,
+    var(--vvp-surface-disabled, #ddd) 37%,
+    var(--vvp-surface, #e2f0f5) 63%
+  );
   background-size: 600px 100%;
   animation: vvp-co-shimmer 1.4s ease infinite;
   border-radius: var(--vvp-radius-xs);
 }
 .et-fb .vvp-content-overview .vvp-co__skeleton {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--vvp-surface, #e2f0f5);
   border-radius: var(--vvp-radius-sm);
   overflow: hidden;
 }
@@ -49,7 +54,7 @@
   padding: 0.625rem;
   border-radius: 0.375rem;
   border: none;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--vvp-surface, #e2f0f5);
 }
 .et-fb
   .vvp-content-overview

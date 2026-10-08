@@ -67,7 +67,7 @@ trait CardRenderTrait
             . '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>'
             . '</svg>';
         $reading_time_html = $props['reading_time']
-            ? '<span class="vvp-co__feed-reading-time">' . $clock_svg . (int) $props['reading_time'] . ' Min.</span>'
+            ? '<span class="vvp-ui-meta-text vvp-co__feed-reading-time">' . $clock_svg . (int) $props['reading_time'] . ' Min.</span>'
             : '';
 
         $excerpt_html = '';
@@ -87,7 +87,7 @@ trait CardRenderTrait
             .   '<div class="vvp-co__feed-footer">'
             .     $source_badge
             .     $category_html
-            .     '<span class="vvp-co__feed-date">' . esc_html($props['date']) . '</span>'
+            .     '<span class="vvp-ui-meta-text vvp-co__feed-date">' . esc_html($props['date']) . '</span>'
             .     $reading_time_html
             .   '</div>'
             . '</div>'
@@ -255,7 +255,7 @@ trait CardRenderTrait
             .       '<a href="' . $yt_url . '" class="vvp-co__yt-banner-title" target="_blank" rel="noopener noreferrer">' . $yt_title . '</a>'
             .       ($yt_desc ? '<p class="vvp-co__yt-banner-description">' . $yt_desc . '</p>' : '')
             .       '<div class="vvp-co__yt-banner-footer">'
-            .         '<span class="vvp-co__yt-banner-date">' . $yt_date . '</span>'
+            .         '<span class="vvp-ui-meta-text vvp-co__yt-banner-date">' . $yt_date . '</span>'
             .       '</div>'
             .     '</div>'
             .   '</div>'
@@ -313,7 +313,7 @@ trait CardRenderTrait
             .       '<a href="' . $pod_link . '" class="vvp-co__podcast-title" target="_blank" rel="noopener noreferrer">' . $pod_title . '</a>'
             .       ($props['summary'] ? '<p class="vvp-co__podcast-summary">' . $pod_summary . '</p>' : '')
             .       '<div class="vvp-co__podcast-footer">'
-            .         '<span class="vvp-co__podcast-date">' . $pod_date . '</span>'
+            .         '<span class="vvp-ui-meta-text vvp-co__podcast-date">' . $pod_date . '</span>'
             .         ($props['enclosure']
                         ? '<button type="button" class="vvp-co__podcast-listen-btn">' . $pod_play_icon . 'Anhören</button>'
                         : '')

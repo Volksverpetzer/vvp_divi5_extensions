@@ -1,5 +1,6 @@
 import React, { type ReactElement } from "react";
 import { ModuleContainer } from "@divi/module";
+import { MetaText } from "@volksverpetzer/ui-web";
 import { type TrendingListEditProps, type TrendingListItem } from "./types";
 import { ModuleStyles } from "./styles";
 import { moduleClassnames } from "./module-classnames";
@@ -52,9 +53,9 @@ export const TrendingListEdit = (
               <a href={item.link} className="vvp-tl__title">
                 {item.title}
               </a>
-              <span className="vvp-tl__meta">
+              <MetaText className="vvp-tl__meta">
                 von {formatAuthors(item.authors)} | {item.date}
-              </span>
+              </MetaText>
             </div>
           ))}
         </div>

@@ -7,7 +7,7 @@ import { FEED_ARTICLES } from "./previewFixtures";
 const meta: Meta<typeof ArticleCard> = {
   title: "Modules/ContentOverview/ArticleCard",
   component: ArticleCard,
-  decorators: [(Story) => <PreviewCard maxWidth={360}>{Story()}</PreviewCard>],
+  decorators: [(Story) => <PreviewCard>{Story()}</PreviewCard>],
 };
 
 export default meta;

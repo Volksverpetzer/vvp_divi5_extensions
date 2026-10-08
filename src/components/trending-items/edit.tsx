@@ -48,6 +48,12 @@ export const TrendingItemsEdit = (
   props: TrendingItemsEditProps,
 ): ReactElement => {
   const { attrs, elements, id, name } = props;
+  const a = attrs as any;
+  // Mirror RenderCallbackTrait.php: off unless explicitly "on", and trim
+  // before falling back to "Trending".
+  const showHeadline = a.showHeadline?.innerContent?.desktop?.value === "on";
+  const headlineText =
+    (a.headline?.innerContent?.desktop?.value ?? "").trim() || "Trending";
 
   return (
     <ModuleContainer
@@ -62,6 +68,27 @@ export const TrendingItemsEdit = (
       {elements.styleComponents({ attrName: "module" })}
 
       <div className="vvp-trending-items">
+        {showHeadline && (
+          <h2 className="vvp-ti__section-title">
+            {headlineText}
+            {/* Lucide "arrow-up-right" — keep in sync with HEADLINE_ICON in RenderCallbackTrait.php */}
+            <svg
+              className="vvp-ti__section-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path d="M7 7h10v10" />
+              <path d="M7 17 17 7" />
+            </svg>
+          </h2>
+        )}
         <div className="vvp-ti__list">
           {PLACEHOLDER_ARTICLES.map((article) => (
             <div key={article.link + article.title} className="vvp-ti__item">

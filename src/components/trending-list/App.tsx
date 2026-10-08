@@ -1,4 +1,5 @@
 import * as React from "react";
+import { MetaText } from "@volksverpetzer/ui-web";
 import { type TrendingListItem } from "./types";
 import { formatAuthors } from "./formatAuthors";
 
@@ -40,9 +41,9 @@ export const TrendingListApp: React.FC<TrendingListAppProps> = ({ items }) => {
           >
             {item.title}
           </a>
-          <span className="vvp-tl__meta">
+          <MetaText className="vvp-tl__meta">
             von {formatAuthors(item.authors)} | {item.date}
-          </span>
+          </MetaText>
         </div>
       ))}
     </div>
