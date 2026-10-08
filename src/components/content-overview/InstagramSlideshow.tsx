@@ -140,6 +140,23 @@ const BrokenImageFallback = ({ permalink }: { permalink: string }) => (
   </a>
 );
 
+interface InternalSliderProps {
+  slides: Slide[];
+  activeIndex: number;
+  setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
+  isCarousel: boolean;
+  caption: string;
+  playingVideos: Record<number, boolean>;
+  setPlayingVideos: React.Dispatch<
+    React.SetStateAction<Record<number, boolean>>
+  >;
+  /** Opens the fullscreen view; null inside fullscreen itself. */
+  onCenterClick: (() => void) | null;
+  onVideoPlay?: () => void;
+  permalink: string;
+  fullscreen?: boolean;
+}
+
 const InternalSlider = ({
   slides,
   activeIndex,
@@ -152,7 +169,7 @@ const InternalSlider = ({
   onVideoPlay,
   permalink,
   fullscreen = false,
-}) => {
+}: InternalSliderProps) => {
   const [showArrows, setShowArrows] = useState(false);
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
   const [failedImages, setFailedImages] = useState<Set<number>>(new Set());

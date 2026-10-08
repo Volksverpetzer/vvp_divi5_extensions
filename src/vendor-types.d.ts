@@ -60,3 +60,10 @@ declare module "zod" {
 declare module "@tinymce/tinymce-react" {
   export type Editor = any;
 }
+// @wordpress/blocks is installed but ships no type declarations; without
+// this stub its import in @divi/types is an implicit `any`, which
+// noImplicitAny rejects.
+declare module "@wordpress/blocks" {
+  export type BlockConfiguration<_T = any> = any;
+  export type BlockInstance<_T = any> = any;
+}

@@ -10,7 +10,7 @@
     "types": ["vitest/globals", "react", "vite/client"],
     "resolveJsonModule": true,
     "strict": false,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "noEmit": true
   },
   "include": ["src/**/*", ".storybook/**/*", "*.ts"],
