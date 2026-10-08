@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Badge, MetaText } from "@volksverpetzer/ui-web";
 import { trackEvent } from "../../utils/plausible";
+import { isExternalUrl } from "../../utils/links";
 import "./ArticleCard.css";
 
 export interface ArticleCardProps {
@@ -16,6 +17,12 @@ export interface ArticleCardProps {
   category_link?: string;
   source?: "volksverpetzer" | "pruefpunkt";
   trackingContext?: "feed" | "trending" | "related";
+  /**
+   * Open the card (and its category link) in a new tab. Derived from `link`
+   * when omitted; PHP passes it explicitly for hydrated cards so server and
+   * client markup can't disagree.
+   */
+  external?: boolean;
 }
 
 const PruefpunktBadge: React.FC = () => (
@@ -56,7 +63,9 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   category_link,
   source = "volksverpetzer",
   trackingContext = "feed",
+  external,
 }) => {
+  const opensNewTab = external ?? isExternalUrl(link);
   const isYoutube = type === "youtube";
   const cardClass = isYoutube
     ? "vvp-co__feed-card vvp-co__feed-card--youtube"
@@ -66,7 +75,11 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     if (category_link) {
       e.preventDefault();
       e.stopPropagation();
-      window.open(category_link, "_blank", "noopener,noreferrer");
+      if (isExternalUrl(category_link)) {
+        window.open(category_link, "_blank", "noopener,noreferrer");
+      } else {
+        window.location.assign(category_link);
+      }
     }
   };
 
@@ -85,8 +98,8 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     <a
       href={link}
       className={cardClass}
-      target="_blank"
-      rel="noopener noreferrer"
+      target={opensNewTab ? "_blank" : undefined}
+      rel={opensNewTab ? "noopener noreferrer" : undefined}
       onClick={handleClick}
     >
       {image_url && (
