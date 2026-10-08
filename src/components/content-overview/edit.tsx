@@ -1,11 +1,11 @@
 // External Dependencies.
-import React, { ReactElement } from "react";
+import React, { type ReactElement } from "react";
 
 // Divi Dependencies.
 import { ModuleContainer } from "@divi/module";
 
 // Local Dependencies.
-import { ContentOverviewEditProps } from "./types";
+import { type ContentOverviewEditProps } from "./types";
 import { ModuleStyles } from "./styles";
 import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";

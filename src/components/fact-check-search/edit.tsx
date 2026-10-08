@@ -1,11 +1,11 @@
 // External Dependencies.
-import React, { ReactElement } from "react";
+import React, { type ReactElement } from "react";
 
 // Divi Dependencies.
 import { ModuleContainer } from "@divi/module";
 
 // Local Dependencies.
-import { FactCheckSearchEditProps } from "./types";
+import { type FactCheckSearchEditProps } from "./types";
 import { ModuleStyles } from "./styles";
 import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";

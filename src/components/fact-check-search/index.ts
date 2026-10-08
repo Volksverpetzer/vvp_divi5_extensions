@@ -4,7 +4,7 @@ import { type Metadata, type ModuleLibrary } from "@divi/types";
 // Local dependencies.
 import metadata from "./module.json";
 import { FactCheckSearchEdit } from "./edit";
-import { FactCheckSearchAttrs } from "./types";
+import { type FactCheckSearchAttrs } from "./types";
 import { placeholderContent } from "./placeholder-content";
 
 // Styles.

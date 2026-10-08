@@ -4,7 +4,7 @@ import { type Metadata, type ModuleLibrary } from "@divi/types";
 // Local dependencies.
 import metadata from "./module.json";
 import { ContentOverviewEdit } from "./edit";
-import { ContentOverviewAttrs } from "./types";
+import { type ContentOverviewAttrs } from "./types";
 import { placeholderContent } from "./placeholder-content";
 
 // Styles.

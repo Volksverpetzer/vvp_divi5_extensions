@@ -37,6 +37,12 @@ export default [
     },
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
+      // Stands in for verbatimModuleSyntax, which @divi/types' raw .ts
+      // sources don't pass. Inline style matches the existing imports.
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        { fixStyle: "inline-type-imports" },
+      ],
       "@typescript-eslint/no-unused-expressions": [
         "error",
         {
