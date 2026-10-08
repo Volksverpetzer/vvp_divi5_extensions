@@ -44,6 +44,23 @@ class ContentOverview implements DependencyInterface
     public const YT_SHORT_MAX_SECONDS = 180;
 
     /**
+     * Render a single local post as the feed's article card.
+     *
+     * Public entry point for other modules (ArticleCard) so the card markup,
+     * the WP_Post → REST-shape mapping and the hydration mount stay defined
+     * in exactly one place — the emitted `.vvp-co-article-mount` is hydrated
+     * by content-overview-frontend.js, which is enqueued on every page.
+     *
+     * @param \WP_Post $post Post to render.
+     *
+     * @return string Card HTML.
+     */
+    public static function render_article_card(\WP_Post $post): string
+    {
+        return self::render_featured_card(self::map_local_post($post));
+    }
+
+    /**
      * Loads `ContentOverview` and registers Front-End render callback.
      *
      * @since 1.0.0
