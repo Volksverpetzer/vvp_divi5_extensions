@@ -1,22 +1,17 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ES2022",
     "module": "ESNext",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ES2022", "DOM"],
     "moduleResolution": "bundler",
     "jsx": "react",
-    "esModuleInterop": true,
     "skipLibCheck": true,
     "allowArbitraryExtensions": true,
     "types": ["vitest/globals", "react", "vite/client"],
-    "allowSyntheticDefaultImports": true,
-    "allowJs": true,
     "resolveJsonModule": true,
     "strict": false,
     "noImplicitAny": false,
-    "outDir": "./dist",
-    "forceConsistentCasingInFileNames": true,
-    "sourceMap": true
+    "noEmit": true
   },
   "include": ["src/**/*", ".storybook/**/*", "*.ts"],
   "exclude": ["node_modules", "dist", "scripts"]

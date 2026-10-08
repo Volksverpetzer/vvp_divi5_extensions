@@ -19,7 +19,7 @@
     "---- check test and lint ----": "-------------",
     "check": "pnpm check:spelling && pnpm check:ts",
     "check:spelling": "cspell lint",
-    "check:ts": "tsc --noEmit",
+    "check:ts": "tsc",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint .",
