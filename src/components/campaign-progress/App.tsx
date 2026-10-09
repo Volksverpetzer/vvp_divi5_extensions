@@ -12,6 +12,18 @@ export const CampaignProgressApp = ({
   const [total, setTotal] = useState(initialTotal);
   const [goal, setGoal] = useState(initialGoal);
 
+  // useState only reads its initial value once — follow prop changes too
+  // (Visual Builder edits to the goal field, Storybook controls).
+  const [prevProps, setPrevProps] = useState({ initialTotal, initialGoal });
+  if (
+    prevProps.initialTotal !== initialTotal ||
+    prevProps.initialGoal !== initialGoal
+  ) {
+    setPrevProps({ initialTotal, initialGoal });
+    setTotal(initialTotal);
+    setGoal(initialGoal);
+  }
+
   useEffect(() => {
     if (!apiUrl) return;
 
