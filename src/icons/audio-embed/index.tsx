@@ -1,34 +1,12 @@
 import React, { type ReactElement } from "react";
 
 // Icon data for Divi icon library — headphones representing the audio player.
+// Drawn like Divi's own module icons: filled shapes on a 16×16 grid without
+// fill/stroke attributes, so the builder's CSS fill colours them.
 export const name = "vvp/audio-embed-icon";
-export const viewBox = "0 0 24 24";
+export const viewBox = "0 0 16 16";
 export const component = (): ReactElement => (
-  <>
-    <path
-      d="M4 13a8 8 0 0116 0v5.5a2.5 2.5 0 01-2.5 2.5H16v-6h2.5v-2a6.5 6.5 0 00-13 0v2H8v6H6.5A2.5 2.5 0 014 18.5V13z"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinejoin="round"
-    />
-    <rect
-      x="4.5"
-      y="14.5"
-      width="3.5"
-      height="6"
-      rx="1.5"
-      fill="currentColor"
-      stroke="none"
-    />
-    <rect
-      x="16"
-      y="14.5"
-      width="3.5"
-      height="6"
-      rx="1.5"
-      fill="currentColor"
-      stroke="none"
-    />
-  </>
+  <g>
+    <path d="M8,2.5c-3.3,0-6,2.7-6,6V13c0,.6.4,1,1,1h1.5c.6,0,1-.4,1-1v-3c0-.6-.4-1-1-1H3v-.5c0-2.8,2.2-5,5-5s5,2.2,5,5V9h-1.5c-.6,0-1,.4-1,1v3c0,.6.4,1,1,1H13c.6,0,1-.4,1-1V8.5C14,5.2,11.3,2.5,8,2.5z" />
+  </g>
 );

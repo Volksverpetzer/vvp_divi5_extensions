@@ -1,54 +1,24 @@
 import React, { type ReactElement } from "react";
 
+// Icon data for Divi icon library — three linked cards.
+// Drawn like Divi's own module icons: filled shapes on a 16×16 grid without
+// fill/stroke attributes, so the builder's CSS fill colours them.
 export const name = "vvp/related-items-icon";
-export const viewBox = "0 0 24 24";
+export const viewBox = "0 0 16 16";
 export const component = (): ReactElement => (
-  <>
-    <rect
-      x="3"
-      y="4"
-      width="7"
-      height="7"
-      rx="1"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
+  <g>
+    <path
+      fillRule="evenodd"
+      d="M2.5,2h4c.3,0,.5.2.5.5v4c0,.3-.2.5-.5.5h-4C2.2,7,2,6.8,2,6.5v-4C2,2.2,2.2,2,2.5,2z M3,3v3h3V3z"
     />
-    <rect
-      x="14"
-      y="4"
-      width="7"
-      height="7"
-      rx="1"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
+    <path
+      fillRule="evenodd"
+      d="M9.5,2h4c.3,0,.5.2.5.5v4c0,.3-.2.5-.5.5h-4C9.2,7,9,6.8,9,6.5v-4C9,2.2,9.2,2,9.5,2z M10,3v3h3V3z"
     />
-    <rect
-      x="8.5"
-      y="14"
-      width="7"
-      height="7"
-      rx="1"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
+    <path
+      fillRule="evenodd"
+      d="M6,9h4c.3,0,.5.2.5.5v4c0,.3-.2.5-.5.5H6c-.3,0-.5-.2-.5-.5v-4C5.5,9.2,5.7,9,6,9z M6.5,10v3h3v-3z"
     />
-    <line
-      x1="9.5"
-      y1="11"
-      x2="12"
-      y2="14"
-      stroke="currentColor"
-      strokeWidth="1.25"
-    />
-    <line
-      x1="14.5"
-      y1="11"
-      x2="12"
-      y2="14"
-      stroke="currentColor"
-      strokeWidth="1.25"
-    />
-  </>
+    <path d="M4,7h1v.5h6V7h1v1.5H8.5V9h-1V8.5H4z" />
+  </g>
 );
