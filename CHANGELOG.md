@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-10-09
+
+### Added
+
+- Artikelkarte (`vvp/article-card`): new module that renders the current post as the ContentOverview feed card. Placed inside a Divi 5 Loop (query type "Current Page"), it replaces the Divi Blog module on archive templates such as author pages, keeping the main query's filtering and pagination.
+
+### Changed
+
+- Article cards (ContentOverview, TrendingItems, RelatedItems, Artikelkarte) and TrendingList entries open internal links, including category links, in the same tab; only external links (e.g. Prüfpunkt articles) still open a new tab.
+
 ## [1.5.0] - 2026-10-08
 
 ### Added

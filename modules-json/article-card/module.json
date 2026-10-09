@@ -1,0 +1,54 @@
+{
+  "name": "vvp/article-card",
+  "d4Shortcode": "",
+  "title": "Artikelkarte",
+  "titles": "Artikelkarten",
+  "moduleIcon": "vvp/article-card-icon",
+  "moduleClassName": "article_card",
+  "moduleOrderClassName": "article_card",
+  "category": "module",
+  "attributes": {
+    "module": {
+      "type": "object",
+      "selector": "{{selector}}",
+      "styleProps": {
+        "border": {
+          "important": true
+        }
+      },
+      "settings": {
+        "meta": {
+          "adminLabel": {}
+        },
+        "advanced": {
+          "text": {},
+          "htmlAttributes": {}
+        },
+        "decoration": {
+          "attributes": {},
+          "background": {},
+          "sizing": {},
+          "spacing": {},
+          "border": {},
+          "boxShadow": {},
+          "filters": {},
+          "transform": {},
+          "animation": {},
+          "overflow": {},
+          "disabledOn": {},
+          "transition": {},
+          "position": {},
+          "zIndex": {},
+          "scroll": {},
+          "sticky": {}
+        }
+      }
+    }
+  },
+  "usesContext": ["postId", "postType"],
+  "settings": {
+    "content": "auto",
+    "design": "auto",
+    "advanced": "auto"
+  }
+}

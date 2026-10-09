@@ -1,6 +1,6 @@
 # VVPs Divi5 Extensions for WordPress
 
-A WordPress plugin that adds custom modules to the **DIVI 5 Visual Builder** for Volksverpetzer. Five modules are included:
+A WordPress plugin that adds custom modules to the **DIVI 5 Visual Builder** for Volksverpetzer. The following modules are included:
 
 | Module                | DIVI slug               | Description                                                                   |
 | --------------------- | ----------------------- | ----------------------------------------------------------------------------- |
@@ -10,6 +10,7 @@ A WordPress plugin that adds custom modules to the **DIVI 5 Visual Builder** for
 | **Trending Beiträge** | `vvp/trending-items`    | Card grid of trending articles with thumbnails, configurable time range       |
 | **Trending Liste**    | `vvp/trending-list`     | Compact list of trending article titles and authors, configurable time range  |
 | **Audio-Player**      | `vvp/audio-embed`       | Embeds the vvp_wp_audio_converter player for the current article              |
+| **Artikelkarte**      | `vvp/article-card`      | The ContentOverview feed card for the current post, for use inside Divi Loops |
 
 ---
 
@@ -124,6 +125,18 @@ Embeds the [vvp_wp_audio_converter](https://github.com/Volksverpetzer/vvp_wp_aud
 - React app (`src/components/audio-embed/App.tsx`) is mounted by `scripts/audio-embed-frontend.js`. It renders the iframe at height `0` and listens for a `postMessage` of `{ type: "vvp-audio-embed-resize", height }` from vvp_wp_audio_converter's `EmbedHeightReporter` component, validating both `event.source` (against the iframe's own `contentWindow`) and `event.origin` before trusting it — the page can carry other third-party iframes, and the embedded iframe could in principle navigate elsewhere.
 - `audioBaseUrl` and `slug` are resolved into the iframe `src` via the `URL` API (`new URL(slug, audioBaseUrl)`, checking `.protocol`) rather than string concatenation — both round-trip through DOM `data-*` attributes before reaching React, so both are treated as untrusted.
 - DIVI Visual Builder preview: `src/components/audio-embed/edit.tsx` renders a static mockup (`App.tsx`'s `preview` prop) instead of a live iframe — no real article slug exists while editing a shared Theme Builder template, and a fake slug would just resolve to vvp_wp_audio_converter's silent "not yet available" state, leaving the module looking completely empty in the builder.
+
+### Artikelkarte (`vvp/article-card`)
+
+Renders the current post as the same article card the Inhaltsübersicht feed uses (image, title, Yoast description, co-authors, category, date, reading time). It is meant to sit inside a **Divi 5 Loop**: enable Loop on a row/column, pick query type **"Current Page"** on an archive template (author, category, tag, search), and place one Artikelkarte inside — Divi repeats it per post and the main query handles filtering (e.g. PublishPress co-authors on author archives) and `/page/N/` pagination.
+
+**Settings (DIVI):** none beyond the standard Design/Advanced controls.
+
+**Architecture:**
+
+- PHP renders the card via `ContentOverview::render_article_card()` (`modules/ContentOverview/ContentOverview.php`), so the WP_Post mapping and card markup are shared with the feed, not duplicated. Outputs nothing for anything other than a published `post`.
+- The emitted `.vvp-co-article-mount` is hydrated by `scripts/content-overview-frontend.js` (enqueued on every page) — the same hydration guardrail as the feed applies (see `CardRenderTrait.php`).
+- DIVI Visual Builder preview: `src/components/article-card/edit.tsx` renders a placeholder article; the builder doesn't resolve loop posts for third-party modules.
 
 ---
 

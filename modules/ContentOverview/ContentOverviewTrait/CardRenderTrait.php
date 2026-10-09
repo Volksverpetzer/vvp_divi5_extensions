@@ -31,16 +31,20 @@ trait CardRenderTrait
         $props = [
             'type'          => 'article',
             'title'         => html_entity_decode(wp_strip_all_tags($post['title']['rendered'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-            'link'          => $post['link'] ?? '',
+            // esc_url_raw() drops non-web schemes (javascript:, data:) before
+            // these reach the hydration props, where the static HTML's
+            // esc_url() no longer protects them.
+            'link'          => esc_url_raw($post['link'] ?? ''),
             'date'          => self::format_date($post['date'] ?? ''),
             'image_url'     => self::get_post_image($post, 'medium_large'),
             'excerpt'       => $post['yoast_head_json']['description'] ?? '',
             'author'        => self::format_authors($post['_embedded']['author'] ?? []),
             'reading_time'  => (int) ($post['reading_time'] ?? 0),
             'category'      => self::get_post_category($post),
-            'category_link' => self::get_post_category_link($post),
+            'category_link' => esc_url_raw(self::get_post_category_link($post)),
             'source'        => $post['_vvp_source'] ?? 'volksverpetzer',
         ];
+        $props['external'] = self::is_external_url($props['link']);
 
         $image_html = $props['image_url']
             ? '<div class="vvp-co__feed-image-wrap">'
@@ -79,7 +83,11 @@ trait CardRenderTrait
             $excerpt_html .= '</p>';
         }
 
-        $static_html = '<a href="' . esc_url($props['link']) . '" class="vvp-co__feed-card vvp-co__feed-card--article" target="_blank" rel="noopener noreferrer">'
+        // Only external links (e.g. Prüfpunkt articles) open a new tab;
+        // attribute order must match ArticleCard.tsx for hydration.
+        $target_attrs = $props['external'] ? ' target="_blank" rel="noopener noreferrer"' : '';
+
+        $static_html = '<a href="' . esc_url($props['link']) . '" class="vvp-co__feed-card vvp-co__feed-card--article"' . $target_attrs . '>'
             . $image_html
             . '<div class="vvp-co__feed-body">'
             .   '<h3 class="vvp-co__feed-title">' . esc_html($props['title']) . '</h3>'
@@ -96,6 +104,26 @@ trait CardRenderTrait
         return '<div class="vvp-co-article-mount" data-article-props="'
             . esc_attr(wp_json_encode($props))
             . '">' . $static_html . '</div>';
+    }
+
+    /**
+     * Whether a URL points to another host than this site — mirrors
+     * isExternalUrl() in src/utils/links.ts. Relative URLs are internal, and
+     * "www." is ignored so www/non-www variants of our domain stay internal
+     * (same normalization as RelatedItems::normalize_host()).
+     *
+     * @param string $url URL to check.
+     */
+    private static function is_external_url(string $url): bool
+    {
+        $host = wp_parse_url($url, PHP_URL_HOST);
+        if (!$host) {
+            return false;
+        }
+
+        $normalize = static fn (string $h): string => preg_replace('/^www\./i', '', strtolower($h));
+
+        return $normalize($host) !== $normalize((string) wp_parse_url(home_url(), PHP_URL_HOST));
     }
 
     /**

@@ -13,6 +13,7 @@ import { campaignProgress } from "./components/campaign-progress";
 import { campaignDonate } from "./components/campaign-donate";
 import { ctaBox } from "./components/cta-box";
 import { audioEmbed } from "./components/audio-embed";
+import { articleCard } from "./components/article-card";
 
 // Import icons.
 import "./module-icons";
@@ -107,5 +108,14 @@ addAction(
   "vvp/audioEmbed",
   () => {
     registerModule(audioEmbed.metadata, omit(audioEmbed, "metadata"));
+  },
+);
+
+// Register Article Card module with DIVI.
+addAction(
+  "divi.moduleLibrary.registerModuleLibraryStore.after",
+  "vvp/articleCard",
+  () => {
+    registerModule(articleCard.metadata, omit(articleCard, "metadata"));
   },
 );
