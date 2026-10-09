@@ -4,20 +4,23 @@ import { CampaignDonateApp } from "./App";
 import { PreviewCard } from "../shared/PreviewCard";
 
 const meta: Meta<typeof CampaignDonateApp> = {
-  title: "Modules/CampaignDonate",
+  title: "Modules/CampaignDonate/Form",
   component: CampaignDonateApp,
   decorators: [
     (Story) => (
       <PreviewCard moduleClass="vvp-campaign-donate">{Story()}</PreviewCard>
     ),
   ],
+  argTypes: {
+    preview: { control: "boolean" },
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof CampaignDonateApp>;
 
-export const StripeAndPayPal: Story = {
-  name: "Stripe + PayPal (with presets)",
+/** Every prop exposed as a control (Stripe + PayPal, with presets). */
+export const Playground: Story = {
   args: {
     apiBaseUrl: "https://crowdfunding.volksverpetzer.de",
     campaignKey: "flyer2026",

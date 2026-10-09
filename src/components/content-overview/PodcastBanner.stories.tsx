@@ -10,6 +10,7 @@ const meta: Meta<typeof PodcastBanner> = {
 export default meta;
 type Story = StoryObj<typeof PodcastBanner>;
 
-export const Default: Story = {
+/** Every prop exposed as a control. */
+export const Playground: Story = {
   args: PODCAST_PROPS,
 };

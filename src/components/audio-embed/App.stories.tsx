@@ -8,6 +8,11 @@ const meta: Meta<typeof AudioEmbedApp> = {
   title: "Modules/AudioEmbed",
   component: AudioEmbedApp,
   decorators: [(Story) => <PreviewCard>{Story()}</PreviewCard>],
+  argTypes: {
+    showErrorCard: { control: "boolean" },
+    preview: { control: "boolean" },
+    errorCard: { control: "boolean" },
+  },
 };
 
 export default meta;
@@ -17,10 +22,14 @@ type Story = StoryObj<typeof AudioEmbedApp>;
 // resizes to the player's real height via postMessage. Confirmed against
 // the live deploy; if this slug's audio ever gets taken down, swap in
 // another one from https://audio.volksverpetzer-app.de.
-export const Valid: Story = {
+/** Every prop exposed as a control. */
+export const Playground: Story = {
   args: {
     slug: "bka-anschlag-halle-vergessen",
     audioBaseUrl: DEFAULT_AUDIO_BASE_URL,
+    showErrorCard: false,
+    preview: false,
+    errorCard: false,
   },
 };
 

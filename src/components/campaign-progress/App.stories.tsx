@@ -16,8 +16,16 @@ const meta: Meta<typeof CampaignProgressApp> = {
 export default meta;
 type Story = StoryObj<typeof CampaignProgressApp>;
 
-export const Default: Story = {
-  args: { total: 62340, goal: 100000 },
+/**
+ * Every prop exposed as a control. Setting `apiUrl` makes the component
+ * fetch and poll that URL itself.
+ */
+export const Playground: Story = {
+  args: { total: 62340, goal: 100000, goalOverride: undefined, apiUrl: "" },
+  argTypes: {
+    goalOverride: { control: "number" },
+    apiUrl: { control: "text" },
+  },
 };
 
 export const GoalReached: Story = {

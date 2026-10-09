@@ -97,7 +97,18 @@ export const CampaignDonateApp = ({
   certificateUrl,
   preview = false,
 }: CampaignDonateAppProps): ReactElement => {
-  const [selected, setSelected] = useState(presets[1] ?? presets[0] ?? 25);
+  const defaultPreset = presets[1] ?? presets[0] ?? 25;
+  const [selected, setSelected] = useState(defaultPreset);
+  // Re-select the default when the presets change (Visual Builder edits,
+  // Storybook controls) — otherwise the old amount stays selected without
+  // a matching button. Compared by value: edit.tsx builds a new array on
+  // every render.
+  const presetsKey = presets.join(",");
+  const [prevPresetsKey, setPrevPresetsKey] = useState(presetsKey);
+  if (presetsKey !== prevPresetsKey) {
+    setPrevPresetsKey(presetsKey);
+    setSelected(defaultPreset);
+  }
   const [customAmount, setCustomAmount] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
