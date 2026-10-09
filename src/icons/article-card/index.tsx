@@ -1,27 +1,16 @@
 import React, { type ReactElement } from "react";
 
 // Icon data for Divi icon library — card with image area and text lines.
+// Drawn like Divi's own module icons: filled shapes on a 16×16 grid without
+// fill/stroke attributes, so the builder's CSS fill colours them.
 export const name = "vvp/article-card-icon";
-export const viewBox = "0 0 24 24";
+export const viewBox = "0 0 16 16";
 export const component = (): ReactElement => (
-  <>
-    <rect
-      x="4"
-      y="3"
-      width="16"
-      height="18"
-      rx="2"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-    />
-    <path d="M4 11h16" fill="none" stroke="currentColor" strokeWidth="1.75" />
+  <g>
     <path
-      d="M7.5 14.5h9M7.5 17.5h6"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
+      fillRule="evenodd"
+      d="M4,2h8c.6,0,1,.4,1,1v10c0,.6-.4,1-1,1H4c-.6,0-1-.4-1-1V3c0-.6.4-1,1-1z M4,8v5h8V8z"
     />
-  </>
+    <path d="M5.5,9h5v1h-5z M5.5,11H9v1H5.5z" />
+  </g>
 );

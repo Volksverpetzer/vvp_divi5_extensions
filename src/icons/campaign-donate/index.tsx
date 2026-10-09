@@ -1,13 +1,12 @@
 import React, { type ReactElement } from "react";
 
+// Icon data for Divi icon library — heart representing a donation.
+// Drawn like Divi's own module icons: filled shapes on a 16×16 grid without
+// fill/stroke attributes, so the builder's CSS fill colours them.
 export const name = "vvp/campaign-donate-icon";
-export const viewBox = "0 0 24 24";
+export const viewBox = "0 0 16 16";
 export const component = (): ReactElement => (
-  <>
-    <path
-      d="M12 21s-7.5-4.6-10-9.1C0.3 8.4 2 4.5 5.6 4.5c2 0 3.4 1 4.4 2.4 1-1.4 2.4-2.4 4.4-2.4 3.6 0 5.3 3.9 3.6 7.4C19.5 16.4 12 21 12 21z"
-      fill="currentColor"
-      stroke="none"
-    />
-  </>
+  <g>
+    <path d="M8,13.5S2,10,2,6.2C2,4.4,3.3,3,5,3c1.3,0,2.4.7,3,1.8C8.6,3.7,9.7,3,11,3c1.7,0,3,1.4,3,3.2C14,10,8,13.5,8,13.5z" />
+  </g>
 );

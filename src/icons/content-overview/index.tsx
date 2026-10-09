@@ -1,90 +1,17 @@
 import React, { type ReactElement } from "react";
 
-// Icon data for Divi icon library — newspaper/grid icon representing a news overview.
+// Icon data for Divi icon library — page with hero teaser, sidebar lines and a feed row.
+// Drawn like Divi's own module icons: filled shapes on a 16×16 grid without
+// fill/stroke attributes, so the builder's CSS fill colours them.
 export const name = "vvp/content-overview-icon";
-export const viewBox = "0 0 24 24";
+export const viewBox = "0 0 16 16";
 export const component = (): ReactElement => (
-  <>
-    {/* Outer document frame */}
-    <rect
-      x="3"
-      y="3"
-      width="18"
-      height="18"
-      rx="2"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
+  <g>
+    <path
+      fillRule="evenodd"
+      d="M3,2h10c.6,0,1,.4,1,1v10c0,.6-.4,1-1,1H3c-.6,0-1-.4-1-1V3c0-.6.4-1,1-1z M3,3v10h10V3z"
     />
-    {/* Large hero image placeholder (top-left 2/3) */}
-    <rect
-      x="5"
-      y="5"
-      width="9"
-      height="7"
-      rx="1"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    />
-    {/* Sidebar lines (top-right 1/3) */}
-    <line
-      x1="16"
-      y1="5.5"
-      x2="19"
-      y2="5.5"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-    <line
-      x1="16"
-      y1="8"
-      x2="19"
-      y2="8"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-    <line
-      x1="16"
-      y1="10.5"
-      x2="19"
-      y2="10.5"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-    {/* Feed grid — 3 small cards in a row */}
-    <rect
-      x="5"
-      y="14"
-      width="4"
-      height="5"
-      rx="0.75"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    />
-    <rect
-      x="10"
-      y="14"
-      width="4"
-      height="5"
-      rx="0.75"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    />
-    <rect
-      x="15"
-      y="14"
-      width="4"
-      height="5"
-      rx="0.75"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    />
-  </>
+    <path d="M4,4h4.5v4H4z M9.5,4H12v1H9.5z M9.5,5.5H12v1H9.5z M9.5,7H12v1H9.5z" />
+    <path d="M4,9.5h2.3V12H4z M6.85,9.5h2.3V12H6.85z M9.7,9.5H12V12H9.7z" />
+  </g>
 );
