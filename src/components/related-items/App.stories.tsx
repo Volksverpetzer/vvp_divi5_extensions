@@ -17,7 +17,8 @@ const meta: Meta<typeof RelatedItemsApp> = {
 export default meta;
 type Story = StoryObj<typeof RelatedItemsApp>;
 
-export const ThreeMatches: Story = {
+/** Every prop exposed as a control. */
+export const Playground: Story = {
   args: { items: TRENDING_ALL.slice(0, 3) },
 };
 

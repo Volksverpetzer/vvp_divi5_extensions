@@ -4,7 +4,7 @@ import { CampaignDonateThanks } from "./App";
 import { PreviewCard } from "../shared/PreviewCard";
 
 const meta: Meta<typeof CampaignDonateThanks> = {
-  title: "Modules/CampaignDonate",
+  title: "Modules/CampaignDonate/Thanks",
   component: CampaignDonateThanks,
   decorators: [
     (Story) => (
@@ -16,8 +16,8 @@ const meta: Meta<typeof CampaignDonateThanks> = {
 export default meta;
 type Story = StoryObj<typeof CampaignDonateThanks>;
 
-export const Success: Story = {
-  name: "Success (donation complete)",
+/** Every prop exposed as a control. */
+export const Playground: Story = {
   args: {
     amount: 50,
     certificateUrl: "/",

@@ -135,10 +135,9 @@ const meta: Meta<typeof ContentOverviewFeed> = {
 export default meta;
 type Story = StoryObj<typeof ContentOverviewFeed>;
 
-export const Full: Story = {};
-
-export const CustomHeadline: Story = {
-  args: { headline: "Frisch aus der Redaktion" },
+/** Every prop exposed as a control. */
+export const Playground: Story = {
+  args: { headline: "Das Neueste", showHeadline: true },
 };
 
 export const NoHeadline: Story = {

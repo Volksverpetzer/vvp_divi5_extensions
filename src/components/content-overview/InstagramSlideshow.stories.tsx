@@ -13,8 +13,9 @@ const meta: Meta<typeof InstagramSlideshow> = {
 export default meta;
 type Story = StoryObj<typeof InstagramSlideshow>;
 
-export const Default: Story = {
-  args: IG_PROPS,
+/** Every prop exposed as a control. */
+export const Playground: Story = {
+  args: { ...IG_PROPS, postId: "", mediaCategory: "Faktencheck" },
 };
 
 export const BrokenImage: Story = {
