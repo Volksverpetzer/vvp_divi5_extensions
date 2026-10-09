@@ -6,9 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Module icons in the Visual Builder use the Volksverpetzer accent colour (`--vvp-color-accent`, default `#DB2685`) instead of Divi's teal, so our modules stand out in the module inserter.
+
 ### Fixed
 
-- Module icons in the Visual Builder's module inserter now match Divi's own icons: redrawn as filled shapes on Divi's 16×16 grid, so they pick up the builder's accent colour and are no longer cropped or oversized.
+- Module icons in the Visual Builder's module inserter now match Divi's own icons: redrawn as filled shapes on Divi's 16×16 grid, so they are no longer white, cropped or oversized.
 
 ## [1.6.0] - 2026-10-09
 
