@@ -30,7 +30,7 @@
     "update:deps": "pnpx npm-check-updates -c 1d -i --format group"
   },
   "dependencies": {
-    "@stripe/stripe-js": "^9.17.0",
+    "@stripe/stripe-js": "^10.0.0",
     "@volksverpetzer/design-tokens": "0.9.0",
     "@volksverpetzer/ui-web": "0.14.0",
     "classnames": "^2.5.1"
