@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Module icons in the Visual Builder use the Volksverpetzer accent colour (`#DB2685`) instead of Divi's teal, so our modules stand out in the module inserter.
+- Module icons in the Visual Builder use the Volksverpetzer accent colour (`--vvp-color-accent`, default `#DB2685`) instead of Divi's teal, so our modules stand out in the module inserter.
 
 ### Fixed
 
