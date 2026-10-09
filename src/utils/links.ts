@@ -11,14 +11,27 @@
 const normalizeHost = (host: string): string =>
   host.toLowerCase().replace(/^www\./, "");
 
-export const isExternalUrl = (url: string): boolean => {
+/**
+ * Resolve a URL (relative ones against the current page) and return it only
+ * if it's http(s). Anything else (`javascript:`, `data:`, unparsable input)
+ * yields null, so callers that navigate programmatically can't be turned
+ * into script execution by URLs from post or REST data.
+ */
+export const toHttpUrl = (url: string): URL | null => {
   try {
     const parsed = new URL(url, window.location.href);
-    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
-      return false;
-    }
-    return normalizeHost(parsed.host) !== normalizeHost(window.location.host);
+    return parsed.protocol === "http:" || parsed.protocol === "https:"
+      ? parsed
+      : null;
   } catch {
-    return false;
+    return null;
   }
+};
+
+export const isExternalUrl = (url: string): boolean => {
+  const parsed = toHttpUrl(url);
+  return (
+    parsed !== null &&
+    normalizeHost(parsed.host) !== normalizeHost(window.location.host)
+  );
 };

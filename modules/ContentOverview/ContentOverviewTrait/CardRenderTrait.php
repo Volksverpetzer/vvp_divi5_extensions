@@ -31,14 +31,17 @@ trait CardRenderTrait
         $props = [
             'type'          => 'article',
             'title'         => html_entity_decode(wp_strip_all_tags($post['title']['rendered'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-            'link'          => $post['link'] ?? '',
+            // esc_url_raw() drops non-web schemes (javascript:, data:) before
+            // these reach the hydration props, where the static HTML's
+            // esc_url() no longer protects them.
+            'link'          => esc_url_raw($post['link'] ?? ''),
             'date'          => self::format_date($post['date'] ?? ''),
             'image_url'     => self::get_post_image($post, 'medium_large'),
             'excerpt'       => $post['yoast_head_json']['description'] ?? '',
             'author'        => self::format_authors($post['_embedded']['author'] ?? []),
             'reading_time'  => (int) ($post['reading_time'] ?? 0),
             'category'      => self::get_post_category($post),
-            'category_link' => self::get_post_category_link($post),
+            'category_link' => esc_url_raw(self::get_post_category_link($post)),
             'source'        => $post['_vvp_source'] ?? 'volksverpetzer',
         ];
         $props['external'] = self::is_external_url($props['link']);

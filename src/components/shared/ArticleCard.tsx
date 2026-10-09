@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Badge, MetaText } from "@volksverpetzer/ui-web";
 import { trackEvent } from "../../utils/plausible";
-import { isExternalUrl } from "../../utils/links";
+import { isExternalUrl, toHttpUrl } from "../../utils/links";
 import "./ArticleCard.css";
 
 export interface ArticleCardProps {
@@ -72,14 +72,17 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     : "vvp-co__feed-card vvp-co__feed-card--article";
 
   const handleCategoryClick = (e: React.SyntheticEvent) => {
-    if (category_link) {
-      e.preventDefault();
-      e.stopPropagation();
-      if (isExternalUrl(category_link)) {
-        window.open(category_link, "_blank", "noopener,noreferrer");
-      } else {
-        window.location.assign(category_link);
-      }
+    if (!category_link) return;
+    e.preventDefault();
+    e.stopPropagation();
+    // Only ever navigate to http(s): category_link can come from remote
+    // REST data, and location.assign("javascript:…") would run in this page.
+    const target = toHttpUrl(category_link);
+    if (!target) return;
+    if (isExternalUrl(target.href)) {
+      window.open(target.href, "_blank", "noopener,noreferrer");
+    } else {
+      window.location.assign(target.href);
     }
   };
 

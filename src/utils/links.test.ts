@@ -1,4 +1,4 @@
-import { isExternalUrl } from "./links";
+import { isExternalUrl, toHttpUrl } from "./links";
 
 describe("isExternalUrl", () => {
   const host = window.location.host;
@@ -27,5 +27,21 @@ describe("isExternalUrl", () => {
   it("treats non-http(s) and unparsable URLs as internal", () => {
     expect(isExternalUrl("mailto:info@example.org")).toBe(false);
     expect(isExternalUrl("http://")).toBe(false);
+  });
+});
+
+describe("toHttpUrl", () => {
+  it("resolves relative and absolute http(s) URLs", () => {
+    expect(toHttpUrl("/category/analyse/")?.pathname).toBe(
+      "/category/analyse/",
+    );
+    expect(toHttpUrl("https://pruefpunkt.org/x/")?.host).toBe("pruefpunkt.org");
+  });
+
+  it("rejects script and other non-web schemes", () => {
+    expect(toHttpUrl("javascript:alert(1)")).toBeNull();
+    expect(toHttpUrl(" JavaScript:alert(1)")).toBeNull();
+    expect(toHttpUrl("data:text/html,<script>alert(1)</script>")).toBeNull();
+    expect(toHttpUrl("http://")).toBeNull();
   });
 });
