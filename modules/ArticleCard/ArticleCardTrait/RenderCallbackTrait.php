@@ -34,6 +34,10 @@ trait RenderCallbackTrait
             return '';
         }
 
+        // Fields declared with attrName "<name>.innerContent" in module.json
+        // are stored under attrs.<name>.innerContent.<bp>.value — see PR #105.
+        $hero = ($attrs['hero']['innerContent']['desktop']['value'] ?? 'off') === 'on';
+
         $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
         $parent_attrs = $parent->attrs ?? [];
 
@@ -58,7 +62,7 @@ trait RenderCallbackTrait
                     'orderIndex'    => $block->parsed_block['orderIndex'],
                     'storeInstance' => $block->parsed_block['storeInstance'],
                 ]),
-                ContentOverview::render_article_card($post),
+                ContentOverview::render_article_card($post, $hero),
             ],
         ]);
     }
