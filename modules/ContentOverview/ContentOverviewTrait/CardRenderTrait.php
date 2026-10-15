@@ -23,10 +23,13 @@ trait CardRenderTrait
      * Emits a React mount point hydrated by content-overview-frontend.js.
      *
      * @param array $post WP post array.
+     * @param bool  $hero Lead-story layout (see ArticleCard.tsx's `hero`
+     *                    prop): larger title as <h2>, larger image that
+     *                    loads eagerly with high fetch priority.
      *
      * @return string HTML.
      */
-    private static function render_featured_card($post)
+    private static function render_featured_card($post, bool $hero = false)
     {
         $props = [
             'type'          => 'article',
@@ -36,7 +39,9 @@ trait CardRenderTrait
             // esc_url() no longer protects them.
             'link'          => esc_url_raw($post['link'] ?? ''),
             'date'          => self::format_date($post['date'] ?? ''),
-            'image_url'     => self::get_post_image($post, 'medium_large'),
+            // The hero renders at ~750 CSS px, too wide for medium_large (768w)
+            // on high-density screens.
+            'image_url'     => self::get_post_image($post, $hero ? 'large' : 'medium_large'),
             'excerpt'       => $post['yoast_head_json']['description'] ?? '',
             'author'        => self::format_authors($post['_embedded']['author'] ?? []),
             'reading_time'  => (int) ($post['reading_time'] ?? 0),
@@ -45,10 +50,16 @@ trait CardRenderTrait
             'source'        => $post['_vvp_source'] ?? 'volksverpetzer',
         ];
         $props['external'] = self::is_external_url($props['link']);
+        if ($hero) {
+            // Only set when true, so feed cards' hydration props are unchanged.
+            $props['hero'] = true;
+        }
 
         $image_html = $props['image_url']
             ? '<div class="vvp-co__feed-image-wrap">'
-            .   '<img src="' . esc_url($props['image_url']) . '" alt="' . esc_attr($props['title']) . '" class="vvp-co__feed-image" loading="lazy" decoding="async">'
+            .   '<img src="' . esc_url($props['image_url']) . '" alt="' . esc_attr($props['title']) . '" class="vvp-co__feed-image"'
+            .   ($hero ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"')
+            .   ' decoding="async">'
             . '</div>'
             : '';
 
@@ -87,10 +98,13 @@ trait CardRenderTrait
         // attribute order must match ArticleCard.tsx for hydration.
         $target_attrs = $props['external'] ? ' target="_blank" rel="noopener noreferrer"' : '';
 
-        $static_html = '<a href="' . esc_url($props['link']) . '" class="vvp-co__feed-card vvp-co__feed-card--article"' . $target_attrs . '>'
+        $card_class = 'vvp-co__feed-card vvp-co__feed-card--article' . ($hero ? ' vvp-co__feed-card--hero' : '');
+        $title_tag  = $hero ? 'h2' : 'h3';
+
+        $static_html = '<a href="' . esc_url($props['link']) . '" class="' . $card_class . '"' . $target_attrs . '>'
             . $image_html
             . '<div class="vvp-co__feed-body">'
-            .   '<h3 class="vvp-co__feed-title">' . esc_html($props['title']) . '</h3>'
+            .   '<' . $title_tag . ' class="vvp-co__feed-title">' . esc_html($props['title']) . '</' . $title_tag . '>'
             .   $excerpt_html
             .   '<div class="vvp-co__feed-footer">'
             .     $source_badge

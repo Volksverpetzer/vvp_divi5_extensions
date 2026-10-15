@@ -88,3 +88,31 @@ describe("ArticleCard category link", () => {
     expect(open).not.toHaveBeenCalled();
   });
 });
+
+describe("ArticleCard hero variant", () => {
+  const props = {
+    title: "Titel",
+    link: "/article/",
+    date: "01.10.2026",
+    image_url: "https://example.org/image.jpg",
+  };
+
+  it("renders feed cards with a lazy image and an h3", () => {
+    const html = renderToStaticMarkup(<ArticleCard {...props} />);
+    expect(html).toContain('loading="lazy"');
+    expect(html).not.toContain("fetchpriority");
+    expect(html).toContain("<h3 ");
+    expect(html).not.toContain("vvp-co__feed-card--hero");
+  });
+
+  it("renders the hero with an eager, high-priority image and an h2", () => {
+    const html = renderToStaticMarkup(<ArticleCard {...props} hero />);
+    // HTML attribute names are case-insensitive; React serialises
+    // fetchPriority with its camelCase name, PHP writes lowercase.
+    const img = html.match(/<img[^>]*>/)![0].toLowerCase();
+    expect(img).toContain('loading="eager"');
+    expect(img).toContain('fetchpriority="high"');
+    expect(html).toContain("<h2 ");
+    expect(html).toContain("vvp-co__feed-card--hero");
+  });
+});

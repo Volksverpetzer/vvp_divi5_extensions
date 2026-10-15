@@ -30,6 +30,7 @@ const meta: Meta<typeof ArticleCard> = {
     },
     reading_time: { control: { type: "number", min: 0 } },
     external: { control: "boolean" },
+    hero: { control: "boolean" },
   },
 };
 
@@ -46,7 +47,25 @@ export const Playground: Story = {
     author: "Minka Fellstein",
     trackingContext: "feed",
     external: false,
+    hero: false,
   },
+};
+
+/**
+ * Lead-story variant (Artikelkarte's "Als Aufmacher" toggle), at roughly
+ * the front-page hero's width.
+ */
+export const Hero: Story = {
+  args: {
+    ...FEED_ARTICLES[0],
+    author: "Minka Fellstein und Tom Kater",
+    hero: true,
+  },
+  render: (args) => (
+    <div className="vvp-article-card" style={{ maxWidth: 752 }}>
+      <ArticleCard {...args} />
+    </div>
+  ),
 };
 
 // ── Loop grid ────────────────────────────────────────────────────────────────
