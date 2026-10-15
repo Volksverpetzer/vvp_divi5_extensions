@@ -130,7 +130,11 @@ Embeds the [vvp_wp_audio_converter](https://github.com/Volksverpetzer/vvp_wp_aud
 
 Renders the current post as the same article card the Inhaltsübersicht feed uses (image, title, Yoast description, co-authors, category, date, reading time). It is meant to sit inside a **Divi 5 Loop**: enable Loop on a row/column, pick query type **"Current Page"** on an archive template (author, category, tag, search), and place one Artikelkarte inside — Divi repeats it per post and the main query handles filtering (e.g. PublishPress co-authors on author archives) and `/page/N/` pagination.
 
-**Settings (DIVI):** none beyond the standard Design/Advanced controls.
+**Settings (DIVI):**
+
+- Als Aufmacher (Hero) anzeigen (`hero`, toggle, off by default): lead-story layout for the front page — larger title as `<h2>`, unclamped excerpt, `large` image size loaded eagerly with `fetchpriority="high"` (the hero image is usually the LCP element; feed cards keep `loading="lazy"`). Use it for at most one card per page.
+
+**Front-page hero setup:** a Loop with query type **"Post Types" → Post**, **1 post per page**, newest first, **sticky posts ignored**, containing one Artikelkarte with the hero toggle on. This must show the newest published post: ContentOverview's `exclude_hero_post()` drops exactly that post from the feed, so a hero showing any other post (e.g. a sticky one) would duplicate it and hide the newest article.
 
 **Architecture:**
 

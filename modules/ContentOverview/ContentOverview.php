@@ -52,12 +52,13 @@ class ContentOverview implements DependencyInterface
      * by content-overview-frontend.js, which is enqueued on every page.
      *
      * @param \WP_Post $post Post to render.
+     * @param bool     $hero Lead-story layout (see render_featured_card()).
      *
      * @return string Card HTML.
      */
-    public static function render_article_card(\WP_Post $post): string
+    public static function render_article_card(\WP_Post $post, bool $hero = false): string
     {
-        return self::render_featured_card(self::map_local_post($post));
+        return self::render_featured_card(self::map_local_post($post), $hero);
     }
 
     /**
