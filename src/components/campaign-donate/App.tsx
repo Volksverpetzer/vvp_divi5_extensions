@@ -149,9 +149,9 @@ export const CampaignDonateApp = ({
     window.dispatchEvent(new CustomEvent(DONATION_COMPLETE_EVENT));
   };
 
-  // Some Stripe payment methods (3D Secure, Klarna, Sofort, ...) leave the
-  // page entirely instead of completing inline, so onComplete below never
-  // fires for them. Stripe's return_url brings the browser back here with
+  // Some Stripe payment methods (3D Secure, Klarna, Bancontact, PayPal, ...)
+  // leave the page entirely instead of completing inline, so onComplete below
+  // never fires for them. Stripe's return_url brings the browser back here with
   // this marker instead, and we finalize the session client-side the same
   // way onComplete does.
   useEffect(() => {
