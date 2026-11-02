@@ -363,21 +363,22 @@ trait RenderCallbackTrait
     /**
      * Remove the post shown in the frontpage hero from the article list.
      *
-     * The hero module queries the local database live and always shows the
-     * newest published post, while this feed mixes sources that can lag
-     * behind it: the local article list sits in a short transient, and the
-     * Prüfpunkt/REST-fallback data comes over HTTP with far longer caching.
-     * Dropping "our newest" (the old array_slice($all_articles, 1)) therefore
-     * removed the wrong article whenever the list was stale or a Prüfpunkt
-     * post happened to be newest. Matching the hero by its actual post ID
-     * cannot misfire: if the hero post is not in the (stale) list yet,
-     * nothing is dropped — the hero post is not in the feed anyway, so no
-     * duplicate can appear.
+     * The hero post is identified by ID, in this order:
+     *  1. The post a hero Artikelkarte already rendered on this page
+     *     (ContentOverview::$rendered_hero_id). The hero Loop can show any
+     *     post (e.g. a sticky one), so this need not be the newest.
+     *  2. Fallback for the legacy Divi Blog hero, which queries the local
+     *     database live and always shows the newest published post: that
+     *     post, looked up live.
      *
-     * When a hero Artikelkarte has already rendered on this page, its post
-     * is excluded instead (ContentOverview::$rendered_hero_id), so the feed
-     * follows whatever the hero Loop actually shows. "Newest published post"
-     * remains the fallback for the legacy Divi Blog hero.
+     * This feed mixes sources that can lag behind the hero: the local
+     * article list sits in a short transient, and the Prüfpunkt/REST-fallback
+     * data comes over HTTP with far longer caching. Dropping "our newest"
+     * (the old array_slice($all_articles, 1)) therefore removed the wrong
+     * article whenever the list was stale or a Prüfpunkt post happened to be
+     * newest. Matching the hero by its actual post ID cannot misfire: if the
+     * hero post is not in the (stale) list yet, nothing is dropped — the hero
+     * post is not in the feed anyway, so no duplicate can appear.
      *
      * @param array $articles Merged, deduped, date-sorted article list.
      *
