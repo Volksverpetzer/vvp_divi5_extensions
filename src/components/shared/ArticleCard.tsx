@@ -23,6 +23,12 @@ export interface ArticleCardProps {
    * client markup can't disagree.
    */
   external?: boolean;
+  /**
+   * Lead-story layout (e.g. the front-page hero): larger title as an <h2>
+   * and an eagerly loaded, high-priority image, since it's typically the
+   * page's LCP element. Mirrored in CardRenderTrait.php for hydration.
+   */
+  hero?: boolean;
 }
 
 const PruefpunktBadge: React.FC = () => (
@@ -64,12 +70,16 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   source = "volksverpetzer",
   trackingContext = "feed",
   external,
+  hero = false,
 }) => {
   const opensNewTab = external ?? isExternalUrl(link);
   const isYoutube = type === "youtube";
   const cardClass = isYoutube
     ? "vvp-co__feed-card vvp-co__feed-card--youtube"
-    : "vvp-co__feed-card vvp-co__feed-card--article";
+    : hero
+      ? "vvp-co__feed-card vvp-co__feed-card--article vvp-co__feed-card--hero"
+      : "vvp-co__feed-card vvp-co__feed-card--article";
+  const TitleTag = hero ? "h2" : "h3";
 
   const handleCategoryClick = (e: React.SyntheticEvent) => {
     if (!category_link) return;
@@ -117,7 +127,8 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             src={image_url}
             alt={title}
             className="vvp-co__feed-image"
-            loading="lazy"
+            loading={hero ? "eager" : "lazy"}
+            fetchPriority={hero ? "high" : undefined}
             decoding="async"
           />
           {isYoutube && (
@@ -136,7 +147,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         </div>
       )}
       <div className="vvp-co__feed-body">
-        <h3 className="vvp-co__feed-title">{title}</h3>
+        <TitleTag className="vvp-co__feed-title">{title}</TitleTag>
         {excerpt && (
           <p className="vvp-co__feed-excerpt">
             {excerpt}

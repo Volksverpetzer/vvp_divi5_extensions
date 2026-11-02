@@ -6,8 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Artikelkarte: "Als Aufmacher (Hero) anzeigen" toggle for the front-page lead story — larger title (as `<h2>`), unclamped excerpt so co-authors stay visible, a larger image size, and the image loads eagerly with `fetchpriority="high"` instead of lazily, since the hero image is typically the page's largest (LCP) element. Only the first hero card on a page gets the hero layout.
+
 ### Changed
 
+- ContentOverview excludes the post the hero Artikelkarte actually rendered, instead of assuming the hero is the newest published post, so a hero Loop showing e.g. a sticky post no longer duplicates it in the feed and hides the newest article. The newest-post assumption remains the fallback for the legacy Divi Blog hero.
 - Module icons in the Visual Builder use the Volksverpetzer accent colour (`--vvp-color-accent`, default `#DB2685`) instead of Divi's teal, so our modules stand out in the module inserter.
 
 ### Fixed

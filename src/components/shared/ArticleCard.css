@@ -243,3 +243,41 @@ button.vvp-co__category--btn:hover,
 .vvp-co__yt-play-btn svg {
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
 }
+
+/* Hero (lead-story) variant — `hero` prop / Artikelkarte "Als Aufmacher"
+   toggle. Same card, scaled for a single wide column: larger, unclamped
+   title and roomier body. The image keeps the base 350/183 ratio, which
+   matches the 1400×732 featured images. */
+.vvp-co__feed-card--hero .vvp-co__feed-body {
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.vvp-co__feed-card--hero .vvp-co__feed-title {
+  font-size: var(--vvp-font-size-xxxl, 30px);
+  font-weight: 700;
+  line-height: 1.25;
+  -webkit-line-clamp: unset;
+  margin-bottom: 0.75rem;
+}
+
+/* Unclamped: the author line is part of the excerpt paragraph, so a clamp
+   would cut the (co-)authors off. SEO meta descriptions are ~160 chars max,
+   so the excerpt stays short anyway. */
+.vvp-co__feed-card--hero .vvp-co__feed-excerpt {
+  font-size: var(--vvp-font-size-lg, 18px);
+  -webkit-line-clamp: unset;
+}
+
+@media (max-width: 767px) {
+  .vvp-co__feed-card--hero .vvp-co__feed-body {
+    padding: 1rem;
+  }
+
+  .vvp-co__feed-card--hero .vvp-co__feed-title {
+    font-size: var(--vvp-font-size-xxl, 24px);
+  }
+
+  .vvp-co__feed-card--hero .vvp-co__feed-excerpt {
+    font-size: var(--vvp-font-size-base, 16px);
+  }
+}
