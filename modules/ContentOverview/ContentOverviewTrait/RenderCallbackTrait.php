@@ -374,6 +374,11 @@ trait RenderCallbackTrait
      * nothing is dropped — the hero post is not in the feed anyway, so no
      * duplicate can appear.
      *
+     * When a hero Artikelkarte has already rendered on this page, its post
+     * is excluded instead (ContentOverview::$rendered_hero_id), so the feed
+     * follows whatever the hero Loop actually shows. "Newest published post"
+     * remains the fallback for the legacy Divi Blog hero.
+     *
      * @param array $articles Merged, deduped, date-sorted article list.
      *
      * @return array Articles without the hero post.
@@ -386,13 +391,16 @@ trait RenderCallbackTrait
             return array_slice($articles, 1);
         }
 
-        $hero_ids = get_posts([
-            'numberposts'  => 1,
-            'post_status'  => 'publish',
-            'fields'       => 'ids',
-            'no_found_rows' => true,
-        ]);
-        $hero_id = $hero_ids ? (int) $hero_ids[0] : 0;
+        $hero_id = self::$rendered_hero_id ?? 0;
+        if (0 === $hero_id) {
+            $hero_ids = get_posts([
+                'numberposts'  => 1,
+                'post_status'  => 'publish',
+                'fields'       => 'ids',
+                'no_found_rows' => true,
+            ]);
+            $hero_id = $hero_ids ? (int) $hero_ids[0] : 0;
+        }
 
         if (0 === $hero_id) {
             // Cannot determine the hero post (empty site or query failure):
