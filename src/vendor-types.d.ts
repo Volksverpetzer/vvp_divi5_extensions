@@ -20,7 +20,11 @@ declare module "@langchain/core/language_models/base" {
 declare module "@langchain/core/messages" {
   export type AIMessage = any;
   export type AIMessageChunk = any;
+  export type BaseMessage = any;
   export type ToolMessage = any;
+}
+declare module "@langchain/core/runnables" {
+  export type RunnableConfig<_T = any> = any;
 }
 declare module "@langchain/core/tools" {
   export type DynamicStructuredToolInput<_T = any, _U = any, _V = any> = object;
@@ -34,7 +38,11 @@ declare module "@langchain/core/tools" {
   export type StructuredToolInterface = any;
 }
 declare module "@langchain/langgraph/web" {
+  export type AnnotationRoot<_T = any> = any;
+  export type BaseChannel<_T = any, _U = any, _V = any> = any;
   export type Command = any;
+  export const MessagesAnnotation: { spec: any };
+  export type OverwriteValue<_T = any> = any;
 
   export type CompiledStateGraph<
     _TS = any,
