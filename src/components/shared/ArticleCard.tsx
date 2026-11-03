@@ -93,9 +93,6 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   const imageWrapClass = isYoutube
     ? "vvp-co__feed-image-wrap vvp-co__feed-image-wrap--yt"
     : "vvp-co__feed-image-wrap";
-  // The hero shows its (co-)authors on their own line under the title, like
-  // the Divi Blog hero it replaces; feed cards append them to the excerpt.
-  const showByline = hero && !!author;
 
   const handleCategoryClick = (e: React.SyntheticEvent) => {
     if (!category_link) return;
@@ -122,6 +119,58 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
       if (source === "pruefpunkt") trackEvent("Pruefpunkt Click");
     }
   };
+
+  // Badges, category, date and reading time: the footer of feed cards,
+  // part of the byline on the hero.
+  const metaItems = (
+    <>
+      {isYoutube && <YoutubeBadge />}
+      {!isYoutube && source === "pruefpunkt" && <PruefpunktBadge />}
+      {category &&
+        (category_link ? (
+          <span
+            role="button"
+            tabIndex={0}
+            className="vvp-co__category vvp-co__category--btn"
+            onClick={handleCategoryClick}
+            onKeyDown={(e) => {
+              if ((e.key === "Enter" || e.key === " ") && !e.repeat) {
+                handleCategoryClick(e);
+              }
+            }}
+          >
+            {category}
+          </span>
+        ) : (
+          <span className="vvp-co__category">{category}</span>
+        ))}
+      <MetaText className="vvp-co__feed-date">{date}</MetaText>
+      {!!reading_time && (
+        <MetaText className="vvp-co__feed-reading-time">
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            data-icon="clock"
+            width="14"
+            height="14"
+            fill="none"
+            stroke="currentColor"
+            role="img"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+            ></path>
+          </svg>
+          {`${reading_time} Min.`}
+        </MetaText>
+      )}
+    </>
+  );
 
   return (
     <a
@@ -164,62 +213,23 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
       )}
       <div className="vvp-co__feed-body">
         <TitleTag className="vvp-co__feed-title">{title}</TitleTag>
-        {showByline && <p className="vvp-co__feed-byline">{`von ${author}`}</p>}
+        {hero && (
+          <div className="vvp-co__feed-byline">
+            {author && (
+              <span className="vvp-co__feed-byline-author">{`von ${author}`}</span>
+            )}
+            {metaItems}
+          </div>
+        )}
         {excerpt && (
           <p className="vvp-co__feed-excerpt">
             {excerpt}
-            {author && !showByline && (
+            {author && !hero && (
               <em className="vvp-co__feed-author">{` – ${author}`}</em>
             )}
           </p>
         )}
-        <div className="vvp-co__feed-footer">
-          {isYoutube && <YoutubeBadge />}
-          {!isYoutube && source === "pruefpunkt" && <PruefpunktBadge />}
-          {category &&
-            (category_link ? (
-              <span
-                role="button"
-                tabIndex={0}
-                className="vvp-co__category vvp-co__category--btn"
-                onClick={handleCategoryClick}
-                onKeyDown={(e) => {
-                  if ((e.key === "Enter" || e.key === " ") && !e.repeat) {
-                    handleCategoryClick(e);
-                  }
-                }}
-              >
-                {category}
-              </span>
-            ) : (
-              <span className="vvp-co__category">{category}</span>
-            ))}
-          <MetaText className="vvp-co__feed-date">{date}</MetaText>
-          {!!reading_time && (
-            <MetaText className="vvp-co__feed-reading-time">
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                data-icon="clock"
-                width="14"
-                height="14"
-                fill="none"
-                stroke="currentColor"
-                role="img"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                ></path>
-              </svg>
-              {`${reading_time} Min.`}
-            </MetaText>
-          )}
-        </div>
+        {!hero && <div className="vvp-co__feed-footer">{metaItems}</div>}
       </div>
     </a>
   );

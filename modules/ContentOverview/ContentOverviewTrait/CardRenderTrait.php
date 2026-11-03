@@ -85,18 +85,27 @@ trait CardRenderTrait
             ? '<span class="vvp-ui-meta-text vvp-co__feed-reading-time">' . $clock_svg . (int) $props['reading_time'] . ' Min.</span>'
             : '';
 
-        // The hero shows its (co-)authors on their own line under the title,
-        // like the Divi Blog hero it replaces; feed cards append them to the
-        // excerpt. Mirrors `showByline` in ArticleCard.tsx.
-        $show_byline = $hero && $props['author'];
-        $byline_html = $show_byline
-            ? '<p class="vvp-co__feed-byline">von ' . esc_html($props['author']) . '</p>'
+        // Badges, category, date and reading time: the footer of feed cards.
+        // The hero instead shows them on one "von … | category | date |
+        // reading time" byline under the title, like the Divi Blog hero it
+        // replaces, and feed cards append the authors to the excerpt.
+        // Mirrors `metaItems` in ArticleCard.tsx.
+        $meta_html = $source_badge
+            . $category_html
+            . '<span class="vvp-ui-meta-text vvp-co__feed-date">' . esc_html($props['date']) . '</span>'
+            . $reading_time_html;
+
+        $byline_html = $hero
+            ? '<div class="vvp-co__feed-byline">'
+            .   ($props['author'] ? '<span class="vvp-co__feed-byline-author">von ' . esc_html($props['author']) . '</span>' : '')
+            .   $meta_html
+            . '</div>'
             : '';
 
         $excerpt_html = '';
         if ($props['excerpt']) {
             $excerpt_html = '<p class="vvp-co__feed-excerpt">' . esc_html($props['excerpt']);
-            if ($props['author'] && !$show_byline) {
+            if ($props['author'] && !$hero) {
                 $excerpt_html .= '<em class="vvp-co__feed-author"> – ' . esc_html($props['author']) . '</em>';
             }
             $excerpt_html .= '</p>';
@@ -115,12 +124,7 @@ trait CardRenderTrait
             .   '<' . $title_tag . ' class="vvp-co__feed-title">' . esc_html($props['title']) . '</' . $title_tag . '>'
             .   $byline_html
             .   $excerpt_html
-            .   '<div class="vvp-co__feed-footer">'
-            .     $source_badge
-            .     $category_html
-            .     '<span class="vvp-ui-meta-text vvp-co__feed-date">' . esc_html($props['date']) . '</span>'
-            .     $reading_time_html
-            .   '</div>'
+            .   ($hero ? '' : '<div class="vvp-co__feed-footer">' . $meta_html . '</div>')
             . '</div>'
             . '</a>';
 

@@ -269,13 +269,45 @@ button.vvp-co__category--btn:hover,
   margin-bottom: 0.75rem;
 }
 
-/* (Co-)authors on their own line under the title, like the Divi Blog
-   hero this replaces. */
+/* Hero byline: "von … | category | date | reading time" under the title,
+   sized like the Divi Blog hero's post-meta line it replaces. The footer
+   items are reused as-is, so reset their footer styling to the line's. */
 .vvp-co__feed-byline {
   margin: -0.25rem 0 0.75rem;
-  font-size: 1rem;
-  line-height: 1.4;
-  color: #4b5563;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--vvp-text-muted, #666);
+}
+
+/* Separator trails the previous item (no-break space before the "|", a
+   normal one after), so a wrapped line never starts with a "|". */
+.vvp-co__feed-byline > :not(:last-child)::after {
+  content: "\00a0| ";
+}
+
+.vvp-co__feed-byline .vvp-co__category,
+.vvp-co__feed-byline .vvp-ui-meta-text {
+  /* Inline, so the separator's trailing space is a line-break opportunity. */
+  display: inline;
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  font-weight: 400;
+  line-height: inherit;
+  text-transform: none;
+  letter-spacing: normal;
+  color: inherit;
+}
+
+.vvp-co__feed-byline .vvp-co__category--btn:hover {
+  color: #585c67;
+}
+
+.vvp-co__feed-byline .vvp-co__feed-reading-time {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vvp-spacing-xs, 4px);
+  white-space: nowrap;
 }
 
 /* Unclamped: SEO meta descriptions are ~160 chars max, so the excerpt stays
@@ -296,5 +328,9 @@ button.vvp-co__category--btn:hover,
 
   .vvp-co__feed-card--hero .vvp-co__feed-excerpt {
     font-size: var(--vvp-font-size-base, 16px);
+  }
+
+  .vvp-co__feed-byline {
+    font-size: 15px;
   }
 }

@@ -134,12 +134,21 @@ describe("ArticleCard author line", () => {
     expect(html).not.toContain("vvp-co__feed-byline");
   });
 
-  it("puts the hero's authors on their own line under the title", () => {
-    const html = renderToStaticMarkup(<ArticleCard {...props} hero />);
-    expect(html).toContain(
-      '</h2><p class="vvp-co__feed-byline">von Anna und Ben</p><p class="vvp-co__feed-excerpt">Auszug</p>',
+  it("puts the hero's authors and meta data on one byline under the title", () => {
+    const html = renderToStaticMarkup(
+      <ArticleCard {...props} hero category="Analyse" reading_time={4} />,
+    );
+    expect(html).toMatch(
+      /<\/h2><div class="vvp-co__feed-byline"><span class="vvp-co__feed-byline-author">von Anna und Ben<\/span><span class="vvp-co__category">Analyse<\/span><span class="vvp-ui-meta-text vvp-co__feed-date">01\.10\.2026<\/span><span class="vvp-ui-meta-text vvp-co__feed-reading-time">.*4 Min\.<\/span><\/div><p class="vvp-co__feed-excerpt">Auszug<\/p>/,
     );
     expect(html).not.toContain("vvp-co__feed-author");
+    expect(html).not.toContain("vvp-co__feed-footer");
+  });
+
+  it("keeps the meta data in the footer on feed cards", () => {
+    const html = renderToStaticMarkup(<ArticleCard {...props} />);
+    expect(html).toContain('<div class="vvp-co__feed-footer">');
+    expect(html).not.toContain("vvp-co__feed-byline");
   });
 });
 

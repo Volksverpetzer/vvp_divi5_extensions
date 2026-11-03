@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Artikelkarte: "Als Aufmacher (Hero) anzeigen" toggle for the front-page lead story — larger title (as `<h2>`), the (co-)authors on their own "von …" line under the title like the Divi Blog hero, an unclamped excerpt, a larger image size, and the image loads eagerly with `fetchpriority="high"` instead of lazily, since the hero image is typically the page's largest (LCP) element. Only the first hero card on a page gets the hero layout.
+- Artikelkarte: "Als Aufmacher (Hero) anzeigen" toggle for the front-page lead story — larger title (as `<h2>`), a "von … | category | date | reading time" byline under the title like the Divi Blog hero (in place of the footer), an unclamped excerpt, a larger image size, and the image loads eagerly with `fetchpriority="high"` instead of lazily, since the hero image is typically the page's largest (LCP) element. Only the first hero card on a page gets the hero layout.
 
 ### Changed
 
