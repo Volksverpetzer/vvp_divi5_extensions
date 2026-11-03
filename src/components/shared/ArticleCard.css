@@ -228,8 +228,13 @@
   justify-content: flex-end;
 }
 
+/* The same size on phones: the Divi Blog hero it replaces keeps 27–28px at
+   every width, so the next token down (24px) read as too small. Long German
+   compounds hyphenate instead of overflowing the narrow card (lang="de"). */
 .vvp-co__feed-card--hero .vvp-co__feed-title {
   font-size: var(--vvp-font-size-xxxl, 30px);
+  hyphens: auto;
+  overflow-wrap: break-word;
   font-weight: 700;
   line-height: 1.25;
   -webkit-line-clamp: unset;
@@ -250,10 +255,6 @@
 @media (max-width: 767px) {
   .vvp-co__feed-card--hero .vvp-co__feed-body {
     padding: var(--vvp-spacing-lg, 16px);
-  }
-
-  .vvp-co__feed-card--hero .vvp-co__feed-title {
-    font-size: var(--vvp-font-size-xxl, 24px);
   }
 
   .vvp-co__feed-card--hero .vvp-co__feed-excerpt {
