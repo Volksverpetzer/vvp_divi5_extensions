@@ -80,8 +80,11 @@
   flex-direction: column;
 }
 
+/* The gap below the title follows the Divi Blog module these cards replace
+   (title padding plus line-height leading: ~22px of visible space at its
+   30px title), scaled down for the smaller feed title. */
 .vvp-co__feed-title {
-  margin: 0 0 var(--vvp-spacing-sm, 8px);
+  margin: 0 0 0.75rem;
   font-size: 1.125rem;
   font-weight: 600;
   line-height: 1.35;
@@ -257,7 +260,7 @@
   font-weight: 700;
   line-height: 1.25;
   -webkit-line-clamp: unset;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .vvp-co__feed-card--hero .vvp-co__feed-byline {
