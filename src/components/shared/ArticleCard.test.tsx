@@ -2,7 +2,7 @@ import * as React from "react";
 import { act } from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import { renderToStaticMarkup } from "react-dom/server";
-import { ArticleCard } from "./ArticleCard";
+import { ArticleCard, unwrapImageLinks } from "./ArticleCard";
 
 const render = (props: Partial<React.ComponentProps<typeof ArticleCard>>) =>
   renderToStaticMarkup(
@@ -198,5 +198,54 @@ describe("ArticleCard hydration with rewritten image markup", () => {
     expect(errors).toEqual([]);
     expect(mount.querySelector(".isc-source-text")?.textContent).toBe("© dpa");
     mount.remove();
+  });
+
+  it("restores a card the parser split at a linked credit", async () => {
+    // How the HTML parser reads a card whose credit links to its source
+    // (parse5, per the spec): the card link ends before the image wrapper,
+    // a copy of it wraps the image, and the credit link moved out of the
+    // credit.
+    // A feed card: the hero also renders a preload <link> before the card.
+    const feedProps = { ...props, hero: false };
+    const mount = document.createElement("div");
+    mount.innerHTML = renderToStaticMarkup(
+      <ArticleCard {...feedProps} />,
+    ).replace(
+      /^(<a [^>]*>)<div class="vvp-co__feed-image-wrap">(<img[^>]*>)<\/div>(.*)<\/a>$/,
+      '$1</a><div class="vvp-co__feed-image-wrap">$1<span class="isc-source">$2<span class="isc-source-text">© </span></span></a><a href="https://example.org/source">dpa</a></div>$3',
+    );
+    document.body.appendChild(mount);
+    expect(mount.querySelectorAll(":scope > a")).toHaveLength(1);
+
+    const wrap = mount.querySelector(".vvp-co__feed-image-wrap")!;
+    unwrapImageLinks(wrap);
+    expect(wrap.querySelector("a")).toBeNull();
+    expect(wrap.querySelector(".isc-source-text")?.textContent).toBe("© dpa");
+
+    const imageHtml = wrap.innerHTML;
+    await act(async () => {
+      // The split markup can't hydrate; React re-renders it on the client.
+      hydrateRoot(mount, <ArticleCard {...feedProps} imageHtml={imageHtml} />, {
+        onRecoverableError: () => {},
+      });
+    });
+
+    const card = mount.querySelector(":scope > a")!;
+    expect(mount.children).toHaveLength(1);
+    expect(card.querySelector(".vvp-co__feed-title")?.textContent).toBe(
+      "Titel",
+    );
+    expect(card.querySelector(".isc-source-text")?.textContent).toBe("© dpa");
+    expect(card.querySelector("a")).toBeNull();
+    mount.remove();
+  });
+
+  it("leaves unlinked image markup as it is", () => {
+    const wrap = document.createElement("div");
+    wrap.innerHTML =
+      '<span class="isc-source"><img src="i.jpg"><span class="isc-source-text">© dpa</span></span>';
+    const before = wrap.innerHTML;
+    unwrapImageLinks(wrap);
+    expect(wrap.innerHTML).toBe(before);
   });
 });
