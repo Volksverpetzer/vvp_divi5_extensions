@@ -27,3 +27,18 @@ export const BrokenImage: Story = {
     ],
   },
 };
+
+/**
+ * First slide's image never answers (a non-routable address), like a hanging
+ * media proxy: the loading placeholder turns into the fallback after
+ * IMAGE_LOAD_TIMEOUT_MS.
+ */
+export const HangingImage: Story = {
+  args: {
+    ...IG_PROPS,
+    slides: [
+      { thumb: "http://10.255.255.1/hangs.jpg", video: "" },
+      ...IG_PROPS.slides.slice(1),
+    ],
+  },
+};
