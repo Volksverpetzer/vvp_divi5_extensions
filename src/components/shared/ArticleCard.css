@@ -112,11 +112,10 @@
   -webkit-line-clamp: 3;
 }
 
-/* Footer row at the bottom of feed article cards (Prüfpunkt badge,
-   category, date, reading time) and of the Instagram card
-   (InstagramSlideshow.tsx), so both line up the same way. The hero has no
-   footer: its meta data is on the byline. `margin-top: auto` pins it to the
-   bottom of the card, so footers line up across a grid row. */
+/* Footer row at the bottom of article cards (Prüfpunkt badge, category,
+   date, reading time; right-aligned on the hero) and of the Instagram card
+   (InstagramSlideshow.tsx), so both line up the same way. `margin-top: auto`
+   pins it to the bottom of the card, so footers line up across a grid row. */
 .vvp-co__feed-footer {
   display: flex;
   align-items: center;
@@ -193,10 +192,7 @@
   height: var(--vvp-icon-size-xs);
 }
 
-/* Byline under the title: "von …" on feed cards; on the hero also the rest
-   of the meta data: "von … | category | date | reading time", with the
-   Prüfpunkt badge after the authors. Resets the shared category and
-   meta-text styling to the line's own. */
+/* Byline under the title: the authors ("von …"). */
 .vvp-co__feed-byline {
   margin: 0 0 var(--vvp-spacing-sm, 8px);
   font-size: var(--vvp-font-size-base, 16px);
@@ -204,61 +200,20 @@
   color: var(--vvp-text-muted, #666);
 }
 
-/* Separator trails the previous item (no-break space before the "|", a
-   normal one after), so a wrapped line never starts with a "|". Badges are
-   pills, not text, and get a gap instead. */
-.vvp-co__feed-byline > :not(:last-child):not(.vvp-ui-badge)::after {
-  content: "\00a0| ";
-}
-
-.vvp-co__feed-byline > .vvp-ui-badge {
-  margin-right: var(--vvp-spacing-sm, 8px);
-  vertical-align: middle;
-}
-
-.vvp-co__feed-byline .vvp-co__category,
-.vvp-co__feed-byline .vvp-ui-meta-text {
-  /* Inline, so the separator's trailing space is a line-break opportunity. */
-  display: inline;
-  margin: 0;
-  padding: 0;
-  font-size: inherit;
-  font-weight: 400;
-  line-height: inherit;
-  text-transform: none;
-  letter-spacing: normal;
-  color: inherit;
-}
-
-.vvp-co__feed-byline .vvp-co__category--btn:hover,
 .vvp-co__feed-footer .vvp-co__category--btn:hover {
-  /* Darker than the muted line, so the clickable category reads as a link. */
+  /* Darker than the muted footer, so the clickable category reads as a link. */
   color: #585c67;
 }
 
-.vvp-co__feed-byline .vvp-co__feed-reading-time {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--vvp-spacing-xs, 4px);
-  white-space: nowrap;
-}
-
 /* Hero (lead-story) variant — `hero` prop / Artikelkarte "Als Aufmacher"
-   toggle. Same content scaled for a single wide column: larger, unclamped
-   title and a larger byline, like the Divi Blog hero it replaces. No card
-   frame (border, shadow) and no hover effect: it sits on the page like an
-   article lead, so the text lines up with the image edges. The image keeps
-   the base 350/183 ratio, which matches the 1400×732 featured images. */
-.vvp-co__feed-card--hero,
+   toggle. Same card scaled for a single wide column: larger, unclamped title,
+   larger text and roomier padding, framed like the regular cards (the Divi
+   Blog hero it replaces sat in a bordered, shadowed box too), but without
+   their hover effect. The footer is right-aligned. The image keeps the base
+   350/183 ratio, which matches the 1400×732 featured images. */
 .vvp-co__feed-card--hero:hover {
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-  background: transparent;
-}
-
-.vvp-co__feed-card--hero .vvp-co__feed-image-wrap {
-  border-radius: var(--vvp-radius-md, 12px);
+  box-shadow: var(--vvp-elevation-xs);
+  border-color: var(--vvp-surface, #e2f0f5);
 }
 
 .vvp-co__feed-card--hero:hover .vvp-co__feed-image {
@@ -266,7 +221,11 @@
 }
 
 .vvp-co__feed-card--hero .vvp-co__feed-body {
-  padding: var(--vvp-spacing-xl, 20px) 0 0;
+  padding: var(--vvp-spacing-xxxl, 30px) var(--vvp-spacing-huge, 40px);
+}
+
+.vvp-co__feed-card--hero .vvp-co__feed-footer {
+  justify-content: flex-end;
 }
 
 .vvp-co__feed-card--hero .vvp-co__feed-title {
@@ -289,6 +248,10 @@
 }
 
 @media (max-width: 767px) {
+  .vvp-co__feed-card--hero .vvp-co__feed-body {
+    padding: var(--vvp-spacing-lg, 16px);
+  }
+
   .vvp-co__feed-card--hero .vvp-co__feed-title {
     font-size: var(--vvp-font-size-xxl, 24px);
   }
