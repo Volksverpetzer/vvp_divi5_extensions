@@ -157,14 +157,17 @@ type SlideImages = ReturnType<typeof useSlideImages>;
  * hasn't settled after IMAGE_LOAD_TIMEOUT_MS shows the "Bild nicht
  * verfügbar" fallback instead. If the image still arrives later, it
  * replaces the fallback (the render prefers loaded over failed).
+ *
+ * Keyed by image URL, not slide index, so a changed or reordered `slides`
+ * list never inherits another image's state.
  */
 const useSlideImages = (slides: Slide[]) => {
-  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
-  const [failedImages, setFailedImages] = useState<Set<number>>(new Set());
-  const requested = React.useRef<Set<number>>(new Set());
+  const [loadedUrls, setLoadedUrls] = useState<Set<string>>(new Set());
+  const [failedUrls, setFailedUrls] = useState<Set<string>>(new Set());
+  const requested = React.useRef<Set<string>>(new Set());
   // Requests that haven't settled yet, with their timeout.
   const pending = React.useRef<
-    Map<number, { img: HTMLImageElement; timer: ReturnType<typeof setTimeout> }>
+    Map<string, { img: HTMLImageElement; timer: ReturnType<typeof setTimeout> }>
   >(new Map());
 
   useEffect(() => {
@@ -173,64 +176,67 @@ const useSlideImages = (slides: Slide[]) => {
     return () => {
       // Abort unsettled requests (an empty src cancels the fetch) and let
       // them be requested again if the card mounts again (StrictMode).
-      pendingNow.forEach(({ img, timer }, index) => {
+      pendingNow.forEach(({ img, timer }, url) => {
         clearTimeout(timer);
         img.onload = null;
         img.onerror = null;
         img.src = "";
-        requestedNow.delete(index);
+        requestedNow.delete(url);
       });
       pendingNow.clear();
     };
   }, []);
 
-  const markLoaded = React.useCallback((index: number) => {
-    setLoadedImages((prev) =>
-      prev.has(index) ? prev : new Set(prev).add(index),
-    );
+  const markUrlLoaded = React.useCallback((url: string) => {
+    setLoadedUrls((prev) => (prev.has(url) ? prev : new Set(prev).add(url)));
   }, []);
-
-  const markFailed = React.useCallback((index: number) => {
-    setFailedImages((prev) =>
-      prev.has(index) ? prev : new Set(prev).add(index),
-    );
+  const markUrlFailed = React.useCallback((url: string) => {
+    setFailedUrls((prev) => (prev.has(url) ? prev : new Set(prev).add(url)));
   }, []);
 
   const preload = React.useCallback(
     (index: number) => {
-      const src = slides[index]?.thumb;
-      if (!src || requested.current.has(index)) return;
-      requested.current.add(index);
+      const url = slides[index]?.thumb;
+      if (!url || requested.current.has(url)) return;
+      requested.current.add(url);
 
       const settle = () => {
-        const entry = pending.current.get(index);
+        const entry = pending.current.get(url);
         if (entry) clearTimeout(entry.timer);
-        pending.current.delete(index);
+        pending.current.delete(url);
       };
 
       const img = new Image();
       img.onload = () => {
         settle();
-        markLoaded(index);
+        markUrlLoaded(url);
       };
       img.onerror = () => {
         settle();
-        markFailed(index);
+        markUrlFailed(url);
       };
-      pending.current.set(index, {
+      pending.current.set(url, {
         img,
         timer: setTimeout(() => {
           // Keep the request (and its handlers) running: a late image still
           // replaces the fallback.
-          markFailed(index);
+          markUrlFailed(url);
         }, IMAGE_LOAD_TIMEOUT_MS),
       });
-      img.src = src;
+      img.src = url;
     },
-    [slides, markLoaded, markFailed],
+    [slides, markUrlLoaded, markUrlFailed],
   );
 
-  return { loadedImages, failedImages, markLoaded, preload };
+  const urlAt = (index: number) => slides[index]?.thumb ?? "";
+  return {
+    preload,
+    isLoaded: (index: number) => loadedUrls.has(urlAt(index)),
+    isFailed: (index: number) => failedUrls.has(urlAt(index)),
+    markLoaded: (index: number) => {
+      if (urlAt(index)) markUrlLoaded(urlAt(index));
+    },
+  };
 };
 
 const InternalSlider = ({
@@ -248,15 +254,14 @@ const InternalSlider = ({
   fullscreen = false,
 }) => {
   const [showArrows, setShowArrows] = useState(false);
-  const { loadedImages, failedImages, markLoaded, preload } =
-    images as SlideImages;
+  const { isLoaded, isFailed, markLoaded, preload } = images as SlideImages;
   const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
   const arrowTimeout = React.useRef<NodeJS.Timeout | null>(null);
   // The always-present nav zones below cover the full slide area and sit
   // above the fallback link, so clicks never reach it — disable the center
   // zone while the active slide is failed so clicks fall through to the
   // fallback link instead of being swallowed here.
-  const activeFailed = failedImages.has(activeIndex);
+  const activeFailed = isFailed(activeIndex);
 
   useEffect(() => {
     const onFsChange = () => {
@@ -403,7 +408,7 @@ const InternalSlider = ({
                           onVideoPlay?.();
                         }}
                       >
-                        {loadedImages.has(index) ? (
+                        {isLoaded(index) ? (
                           <img
                             src={
                               slide.thumb ||
@@ -436,7 +441,7 @@ const InternalSlider = ({
                               e.currentTarget.style.opacity = "1";
                             }}
                           />
-                        ) : failedImages.has(index) ? (
+                        ) : isFailed(index) ? (
                           <BrokenImageFallback permalink={permalink} />
                         ) : (
                           <LoadingPlaceholder />
@@ -519,7 +524,7 @@ const InternalSlider = ({
                           }
                     }
                   >
-                    {loadedImages.has(index) ? (
+                    {isLoaded(index) ? (
                       <img
                         src={slide.thumb}
                         alt={caption}
@@ -550,7 +555,7 @@ const InternalSlider = ({
                           e.currentTarget.style.opacity = "1";
                         }}
                       />
-                    ) : failedImages.has(index) ? (
+                    ) : isFailed(index) ? (
                       <BrokenImageFallback permalink={permalink} />
                     ) : (
                       <LoadingPlaceholder />

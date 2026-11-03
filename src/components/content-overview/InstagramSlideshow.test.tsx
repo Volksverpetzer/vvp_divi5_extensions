@@ -135,6 +135,24 @@ describe("InstagramSlideshow image loading", () => {
     expect(FakeImage.requests).toHaveLength(2);
   });
 
+  it("doesn't carry a slide's state over to a new image at the same index", () => {
+    act(() => request(slides[0].thumb).onerror!());
+    expect(firstSlide().textContent).toContain(FALLBACK_TEXT);
+
+    const replaced = [
+      { thumb: "https://example.org/new.jpg", video: "" },
+      ...slides.slice(1),
+    ];
+    act(() => root.render(<InstagramSlideshow {...props} slides={replaced} />));
+    // The new image is requested and loads on its own, not stuck on the
+    // old one's fallback.
+    expect(firstSlide().textContent).not.toContain(FALLBACK_TEXT);
+    act(() => request(replaced[0].thumb).onload!());
+    expect(firstSlide().querySelector("img")?.getAttribute("src")).toBe(
+      replaced[0].thumb,
+    );
+  });
+
   it("aborts requests that are still pending on unmount", () => {
     const pending = request(slides[0].thumb);
     act(() => root.unmount());
