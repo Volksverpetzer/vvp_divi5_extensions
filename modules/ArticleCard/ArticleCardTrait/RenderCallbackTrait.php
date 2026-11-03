@@ -15,6 +15,7 @@ if (!defined('ABSPATH')) {
 use ET\Builder\Packages\Module\Module;
 use ET\Builder\FrontEnd\BlockParser\BlockParserStore;
 use ET\Builder\Packages\Module\Options\Element\ElementComponents;
+use ET\Builder\Packages\Module\Options\Loop\LoopContext;
 use VVP\Divi5\ArticleCard\ArticleCard;
 use VVP\Divi5\ContentOverview\ContentOverview;
 
@@ -72,8 +73,13 @@ trait RenderCallbackTrait
      * rendered inside a Divi Loop, otherwise the page's own post.
      *
      * Candidates, first match wins:
-     *  1. The global post — what a loop that iterates with the_post() sets.
-     *  2. The block's `postId` context (declared via usesContext in
+     *  1. Divi 5's LoopContext — the current item of the enclosing Divi
+     *     Loop. Divi does not switch the global post while rendering a Loop,
+     *     so this is the only place the loop item is available. Checked
+     *     first: on a single-post template the global is a valid article
+     *     too, but not the one the Loop iteration is about.
+     *  2. The global post — what a loop that iterates with the_post() sets.
+     *  3. The block's `postId` context (declared via usesContext in
      *     module.json) — for render paths that pass the loop item as context
      *     instead of switching the global.
      *
@@ -82,13 +88,13 @@ trait RenderCallbackTrait
      * there), this also rejects the Theme Builder template's own post, which
      * is what the global resolves to inside a template outside a loop — see
      * RelatedItems::current_post_id(). Renders nothing rather than the wrong
-     * post when neither candidate qualifies.
+     * post when no candidate qualifies.
      *
      * @param \WP_Block $block Block being rendered.
      */
     private static function get_post_for_context($block): ?\WP_Post
     {
-        $candidates = [get_post()];
+        $candidates = [self::get_loop_post(), get_post()];
 
         // Guard the ID: get_post(0) would fall back to the global again.
         $context_id = (int) ($block->context['postId'] ?? 0);
@@ -103,5 +109,42 @@ trait RenderCallbackTrait
         }
 
         return null;
+    }
+
+    /**
+     * The current item of the enclosing Divi 5 Loop, or null outside a Loop
+     * or for Loops over something other than posts (terms, users, repeater
+     * rows).
+     *
+     * Divi stores the Loop's query results and the current iteration in
+     * LoopContext (Packages/Module/Options/Loop/LoopContext.php) instead of
+     * calling setup_postdata(). Guarded with method_exists() since this is
+     * Divi-internal API.
+     */
+    private static function get_loop_post(): ?\WP_Post
+    {
+        $loop_context = LoopContext::class;
+        if (!class_exists($loop_context) || !method_exists($loop_context, 'get')) {
+            return null;
+        }
+
+        $context = $loop_context::get();
+        if (!$context
+            || !method_exists($context, 'get_result_for_position')
+            || !method_exists($context, 'get_current_iteration')
+            || (method_exists($context, 'get_query_type') && 'post_types' !== $context->get_query_type())
+        ) {
+            return null;
+        }
+
+        $result = $context->get_result_for_position($context->get_current_iteration());
+        if ($result instanceof \WP_Post) {
+            return $result;
+        }
+
+        // Results may also be plain objects carrying the post ID.
+        $id = (int) (is_object($result) ? ($result->ID ?? $result->id ?? 0) : 0);
+
+        return $id > 0 ? get_post($id) : null;
     }
 }
