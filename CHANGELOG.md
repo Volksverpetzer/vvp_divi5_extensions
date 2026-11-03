@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- All article cards (ContentOverview feed, Trending, Related, Artikelkarte) stack their content the same way: image, title, a byline with the meta data ("category | date | von … | reading time", Prüfpunkt/YouTube badges first), then the excerpt. This replaces the footer below the excerpt and the authors appended to the excerpt.
+- All article cards (ContentOverview feed, Trending, Related, Artikelkarte) stack their content the same way: image, title, a byline with the meta data ("category | date | von … | reading time", Prüfpunkt/YouTube badges first), then the excerpt. This replaces the footer below the excerpt and the authors appended to the excerpt. Trending and Related cards now name the authors too (PublishPress co-authors included); their cached items are invalidated once on update.
 - ContentOverview excludes the post the hero Artikelkarte actually rendered, instead of assuming the hero is the newest published post, so a hero Loop showing e.g. a sticky post no longer duplicates it in the feed and hides the newest article. The newest-post assumption remains the fallback for the legacy Divi Blog hero.
 - Module icons in the Visual Builder use the Volksverpetzer accent colour (`--vvp-color-accent`, default `#DB2685`) instead of Divi's teal, so our modules stand out in the module inserter.
 

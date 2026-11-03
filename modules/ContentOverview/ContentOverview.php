@@ -84,6 +84,26 @@ class ContentOverview implements DependencyInterface
     }
 
     /**
+     * A post's authors as shown in the card byline ("A", "A und B",
+     * "A, B und C"), PublishPress co-authors included.
+     *
+     * Public entry point for the other modules that build ArticleCard props
+     * themselves (TrendingItems, RelatedItems), so every card names the
+     * same authors.
+     *
+     * @param \WP_Post $post Post.
+     *
+     * @return string Author line, '' when the post has none.
+     */
+    public static function format_post_authors(\WP_Post $post): string
+    {
+        return self::format_authors(array_map(
+            static fn (string $name) => ['name' => $name],
+            self::get_author_names($post)
+        ));
+    }
+
+    /**
      * Loads `ContentOverview` and registers Front-End render callback.
      *
      * @since 1.0.0
