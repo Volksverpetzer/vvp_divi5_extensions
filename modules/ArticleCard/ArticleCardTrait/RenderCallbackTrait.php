@@ -97,6 +97,11 @@ trait RenderCallbackTrait
     private static function get_post_for_context($block): ?\WP_Post
     {
         $loop_context = self::get_loop_context();
+        if (null === $loop_context) {
+            // A Loop is active, but its LoopContext API has changed.
+            return null;
+        }
+
         if ($loop_context) {
             $candidates = [self::get_loop_post($loop_context)];
         } else {
@@ -119,24 +124,33 @@ trait RenderCallbackTrait
     }
 
     /**
-     * Divi 5's LoopContext for the enclosing Loop, or null outside a Loop.
+     * Divi 5's LoopContext for the enclosing Loop.
      *
      * Divi stores the Loop's query results and the current iteration in
      * LoopContext (Packages/Module/Options/Loop/LoopContext.php) instead of
-     * calling setup_postdata(). This is Divi-internal API, so every method
-     * used is required to exist; if one is missing, the card behaves as
-     * outside a Loop rather than guessing.
+     * calling setup_postdata(). This is Divi-internal API, so the three
+     * possible outcomes are kept apart:
+     *  - object: an active Loop with every method get_loop_post() needs.
+     *  - false:  no active Loop — LoopContext::get() returned nothing, or
+     *            LoopContext / its get() doesn't exist, so a Loop can't be
+     *            detected at all (the behaviour before Divi's LoopContext).
+     *  - null:   an active Loop whose context lacks a required method, i.e.
+     *            Divi changed the API. The caller renders nothing rather
+     *            than falling back to the global post, which would repeat an
+     *            unrelated article in every iteration.
+     *
+     * @return object|false|null
      */
-    private static function get_loop_context(): ?object
+    private static function get_loop_context()
     {
         $class = LoopContext::class;
         if (!class_exists($class) || !method_exists($class, 'get')) {
-            return null;
+            return false;
         }
 
         $context = $class::get();
         if (!is_object($context)) {
-            return null;
+            return false;
         }
 
         foreach (['get_query_type', 'get_current_iteration', 'get_result_for_position'] as $method) {
