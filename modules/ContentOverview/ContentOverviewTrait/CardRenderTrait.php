@@ -117,16 +117,25 @@ trait CardRenderTrait
             ? '<span class="vvp-ui-meta-text vvp-co__feed-reading-time">' . $clock_svg . (int) $props['reading_time'] . ' Min.</span>'
             : '';
 
-        // Every card's byline, under the title: "von … | category | date |
-        // reading time", with the Prüfpunkt badge after the authors. Mirrors
-        // `byline` in ArticleCard.tsx.
-        $byline_html = '<div class="vvp-co__feed-byline">'
-            . ($props['author'] ? '<span class="vvp-co__feed-byline-author">von ' . esc_html($props['author']) . '</span>' : '')
-            . $source_badge
+        // Under the title: the authors ("von …"). The rest of the meta data
+        // joins them on the hero's one-line byline, but sits in the footer at
+        // the bottom of feed cards, like the Instagram card's footer. Mirrors
+        // `authorItem`/`metaItems` in ArticleCard.tsx.
+        $author_html = $props['author']
+            ? '<span class="vvp-co__feed-byline-author">von ' . esc_html($props['author']) . '</span>'
+            : '';
+        $meta_html = $source_badge
             . $category_html
             . '<span class="vvp-ui-meta-text vvp-co__feed-date">' . esc_html($props['date']) . '</span>'
-            . $reading_time_html
-            . '</div>';
+            . $reading_time_html;
+
+        if ($hero) {
+            $byline_html = '<div class="vvp-co__feed-byline">' . $author_html . $meta_html . '</div>';
+            $footer_html = '';
+        } else {
+            $byline_html = $author_html ? '<div class="vvp-co__feed-byline">' . $author_html . '</div>' : '';
+            $footer_html = '<div class="vvp-co__feed-footer">' . $meta_html . '</div>';
+        }
 
         $excerpt_html = $props['excerpt']
             ? '<p class="vvp-co__feed-excerpt">' . esc_html($props['excerpt']) . '</p>'
@@ -145,6 +154,7 @@ trait CardRenderTrait
             .   '<' . $title_tag . ' class="vvp-co__feed-title">' . esc_html($props['title']) . '</' . $title_tag . '>'
             .   $byline_html
             .   $excerpt_html
+            .   $footer_html
             . '</div>'
             . '</a>';
 

@@ -91,14 +91,15 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     }
   };
 
-  // Every card's byline, under the title: "von … | category | date |
-  // reading time", with the Prüfpunkt badge after the authors. Mirrored in
-  // CardRenderTrait.php.
-  const byline = (
-    <div className="vvp-co__feed-byline">
-      {author && (
-        <span className="vvp-co__feed-byline-author">{`von ${author}`}</span>
-      )}
+  // Under the title: the authors ("von …"). The rest of the meta data —
+  // Prüfpunkt badge, category, date, reading time — joins them on the hero's
+  // one-line byline, but sits in the footer at the bottom of feed cards, like
+  // the Instagram card's footer. Mirrored in CardRenderTrait.php.
+  const authorItem = author && (
+    <span className="vvp-co__feed-byline-author">{`von ${author}`}</span>
+  );
+  const metaItems = (
+    <>
       {source === "pruefpunkt" && <PruefpunktBadge />}
       {category &&
         (category_link ? (
@@ -143,7 +144,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           {`${reading_time} Min.`}
         </MetaText>
       )}
-    </div>
+    </>
   );
 
   return (
@@ -174,8 +175,16 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         ))}
       <div className="vvp-co__feed-body">
         <TitleTag className="vvp-co__feed-title">{title}</TitleTag>
-        {byline}
+        {hero ? (
+          <div className="vvp-co__feed-byline">
+            {authorItem}
+            {metaItems}
+          </div>
+        ) : (
+          authorItem && <div className="vvp-co__feed-byline">{authorItem}</div>
+        )}
         {excerpt && <p className="vvp-co__feed-excerpt">{excerpt}</p>}
+        {!hero && <div className="vvp-co__feed-footer">{metaItems}</div>}
       </div>
     </a>
   );

@@ -112,8 +112,11 @@
   -webkit-line-clamp: 3;
 }
 
-/* Footer row of the Instagram card (InstagramSlideshow.tsx); article
-   cards show their meta data in `.vvp-co__feed-byline` instead. */
+/* Footer row at the bottom of feed article cards (Prüfpunkt badge,
+   category, date, reading time) and of the Instagram card
+   (InstagramSlideshow.tsx), so both line up the same way. The hero has no
+   footer: its meta data is on the byline. `margin-top: auto` pins it to the
+   bottom of the card, so footers line up across a grid row. */
 .vvp-co__feed-footer {
   display: flex;
   align-items: center;
@@ -129,13 +132,22 @@
   flex-shrink: 0;
 }
 
+.vvp-co__feed-footer .vvp-co__feed-reading-time {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vvp-spacing-xs, 4px);
+  font-size: var(--vvp-font-size-base, 16px);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 .vvp-co__feed-footer .vvp-ui-badge {
   flex-shrink: 0;
 }
 
-/* The date is the footer's must-have; the category
+/* Date and reading time are the footer's must-haves; the category
    label is the first thing to give — it shrinks and truncates
-   instead of pushing it out of the (overflow: hidden) footer. */
+   instead of pushing them out of the (overflow: hidden) footer. */
 .vvp-co__feed-footer .vvp-co__category {
   color: var(--vvp-text-muted, #666);
   font-size: var(--vvp-font-size-base, 16px);
@@ -181,9 +193,10 @@
   height: var(--vvp-icon-size-xs);
 }
 
-/* Byline under every article card's title: "von … | category | date |
-   reading time", with the Prüfpunkt badge after the authors. Resets the
-   shared category and meta-text styling to the line's own. */
+/* Byline under the title: "von …" on feed cards; on the hero also the rest
+   of the meta data: "von … | category | date | reading time", with the
+   Prüfpunkt badge after the authors. Resets the shared category and
+   meta-text styling to the line's own. */
 .vvp-co__feed-byline {
   margin: 0 0 var(--vvp-spacing-sm, 8px);
   font-size: var(--vvp-font-size-base, 16px);
@@ -217,7 +230,8 @@
   color: inherit;
 }
 
-.vvp-co__feed-byline .vvp-co__category--btn:hover {
+.vvp-co__feed-byline .vvp-co__category--btn:hover,
+.vvp-co__feed-footer .vvp-co__category--btn:hover {
   /* Darker than the muted line, so the clickable category reads as a link. */
   color: #585c67;
 }
