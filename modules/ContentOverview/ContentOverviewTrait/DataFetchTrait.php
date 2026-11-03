@@ -383,8 +383,9 @@ trait DataFetchTrait
 
     /**
      * srcset for the featured image of a WP REST post array: every
-     * medium..full size with a known width, each width once. URLs are
-     * esc_url()-ed; the caller still esc_attr()s the whole attribute.
+     * medium..full size with a known width, each width once. URLs go
+     * through esc_url_raw() (drops non-web schemes) but are not
+     * HTML-escaped: the caller esc_attr()s the whole attribute once.
      *
      * @param array $post WP post array with _embedded data.
      *
@@ -410,7 +411,11 @@ trait DataFetchTrait
                 continue;
             }
             $seen_widths[$w] = true;
-            $parts[] = esc_url($sizes[$key]['source_url']) . ' ' . $w . 'w';
+            $url = esc_url_raw($sizes[$key]['source_url']);
+            if ('' === $url) {
+                continue;
+            }
+            $parts[] = $url . ' ' . $w . 'w';
         }
 
         return implode(', ', $parts);
