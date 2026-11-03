@@ -13,13 +13,13 @@
 /* Category label */
 .vvp-co__category {
   display: inline-block;
-  font-size: 1rem;
+  font-size: var(--vvp-font-size-base, 16px);
   transition: color 0.15s ease;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--vvp-blue-2);
-  margin-right: 0.375rem;
+  margin-right: var(--vvp-spacing-sm, 8px);
 }
 
 /* Feed card base */
@@ -31,7 +31,7 @@
   color: inherit;
   background-color: var(--vvp-background, #fff);
   border: 1px solid var(--vvp-surface, #e2f0f5);
-  border-radius: 0.625rem;
+  border-radius: var(--vvp-radius-md, 12px);
   overflow: hidden;
   box-shadow: var(--vvp-elevation-xs);
   transition:
@@ -74,15 +74,18 @@
 }
 
 .vvp-co__feed-body {
-  padding: 0.875rem;
+  padding: var(--vvp-spacing-lg, 16px);
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
+/* The gap below the title follows the Divi Blog module these cards replace
+   (title padding plus line-height leading: ~22px of visible space between
+   its title and the post meta). */
 .vvp-co__feed-title {
-  margin: 0 0 var(--vvp-spacing-sm, 8px);
-  font-size: 1.125rem;
+  margin: 0 0 var(--vvp-spacing-lg, 16px);
+  font-size: var(--vvp-font-size-lg, 18px);
   font-weight: 600;
   line-height: 1.35;
   color: var(--vvp-text, #111);
@@ -96,7 +99,7 @@
 
 .vvp-co__feed-excerpt {
   margin: 0 0 var(--vvp-spacing-sm, 8px);
-  font-size: 1rem;
+  font-size: var(--vvp-font-size-base, 16px);
   color: #4b5563;
   line-height: 1.5;
   display: -webkit-box;
@@ -118,11 +121,11 @@
   flex-wrap: nowrap;
   overflow: hidden;
   margin-top: auto;
-  padding-top: 0.375rem;
+  padding-top: var(--vvp-spacing-sm, 8px);
 }
 
 .vvp-co__feed-footer .vvp-co__feed-date {
-  font-size: 1rem;
+  font-size: var(--vvp-font-size-base, 16px);
   flex-shrink: 0;
 }
 
@@ -135,7 +138,7 @@
    instead of pushing it out of the (overflow: hidden) footer. */
 .vvp-co__feed-footer .vvp-co__category {
   color: var(--vvp-text-muted, #666);
-  font-size: 1rem;
+  font-size: var(--vvp-font-size-base, 16px);
   font-weight: 400;
   text-transform: none;
   letter-spacing: normal;
@@ -183,7 +186,7 @@
    shared category and meta-text styling to the line's own. */
 .vvp-co__feed-byline {
   margin: 0 0 var(--vvp-spacing-sm, 8px);
-  font-size: 1rem;
+  font-size: var(--vvp-font-size-base, 16px);
   line-height: 1.5;
   color: var(--vvp-text-muted, #666);
 }
@@ -241,7 +244,7 @@
 }
 
 .vvp-co__feed-card--hero .vvp-co__feed-image-wrap {
-  border-radius: 0.625rem;
+  border-radius: var(--vvp-radius-md, 12px);
 }
 
 .vvp-co__feed-card--hero:hover .vvp-co__feed-image {
@@ -249,7 +252,7 @@
 }
 
 .vvp-co__feed-card--hero .vvp-co__feed-body {
-  padding: 1.25rem 0 0;
+  padding: var(--vvp-spacing-xl, 20px) 0 0;
 }
 
 .vvp-co__feed-card--hero .vvp-co__feed-title {
@@ -257,12 +260,11 @@
   font-weight: 700;
   line-height: 1.25;
   -webkit-line-clamp: unset;
-  margin-bottom: 0.5rem;
 }
 
 .vvp-co__feed-card--hero .vvp-co__feed-byline {
-  margin-bottom: 0.75rem;
-  font-size: 17px;
+  margin-bottom: var(--vvp-spacing-md, 10px);
+  font-size: var(--vvp-font-size-lg, 18px);
 }
 
 /* Unclamped: SEO meta descriptions are ~160 chars max, so the excerpt stays
@@ -282,6 +284,6 @@
   }
 
   .vvp-co__feed-card--hero .vvp-co__feed-byline {
-    font-size: 15px;
+    font-size: var(--vvp-font-size-base, 16px);
   }
 }
