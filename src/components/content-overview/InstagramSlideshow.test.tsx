@@ -111,4 +111,37 @@ describe("InstagramSlideshow image loading", () => {
     act(() => request(slides[0].thumb).onload!());
     expect(FakeImage.requests).toHaveLength(2);
   });
+
+  it("shares the requests and their state with the fullscreen view", () => {
+    const open = container.querySelector(
+      '[aria-label="Vollbild öffnen"]',
+    ) as HTMLElement;
+    act(() => open.click());
+    const shown = () => document.querySelectorAll(".vvp-co-active-slide");
+    expect(shown()).toHaveLength(2);
+    // The fullscreen slider doesn't request the images again…
+    expect(FakeImage.requests).toHaveLength(2);
+
+    // …and shows the same state as the card: fallback after the timeout,
+    // the image once it arrives.
+    act(() => vi.advanceTimersByTime(IMAGE_LOAD_TIMEOUT_MS));
+    shown().forEach((slide) =>
+      expect(slide.textContent).toContain(FALLBACK_TEXT),
+    );
+    act(() => request(slides[0].thumb).onload!());
+    shown().forEach((slide) =>
+      expect(slide.querySelector("img")).not.toBeNull(),
+    );
+    expect(FakeImage.requests).toHaveLength(2);
+  });
+
+  it("aborts requests that are still pending on unmount", () => {
+    const pending = request(slides[0].thumb);
+    act(() => root.unmount());
+    expect(pending.src).toBe("");
+    expect(pending.onload).toBeNull();
+    expect(pending.onerror).toBeNull();
+    // afterEach unmounts again; give it a fresh root.
+    root = createRoot(container);
+  });
 });
