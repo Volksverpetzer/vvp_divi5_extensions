@@ -1,6 +1,6 @@
 import * as React from "react";
 import { act } from "react";
-import { createRoot } from "react-dom/client";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import { renderToStaticMarkup } from "react-dom/server";
 import { ArticleCard } from "./ArticleCard";
 
@@ -114,5 +114,66 @@ describe("ArticleCard hero variant", () => {
     expect(img).toContain('fetchpriority="high"');
     expect(html).toContain("<h2 ");
     expect(html).toContain("vvp-co__feed-card--hero");
+  });
+});
+
+describe("ArticleCard author line", () => {
+  const props = {
+    title: "Titel",
+    link: "/article/",
+    date: "01.10.2026",
+    excerpt: "Auszug",
+    author: "Anna und Ben",
+  };
+
+  it("appends the authors to the excerpt on feed cards", () => {
+    const html = renderToStaticMarkup(<ArticleCard {...props} />);
+    expect(html).toContain(
+      '<p class="vvp-co__feed-excerpt">Auszug<em class="vvp-co__feed-author"> – Anna und Ben</em></p>',
+    );
+    expect(html).not.toContain("vvp-co__feed-byline");
+  });
+
+  it("puts the hero's authors on their own line under the title", () => {
+    const html = renderToStaticMarkup(<ArticleCard {...props} hero />);
+    expect(html).toContain(
+      '</h2><p class="vvp-co__feed-byline">von Anna und Ben</p><p class="vvp-co__feed-excerpt">Auszug</p>',
+    );
+    expect(html).not.toContain("vvp-co__feed-author");
+  });
+});
+
+describe("ArticleCard hydration with rewritten image markup", () => {
+  const props = {
+    title: "Titel",
+    link: "/article/",
+    date: "01.10.2026",
+    image_url: "https://example.org/image.jpg",
+    hero: true,
+  };
+
+  it("keeps an image credit added after server rendering", async () => {
+    // What Image Source Control does to the server-rendered <img>.
+    const serverHtml = renderToStaticMarkup(<ArticleCard {...props} />).replace(
+      /(<img[^>]*>)/,
+      '<span class="isc-source">$1<span class="isc-source-text">© dpa</span></span>',
+    );
+    const mount = document.createElement("div");
+    mount.innerHTML = serverHtml;
+    document.body.appendChild(mount);
+
+    const imageHtml = mount.querySelector(
+      ":scope > a > .vvp-co__feed-image-wrap",
+    )!.innerHTML;
+    const errors: unknown[] = [];
+    await act(async () => {
+      hydrateRoot(mount, <ArticleCard {...props} imageHtml={imageHtml} />, {
+        onRecoverableError: (e) => errors.push(e),
+      });
+    });
+
+    expect(errors).toEqual([]);
+    expect(mount.querySelector(".isc-source-text")?.textContent).toBe("© dpa");
+    mount.remove();
   });
 });
