@@ -381,6 +381,16 @@ trait DataFetchTrait
         return $media['source_url'] ?? '';
     }
 
+    /**
+     * srcset for the featured image of a WP REST post array: every
+     * medium..full size with a known width, each width once. URLs go
+     * through esc_url_raw() (drops non-web schemes) but are not
+     * HTML-escaped: the caller esc_attr()s the whole attribute once.
+     *
+     * @param array $post WP post array with _embedded data.
+     *
+     * @return string srcset value, '' without sizes.
+     */
     private static function get_post_image_srcset($post)
     {
         $media = $post['_embedded']['wp:featuredmedia'][0] ?? null;
@@ -401,7 +411,11 @@ trait DataFetchTrait
                 continue;
             }
             $seen_widths[$w] = true;
-            $parts[] = esc_url($sizes[$key]['source_url']) . ' ' . $w . 'w';
+            $url = esc_url_raw($sizes[$key]['source_url']);
+            if ('' === $url) {
+                continue;
+            }
+            $parts[] = $url . ' ' . $w . 'w';
         }
 
         return implode(', ', $parts);

@@ -88,16 +88,8 @@ const frontends = [
     entry: "./src/components/author-profile/frontend.tsx",
   },
   {
-    name: "trending-items-frontend",
-    entry: "./src/components/trending-items/frontend.tsx",
-  },
-  {
     name: "trending-list-frontend",
     entry: "./src/components/trending-list/frontend.tsx",
-  },
-  {
-    name: "related-items-frontend",
-    entry: "./src/components/related-items/frontend.tsx",
   },
   {
     name: "campaign-progress-frontend",

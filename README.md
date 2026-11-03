@@ -91,9 +91,8 @@ Renders a card grid of the most-read articles within a configurable time range, 
 
 **Architecture:**
 
-- PHP fetches trending data and server-renders the module (`modules/TrendingItems/TrendingItemsTrait/RenderCallbackTrait.php`)
-- React app (`src/components/trending-items/App.tsx`) is mounted by `scripts/trending-items-frontend.js`
-- DIVI Visual Builder preview: `src/components/trending-items/edit.tsx` (placeholder article cards)
+- PHP fetches the trending post IDs (cached) and server-renders the cards via `ContentOverview::render_article_card()` (`modules/TrendingItems/TrendingItemsTrait/RenderCallbackTrait.php`) — the same cards as the feed, hydrated by `scripts/content-overview-frontend.js`
+- DIVI Visual Builder preview: `src/components/trending-items/edit.tsx` renders `App.tsx` (the client-side mirror of the server list) with placeholder article cards
 
 ### Trending Liste (`vvp/trending-list`)
 
@@ -201,9 +200,8 @@ Renders the current post as the same article card the Inhaltsübersicht feed use
 ├── scripts/                       # Compiled JS (Vite output)
 │   ├── bundle.js                  # DIVI Visual Builder module
 │   ├── fact-check-frontend.js     # Mounts FactCheckSearchApp
-│   ├── content-overview-frontend.js  # Mounts InstagramSlideshow + PodcastBanner
+│   ├── content-overview-frontend.js  # Hydrates article cards; mounts InstagramSlideshow + PodcastBanner
 │   ├── author-profile-frontend.js # Mounts AuthorProfileApp
-│   ├── trending-items-frontend.js # Mounts TrendingItemsApp
 │   └── trending-list-frontend.js  # Mounts TrendingListApp
 ├── styles/                        # Compiled CSS (Vite output)
 │   └── main.css
@@ -259,9 +257,8 @@ Renders the current post as the same article card the Inhaltsübersicht feed use
 │   │   │   └── module.css        # VB editor styles
 │   │   ├── trending-items/
 │   │   │   ├── module.json
-│   │   │   ├── App.tsx
+│   │   │   ├── App.tsx           # VB/Storybook mirror of the server-rendered list
 │   │   │   ├── edit.tsx
-│   │   │   ├── frontend.tsx
 │   │   │   ├── index.ts
 │   │   │   ├── types.ts
 │   │   │   ├── placeholder-content.ts
@@ -344,7 +341,7 @@ pnpm install --frozen-lockfile
 pnpm start
 ```
 
-Watches `src/` and recompiles `scripts/bundle.js`, `scripts/fact-check-frontend.js`, `scripts/content-overview-frontend.js`, `scripts/author-profile-frontend.js`, `scripts/trending-items-frontend.js`, `scripts/trending-list-frontend.js`, and `styles/main.css` on every save.
+Watches `src/` and recompiles `scripts/bundle.js`, `scripts/fact-check-frontend.js`, `scripts/content-overview-frontend.js`, `scripts/author-profile-frontend.js`, `scripts/trending-list-frontend.js`, and `styles/main.css` on every save.
 
 ### 4. Vite component preview (no WordPress needed)
 
@@ -395,7 +392,6 @@ Vite in production mode outputs:
 | `scripts/fact-check-frontend.js`       | FactCheckSearch frontend bundle (standalone)                |
 | `scripts/content-overview-frontend.js` | ContentOverview frontend bundle (standalone)                |
 | `scripts/author-profile-frontend.js`   | AuthorProfile frontend bundle (standalone)                  |
-| `scripts/trending-items-frontend.js`   | TrendingItems frontend bundle (standalone)                  |
 | `scripts/trending-list-frontend.js`    | TrendingList frontend bundle (standalone)                   |
 | `styles/main.css`                      | All component CSS                                           |
 | `modules-json/*/module.json`           | Copied module schemas                                       |

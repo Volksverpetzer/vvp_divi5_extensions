@@ -19,28 +19,47 @@ namespace VVP\Divi5\ContentOverview\ContentOverviewTrait;
 trait CardRenderTrait
 {
     /**
-     * Render a featured article card for the feed grid.
-     * Emits a React mount point hydrated by content-overview-frontend.js.
+     * Default `sizes` for the card image's srcset: one column of the feed
+     * grid (content-overview/style.css: full width below 700px, half up to
+     * 1023px, roughly a third of the content width above), or the single
+     * wide column of the hero. Modules with other grids pass their own —
+     * see render_featured_card()'s $image_sizes.
+     */
+    private const CARD_IMAGE_SIZES = '(max-width: 699px) 100vw, (max-width: 1023px) 50vw, 400px';
+    private const HERO_IMAGE_SIZES = '(max-width: 767px) 100vw, 750px';
+
+    /**
+     * Render an article card: the feed's cards, and through
+     * ContentOverview::render_article_card() also the Artikelkarte, Trending
+     * and Related cards. Emits a React mount point hydrated by
+     * content-overview-frontend.js.
      *
-     * @param array $post WP post array.
-     * @param bool  $hero Lead-story layout (see ArticleCard.tsx's `hero`
-     *                    prop): larger title as <h2>, larger image that
-     *                    loads eagerly with high fetch priority.
+     * @param array  $post             WP post array.
+     * @param bool   $hero             Lead-story layout (see ArticleCard.tsx's
+     *                                 `hero` prop): larger title as <h2>,
+     *                                 larger image that loads eagerly with
+     *                                 high fetch priority.
+     * @param string $tracking_context Which Plausible click event the card
+     *                                 sends (ArticleCard.tsx's
+     *                                 `trackingContext`).
+     * @param string $image_sizes      `sizes` for the image's srcset, matching
+     *                                 the grid the card sits in; '' for the
+     *                                 feed (or hero) default.
      *
      * @return string HTML.
      */
-    private static function render_featured_card($post, bool $hero = false)
+    private static function render_featured_card($post, bool $hero = false, string $tracking_context = 'feed', string $image_sizes = '')
     {
         $props = [
-            'type'          => 'article',
             'title'         => html_entity_decode(wp_strip_all_tags($post['title']['rendered'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
             // esc_url_raw() drops non-web schemes (javascript:, data:) before
             // these reach the hydration props, where the static HTML's
             // esc_url() no longer protects them.
             'link'          => esc_url_raw($post['link'] ?? ''),
             'date'          => self::format_date($post['date'] ?? ''),
-            // The hero renders at ~750 CSS px, too wide for medium_large (768w)
-            // on high-density screens.
+            // Fallback for browsers without srcset support; the hero renders
+            // at ~750 CSS px, too wide for medium_large (768w) on
+            // high-density screens.
             'image_url'     => self::get_post_image($post, $hero ? 'large' : 'medium_large'),
             'excerpt'       => $post['yoast_head_json']['description'] ?? '',
             'author'        => self::format_authors($post['_embedded']['author'] ?? []),
@@ -50,14 +69,27 @@ trait CardRenderTrait
             'source'        => $post['_vvp_source'] ?? 'volksverpetzer',
         ];
         $props['external'] = self::is_external_url($props['link']);
+        // Only set when they differ from ArticleCard.tsx's defaults, so feed
+        // cards' hydration props stay lean.
         if ($hero) {
-            // Only set when true, so feed cards' hydration props are unchanged.
             $props['hero'] = true;
+        }
+        if ('feed' !== $tracking_context) {
+            $props['trackingContext'] = $tracking_context;
+        }
+
+        // Not part of the props: the client keeps the server's image markup
+        // as-is when hydrating (`imageHtml`), so only PHP needs the srcset.
+        $srcset = $props['image_url'] ? self::get_post_image_srcset($post) : '';
+        if ('' === $image_sizes) {
+            $image_sizes = $hero ? self::HERO_IMAGE_SIZES : self::CARD_IMAGE_SIZES;
         }
 
         $image_html = $props['image_url']
             ? '<div class="vvp-co__feed-image-wrap">'
-            .   '<img src="' . esc_url($props['image_url']) . '" alt="' . esc_attr($props['title']) . '" class="vvp-co__feed-image"'
+            .   '<img src="' . esc_url($props['image_url']) . '"'
+            .   ($srcset ? ' srcset="' . esc_attr($srcset) . '" sizes="' . esc_attr($image_sizes) . '"' : '')
+            .   ' alt="' . esc_attr($props['title']) . '" class="vvp-co__feed-image"'
             .   ($hero ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"')
             .   ' decoding="async">'
             . '</div>'

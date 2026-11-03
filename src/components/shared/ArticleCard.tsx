@@ -5,7 +5,6 @@ import { isExternalUrl, toHttpUrl } from "../../utils/links";
 import "./ArticleCard.css";
 
 export interface ArticleCardProps {
-  type?: "article" | "youtube";
   title: string;
   excerpt?: string;
   author?: string;
@@ -46,27 +45,7 @@ const PruefpunktBadge: React.FC = () => (
   </Badge>
 );
 
-const YoutubeIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="13"
-    height="10"
-    viewBox="0 0 461 461"
-    fill="currentColor"
-    aria-hidden="true"
-  >
-    <path d="M365.257 67.393H95.744C42.866 67.393 0 110.259 0 163.137v134.728c0 52.878 42.866 95.744 95.744 95.744h269.513c52.878 0 95.744-42.866 95.744-95.744V163.137c0-52.878-42.866-95.744-95.744-95.744zm-64.751 169.663l-126.06 60.123c-3.359 1.602-7.239-.847-7.239-4.568V168.607c0-3.774 3.982-6.22 7.348-4.514l126.06 63.943c3.748 1.899 3.683 7.274-.109 9.02z" />
-  </svg>
-);
-
-const YoutubeBadge: React.FC = () => (
-  <Badge variant="error" size="md" icon={<YoutubeIcon />}>
-    YouTube
-  </Badge>
-);
-
 export const ArticleCard: React.FC<ArticleCardProps> = ({
-  type = "article",
   title,
   excerpt,
   author,
@@ -83,16 +62,8 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   imageHtml,
 }) => {
   const opensNewTab = external ?? isExternalUrl(link);
-  const isYoutube = type === "youtube";
-  const cardClass = isYoutube
-    ? "vvp-co__feed-card vvp-co__feed-card--youtube"
-    : hero
-      ? "vvp-co__feed-card vvp-co__feed-card--article vvp-co__feed-card--hero"
-      : "vvp-co__feed-card vvp-co__feed-card--article";
+  const cardClass = `vvp-co__feed-card vvp-co__feed-card--article${hero ? " vvp-co__feed-card--hero" : ""}`;
   const TitleTag = hero ? "h2" : "h3";
-  const imageWrapClass = isYoutube
-    ? "vvp-co__feed-image-wrap vvp-co__feed-image-wrap--yt"
-    : "vvp-co__feed-image-wrap";
 
   const handleCategoryClick = (e: React.SyntheticEvent) => {
     if (!category_link) return;
@@ -120,12 +91,11 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     }
   };
 
-  // Every card's byline, under the title: badges, then "category | date |
-  // von … | reading time". Mirrored in CardRenderTrait.php.
+  // Every card's byline, under the title: the Prüfpunkt badge, then
+  // "category | date | von … | reading time". Mirrored in CardRenderTrait.php.
   const byline = (
     <div className="vvp-co__feed-byline">
-      {isYoutube && <YoutubeBadge />}
-      {!isYoutube && source === "pruefpunkt" && <PruefpunktBadge />}
+      {source === "pruefpunkt" && <PruefpunktBadge />}
       {category &&
         (category_link ? (
           <span
@@ -183,37 +153,24 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
       rel={opensNewTab ? "noopener noreferrer" : undefined}
       onClick={handleClick}
     >
-      {image_url && imageHtml !== undefined && (
-        <div
-          className={imageWrapClass}
-          dangerouslySetInnerHTML={{ __html: imageHtml }}
-        />
-      )}
-      {image_url && imageHtml === undefined && (
-        <div className={imageWrapClass}>
-          <img
-            src={image_url}
-            alt={title}
-            className="vvp-co__feed-image"
-            loading={hero ? "eager" : "lazy"}
-            fetchPriority={hero ? "high" : undefined}
-            decoding="async"
+      {image_url &&
+        (imageHtml !== undefined ? (
+          <div
+            className="vvp-co__feed-image-wrap"
+            dangerouslySetInnerHTML={{ __html: imageHtml }}
           />
-          {isYoutube && (
-            <div className="vvp-co__yt-play-btn" aria-hidden="true">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="white"
-              >
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            </div>
-          )}
-        </div>
-      )}
+        ) : (
+          <div className="vvp-co__feed-image-wrap">
+            <img
+              src={image_url}
+              alt={title}
+              className="vvp-co__feed-image"
+              loading={hero ? "eager" : "lazy"}
+              fetchPriority={hero ? "high" : undefined}
+              decoding="async"
+            />
+          </div>
+        ))}
       <div className="vvp-co__feed-body">
         <TitleTag className="vvp-co__feed-title">{title}</TitleTag>
         {byline}

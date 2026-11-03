@@ -4,7 +4,8 @@ import { type TrendingItemsEditProps } from "./types";
 import { ModuleStyles } from "./styles";
 import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";
-import { ArticleCard, type ArticleCardProps } from "../shared/ArticleCard";
+import { type ArticleCardProps } from "../shared/ArticleCard";
+import { TrendingItemsApp } from "./App";
 import { catPlaceholderImage as img } from "../shared/catPlaceholder";
 
 const PLACEHOLDER_ARTICLES: ArticleCardProps[] = [
@@ -89,13 +90,7 @@ export const TrendingItemsEdit = (
             </svg>
           </h2>
         )}
-        <div className="vvp-ti__list">
-          {PLACEHOLDER_ARTICLES.map((article) => (
-            <div key={article.link + article.title} className="vvp-ti__item">
-              <ArticleCard {...article} />
-            </div>
-          ))}
-        </div>
+        <TrendingItemsApp items={PLACEHOLDER_ARTICLES} />
       </div>
     </ModuleContainer>
   );
