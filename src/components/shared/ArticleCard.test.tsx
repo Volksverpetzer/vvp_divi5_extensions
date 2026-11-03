@@ -141,15 +141,11 @@ describe("ArticleCard byline", () => {
     expect(html).toMatch(/4 Min\.<\/span><\/div><\/div><\/a>$/);
   });
 
-  it("stacks the hero as title, full byline, excerpt", () => {
+  it("stacks the hero like feed cards: title, authors, excerpt, meta footer", () => {
     const html = renderToStaticMarkup(<ArticleCard {...props} hero />);
     expect(html).toContain(
-      `</h2><div class="vvp-co__feed-byline">${authors}${meta}`,
+      `</h2><div class="vvp-co__feed-byline">${authors}</div><p class="vvp-co__feed-excerpt">Auszug</p><div class="vvp-co__feed-footer">${meta}`,
     );
-    expect(html).toMatch(
-      /4 Min\.<\/span><\/div><p class="vvp-co__feed-excerpt">Auszug<\/p><\/div><\/a>$/,
-    );
-    expect(html).not.toContain("vvp-co__feed-footer");
   });
 
   it("leaves out the feed card's byline when there are no authors", () => {
@@ -166,15 +162,6 @@ describe("ArticleCard byline", () => {
     );
     expect(html).toContain(
       '<div class="vvp-co__feed-footer"><span class="vvp-ui-badge vvp-ui-badge--pruefpunkt',
-    );
-  });
-
-  it("puts the source badge right after the authors on the hero", () => {
-    const html = renderToStaticMarkup(
-      <ArticleCard {...props} source="pruefpunkt" hero />,
-    );
-    expect(html).toContain(
-      `<div class="vvp-co__feed-byline">${authors}<span class="vvp-ui-badge vvp-ui-badge--pruefpunkt`,
     );
   });
 });

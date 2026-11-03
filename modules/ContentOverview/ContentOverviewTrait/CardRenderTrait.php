@@ -118,24 +118,18 @@ trait CardRenderTrait
             : '';
 
         // Under the title: the authors ("von …"). The rest of the meta data
-        // joins them on the hero's one-line byline, but sits in the footer at
-        // the bottom of feed cards, like the Instagram card's footer. Mirrors
+        // sits in the footer at the bottom of the card, like the Instagram
+        // card's footer (right-aligned on the hero). Mirrors
         // `authorItem`/`metaItems` in ArticleCard.tsx.
-        $author_html = $props['author']
-            ? '<span class="vvp-co__feed-byline-author">von ' . esc_html($props['author']) . '</span>'
+        $byline_html = $props['author']
+            ? '<div class="vvp-co__feed-byline"><span class="vvp-co__feed-byline-author">von ' . esc_html($props['author']) . '</span></div>'
             : '';
-        $meta_html = $source_badge
+        $footer_html = '<div class="vvp-co__feed-footer">'
+            . $source_badge
             . $category_html
             . '<span class="vvp-ui-meta-text vvp-co__feed-date">' . esc_html($props['date']) . '</span>'
-            . $reading_time_html;
-
-        if ($hero) {
-            $byline_html = '<div class="vvp-co__feed-byline">' . $author_html . $meta_html . '</div>';
-            $footer_html = '';
-        } else {
-            $byline_html = $author_html ? '<div class="vvp-co__feed-byline">' . $author_html . '</div>' : '';
-            $footer_html = '<div class="vvp-co__feed-footer">' . $meta_html . '</div>';
-        }
+            . $reading_time_html
+            . '</div>';
 
         $excerpt_html = $props['excerpt']
             ? '<p class="vvp-co__feed-excerpt">' . esc_html($props['excerpt']) . '</p>'

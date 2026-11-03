@@ -92,9 +92,9 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   };
 
   // Under the title: the authors ("von …"). The rest of the meta data —
-  // Prüfpunkt badge, category, date, reading time — joins them on the hero's
-  // one-line byline, but sits in the footer at the bottom of feed cards, like
-  // the Instagram card's footer. Mirrored in CardRenderTrait.php.
+  // Prüfpunkt badge, category, date, reading time — sits in the footer at
+  // the bottom of the card, like the Instagram card's footer (right-aligned
+  // on the hero). Mirrored in CardRenderTrait.php.
   const authorItem = author && (
     <span className="vvp-co__feed-byline-author">{`von ${author}`}</span>
   );
@@ -175,16 +175,9 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         ))}
       <div className="vvp-co__feed-body">
         <TitleTag className="vvp-co__feed-title">{title}</TitleTag>
-        {hero ? (
-          <div className="vvp-co__feed-byline">
-            {authorItem}
-            {metaItems}
-          </div>
-        ) : (
-          authorItem && <div className="vvp-co__feed-byline">{authorItem}</div>
-        )}
+        {authorItem && <div className="vvp-co__feed-byline">{authorItem}</div>}
         {excerpt && <p className="vvp-co__feed-excerpt">{excerpt}</p>}
-        {!hero && <div className="vvp-co__feed-footer">{metaItems}</div>}
+        <div className="vvp-co__feed-footer">{metaItems}</div>
       </div>
     </a>
   );
