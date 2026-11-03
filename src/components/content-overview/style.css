@@ -167,7 +167,8 @@
 /* CLS prevention: mount points hold space before JS hydration */
 .vvp-co-article-mount,
 .vvp-co-ig-mount {
-  border-radius: 0.625rem;
+  /* Same radius as the card it stands in for (ArticleCard.css). */
+  border-radius: var(--vvp-radius-md, 12px);
   border: 1px solid var(--vvp-surface, #e2f0f5);
   background: var(--vvp-surface, #e2f0f5);
 }
