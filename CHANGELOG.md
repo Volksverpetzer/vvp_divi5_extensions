@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Artikelkarte rendered nothing inside a Divi 5 Loop: Divi doesn't switch the global post while rendering a Loop, so the card now reads the current Loop item from Divi's `LoopContext`.
 - Module icons in the Visual Builder's module inserter now match Divi's own icons: redrawn as filled shapes on Divi's 16×16 grid, so they are no longer white, cropped or oversized.
 
 ## [1.6.0] - 2026-10-09
