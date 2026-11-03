@@ -21,6 +21,13 @@ use VVP\Divi5\TrendingItems\TrendingItems;
 trait RenderCallbackTrait
 {
     /**
+     * `sizes` for the card images' srcset, matching this module's grid in
+     * src/components/trending-items/style.css: one column up to 640px, three above
+     * (about a third of the viewport until the content width caps them).
+     */
+    private const CARD_IMAGE_SIZES = '(max-width: 640px) 100vw, (max-width: 1023px) 33vw, 400px';
+
+    /**
      * TTL for an empty result (WPP inactive/misconfigured, or the range
      * yields no posts). Caching that at the full 1h TTL like a normal
      * successful result would leave the list looking empty for up to an
@@ -104,7 +111,7 @@ trait RenderCallbackTrait
             $post = get_post($post_id);
             if (ContentOverview::is_card_post($post)) {
                 $cards .= '<div class="vvp-ti__item">'
-                    . ContentOverview::render_article_card($post, false, 'trending', $show_thumb)
+                    . ContentOverview::render_article_card($post, false, 'trending', $show_thumb, self::CARD_IMAGE_SIZES)
                     . '</div>';
             }
         }

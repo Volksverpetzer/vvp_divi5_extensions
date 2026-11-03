@@ -69,6 +69,8 @@ class ContentOverview implements DependencyInterface
      * @param string   $tracking_context Plausible click event context:
      *                                   "feed", "trending" or "related".
      * @param bool     $show_image       Whether the card shows the featured image.
+     * @param string   $image_sizes      `sizes` for the image's srcset, matching
+     *                                   the caller's grid; '' for the feed's.
      *
      * @return string Card HTML.
      */
@@ -76,7 +78,8 @@ class ContentOverview implements DependencyInterface
         \WP_Post $post,
         bool $hero = false,
         string $tracking_context = 'feed',
-        bool $show_image = true
+        bool $show_image = true,
+        string $image_sizes = ''
     ): string {
         // Only the first hero card of a request is rendered as the hero (a
         // hero-toggled card in a multi-post Loop must not give every card an
@@ -93,7 +96,7 @@ class ContentOverview implements DependencyInterface
             unset($rest_post['_embedded']['wp:featuredmedia']);
         }
 
-        return self::render_featured_card($rest_post, $hero, $tracking_context);
+        return self::render_featured_card($rest_post, $hero, $tracking_context, $image_sizes);
     }
 
     /**

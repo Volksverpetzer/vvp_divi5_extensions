@@ -348,7 +348,7 @@ namespace VVP\Divi5\ContentOverview {
             return is_object($post) && 'post' === $post->post_type && 'publish' === $post->post_status;
         }
 
-        public static function render_article_card(object $post, bool $hero = false, string $tracking_context = 'feed', bool $show_image = true): string
+        public static function render_article_card(object $post, bool $hero = false, string $tracking_context = 'feed', bool $show_image = true, string $image_sizes = ''): string
         {
             $id    = (int) $post->ID;
             $image = $show_image ? get_the_post_thumbnail_url($id, 'medium_large') : false;
@@ -366,7 +366,7 @@ namespace VVP\Divi5\ContentOverview {
                     'wp:term'          => $cat ? [[['name' => $cat->name, 'slug' => $cat->slug]]] : null,
                     'wp:featuredmedia' => $image ? [['source_url' => $image]] : null,
                 ]),
-            ], $hero, $tracking_context);
+            ], $hero, $tracking_context, $image_sizes);
         }
     }
 
@@ -386,9 +386,9 @@ namespace VVP\Divi5\ContentOverview {
             return self::build_overview_html();
         }
 
-        public static function card(array $post, bool $hero, string $tracking_context): string
+        public static function card(array $post, bool $hero, string $tracking_context, string $image_sizes = ''): string
         {
-            return self::render_featured_card($post, $hero, $tracking_context);
+            return self::render_featured_card($post, $hero, $tracking_context, $image_sizes);
         }
     }
 

@@ -21,6 +21,13 @@ use VVP\Divi5\RelatedItems\RelatedItems;
 trait RenderCallbackTrait
 {
     /**
+     * `sizes` for the card images' srcset, matching this module's grid in
+     * src/components/related-items/style.css: one column up to 640px, three above
+     * (about a third of the viewport until the content width caps them).
+     */
+    private const CARD_IMAGE_SIZES = '(max-width: 640px) 100vw, (max-width: 1023px) 33vw, 400px';
+
+    /**
      * vectorcrawl's recommend endpoint. Same host FactCheckSearch already
      * calls for search/import (ai.volksverpetzer-app.de/api/...).
      */
@@ -53,7 +60,7 @@ trait RenderCallbackTrait
             $post = get_post($related_id);
             if (ContentOverview::is_card_post($post)) {
                 $cards .= '<div class="vvp-ri__item">'
-                    . ContentOverview::render_article_card($post, false, 'related')
+                    . ContentOverview::render_article_card($post, false, 'related', true, self::CARD_IMAGE_SIZES)
                     . '</div>';
             }
         }

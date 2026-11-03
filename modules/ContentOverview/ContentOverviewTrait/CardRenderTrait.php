@@ -19,9 +19,11 @@ namespace VVP\Divi5\ContentOverview\ContentOverviewTrait;
 trait CardRenderTrait
 {
     /**
-     * `sizes` for the card image's srcset: one feed column (full width on
-     * phones, half on tablets, roughly a third of the content width on
-     * desktop), or the single wide column of the hero.
+     * Default `sizes` for the card image's srcset: one column of the feed
+     * grid (content-overview/style.css: full width below 700px, half up to
+     * 1023px, roughly a third of the content width above), or the single
+     * wide column of the hero. Modules with other grids pass their own —
+     * see render_featured_card()'s $image_sizes.
      */
     private const CARD_IMAGE_SIZES = '(max-width: 699px) 100vw, (max-width: 1023px) 50vw, 400px';
     private const HERO_IMAGE_SIZES = '(max-width: 767px) 100vw, 750px';
@@ -40,10 +42,13 @@ trait CardRenderTrait
      * @param string $tracking_context Which Plausible click event the card
      *                                 sends (ArticleCard.tsx's
      *                                 `trackingContext`).
+     * @param string $image_sizes      `sizes` for the image's srcset, matching
+     *                                 the grid the card sits in; '' for the
+     *                                 feed (or hero) default.
      *
      * @return string HTML.
      */
-    private static function render_featured_card($post, bool $hero = false, string $tracking_context = 'feed')
+    private static function render_featured_card($post, bool $hero = false, string $tracking_context = 'feed', string $image_sizes = '')
     {
         $props = [
             'title'         => html_entity_decode(wp_strip_all_tags($post['title']['rendered'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
@@ -76,11 +81,14 @@ trait CardRenderTrait
         // Not part of the props: the client keeps the server's image markup
         // as-is when hydrating (`imageHtml`), so only PHP needs the srcset.
         $srcset = $props['image_url'] ? self::get_post_image_srcset($post) : '';
+        if ('' === $image_sizes) {
+            $image_sizes = $hero ? self::HERO_IMAGE_SIZES : self::CARD_IMAGE_SIZES;
+        }
 
         $image_html = $props['image_url']
             ? '<div class="vvp-co__feed-image-wrap">'
             .   '<img src="' . esc_url($props['image_url']) . '"'
-            .   ($srcset ? ' srcset="' . esc_attr($srcset) . '" sizes="' . ($hero ? self::HERO_IMAGE_SIZES : self::CARD_IMAGE_SIZES) . '"' : '')
+            .   ($srcset ? ' srcset="' . esc_attr($srcset) . '" sizes="' . esc_attr($image_sizes) . '"' : '')
             .   ' alt="' . esc_attr($props['title']) . '" class="vvp-co__feed-image"'
             .   ($hero ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"')
             .   ' decoding="async">'
