@@ -26,7 +26,11 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 import { InstagramSlideshow } from "./InstagramSlideshow";
 import { PodcastBanner } from "./PodcastBanner";
 import { YouTubeBanner, type YouTubeBannerProps } from "./YouTubeBanner";
-import { ArticleCard, type ArticleCardProps } from "../shared/ArticleCard";
+import {
+  ArticleCard,
+  type ArticleCardProps,
+  unwrapImageLinks,
+} from "../shared/ArticleCard";
 
 const initArticleCards = () => {
   const mounts = document.querySelectorAll(
@@ -41,9 +45,11 @@ const initArticleCards = () => {
         // Reuse the server's image markup as-is: plugins like Image Source
         // Control wrap the <img> with its credit after PHP renders it, and
         // re-rendering the bare <img> would fail hydration and drop the credit.
-        const imageHtml = mount.querySelector(
-          ":scope > a > .vvp-co__feed-image-wrap",
-        )?.innerHTML;
+        // Not `:scope > a > …`: a split card (see unwrapImageLinks) has the
+        // wrapper outside the card link.
+        const imageWrap = mount.querySelector(".vvp-co__feed-image-wrap");
+        if (imageWrap) unwrapImageLinks(imageWrap);
+        const imageHtml = imageWrap?.innerHTML;
         hydrateRoot(mount, <ArticleCard {...props} imageHtml={imageHtml} />);
       } catch (e) {
         console.error("Failed to parse article card props", e);

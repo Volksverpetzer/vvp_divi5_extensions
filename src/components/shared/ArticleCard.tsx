@@ -39,6 +39,23 @@ export interface ArticleCardProps {
   imageHtml?: string;
 }
 
+/**
+ * Prepares the server-rendered image wrapper for `imageHtml`. Image Source
+ * Control can link the image credit (`.isc-source-text a`), a link nested in
+ * the card's link. The server removes those links
+ * (includes/class-vvp-isc-card-credit-links.php); this covers markup that got
+ * past it. There the parser has already split the card: it closed the card
+ * link at the credit, re-opened it inside the image wrapper and moved the
+ * credit link out of `.isc-source-text`. Undo that, so the wrapper holds just
+ * the image and its credit, without links.
+ */
+export const unwrapImageLinks = (wrap: Element) => {
+  wrap.querySelectorAll("a").forEach((a) => a.replaceWith(...a.childNodes));
+  const source = wrap.querySelector(":scope > .isc-source");
+  const text = source?.querySelector(".isc-source-text");
+  while (source && text && source.nextSibling) text.append(source.nextSibling);
+};
+
 const PruefpunktBadge: React.FC = () => (
   <Badge variant="pruefpunkt" size="md">
     Prüfpunkt

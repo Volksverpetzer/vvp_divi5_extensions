@@ -111,6 +111,15 @@ require_once VVP_DIVI5_PATH . 'includes/class-vvp-divi-cache-prewarm.php';
 add_action( 'plugins_loaded', [ 'VVP_Divi_Cache_Prewarm', 'init' ] );
 
 /**
+ * Unwraps Image Source Control's credit links inside the article cards'
+ * image, where they'd be a link nested in the card's link (invalid HTML that
+ * the browser splits) -- see the class docblock.
+ */
+require_once VVP_DIVI5_PATH . 'includes/class-vvp-isc-card-credit-links.php';
+
+add_action( 'plugins_loaded', [ 'VVP_Isc_Card_Credit_Links', 'init' ] );
+
+/**
  * Enqueue Visual Builder assets for DIVI 5.
  *
  * @since 1.0.0
