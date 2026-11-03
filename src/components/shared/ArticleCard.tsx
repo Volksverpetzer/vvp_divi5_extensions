@@ -62,7 +62,11 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   imageHtml,
 }) => {
   const opensNewTab = external ?? isExternalUrl(link);
-  const cardClass = `vvp-co__feed-card vvp-co__feed-card--article${hero ? " vvp-co__feed-card--hero" : ""}`;
+  // `show-source`: the site's Image Source Control CSS hides image credits
+  // unless an ancestor has this class (set per module in Divi elsewhere);
+  // the lead story always shows its credit, like the Divi Blog hero did.
+  // Mirrored in CardRenderTrait.php.
+  const cardClass = `vvp-co__feed-card vvp-co__feed-card--article${hero ? " vvp-co__feed-card--hero show-source" : ""}`;
   const TitleTag = hero ? "h2" : "h3";
 
   const handleCategoryClick = (e: React.SyntheticEvent) => {

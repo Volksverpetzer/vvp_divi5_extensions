@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Artikelkarte: "Als Aufmacher (Hero) anzeigen" toggle for the front-page lead story — larger title (as `<h2>`) and text, roomier padding, framed like the regular cards but without their hover effect, the meta data footer right-aligned, an unclamped excerpt, a larger image size, and the image loads eagerly with `fetchpriority="high"` instead of lazily, since the hero image is typically the page's largest (LCP) element. Only the first hero card on a page gets the hero layout.
+- Artikelkarte: "Als Aufmacher (Hero) anzeigen" toggle for the front-page lead story — larger title (as `<h2>`) and text, roomier padding, framed like the regular cards but without their hover effect, the meta data footer right-aligned, an unclamped excerpt, a larger image size, and the image loads eagerly with `fetchpriority="high"` instead of lazily, since the hero image is typically the page's largest (LCP) element. Only the first hero card on a page gets the hero layout. The hero always shows its image credit (Image Source Control): the card carries the `show-source` class that the site's ISC CSS requires, instead of relying on a CSS class in the module settings.
 
 ### Changed
 
