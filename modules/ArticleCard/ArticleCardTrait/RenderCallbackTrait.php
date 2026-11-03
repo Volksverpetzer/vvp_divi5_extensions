@@ -72,14 +72,16 @@ trait RenderCallbackTrait
      * The post this card represents: the current loop iteration's post when
      * rendered inside a Divi Loop, otherwise the page's own post.
      *
-     * Candidates, first match wins:
-     *  1. Divi 5's LoopContext — the current item of the enclosing Divi
-     *     Loop. Divi does not switch the global post while rendering a Loop,
-     *     so this is the only place the loop item is available. Checked
-     *     first: on a single-post template the global is a valid article
-     *     too, but not the one the Loop iteration is about.
-     *  2. The global post — what a loop that iterates with the_post() sets.
-     *  3. The block's `postId` context (declared via usesContext in
+     * Inside an active Divi 5 Loop, the Loop's current item is the only
+     * candidate. Divi does not switch the global post while rendering a
+     * Loop, so the global (and the template's postId context) would be the
+     * page, or on a single-post template an unrelated article that every
+     * iteration would repeat. A Loop over terms, users or repeater rows
+     * therefore renders nothing instead of falling back.
+     *
+     * Outside a Divi Loop, candidates in order, first match wins:
+     *  1. The global post — what a loop that iterates with the_post() sets.
+     *  2. The block's `postId` context (declared via usesContext in
      *     module.json) — for render paths that pass the loop item as context
      *     instead of switching the global.
      *
@@ -94,12 +96,17 @@ trait RenderCallbackTrait
      */
     private static function get_post_for_context($block): ?\WP_Post
     {
-        $candidates = [self::get_loop_post(), get_post()];
+        $loop_context = self::get_loop_context();
+        if ($loop_context) {
+            $candidates = [self::get_loop_post($loop_context)];
+        } else {
+            $candidates = [get_post()];
 
-        // Guard the ID: get_post(0) would fall back to the global again.
-        $context_id = (int) ($block->context['postId'] ?? 0);
-        if ($context_id > 0) {
-            $candidates[] = get_post($context_id);
+            // Guard the ID: get_post(0) would fall back to the global again.
+            $context_id = (int) ($block->context['postId'] ?? 0);
+            if ($context_id > 0) {
+                $candidates[] = get_post($context_id);
+            }
         }
 
         foreach ($candidates as $post) {
@@ -112,32 +119,48 @@ trait RenderCallbackTrait
     }
 
     /**
-     * The current item of the enclosing Divi 5 Loop, or null outside a Loop
-     * or for Loops over something other than posts (terms, users, repeater
-     * rows).
+     * Divi 5's LoopContext for the enclosing Loop, or null outside a Loop.
      *
      * Divi stores the Loop's query results and the current iteration in
      * LoopContext (Packages/Module/Options/Loop/LoopContext.php) instead of
-     * calling setup_postdata(). Guarded with method_exists() since this is
-     * Divi-internal API.
+     * calling setup_postdata(). This is Divi-internal API, so every method
+     * used is required to exist; if one is missing, the card behaves as
+     * outside a Loop rather than guessing.
      */
-    private static function get_loop_post(): ?\WP_Post
+    private static function get_loop_context(): ?object
     {
-        $loop_context = LoopContext::class;
-        if (!class_exists($loop_context) || !method_exists($loop_context, 'get')) {
+        $class = LoopContext::class;
+        if (!class_exists($class) || !method_exists($class, 'get')) {
             return null;
         }
 
-        $context = $loop_context::get();
-        if (!$context
-            || !method_exists($context, 'get_result_for_position')
-            || !method_exists($context, 'get_current_iteration')
-            || (method_exists($context, 'get_query_type') && 'post_types' !== $context->get_query_type())
-        ) {
+        $context = $class::get();
+        if (!is_object($context)) {
             return null;
         }
 
-        $result = $context->get_result_for_position($context->get_current_iteration());
+        foreach (['get_query_type', 'get_current_iteration', 'get_result_for_position'] as $method) {
+            if (!method_exists($context, $method)) {
+                return null;
+            }
+        }
+
+        return $context;
+    }
+
+    /**
+     * The current item of a Divi Loop, or null if the Loop isn't over posts
+     * (terms, users, repeater rows) or the item can't be resolved.
+     *
+     * @param object $loop_context Value from get_loop_context().
+     */
+    private static function get_loop_post(object $loop_context): ?\WP_Post
+    {
+        if ('post_types' !== $loop_context->get_query_type()) {
+            return null;
+        }
+
+        $result = $loop_context->get_result_for_position($loop_context->get_current_iteration());
         if ($result instanceof \WP_Post) {
             return $result;
         }
