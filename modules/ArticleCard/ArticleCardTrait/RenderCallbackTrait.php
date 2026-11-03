@@ -144,7 +144,9 @@ trait RenderCallbackTrait
     private static function get_loop_context()
     {
         $class = LoopContext::class;
-        if (!class_exists($class) || !method_exists($class, 'get')) {
+        // is_callable(), not method_exists(): a non-public or non-static
+        // get() after a Divi update must not fatal.
+        if (!class_exists($class) || !is_callable([$class, 'get'])) {
             return false;
         }
 
@@ -154,7 +156,7 @@ trait RenderCallbackTrait
         }
 
         foreach (['get_query_type', 'get_current_iteration', 'get_result_for_position'] as $method) {
-            if (!method_exists($context, $method)) {
+            if (!is_callable([$context, $method])) {
                 return null;
             }
         }
