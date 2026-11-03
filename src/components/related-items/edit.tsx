@@ -4,7 +4,8 @@ import { type RelatedItemsEditProps } from "./types";
 import { ModuleStyles } from "./styles";
 import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";
-import { ArticleCard, type ArticleCardProps } from "../shared/ArticleCard";
+import { type ArticleCardProps } from "../shared/ArticleCard";
+import { RelatedItemsApp } from "./App";
 import { catPlaceholderImage as img } from "../shared/catPlaceholder";
 
 const PLACEHOLDER_ARTICLES: ArticleCardProps[] = [
@@ -62,13 +63,7 @@ export const RelatedItemsEdit = (
       {elements.styleComponents({ attrName: "module" })}
 
       <div className="vvp-related-items">
-        <div className="vvp-ri__list">
-          {PLACEHOLDER_ARTICLES.map((article) => (
-            <div key={article.link + article.title} className="vvp-ri__item">
-              <ArticleCard {...article} />
-            </div>
-          ))}
-        </div>
+        <RelatedItemsApp items={PLACEHOLDER_ARTICLES} />
       </div>
     </ModuleContainer>
   );

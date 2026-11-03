@@ -1,7 +1,7 @@
 /* ============================================================
    ArticleCard — vvp-co__* classes shared by every module that
-   renders `shared/ArticleCard.tsx` (ContentOverview, TrendingItems)
-   as well as ContentOverview's Instagram slideshow card, which
+   renders `shared/ArticleCard.tsx` (ContentOverview, Artikelkarte,
+   TrendingItems, RelatedItems) as well as ContentOverview's Instagram slideshow card, which
    reuses this same card markup pattern.
 
    Colocated with the component on purpose: these rules previously
@@ -61,14 +61,6 @@
   height: 100%;
 }
 
-.vvp-co__feed-image-wrap--square {
-  aspect-ratio: 1/1;
-}
-
-.vvp-co__feed-image-wrap--yt {
-  aspect-ratio: 16/9;
-}
-
 .vvp-co__feed-image {
   width: 100%;
   height: 100%;
@@ -81,23 +73,11 @@
   transform: scale(1.04);
 }
 
-.vvp-co__feed-image--insta {
-  object-position: center;
-}
-
 .vvp-co__feed-body {
   padding: 0.875rem;
   flex: 1;
   display: flex;
   flex-direction: column;
-}
-
-.vvp-co__feed-meta {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  margin-bottom: var(--vvp-spacing-sm, 8px);
 }
 
 .vvp-co__feed-title {
@@ -129,15 +109,6 @@
   -webkit-line-clamp: 3;
 }
 
-.vvp-co__feed-date.vvp-ui-meta-text {
-  font-size: 1rem;
-}
-
-.vvp-co__feed-date {
-  margin-top: auto;
-  padding-top: 0.375rem;
-}
-
 /* Footer row of the Instagram card (InstagramSlideshow.tsx); article
    cards show their meta data in `.vvp-co__feed-byline` instead. */
 .vvp-co__feed-footer {
@@ -151,17 +122,7 @@
 }
 
 .vvp-co__feed-footer .vvp-co__feed-date {
-  margin-top: 0;
-  padding-top: 0;
-  flex-shrink: 0;
-}
-
-.vvp-co__feed-footer .vvp-co__feed-reading-time {
   font-size: 1rem;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--vvp-spacing-xs, 4px);
-  white-space: nowrap;
   flex-shrink: 0;
 }
 
@@ -169,9 +130,9 @@
   flex-shrink: 0;
 }
 
-/* Date and reading time are the footer's must-haves; the category
+/* The date is the footer's must-have; the category
    label is the first thing to give — it shrinks and truncates
-   instead of pushing them out of the (overflow: hidden) footer. */
+   instead of pushing it out of the (overflow: hidden) footer. */
 .vvp-co__feed-footer .vvp-co__category {
   color: var(--vvp-text-muted, #666);
   font-size: 1rem;
@@ -184,21 +145,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-button.vvp-co__category--btn {
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  font-family: inherit;
-  line-height: inherit;
-}
-
-button.vvp-co__category--btn:hover,
-.vvp-co__category:hover {
-  color: #585c67;
 }
 
 /* Copy-link button — a footer flex item, pushed to the row's end and
@@ -232,28 +178,9 @@ button.vvp-co__category--btn:hover,
   height: var(--vvp-icon-size-xs);
 }
 
-/* YouTube play button overlay */
-.vvp-co__yt-play-btn {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.35);
-  transition: background 0.2s ease;
-}
-
-.vvp-co__feed-card:hover .vvp-co__yt-play-btn {
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.vvp-co__yt-play-btn svg {
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
-}
-
-/* Byline under every article card's title: badges, then "category | date |
-   von … | reading time". The items are reused from the old card footer, so
-   reset them to the line's own styling. */
+/* Byline under every article card's title: the Prüfpunkt badge, then
+   "category | date | von … | reading time". Resets the shared category and
+   meta-text styling to the line's own. */
 .vvp-co__feed-byline {
   margin: 0 0 var(--vvp-spacing-sm, 8px);
   font-size: 1rem;
@@ -288,6 +215,7 @@ button.vvp-co__category--btn:hover,
 }
 
 .vvp-co__feed-byline .vvp-co__category--btn:hover {
+  /* Darker than the muted line, so the clickable category reads as a link. */
   color: #585c67;
 }
 

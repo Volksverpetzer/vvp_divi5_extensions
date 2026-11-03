@@ -18,6 +18,7 @@ namespace {
     }
 
     define('ABSPATH', __DIR__ . '/');
+    define('MINUTE_IN_SECONDS', 60);
     define('HOUR_IN_SECONDS', 3600);
 
     // ── Flush cache ───────────────────────────────────────────────────────────
@@ -137,6 +138,15 @@ namespace {
         if (!preg_match('/^https?:\/\//i', $url)) return '';
         return htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
+
+    function esc_url_raw(string $url): string
+    {
+        $url = trim($url);
+        return preg_match('/^https?:\/\//i', $url) ? $url : '';
+    }
+
+    function wp_parse_url(string $url, int $component = -1): mixed { return parse_url($url, $component); }
+    function home_url(): string { return 'https://volksverpetzer.de'; }
 
     function wp_json_encode(mixed $data): string|false { return json_encode($data); }
 
@@ -326,14 +336,37 @@ namespace VVP\Divi5\AuthorProfile {
 // ── ContentOverview namespace: stub + preview wrapper ────────────────────────
 namespace VVP\Divi5\ContentOverview {
 
-    // Stub the self-reference used in render_callback() (not called in preview),
-    // plus the author formatter TrendingItems' build_post_data() calls. Mock
-    // posts here are plain objects, not WP_Post, so it can't be the real one.
+    // Stands in for the real ContentOverview class, whose public helpers the
+    // TrendingItems preview below calls. The mock posts here are plain
+    // objects, not WP_Post, so these build the card from the mock template
+    // tags instead of map_local_post() — the card markup itself is still
+    // the real render_featured_card().
     class ContentOverview
     {
-        public static function format_post_authors(object $post): string
+        public static function is_card_post($post): bool
         {
-            return 'Max Mustermann';
+            return is_object($post) && 'post' === $post->post_type && 'publish' === $post->post_status;
+        }
+
+        public static function render_article_card(object $post, bool $hero = false, string $tracking_context = 'feed', bool $show_image = true): string
+        {
+            $id    = (int) $post->ID;
+            $image = $show_image ? get_the_post_thumbnail_url($id, 'medium_large') : false;
+            $cat   = get_the_category($id)[0] ?? null;
+
+            return ContentOverviewPreview::card([
+                'date'            => get_the_date('Y-m-d', $id),
+                'link'            => get_permalink($id),
+                'title'           => ['rendered' => get_the_title($id)],
+                'reading_time'    => (int) get_post_meta($id, '_yoast_wpseo_estimated-reading-time-minutes', true),
+                'yoast_head_json' => ['description' => get_the_excerpt($id)],
+                '_vvp_source'     => 'volksverpetzer',
+                '_embedded'       => array_filter([
+                    'author'           => [['name' => get_the_author_meta('display_name', 1)]],
+                    'wp:term'          => $cat ? [[['name' => $cat->name, 'slug' => $cat->slug]]] : null,
+                    'wp:featuredmedia' => $image ? [['source_url' => $image]] : null,
+                ]),
+            ], $hero, $tracking_context);
         }
     }
 
@@ -341,7 +374,8 @@ namespace VVP\Divi5\ContentOverview {
     require __DIR__ . '/modules/ContentOverview/ContentOverviewTrait/RenderCallbackTrait.php';
 
     /**
-     * Thin wrapper that exposes the private build_overview_html() for the preview.
+     * Thin wrapper that exposes the private build_overview_html() and
+     * render_featured_card() for the preview.
      */
     class ContentOverviewPreview
     {
@@ -350,6 +384,11 @@ namespace VVP\Divi5\ContentOverview {
         public static function render(): string
         {
             return self::build_overview_html();
+        }
+
+        public static function card(array $post, bool $hero, string $tracking_context): string
+        {
+            return self::render_featured_card($post, $hero, $tracking_context);
         }
     }
 
@@ -368,13 +407,7 @@ namespace VVP\Divi5\TrendingItems {
 
         public static function render(string $range = 'last7days'): string
         {
-            $items = self::get_trending_items(3, $range);
-
-            if (empty($items)) {
-                return '<div class="vvp-ti__empty">Keine Trending-Beiträge gefunden.</div>';
-            }
-
-            return '<div class="vvp-ti__mount" data-articles="' . esc_attr(wp_json_encode($items)) . '"></div>';
+            return self::render_list($range, true);
         }
     }
 
@@ -449,7 +482,6 @@ namespace {
           <script src="/scripts/fact-check-frontend.js" defer></script>
           <script src="/scripts/content-overview-frontend.js" defer></script>
           <script src="/scripts/author-profile-frontend.js" defer></script>
-          <script src="/scripts/trending-items-frontend.js" defer></script>
           <style>
             *, *::before, *::after { box-sizing: border-box; }
             body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #eee; color: var(--vvp-text, #111); }

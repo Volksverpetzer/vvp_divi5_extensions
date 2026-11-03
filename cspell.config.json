@@ -13,8 +13,8 @@
     "jsxs",
     "katze",
     "Katzenverpetzer",
-    "komma",
     "Klarna",
+    "komma",
     "Kratzbäume",
     "Kratzenbach",
     "Laschyk",
@@ -38,7 +38,8 @@
     "Vite",
     "volksverpetzer",
     "vvp",
-    "xmas"
+    "xmas",
+    "Yoast"
   ],
   "allowCompoundWords": true,
   "files": ["src/**/*"],

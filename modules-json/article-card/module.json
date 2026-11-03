@@ -55,7 +55,7 @@
             "render": true,
             "attrName": "hero.innerContent",
             "label": "Als Aufmacher (Hero) anzeigen",
-            "description": "Größere Überschrift und ein Bild, das sofort mit hoher Priorität lädt – für den Aufmacher auf der Startseite. Nur für eine Karte pro Seite verwenden.",
+            "description": "Für den Aufmacher auf der Startseite: größere Überschrift und Meta-Zeile, ohne Rahmen und Hover-Effekt, und ein Bild, das sofort mit hoher Priorität lädt. Nur die erste Aufmacher-Karte einer Seite wird so dargestellt.",
             "features": {
               "sticky": false,
               "dynamicContent": false

@@ -381,6 +381,15 @@ trait DataFetchTrait
         return $media['source_url'] ?? '';
     }
 
+    /**
+     * srcset for the featured image of a WP REST post array: every
+     * medium..full size with a known width, each width once. URLs are
+     * esc_url()-ed; the caller still esc_attr()s the whole attribute.
+     *
+     * @param array $post WP post array with _embedded data.
+     *
+     * @return string srcset value, '' without sizes.
+     */
     private static function get_post_image_srcset($post)
     {
         $media = $post['_embedded']['wp:featuredmedia'][0] ?? null;

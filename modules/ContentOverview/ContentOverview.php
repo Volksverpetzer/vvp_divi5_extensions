@@ -58,18 +58,26 @@ class ContentOverview implements DependencyInterface
     /**
      * Render a single local post as the feed's article card.
      *
-     * Public entry point for other modules (ArticleCard) so the card markup,
-     * the WP_Post → REST-shape mapping and the hydration mount stay defined
-     * in exactly one place — the emitted `.vvp-co-article-mount` is hydrated
+     * Public entry point for the other modules showing article cards
+     * (ArticleCard, TrendingItems, RelatedItems), so the card markup, the
+     * WP_Post → REST-shape mapping and the hydration mount stay defined in
+     * exactly one place — the emitted `.vvp-co-article-mount` is hydrated
      * by content-overview-frontend.js, which is enqueued on every page.
      *
-     * @param \WP_Post $post Post to render.
-     * @param bool     $hero Lead-story layout (see render_featured_card()).
+     * @param \WP_Post $post             Post to render.
+     * @param bool     $hero             Lead-story layout (see render_featured_card()).
+     * @param string   $tracking_context Plausible click event context:
+     *                                   "feed", "trending" or "related".
+     * @param bool     $show_image       Whether the card shows the featured image.
      *
      * @return string Card HTML.
      */
-    public static function render_article_card(\WP_Post $post, bool $hero = false): string
-    {
+    public static function render_article_card(
+        \WP_Post $post,
+        bool $hero = false,
+        string $tracking_context = 'feed',
+        bool $show_image = true
+    ): string {
         // Only the first hero card of a request is rendered as the hero (a
         // hero-toggled card in a multi-post Loop must not give every card an
         // eager, high-priority image), and its post is what the feed then
@@ -80,27 +88,24 @@ class ContentOverview implements DependencyInterface
             $hero = false;
         }
 
-        return self::render_featured_card(self::map_local_post($post), $hero);
+        $rest_post = self::map_local_post($post);
+        if (!$show_image) {
+            unset($rest_post['_embedded']['wp:featuredmedia']);
+        }
+
+        return self::render_featured_card($rest_post, $hero, $tracking_context);
     }
 
     /**
-     * A post's authors as shown in the card byline ("A", "A und B",
-     * "A, B und C"), PublishPress co-authors included.
+     * Whether a post can be shown as an article card: a published post of
+     * type "post". Its Yoast/reading-time/category mapping only makes sense
+     * for articles.
      *
-     * Public entry point for the other modules that build ArticleCard props
-     * themselves (TrendingItems, RelatedItems), so every card names the
-     * same authors.
-     *
-     * @param \WP_Post $post Post.
-     *
-     * @return string Author line, '' when the post has none.
+     * @param mixed $post Result of get_post().
      */
-    public static function format_post_authors(\WP_Post $post): string
+    public static function is_card_post($post): bool
     {
-        return self::format_authors(array_map(
-            static fn (string $name) => ['name' => $name],
-            self::get_author_names($post)
-        ));
+        return $post instanceof \WP_Post && 'post' === $post->post_type && 'publish' === $post->post_status;
     }
 
     /**
