@@ -115,6 +115,13 @@ describe("ArticleCard hero variant", () => {
     expect(html).toContain("<h2 ");
     expect(html).toContain("vvp-co__feed-card--hero");
   });
+
+  it("shows the image credit on the hero only (ISC's show-source)", () => {
+    const hero = renderToStaticMarkup(<ArticleCard {...props} hero />);
+    expect(hero).toMatch(/<a [^>]*class="[^"]*\bshow-source\b/);
+    const feed = renderToStaticMarkup(<ArticleCard {...props} />);
+    expect(feed).not.toContain("show-source");
+  });
 });
 
 describe("ArticleCard byline", () => {

@@ -139,7 +139,10 @@ trait CardRenderTrait
         // attribute order must match ArticleCard.tsx for hydration.
         $target_attrs = $props['external'] ? ' target="_blank" rel="noopener noreferrer"' : '';
 
-        $card_class = 'vvp-co__feed-card vvp-co__feed-card--article' . ($hero ? ' vvp-co__feed-card--hero' : '');
+        // `show-source` makes Image Source Control show the hero's image
+        // credit, which the site's ISC CSS hides outside such an element.
+        // Mirrors `cardClass` in ArticleCard.tsx.
+        $card_class = 'vvp-co__feed-card vvp-co__feed-card--article' . ($hero ? ' vvp-co__feed-card--hero show-source' : '');
         $title_tag  = $hero ? 'h2' : 'h3';
 
         $static_html = '<a href="' . esc_url($props['link']) . '" class="' . $card_class . '"' . $target_attrs . '>'
