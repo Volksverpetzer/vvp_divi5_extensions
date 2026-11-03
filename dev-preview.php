@@ -326,8 +326,16 @@ namespace VVP\Divi5\AuthorProfile {
 // ── ContentOverview namespace: stub + preview wrapper ────────────────────────
 namespace VVP\Divi5\ContentOverview {
 
-    // Stub the self-reference used in render_callback() (not called in preview)
-    class ContentOverview {}
+    // Stub the self-reference used in render_callback() (not called in preview),
+    // plus the author formatter TrendingItems' build_post_data() calls. Mock
+    // posts here are plain objects, not WP_Post, so it can't be the real one.
+    class ContentOverview
+    {
+        public static function format_post_authors(object $post): string
+        {
+            return 'Max Mustermann';
+        }
+    }
 
     // Load the real trait (defines VVP\Divi5\ContentOverview\ContentOverviewTrait\RenderCallbackTrait)
     require __DIR__ . '/modules/ContentOverview/ContentOverviewTrait/RenderCallbackTrait.php';

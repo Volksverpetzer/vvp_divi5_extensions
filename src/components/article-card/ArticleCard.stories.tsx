@@ -127,7 +127,7 @@ export const WithoutImage: Story = {
 };
 
 export const WithoutExcerpt: Story = {
-  name: "Without excerpt (no author line)",
+  name: "Without excerpt",
   args: { ...FEED_ARTICLES[3], excerpt: undefined },
 };
 

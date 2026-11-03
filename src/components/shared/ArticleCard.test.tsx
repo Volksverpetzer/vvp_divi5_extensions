@@ -117,29 +117,38 @@ describe("ArticleCard hero variant", () => {
   });
 });
 
-describe("ArticleCard author line", () => {
+describe("ArticleCard byline", () => {
   const props = {
     title: "Titel",
     link: "/article/",
     date: "01.10.2026",
     excerpt: "Auszug",
     author: "Anna und Ben",
+    category: "Analyse",
+    reading_time: 4,
   };
 
-  it("appends the authors to the excerpt on feed cards", () => {
-    const html = renderToStaticMarkup(<ArticleCard {...props} />);
-    expect(html).toContain(
-      '<p class="vvp-co__feed-excerpt">Auszug<em class="vvp-co__feed-author"> – Anna und Ben</em></p>',
-    );
-    expect(html).not.toContain("vvp-co__feed-byline");
+  // Image, title, byline (category | date | authors | reading time), excerpt.
+  const order =
+    /<\/h[23]><div class="vvp-co__feed-byline"><span class="vvp-co__category">Analyse<\/span><span class="vvp-ui-meta-text vvp-co__feed-date">01\.10\.2026<\/span><span class="vvp-co__feed-byline-author">von Anna und Ben<\/span><span class="vvp-ui-meta-text vvp-co__feed-reading-time">.*4 Min\.<\/span><\/div><p class="vvp-co__feed-excerpt">Auszug<\/p><\/div><\/a>$/;
+
+  it.each([
+    ["feed cards", false],
+    ["the hero", true],
+  ])("stacks %s as title, byline, excerpt", (_label, hero) => {
+    const html = renderToStaticMarkup(<ArticleCard {...props} hero={hero} />);
+    expect(html).toMatch(order);
+    expect(html).not.toContain("vvp-co__feed-footer");
+    expect(html).not.toContain("vvp-co__feed-author");
   });
 
-  it("puts the hero's authors on their own line under the title", () => {
-    const html = renderToStaticMarkup(<ArticleCard {...props} hero />);
-    expect(html).toContain(
-      '</h2><p class="vvp-co__feed-byline">von Anna und Ben</p><p class="vvp-co__feed-excerpt">Auszug</p>',
+  it("puts source badges at the start of the byline", () => {
+    const html = renderToStaticMarkup(
+      <ArticleCard {...props} source="pruefpunkt" />,
     );
-    expect(html).not.toContain("vvp-co__feed-author");
+    expect(html).toContain(
+      '<div class="vvp-co__feed-byline"><span class="vvp-ui-badge vvp-ui-badge--pruefpunkt',
+    );
   });
 });
 

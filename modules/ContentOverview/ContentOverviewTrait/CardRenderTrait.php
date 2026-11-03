@@ -85,22 +85,19 @@ trait CardRenderTrait
             ? '<span class="vvp-ui-meta-text vvp-co__feed-reading-time">' . $clock_svg . (int) $props['reading_time'] . ' Min.</span>'
             : '';
 
-        // The hero shows its (co-)authors on their own line under the title,
-        // like the Divi Blog hero it replaces; feed cards append them to the
-        // excerpt. Mirrors `showByline` in ArticleCard.tsx.
-        $show_byline = $hero && $props['author'];
-        $byline_html = $show_byline
-            ? '<p class="vvp-co__feed-byline">von ' . esc_html($props['author']) . '</p>'
-            : '';
+        // Every card's byline, under the title: badges, then "category |
+        // date | von … | reading time". Mirrors `byline` in ArticleCard.tsx.
+        $byline_html = '<div class="vvp-co__feed-byline">'
+            . $source_badge
+            . $category_html
+            . '<span class="vvp-ui-meta-text vvp-co__feed-date">' . esc_html($props['date']) . '</span>'
+            . ($props['author'] ? '<span class="vvp-co__feed-byline-author">von ' . esc_html($props['author']) . '</span>' : '')
+            . $reading_time_html
+            . '</div>';
 
-        $excerpt_html = '';
-        if ($props['excerpt']) {
-            $excerpt_html = '<p class="vvp-co__feed-excerpt">' . esc_html($props['excerpt']);
-            if ($props['author'] && !$show_byline) {
-                $excerpt_html .= '<em class="vvp-co__feed-author"> – ' . esc_html($props['author']) . '</em>';
-            }
-            $excerpt_html .= '</p>';
-        }
+        $excerpt_html = $props['excerpt']
+            ? '<p class="vvp-co__feed-excerpt">' . esc_html($props['excerpt']) . '</p>'
+            : '';
 
         // Only external links (e.g. Prüfpunkt articles) open a new tab;
         // attribute order must match ArticleCard.tsx for hydration.
@@ -115,12 +112,6 @@ trait CardRenderTrait
             .   '<' . $title_tag . ' class="vvp-co__feed-title">' . esc_html($props['title']) . '</' . $title_tag . '>'
             .   $byline_html
             .   $excerpt_html
-            .   '<div class="vvp-co__feed-footer">'
-            .     $source_badge
-            .     $category_html
-            .     '<span class="vvp-ui-meta-text vvp-co__feed-date">' . esc_html($props['date']) . '</span>'
-            .     $reading_time_html
-            .   '</div>'
             . '</div>'
             . '</a>';
 
@@ -152,7 +143,7 @@ trait CardRenderTrait
     /**
      * Joins the `name` field of each _embedded.author entry into a
      * German-style list ("A", "A und B", "A, B und C") for display in the
-     * feed card excerpt. Handles both locally-sourced posts (one entry per
+     * card byline. Handles both locally-sourced posts (one entry per
      * PublishPress co-author, see DataFetchTrait::get_author_names) and
      * posts fetched from a remote WP REST source, which may embed more
      * than one author entry too.

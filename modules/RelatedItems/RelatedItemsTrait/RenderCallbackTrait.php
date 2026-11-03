@@ -16,6 +16,7 @@ use ET\Builder\Packages\Module\Module;
 use ET\Builder\Framework\Utility\HTMLUtility;
 use ET\Builder\FrontEnd\BlockParser\BlockParserStore;
 use ET\Builder\Packages\Module\Options\Element\ElementComponents;
+use VVP\Divi5\ContentOverview\ContentOverview;
 use VVP\Divi5\RelatedItems\RelatedItems;
 
 trait RenderCallbackTrait
@@ -89,7 +90,7 @@ trait RenderCallbackTrait
      * cached locally. Empty array (never an error string) on any failure,
      * so the module just renders nothing rather than a broken card.
      *
-     * @return list<array{type:string,title:string,link:string,date:string,image_url:string,excerpt:string,category:string,category_link:string,source:string,reading_time:int}>
+     * @return list<array{type:string,title:string,link:string,date:string,image_url:string,excerpt:string,author:string,category:string,category_link:string,source:string,reading_time:int}>
      */
     private static function get_related_items(int $post_id): array
     {
@@ -124,7 +125,7 @@ trait RenderCallbackTrait
     }
 
     /**
-     * @return list<array{type:string,title:string,link:string,date:string,image_url:string,excerpt:string,category:string,category_link:string,source:string,reading_time:int}>
+     * @return list<array{type:string,title:string,link:string,date:string,image_url:string,excerpt:string,author:string,category:string,category_link:string,source:string,reading_time:int}>
      */
     private static function fetch_related_items(string $permalink): array
     {
@@ -180,7 +181,7 @@ trait RenderCallbackTrait
     }
 
     /**
-     * @return array{type:string,title:string,link:string,date:string,image_url:string,excerpt:string,category:string,category_link:string,source:string,reading_time:int}|null
+     * @return array{type:string,title:string,link:string,date:string,image_url:string,excerpt:string,author:string,category:string,category_link:string,source:string,reading_time:int}|null
      */
     private static function build_post_data(int $post_id): ?array
     {
@@ -217,6 +218,7 @@ trait RenderCallbackTrait
             'link'          => (string) get_permalink($post_id),
             'date'          => get_the_date('d.m.Y', $post_id),
             'image_url'     => (string) (get_the_post_thumbnail_url($post_id, 'medium_large') ?: ''),
+            'author'        => ContentOverview::format_post_authors($post),
             'excerpt'       => $excerpt,
             'category'      => $category_name,
             'category_link' => $category_link,
@@ -269,7 +271,7 @@ trait RenderCallbackTrait
      * simply orphaned under the old key and expire on their original
      * schedule, never read again.
      */
-    private const CACHE_VERSION = 2;
+    private const CACHE_VERSION = 3;
 
     /**
      * Public (unlike the rest of this trait) so the main plugin file's

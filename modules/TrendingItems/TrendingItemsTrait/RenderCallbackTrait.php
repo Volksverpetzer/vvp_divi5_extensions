@@ -16,6 +16,7 @@ use ET\Builder\Packages\Module\Module;
 use ET\Builder\Framework\Utility\HTMLUtility;
 use ET\Builder\FrontEnd\BlockParser\BlockParserStore;
 use ET\Builder\Packages\Module\Options\Element\ElementComponents;
+use VVP\Divi5\ContentOverview\ContentOverview;
 use VVP\Divi5\TrendingItems\TrendingItems;
 
 trait RenderCallbackTrait
@@ -109,11 +110,14 @@ trait RenderCallbackTrait
     }
 
     /**
-     * @return list<array{type:string,title:string,link:string,date:string,image_url:string,excerpt:string,category:string,category_link:string,source:string}>
+     * @return list<array{type:string,title:string,link:string,date:string,image_url:string,excerpt:string,author:string,category:string,category_link:string,source:string}>
      */
     private static function get_trending_items(int $item_count, string $range): array
     {
-        $cache_key = 'vvp_trending_' . md5("{$item_count}_{$range}");
+        // Versioned like RelatedItems' CACHE_VERSION: bump when what
+        // build_post_data() computes changes, so cached items without the
+        // new fields aren't served until they expire.
+        $cache_key = 'vvp_trending_v2_' . md5("{$item_count}_{$range}");
         $cached    = get_transient($cache_key);
         if ($cached !== false) {
             return $cached;
@@ -158,7 +162,7 @@ trait RenderCallbackTrait
     }
 
     /**
-     * @return array{type:string,title:string,link:string,date:string,image_url:string,excerpt:string,category:string,category_link:string,source:string}|null
+     * @return array{type:string,title:string,link:string,date:string,image_url:string,excerpt:string,author:string,category:string,category_link:string,source:string}|null
      */
     private static function build_post_data(int $post_id): ?array
     {
@@ -180,6 +184,7 @@ trait RenderCallbackTrait
             'link'          => (string) get_permalink($post_id),
             'date'          => get_the_date('d.m.Y', $post_id),
             'image_url'     => (string) (get_the_post_thumbnail_url($post_id, 'medium_large') ?: ''),
+            'author'        => ContentOverview::format_post_authors($post),
             'excerpt'       => wp_strip_all_tags(get_the_excerpt($post_id)),
             'category'      => $category_name,
             'category_link' => $category_link,
