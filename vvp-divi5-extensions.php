@@ -174,36 +174,10 @@ function VVP_DIVI5_enqueue_vb_scripts() {
 
 		\ET\Builder\VisualBuilder\Assets\PackageBuildManager::register_package_build(
 			[
-				'name'    => 'vvp-trending-items-frontend-vb',
-				'version' => VVP_DIVI5_VERSION,
-				'script'  => [
-					'src'                => VVP_DIVI5_URL . 'scripts/trending-items-frontend.js',
-					'deps'               => [],
-					'enqueue_top_window' => false,
-					'enqueue_app_window' => true,
-				],
-			]
-		);
-
-		\ET\Builder\VisualBuilder\Assets\PackageBuildManager::register_package_build(
-			[
 				'name'    => 'vvp-trending-list-frontend-vb',
 				'version' => VVP_DIVI5_VERSION,
 				'script'  => [
 					'src'                => VVP_DIVI5_URL . 'scripts/trending-list-frontend.js',
-					'deps'               => [],
-					'enqueue_top_window' => false,
-					'enqueue_app_window' => true,
-				],
-			]
-		);
-
-		\ET\Builder\VisualBuilder\Assets\PackageBuildManager::register_package_build(
-			[
-				'name'    => 'vvp-related-items-frontend-vb',
-				'version' => VVP_DIVI5_VERSION,
-				'script'  => [
-					'src'                => VVP_DIVI5_URL . 'scripts/related-items-frontend.js',
 					'deps'               => [],
 					'enqueue_top_window' => false,
 					'enqueue_app_window' => true,
@@ -312,17 +286,6 @@ function VVP_DIVI5_enqueue_frontend_scripts() {
 		true
 	);
 
-	$ti_frontend_path = VVP_DIVI5_PATH . 'scripts/trending-items-frontend.js';
-	$ti_frontend_ver  = file_exists( $ti_frontend_path ) ? filemtime( $ti_frontend_path ) : VVP_DIVI5_VERSION;
-
-	wp_enqueue_script(
-		'vvp-trending-items-frontend',
-		VVP_DIVI5_URL . 'scripts/trending-items-frontend.js',
-		array(),
-		$ti_frontend_ver,
-		true
-	);
-
 	$tl_frontend_path = VVP_DIVI5_PATH . 'scripts/trending-list-frontend.js';
 	$tl_frontend_ver  = file_exists( $tl_frontend_path ) ? filemtime( $tl_frontend_path ) : VVP_DIVI5_VERSION;
 
@@ -331,17 +294,6 @@ function VVP_DIVI5_enqueue_frontend_scripts() {
 		VVP_DIVI5_URL . 'scripts/trending-list-frontend.js',
 		array(),
 		$tl_frontend_ver,
-		true
-	);
-
-	$ri_frontend_path = VVP_DIVI5_PATH . 'scripts/related-items-frontend.js';
-	$ri_frontend_ver  = file_exists( $ri_frontend_path ) ? filemtime( $ri_frontend_path ) : VVP_DIVI5_VERSION;
-
-	wp_enqueue_script(
-		'vvp-related-items-frontend',
-		VVP_DIVI5_URL . 'scripts/related-items-frontend.js',
-		array(),
-		$ri_frontend_ver,
 		true
 	);
 

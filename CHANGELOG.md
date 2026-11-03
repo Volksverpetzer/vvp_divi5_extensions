@@ -12,9 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- All article cards (ContentOverview feed, Trending, Related, Artikelkarte) stack their content the same way: image, title, a byline with the meta data ("category | date | von … | reading time", Prüfpunkt/YouTube badges first), then the excerpt. This replaces the footer below the excerpt and the authors appended to the excerpt. Trending and Related cards now name the authors too (PublishPress co-authors included); their cached items are invalidated once on update.
+- All article cards (ContentOverview feed, Trending, Related, Artikelkarte) stack their content the same way: image, title, a byline with the meta data ("von … | category | date | reading time", Prüfpunkt badge after the authors), then the excerpt. This replaces the footer below the excerpt and the authors appended to the excerpt.
+- Trending and Related render their cards on the server through the same code as the feed and the Artikelkarte (`ContentOverview::render_article_card()`), hydrated by `content-overview-frontend.js`. Their cards now show the same excerpt (the Yoast meta description), authors (PublishPress co-authors included) and image credits as the feed, and no longer leave an empty box until JavaScript has loaded. They cache only the post IDs, so edits to a post show up right away, and their caches from earlier versions are invalidated once on update. `trending-items-frontend.js` and `related-items-frontend.js` are gone.
+- Article card images come with `srcset`/`sizes`, so browsers load a size that fits the card instead of always the 768px (feed) or 1024px (hero) version.
 - ContentOverview excludes the post the hero Artikelkarte actually rendered, instead of assuming the hero is the newest published post, so a hero Loop showing e.g. a sticky post no longer duplicates it in the feed and hides the newest article. The newest-post assumption remains the fallback for the legacy Divi Blog hero.
 - Module icons in the Visual Builder use the Volksverpetzer accent colour (`--vvp-color-accent`, default `#DB2685`) instead of Divi's teal, so our modules stand out in the module inserter.
+
+### Removed
+
+- The unused YouTube variant of the article card (`type: "youtube"`): YouTube videos in the feed render as the YouTube banner.
 
 ### Fixed
 

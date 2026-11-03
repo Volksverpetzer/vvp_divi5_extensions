@@ -14,9 +14,7 @@ const PREVIEW_ARTICLE = { ...FEED_ARTICLES[0], author: "Minka Fellstein" };
 export const ArticleCardEdit = (props: ArticleCardEditProps): ReactElement => {
   const { attrs, elements, id, name } = props;
 
-  // Fields declared with attrName "<name>.innerContent" in module.json store
-  // their value under attrs.<name>.innerContent.desktop.value — see PR #105.
-  const hero = (attrs as any).hero?.innerContent?.desktop?.value === "on";
+  const hero = attrs.hero?.innerContent?.desktop?.value === "on";
 
   return (
     <ModuleContainer

@@ -19,7 +19,6 @@ const meta: Meta<typeof ArticleCard> = {
     </div>
   ),
   argTypes: {
-    type: { control: "inline-radio", options: ["article", "youtube"] },
     source: {
       control: "inline-radio",
       options: ["volksverpetzer", "pruefpunkt"],
@@ -43,7 +42,6 @@ const pruefpunkt = FEED_ARTICLES.find((a) => a.source === "pruefpunkt")!;
 export const Playground: Story = {
   args: {
     ...FEED_ARTICLES[0],
-    type: "article",
     author: "Minka Fellstein",
     trackingContext: "feed",
     external: false,

@@ -29,7 +29,9 @@ trait RenderCallbackTrait
      */
     public static function render_callback($attrs, $content, $block, $elements)
     {
-        $post = self::get_post_for_context($attrs, $block);
+        $parent = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
+
+        $post = self::get_post_for_context($attrs, $block, $parent);
         if (!$post) {
             return '';
         }
@@ -38,7 +40,6 @@ trait RenderCallbackTrait
         // are stored under attrs.<name>.innerContent.<bp>.value — see PR #105.
         $hero = ($attrs['hero']['innerContent']['desktop']['value'] ?? 'off') === 'on';
 
-        $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
         $parent_attrs = $parent->attrs ?? [];
 
         return Module::render([
@@ -84,19 +85,20 @@ trait RenderCallbackTrait
      *     module.json) — for render paths that pass the loop item as context
      *     instead of switching the global.
      *
-     * Only published posts of type "post" qualify. Besides limiting the card
-     * to articles (its Yoast/reading-time/category mapping only makes sense
-     * there), this also rejects the Theme Builder template's own post, which
+     * Only published posts of type "post" qualify (see
+     * ContentOverview::is_card_post()). Besides limiting the card to
+     * articles, this also rejects the Theme Builder template's own post, which
      * is what the global resolves to inside a template outside a loop — see
      * RelatedItems::current_post_id(). Renders nothing rather than the wrong
      * post when no candidate qualifies.
      *
-     * @param array     $attrs Module attributes.
-     * @param \WP_Block $block Block being rendered.
+     * @param array       $attrs  Module attributes.
+     * @param \WP_Block   $block  Block being rendered.
+     * @param object|null $parent The block's parent (BlockParserStore::get_parent()).
      */
-    private static function get_post_for_context(array $attrs, $block): ?\WP_Post
+    private static function get_post_for_context(array $attrs, $block, $parent): ?\WP_Post
     {
-        $loop_post_id = self::get_loop_post_id($attrs, $block);
+        $loop_post_id = self::get_loop_post_id($attrs, $parent, $block->parsed_block['storeInstance'] ?? null);
         if (null !== $loop_post_id) {
             $candidates = [$loop_post_id > 0 ? get_post($loop_post_id) : null];
         } else {
@@ -110,7 +112,7 @@ trait RenderCallbackTrait
         }
 
         foreach ($candidates as $post) {
-            if ($post instanceof \WP_Post && 'post' === $post->post_type && 'publish' === $post->post_status) {
+            if (ContentOverview::is_card_post($post)) {
                 return $post;
             }
         }
@@ -134,14 +136,13 @@ trait RenderCallbackTrait
      * and if Divi stops writing them the card falls back to the non-Loop
      * candidates instead of fataling.
      *
-     * @param array     $attrs Module attributes.
-     * @param \WP_Block $block Block being rendered.
+     * @param array       $attrs  Module attributes.
+     * @param object|null $parent The module's parent block.
+     * @param mixed       $store  The block parser store instance.
      */
-    private static function get_loop_post_id(array $attrs, $block): ?int
+    private static function get_loop_post_id(array $attrs, $parent, $store): ?int
     {
         $loop_attrs = $attrs;
-        $store      = $block->parsed_block['storeInstance'] ?? null;
-        $item_id    = $block->parsed_block['id'] ?? null;
 
         // Bounded walk: Divi nests section > row > column > (group…) > module.
         for ($depth = 0; $depth < 20; $depth++) {
@@ -153,15 +154,11 @@ trait RenderCallbackTrait
                 return 0;
             }
 
-            if (null === $item_id || null === $store) {
-                break;
-            }
-            $parent = BlockParserStore::get_parent($item_id, $store);
             if (!is_object($parent) || !isset($parent->id)) {
                 break;
             }
-            $item_id    = $parent->id;
             $loop_attrs = is_array($parent->attrs ?? null) ? $parent->attrs : [];
+            $parent     = null === $store ? null : BlockParserStore::get_parent($parent->id, $store);
         }
 
         return null;
