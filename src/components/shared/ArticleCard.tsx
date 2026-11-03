@@ -120,10 +120,10 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     }
   };
 
-  // Badges, category, date and reading time: the footer of feed cards,
-  // part of the byline on the hero.
-  const metaItems = (
-    <>
+  // Every card's byline, under the title: badges, then "category | date |
+  // von … | reading time". Mirrored in CardRenderTrait.php.
+  const byline = (
+    <div className="vvp-co__feed-byline">
       {isYoutube && <YoutubeBadge />}
       {!isYoutube && source === "pruefpunkt" && <PruefpunktBadge />}
       {category &&
@@ -145,6 +145,9 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           <span className="vvp-co__category">{category}</span>
         ))}
       <MetaText className="vvp-co__feed-date">{date}</MetaText>
+      {author && (
+        <span className="vvp-co__feed-byline-author">{`von ${author}`}</span>
+      )}
       {!!reading_time && (
         <MetaText className="vvp-co__feed-reading-time">
           <svg
@@ -169,7 +172,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           {`${reading_time} Min.`}
         </MetaText>
       )}
-    </>
+    </div>
   );
 
   return (
@@ -213,23 +216,8 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
       )}
       <div className="vvp-co__feed-body">
         <TitleTag className="vvp-co__feed-title">{title}</TitleTag>
-        {hero && (
-          <div className="vvp-co__feed-byline">
-            {author && (
-              <span className="vvp-co__feed-byline-author">{`von ${author}`}</span>
-            )}
-            {metaItems}
-          </div>
-        )}
-        {excerpt && (
-          <p className="vvp-co__feed-excerpt">
-            {excerpt}
-            {author && !hero && (
-              <em className="vvp-co__feed-author">{` – ${author}`}</em>
-            )}
-          </p>
-        )}
-        {!hero && <div className="vvp-co__feed-footer">{metaItems}</div>}
+        {byline}
+        {excerpt && <p className="vvp-co__feed-excerpt">{excerpt}</p>}
       </div>
     </a>
   );

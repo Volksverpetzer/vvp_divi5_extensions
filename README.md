@@ -132,7 +132,7 @@ Renders the current post as the same article card the Inhaltsübersicht feed use
 
 **Settings (DIVI):**
 
-- Als Aufmacher (Hero) anzeigen (`hero`, toggle, off by default): lead-story layout for the front page — larger title as `<h2>`, "von … | category | date | reading time" byline under the title instead of the footer, unclamped excerpt, `large` image size loaded eagerly with `fetchpriority="high"` (the hero image is usually the LCP element; feed cards keep `loading="lazy"`). Only the first hero card rendered on a page gets this layout; any further ones render as normal cards.
+- Als Aufmacher (Hero) anzeigen (`hero`, toggle, off by default): lead-story layout for the front page — larger title as `<h2>` and byline, no card border or hover effect, unclamped excerpt, `large` image size loaded eagerly with `fetchpriority="high"` (the hero image is usually the LCP element; feed cards keep `loading="lazy"`). Only the first hero card rendered on a page gets this layout; any further ones render as normal cards.
 
 **Front-page hero setup:** a Loop with query type **"Post Types" → Post**, **1 post per page**, newest first, containing one Artikelkarte with the hero toggle on. The hero card registers the post it rendered (`ContentOverview::$rendered_hero_id`), and the Inhaltsübersicht feed further down excludes exactly that post — so the feed stays duplicate-free whatever the Loop shows (e.g. a sticky post). This relies on the hero rendering before the feed, i.e. sitting above it on the page; otherwise the feed falls back to excluding the newest published post.
 
