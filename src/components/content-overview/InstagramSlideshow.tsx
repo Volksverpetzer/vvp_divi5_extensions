@@ -65,6 +65,12 @@ const InstaIcon = () => (
   </svg>
 );
 
+/**
+ * How long a slide image may take before the slide shows the "Bild nicht
+ * verfügbar" fallback instead of its loading placeholder.
+ */
+export const IMAGE_LOAD_TIMEOUT_MS = 8000;
+
 const LoadingPlaceholder = () => (
   <div
     className="vvp-co__ig-loading-placeholder"
@@ -184,49 +190,67 @@ const InternalSlider = ({
   const touchStartX = React.useRef<number>(0);
   const touchEndX = React.useRef<number>(0);
 
-  // Preload images for current slide and nearby slides
-  useEffect(() => {
-    const preloadImages = () => {
-      const imagesToPreload = [activeIndex];
-      // Preload previous and next slides
-      if (activeIndex > 0) imagesToPreload.push(activeIndex - 1);
-      if (activeIndex < slides.length - 1)
-        imagesToPreload.push(activeIndex + 1);
+  // Each slide image is requested once. The media proxy can hang without
+  // ever answering or erroring, which would leave the slide on its loading
+  // placeholder forever — so a request that hasn't settled after
+  // IMAGE_LOAD_TIMEOUT_MS shows the "Bild nicht verfügbar" fallback
+  // instead. If the image still arrives later, it replaces the fallback
+  // (the render prefers loaded over failed).
+  const requestedImages = React.useRef<Set<number>>(new Set());
+  // Timeout per slide whose request hasn't settled yet.
+  const pendingImages = React.useRef<
+    Map<number, ReturnType<typeof setTimeout>>
+  >(new Map());
 
-      imagesToPreload.forEach((index) => {
-        if (
-          !loadedImages.has(index) &&
-          !failedImages.has(index) &&
-          slides[index]?.thumb
-        ) {
-          const img = new Image();
-          img.src = slides[index].thumb;
-          img.onload = () => {
-            setLoadedImages((prev) => new Set(prev).add(index));
-          };
-          img.onerror = () => {
-            setFailedImages((prev) => new Set(prev).add(index));
-          };
-        }
+  useEffect(() => {
+    const requested = requestedImages.current;
+    const pending = pendingImages.current;
+    return () => {
+      // Unsettled requests lose their timeout here, so let them be
+      // requested again if this effect re-runs (StrictMode, remount).
+      pending.forEach((timer, index) => {
+        clearTimeout(timer);
+        requested.delete(index);
       });
+      pending.clear();
     };
+  }, []);
 
-    preloadImages();
-  }, [activeIndex, loadedImages, failedImages, slides]);
-
-  // Preload first slide immediately on mount
   useEffect(() => {
-    if (slides[0]?.thumb && !loadedImages.has(0) && !failedImages.has(0)) {
+    const preload = (index: number) => {
+      const src = slides[index]?.thumb;
+      if (!src || requestedImages.current.has(index)) return;
+      requestedImages.current.add(index);
+
+      const settle = () => {
+        clearTimeout(pendingImages.current.get(index));
+        pendingImages.current.delete(index);
+      };
+      pendingImages.current.set(
+        index,
+        setTimeout(() => {
+          pendingImages.current.delete(index);
+          setFailedImages((prev) => new Set(prev).add(index));
+        }, IMAGE_LOAD_TIMEOUT_MS),
+      );
+
       const img = new Image();
-      img.src = slides[0].thumb;
       img.onload = () => {
-        setLoadedImages((prev) => new Set(prev).add(0));
+        settle();
+        setLoadedImages((prev) => new Set(prev).add(index));
       };
       img.onerror = () => {
-        setFailedImages((prev) => new Set(prev).add(0));
+        settle();
+        setFailedImages((prev) => new Set(prev).add(index));
       };
-    }
-  }, [slides, loadedImages, failedImages]);
+      img.src = src;
+    };
+
+    // The current slide and its neighbours.
+    preload(activeIndex);
+    if (activeIndex > 0) preload(activeIndex - 1);
+    if (activeIndex < slides.length - 1) preload(activeIndex + 1);
+  }, [activeIndex, slides]);
 
   const handleNext = (e?: React.MouseEvent) => {
     if (e) {

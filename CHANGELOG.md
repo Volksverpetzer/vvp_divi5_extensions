@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Instagram cards stayed on their grey loading placeholder forever when the media proxy hung without answering. A slide image that hasn't loaded after 8 seconds now shows the "Bild nicht verfügbar — auf Instagram ansehen" fallback, and is still swapped in if it arrives later. Each slide image is also requested only once, instead of again on every state change while still pending.
 - Image credits (Image Source Control) on article cards disappeared after the page loaded: the plugin wraps our `<img>` with the credit, which made React's hydration fail and re-render the bare image. The cards now keep the server's image markup as-is when hydrating.
 - Artikelkarte rendered nothing inside a Divi 5 Loop: Divi doesn't switch the global post while rendering a Loop, so the card now reads the current Loop item's post ID from the `__loop_post_id` attribute Divi stamps on each Loop item.
 - Module icons in the Visual Builder's module inserter now match Divi's own icons: redrawn as filled shapes on Divi's 16×16 grid, so they are no longer white, cropped or oversized.
