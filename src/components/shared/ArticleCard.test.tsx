@@ -128,9 +128,9 @@ describe("ArticleCard byline", () => {
     reading_time: 4,
   };
 
-  // Image, title, byline (category | date | authors | reading time), excerpt.
+  // Image, title, byline (authors | category | date | reading time), excerpt.
   const order =
-    /<\/h[23]><div class="vvp-co__feed-byline"><span class="vvp-co__category">Analyse<\/span><span class="vvp-ui-meta-text vvp-co__feed-date">01\.10\.2026<\/span><span class="vvp-co__feed-byline-author">von Anna und Ben<\/span><span class="vvp-ui-meta-text vvp-co__feed-reading-time">.*4 Min\.<\/span><\/div><p class="vvp-co__feed-excerpt">Auszug<\/p><\/div><\/a>$/;
+    /<\/h[23]><div class="vvp-co__feed-byline"><span class="vvp-co__feed-byline-author">von Anna und Ben<\/span><span class="vvp-co__category">Analyse<\/span><span class="vvp-ui-meta-text vvp-co__feed-date">01\.10\.2026<\/span><span class="vvp-ui-meta-text vvp-co__feed-reading-time">.*4 Min\.<\/span><\/div><p class="vvp-co__feed-excerpt">Auszug<\/p><\/div><\/a>$/;
 
   it.each([
     ["feed cards", false],
@@ -142,12 +142,12 @@ describe("ArticleCard byline", () => {
     expect(html).not.toContain("vvp-co__feed-author");
   });
 
-  it("puts source badges at the start of the byline", () => {
+  it("puts the source badge right after the authors", () => {
     const html = renderToStaticMarkup(
       <ArticleCard {...props} source="pruefpunkt" />,
     );
     expect(html).toContain(
-      '<div class="vvp-co__feed-byline"><span class="vvp-ui-badge vvp-ui-badge--pruefpunkt',
+      '<div class="vvp-co__feed-byline"><span class="vvp-co__feed-byline-author">von Anna und Ben</span><span class="vvp-ui-badge vvp-ui-badge--pruefpunkt',
     );
   });
 });

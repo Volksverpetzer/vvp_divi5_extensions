@@ -178,9 +178,9 @@
   height: var(--vvp-icon-size-xs);
 }
 
-/* Byline under every article card's title: the Prüfpunkt badge, then
-   "category | date | von … | reading time". Resets the shared category and
-   meta-text styling to the line's own. */
+/* Byline under every article card's title: "von … | category | date |
+   reading time", with the Prüfpunkt badge after the authors. Resets the
+   shared category and meta-text styling to the line's own. */
 .vvp-co__feed-byline {
   margin: 0 0 var(--vvp-spacing-sm, 8px);
   font-size: 1rem;

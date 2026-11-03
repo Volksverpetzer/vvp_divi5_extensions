@@ -117,13 +117,14 @@ trait CardRenderTrait
             ? '<span class="vvp-ui-meta-text vvp-co__feed-reading-time">' . $clock_svg . (int) $props['reading_time'] . ' Min.</span>'
             : '';
 
-        // Every card's byline, under the title: badges, then "category |
-        // date | von … | reading time". Mirrors `byline` in ArticleCard.tsx.
+        // Every card's byline, under the title: "von … | category | date |
+        // reading time", with the Prüfpunkt badge after the authors. Mirrors
+        // `byline` in ArticleCard.tsx.
         $byline_html = '<div class="vvp-co__feed-byline">'
+            . ($props['author'] ? '<span class="vvp-co__feed-byline-author">von ' . esc_html($props['author']) . '</span>' : '')
             . $source_badge
             . $category_html
             . '<span class="vvp-ui-meta-text vvp-co__feed-date">' . esc_html($props['date']) . '</span>'
-            . ($props['author'] ? '<span class="vvp-co__feed-byline-author">von ' . esc_html($props['author']) . '</span>' : '')
             . $reading_time_html
             . '</div>';
 
