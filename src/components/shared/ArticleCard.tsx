@@ -29,6 +29,15 @@ export interface ArticleCardProps {
    * page's LCP element. Mirrored in CardRenderTrait.php for hydration.
    */
   hero?: boolean;
+  /**
+   * Inner HTML of the image wrapper, taken verbatim from the server-rendered
+   * card at hydration time (content-overview frontend.tsx). Plugins such as
+   * Image Source Control rewrite the page's <img> tags after our PHP renders
+   * them (e.g. wrapping them with the image credit); rendering this markup
+   * as-is keeps those additions and the hydration match. Client-only — never
+   * part of the PHP props.
+   */
+  imageHtml?: string;
 }
 
 const PruefpunktBadge: React.FC = () => (
@@ -71,6 +80,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   trackingContext = "feed",
   external,
   hero = false,
+  imageHtml,
 }) => {
   const opensNewTab = external ?? isExternalUrl(link);
   const isYoutube = type === "youtube";
@@ -80,6 +90,12 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
       ? "vvp-co__feed-card vvp-co__feed-card--article vvp-co__feed-card--hero"
       : "vvp-co__feed-card vvp-co__feed-card--article";
   const TitleTag = hero ? "h2" : "h3";
+  const imageWrapClass = isYoutube
+    ? "vvp-co__feed-image-wrap vvp-co__feed-image-wrap--yt"
+    : "vvp-co__feed-image-wrap";
+  // The hero shows its (co-)authors on their own line under the title, like
+  // the Divi Blog hero it replaces; feed cards append them to the excerpt.
+  const showByline = hero && !!author;
 
   const handleCategoryClick = (e: React.SyntheticEvent) => {
     if (!category_link) return;
@@ -115,14 +131,14 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
       rel={opensNewTab ? "noopener noreferrer" : undefined}
       onClick={handleClick}
     >
-      {image_url && (
+      {image_url && imageHtml !== undefined && (
         <div
-          className={
-            isYoutube
-              ? "vvp-co__feed-image-wrap vvp-co__feed-image-wrap--yt"
-              : "vvp-co__feed-image-wrap"
-          }
-        >
+          className={imageWrapClass}
+          dangerouslySetInnerHTML={{ __html: imageHtml }}
+        />
+      )}
+      {image_url && imageHtml === undefined && (
+        <div className={imageWrapClass}>
           <img
             src={image_url}
             alt={title}
@@ -148,10 +164,11 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
       )}
       <div className="vvp-co__feed-body">
         <TitleTag className="vvp-co__feed-title">{title}</TitleTag>
+        {showByline && <p className="vvp-co__feed-byline">{`von ${author}`}</p>}
         {excerpt && (
           <p className="vvp-co__feed-excerpt">
             {excerpt}
-            {author && (
+            {author && !showByline && (
               <em className="vvp-co__feed-author">{` – ${author}`}</em>
             )}
           </p>

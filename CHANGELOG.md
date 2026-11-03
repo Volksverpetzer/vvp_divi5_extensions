@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Artikelkarte: "Als Aufmacher (Hero) anzeigen" toggle for the front-page lead story — larger title (as `<h2>`), unclamped excerpt so co-authors stay visible, a larger image size, and the image loads eagerly with `fetchpriority="high"` instead of lazily, since the hero image is typically the page's largest (LCP) element. Only the first hero card on a page gets the hero layout.
+- Artikelkarte: "Als Aufmacher (Hero) anzeigen" toggle for the front-page lead story — larger title (as `<h2>`), the (co-)authors on their own "von …" line under the title like the Divi Blog hero, an unclamped excerpt, a larger image size, and the image loads eagerly with `fetchpriority="high"` instead of lazily, since the hero image is typically the page's largest (LCP) element. Only the first hero card on a page gets the hero layout.
 
 ### Changed
 
@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Image credits (Image Source Control) on article cards disappeared after the page loaded: the plugin wraps our `<img>` with the credit, which made React's hydration fail and re-render the bare image. The cards now keep the server's image markup as-is when hydrating.
 - Artikelkarte rendered nothing inside a Divi 5 Loop: Divi doesn't switch the global post while rendering a Loop, so the card now reads the current Loop item's post ID from the `__loop_post_id` attribute Divi stamps on each Loop item.
 - Module icons in the Visual Builder's module inserter now match Divi's own icons: redrawn as filled shapes on Divi's 16×16 grid, so they are no longer white, cropped or oversized.
 

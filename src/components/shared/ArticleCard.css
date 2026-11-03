@@ -52,6 +52,15 @@
   position: relative;
 }
 
+/* Image Source Control wraps the <img> in an inline-block span carrying the
+   credit overlay (the markup is kept through hydration — see `imageHtml`).
+   Let it fill the wrapper so the image's 100% width/height still resolve. */
+.vvp-co__feed-image-wrap > .isc-source {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .vvp-co__feed-image-wrap--square {
   aspect-ratio: 1/1;
 }
@@ -260,9 +269,17 @@ button.vvp-co__category--btn:hover,
   margin-bottom: 0.75rem;
 }
 
-/* Unclamped: the author line is part of the excerpt paragraph, so a clamp
-   would cut the (co-)authors off. SEO meta descriptions are ~160 chars max,
-   so the excerpt stays short anyway. */
+/* (Co-)authors on their own line under the title, like the Divi Blog
+   hero this replaces. */
+.vvp-co__feed-byline {
+  margin: -0.25rem 0 0.75rem;
+  font-size: 1rem;
+  line-height: 1.4;
+  color: #4b5563;
+}
+
+/* Unclamped: SEO meta descriptions are ~160 chars max, so the excerpt stays
+   short anyway, and the lead story shouldn't end mid-sentence. */
 .vvp-co__feed-card--hero .vvp-co__feed-excerpt {
   font-size: var(--vvp-font-size-lg, 18px);
   -webkit-line-clamp: unset;

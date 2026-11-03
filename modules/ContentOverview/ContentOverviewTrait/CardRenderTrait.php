@@ -85,10 +85,18 @@ trait CardRenderTrait
             ? '<span class="vvp-ui-meta-text vvp-co__feed-reading-time">' . $clock_svg . (int) $props['reading_time'] . ' Min.</span>'
             : '';
 
+        // The hero shows its (co-)authors on their own line under the title,
+        // like the Divi Blog hero it replaces; feed cards append them to the
+        // excerpt. Mirrors `showByline` in ArticleCard.tsx.
+        $show_byline = $hero && $props['author'];
+        $byline_html = $show_byline
+            ? '<p class="vvp-co__feed-byline">von ' . esc_html($props['author']) . '</p>'
+            : '';
+
         $excerpt_html = '';
         if ($props['excerpt']) {
             $excerpt_html = '<p class="vvp-co__feed-excerpt">' . esc_html($props['excerpt']);
-            if ($props['author']) {
+            if ($props['author'] && !$show_byline) {
                 $excerpt_html .= '<em class="vvp-co__feed-author"> – ' . esc_html($props['author']) . '</em>';
             }
             $excerpt_html .= '</p>';
@@ -105,6 +113,7 @@ trait CardRenderTrait
             . $image_html
             . '<div class="vvp-co__feed-body">'
             .   '<' . $title_tag . ' class="vvp-co__feed-title">' . esc_html($props['title']) . '</' . $title_tag . '>'
+            .   $byline_html
             .   $excerpt_html
             .   '<div class="vvp-co__feed-footer">'
             .     $source_badge

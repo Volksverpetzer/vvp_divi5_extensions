@@ -15,6 +15,9 @@
  *      hand-written PHP string (`margin-right:4px` vs `margin-right: 4px;`).
  *      Use a CSS class instead.
  *
+ * The image wrapper is exempt: its server markup is passed back in verbatim
+ * (`imageHtml`), since other plugins may rewrite the <img> after PHP renders it.
+ *
  * Components mounted with `createRoot` (InstagramSlideshow, trending, etc.) are
  * exempt — they re-render from scratch and never hydrate PHP markup.
  */
@@ -35,7 +38,13 @@ const initArticleCards = () => {
     if (rawProps) {
       try {
         const props: ArticleCardProps = JSON.parse(rawProps);
-        hydrateRoot(mount, <ArticleCard {...props} />);
+        // Reuse the server's image markup as-is: plugins like Image Source
+        // Control wrap the <img> with its credit after PHP renders it, and
+        // re-rendering the bare <img> would fail hydration and drop the credit.
+        const imageHtml = mount.querySelector(
+          ":scope > a > .vvp-co__feed-image-wrap",
+        )?.innerHTML;
+        hydrateRoot(mount, <ArticleCard {...props} imageHtml={imageHtml} />);
       } catch (e) {
         console.error("Failed to parse article card props", e);
       }
