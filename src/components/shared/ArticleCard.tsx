@@ -91,10 +91,14 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     }
   };
 
-  // Every card's byline, under the title: the Prüfpunkt badge, then
-  // "category | date | von … | reading time". Mirrored in CardRenderTrait.php.
+  // Every card's byline, under the title: "von … | category | date |
+  // reading time", with the Prüfpunkt badge after the authors. Mirrored in
+  // CardRenderTrait.php.
   const byline = (
     <div className="vvp-co__feed-byline">
+      {author && (
+        <span className="vvp-co__feed-byline-author">{`von ${author}`}</span>
+      )}
       {source === "pruefpunkt" && <PruefpunktBadge />}
       {category &&
         (category_link ? (
@@ -115,9 +119,6 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           <span className="vvp-co__category">{category}</span>
         ))}
       <MetaText className="vvp-co__feed-date">{date}</MetaText>
-      {author && (
-        <span className="vvp-co__feed-byline-author">{`von ${author}`}</span>
-      )}
       {!!reading_time && (
         <MetaText className="vvp-co__feed-reading-time">
           <svg
