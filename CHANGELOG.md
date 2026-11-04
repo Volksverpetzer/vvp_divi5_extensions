@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Artikelkarte (`vvp/article-card`): new module that renders the current post as the ContentOverview feed card. Placed inside a Divi 5 Loop (query type "Current Page"), it replaces the Divi Blog module on archive templates such as author pages, keeping the main query's filtering and pagination.
+- Artikelkarte (`vvp/article-card`): new module that renders the current post as the ContentOverview feed card. Placed inside a Divi 5 Loop (query type "Current Page"), it replaces the Divi Blog module on archive templates such as author pages, keeping the main query's filtering and pagination. Outside a Loop on a single-post Theme Builder template it falls back to the post being viewed.
 - Artikelkarte: "Als Aufmacher (Hero) anzeigen" toggle for the front-page lead story — larger title (as `<h2>`) and text, roomier padding, framed like the regular cards but without their hover effect, the meta data footer right-aligned, an unclamped excerpt, a larger image size, and the image loads eagerly with `fetchpriority="high"` instead of lazily, since the hero image is typically the page's largest (LCP) element. Only the first hero card on a page gets the hero layout. The hero always shows its image credit (Image Source Control): the card carries the `show-source` class that the site's ISC CSS requires, instead of relying on a CSS class in the module settings.
 
 ### Changed
