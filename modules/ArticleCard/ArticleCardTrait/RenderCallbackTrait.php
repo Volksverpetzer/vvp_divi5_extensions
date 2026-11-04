@@ -84,6 +84,11 @@ trait RenderCallbackTrait
      *  2. The block's `postId` context (declared via usesContext in
      *     module.json) — for render paths that pass the loop item as context
      *     instead of switching the global.
+     *  3. On singular requests, the queried object — the post actually being
+     *     viewed. Inside a Theme Builder template the global is the
+     *     template's own post (rejected below), so this lets a standalone
+     *     card on a single-post template show the viewed article. It comes
+     *     last so it never overrides a the_post() loop on a singular page.
      *
      * Only published posts of type "post" qualify (see
      * ContentOverview::is_card_post()). Besides limiting the card to
@@ -108,6 +113,14 @@ trait RenderCallbackTrait
             $context_id = (int) ($block->context['postId'] ?? 0);
             if ($context_id > 0) {
                 $candidates[] = get_post($context_id);
+            }
+
+            if (is_singular()) {
+                // Same guard: get_post(0) would return the global.
+                $queried_id = get_queried_object_id();
+                if ($queried_id > 0) {
+                    $candidates[] = get_post($queried_id);
+                }
             }
         }
 
