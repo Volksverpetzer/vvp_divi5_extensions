@@ -114,7 +114,7 @@
 
 /* Footer row at the bottom of article cards and of the Instagram card
    (InstagramSlideshow.tsx), so both line up the same way: badges on the left
-   (article cards: Prüfpunkt, category), the meta data on the right (article
+   (article cards: the category, or the Prüfpunkt badge), the meta data on the right (article
    cards: date | reading time, `.vvp-co__feed-footer-meta`). Same layout on
    the hero. `margin-top: auto` pins it to the bottom of the card, so footers
    line up across a grid row. */
@@ -148,7 +148,7 @@
 
 /* Article cards wrap their footer rather than squeezing the category badge
    down to a letter when the badges and the meta data don't fit one line
-   (e.g. a Prüfpunkt article in a narrow column): the meta data moves to a
+   (e.g. a long category in a narrow column): the meta data moves to a
    second line, still right-aligned. */
 .vvp-co__feed-card--article .vvp-co__feed-footer {
   flex-wrap: wrap;

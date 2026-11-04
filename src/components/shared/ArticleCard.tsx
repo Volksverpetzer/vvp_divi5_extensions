@@ -114,16 +114,19 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
 
   // Under the title: the authors ("von …"). The rest of the meta data sits
   // in the footer at the bottom of the card, laid out like the Instagram and
-  // YouTube cards' footers: badges on the left (Prüfpunkt, then the category
-  // as a badge linking to its archive), date and reading time on the right,
+  // YouTube cards' footers: a badge on the left (the category, linking to
+  // its archive; on Prüfpunkt articles just the Prüfpunkt badge instead),
+  // date and reading time on the right,
   // separated by a "|". Same on the hero. Mirrored in CardRenderTrait.php.
   const authorItem = author && (
     <span className="vvp-co__feed-byline-author">{`von ${author}`}</span>
   );
+  const isPruefpunkt = source === "pruefpunkt";
   const metaItems = (
     <>
-      {source === "pruefpunkt" && <PruefpunktBadge />}
-      {category &&
+      {isPruefpunkt && <PruefpunktBadge />}
+      {!isPruefpunkt &&
+        category &&
         (category_link ? (
           <Badge
             variant="primary"

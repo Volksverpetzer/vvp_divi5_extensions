@@ -99,15 +99,17 @@ trait CardRenderTrait
         // (see ArticleCard.tsx's PruefpunktBadge) — the hydration guardrail above
         // requires it, and it's also what actually carries the badge's styling
         // (Badge.css), unlike the old vvp-co__badge classes which were never styled.
-        $source_badge = $props['source'] === 'pruefpunkt'
+        $is_pruefpunkt = $props['source'] === 'pruefpunkt';
+        $source_badge  = $is_pruefpunkt
             ? '<span class="vvp-ui-badge vvp-ui-badge--pruefpunkt vvp-ui-badge--size-md">Prüfpunkt</span>'
             : '';
 
         // The category as a ui-web <Badge variant="primary" size="md">: its
         // classes come first, then the role/tabindex React spreads after them
-        // (Badge renders `className` before `...rest`).
+        // (Badge renders `className` before `...rest`). Prüfpunkt articles
+        // show only their Prüfpunkt badge, no category.
         $category_html = '';
-        if ($props['category']) {
+        if (!$is_pruefpunkt && $props['category']) {
             $category_html = $props['category_link']
                 ? '<span class="vvp-ui-badge vvp-ui-badge--primary vvp-ui-badge--size-md vvp-co__category vvp-co__category--btn" role="button" tabindex="0">' . esc_html($props['category']) . '</span>'
                 : '<span class="vvp-ui-badge vvp-ui-badge--primary vvp-ui-badge--size-md vvp-co__category">' . esc_html($props['category']) . '</span>';

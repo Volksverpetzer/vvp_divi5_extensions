@@ -182,13 +182,18 @@ describe("ArticleCard byline", () => {
     );
   });
 
-  it("puts the source badge first in the feed card footer", () => {
+  it("shows only the Prüfpunkt badge, no category, on Prüfpunkt cards", () => {
     const html = renderToStaticMarkup(
-      <ArticleCard {...props} source="pruefpunkt" />,
+      <ArticleCard
+        {...props}
+        source="pruefpunkt"
+        category_link="https://pruefpunkt.org/category/analyse/"
+      />,
     );
     expect(html).toContain(
-      '<div class="vvp-co__feed-footer"><span class="vvp-ui-badge vvp-ui-badge--pruefpunkt',
+      '<div class="vvp-co__feed-footer"><span class="vvp-ui-badge vvp-ui-badge--pruefpunkt vvp-ui-badge--size-md">Prüfpunkt</span><span class="vvp-co__feed-footer-meta">',
     );
+    expect(html).not.toContain("vvp-co__category");
   });
 });
 
