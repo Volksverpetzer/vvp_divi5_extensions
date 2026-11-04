@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ContentOverview excludes the post the hero Artikelkarte actually rendered, instead of assuming the hero is the newest published post, so a hero Loop showing e.g. a sticky post no longer duplicates it in the feed and hides the newest article. The newest-post assumption remains the fallback for the legacy Divi Blog hero.
 - Module icons in the Visual Builder use the Volksverpetzer accent colour (`--vvp-color-accent`, default `#DB2685`) instead of Divi's teal, so our modules stand out in the module inserter.
 - Campaign Donate loads Stripe.js from the `endive` release train (`@stripe/stripe-js` 10), matching the crowdfunding backend's switch to Stripe API `2026-10-28.endive` ([vvp_crowdfunding#89](https://github.com/Volksverpetzer/vvp_crowdfunding/pull/89)).
-- Bumped dependencies, including `@wordpress/hooks` 5, `@wordpress/i18n` 7, `@volksverpetzer/ui-web` 0.15, the `@divi/*` packages, and `happy-dom` 21 (dev-only, fixes a Dependabot security alert) ([#223](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/223)).
+- Bumped dependencies, including `@wordpress/hooks` 5.1, `@wordpress/i18n` 7.1, `@stripe/stripe-js` 10.2.1, `@volksverpetzer/ui-web` 0.15, the `@divi/*` packages, `vitest` 5.1, and `happy-dom` 21 (dev-only, fixes a Dependabot security alert) ([#223](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/223), [#237](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/237)).
 
 ### Removed
 
