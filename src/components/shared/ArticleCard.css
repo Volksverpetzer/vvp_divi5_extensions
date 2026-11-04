@@ -112,10 +112,12 @@
   -webkit-line-clamp: 3;
 }
 
-/* Footer row at the bottom of article cards (Prüfpunkt badge, category,
-   date, reading time; right-aligned on the hero) and of the Instagram card
-   (InstagramSlideshow.tsx), so both line up the same way. `margin-top: auto`
-   pins it to the bottom of the card, so footers line up across a grid row. */
+/* Footer row at the bottom of article cards and of the Instagram card
+   (InstagramSlideshow.tsx), so both line up the same way: badges on the left
+   (article cards: Prüfpunkt, category), the meta data on the right (article
+   cards: date | reading time, `.vvp-co__feed-footer-meta`). Same layout on
+   the hero. `margin-top: auto` pins it to the bottom of the card, so footers
+   line up across a grid row. */
 .vvp-co__feed-footer {
   display: flex;
   align-items: center;
@@ -144,10 +146,68 @@
   flex-shrink: 0;
 }
 
-/* Date and reading time are the footer's must-haves; the category
-   label is the first thing to give — it shrinks and truncates
-   instead of pushing them out of the (overflow: hidden) footer. */
-.vvp-co__feed-footer .vvp-co__category {
+/* Article cards wrap their footer rather than squeezing the category badge
+   down to a letter when the badges and the meta data don't fit one line
+   (e.g. a Prüfpunkt article in a narrow column): the meta data moves to a
+   second line, still right-aligned. */
+.vvp-co__feed-card--article .vvp-co__feed-footer {
+  flex-wrap: wrap;
+  row-gap: var(--vvp-spacing-xs, 4px);
+}
+
+/* Article cards' right-hand group: date | reading time. Pushed to the row's
+   end; never shrinks. */
+.vvp-co__feed-footer-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vvp-spacing-sm, 8px);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.vvp-co__feed-footer-sep {
+  color: var(--vvp-text-muted, #666);
+  font-size: var(--vvp-font-size-base, 16px);
+  line-height: 1.4;
+}
+
+/* The article cards' category badge (ui-web Badge, "primary"). A category
+   too long for a whole footer line truncates instead of overflowing the
+   (overflow: hidden) footer. Block display, since text-overflow doesn't
+   apply to the Badge's inline-flex text. */
+.vvp-co__feed-footer .vvp-ui-badge.vvp-co__category {
+  display: block;
+  flex-shrink: 1;
+  min-width: 0;
+  margin-right: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Restate the Badge's color over the base .vvp-co__category rule, which
+     has the same specificity and could win depending on stylesheet order. */
+  color: var(--vvp-primary, #1b7194);
+  text-transform: none;
+  letter-spacing: normal;
+  transition: background 0.15s ease;
+}
+
+.vvp-co__feed-footer .vvp-ui-badge.vvp-co__category--btn {
+  cursor: pointer;
+}
+
+.vvp-co__feed-footer .vvp-ui-badge.vvp-co__category--btn:hover,
+.vvp-co__feed-footer .vvp-ui-badge.vvp-co__category--btn:focus-visible {
+  background: color-mix(in srgb, var(--vvp-primary, #1b7194) 25%, white);
+}
+
+.dark .vvp-co__feed-footer .vvp-ui-badge.vvp-co__category--btn:hover,
+.dark .vvp-co__feed-footer .vvp-ui-badge.vvp-co__category--btn:focus-visible {
+  background: color-mix(in srgb, var(--vvp-primary, #1b7194) 15%, white);
+}
+
+/* The Instagram card's plain media-category label ("Foto", "Karussell", …):
+   muted text that shrinks and truncates first, like the article cards'
+   category badge above. */
+.vvp-co__feed-footer .vvp-co__category:not(.vvp-ui-badge) {
   color: var(--vvp-text-muted, #666);
   font-size: var(--vvp-font-size-base, 16px);
   font-weight: 400;
@@ -200,16 +260,11 @@
   color: var(--vvp-text-muted, #666);
 }
 
-.vvp-co__feed-footer .vvp-co__category--btn:hover {
-  /* Darker than the muted footer, so the clickable category reads as a link. */
-  color: #585c67;
-}
-
 /* Hero (lead-story) variant — `hero` prop / Artikelkarte "Als Aufmacher"
    toggle. Same card scaled for a single wide column: larger, unclamped title,
    larger text and roomier padding, framed like the regular cards (the Divi
    Blog hero it replaces sat in a bordered, shadowed box too), but without
-   their hover effect. The footer is right-aligned. The image keeps the base
+   their hover effect. The footer is laid out as on the regular cards. The image keeps the base
    350/183 ratio, which matches the 1400×732 featured images. */
 .vvp-co__feed-card--hero:hover {
   box-shadow: var(--vvp-elevation-xs);
@@ -222,10 +277,6 @@
 
 .vvp-co__feed-card--hero .vvp-co__feed-body {
   padding: var(--vvp-spacing-xxxl, 30px) var(--vvp-spacing-huge, 40px);
-}
-
-.vvp-co__feed-card--hero .vvp-co__feed-footer {
-  justify-content: flex-end;
 }
 
 /* The same size on phones: the Divi Blog hero it replaces keeps 27–28px at

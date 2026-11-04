@@ -112,10 +112,11 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     }
   };
 
-  // Under the title: the authors ("von …"). The rest of the meta data —
-  // Prüfpunkt badge, category, date, reading time — sits in the footer at
-  // the bottom of the card, like the Instagram card's footer (right-aligned
-  // on the hero). Mirrored in CardRenderTrait.php.
+  // Under the title: the authors ("von …"). The rest of the meta data sits
+  // in the footer at the bottom of the card, laid out like the Instagram and
+  // YouTube cards' footers: badges on the left (Prüfpunkt, then the category
+  // as a badge linking to its archive), date and reading time on the right,
+  // separated by a "|". Same on the hero. Mirrored in CardRenderTrait.php.
   const authorItem = author && (
     <span className="vvp-co__feed-byline-author">{`von ${author}`}</span>
   );
@@ -124,10 +125,12 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
       {source === "pruefpunkt" && <PruefpunktBadge />}
       {category &&
         (category_link ? (
-          <span
+          <Badge
+            variant="primary"
+            size="md"
+            className="vvp-co__category vvp-co__category--btn"
             role="button"
             tabIndex={0}
-            className="vvp-co__category vvp-co__category--btn"
             onClick={handleCategoryClick}
             onKeyDown={(e) => {
               if ((e.key === "Enter" || e.key === " ") && !e.repeat) {
@@ -136,35 +139,44 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             }}
           >
             {category}
-          </span>
+          </Badge>
         ) : (
-          <span className="vvp-co__category">{category}</span>
+          <Badge variant="primary" size="md" className="vvp-co__category">
+            {category}
+          </Badge>
         ))}
-      <MetaText className="vvp-co__feed-date">{date}</MetaText>
-      {!!reading_time && (
-        <MetaText className="vvp-co__feed-reading-time">
-          <svg
-            aria-hidden="true"
-            focusable="false"
-            data-icon="clock"
-            width="14"
-            height="14"
-            fill="none"
-            stroke="currentColor"
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-            ></path>
-          </svg>
-          {`${reading_time} Min.`}
-        </MetaText>
-      )}
+      <span className="vvp-co__feed-footer-meta">
+        <MetaText className="vvp-co__feed-date">{date}</MetaText>
+        {!!reading_time && (
+          <>
+            <span className="vvp-co__feed-footer-sep" aria-hidden="true">
+              |
+            </span>
+            <MetaText className="vvp-co__feed-reading-time">
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                data-icon="clock"
+                width="14"
+                height="14"
+                fill="none"
+                stroke="currentColor"
+                role="img"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+              {`${reading_time} Min.`}
+            </MetaText>
+          </>
+        )}
+      </span>
     </>
   );
 

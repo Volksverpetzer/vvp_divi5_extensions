@@ -136,7 +136,7 @@ describe("ArticleCard byline", () => {
   };
 
   const meta =
-    '<span class="vvp-co__category">Analyse</span><span class="vvp-ui-meta-text vvp-co__feed-date">01.10.2026</span><span class="vvp-ui-meta-text vvp-co__feed-reading-time">';
+    '<span class="vvp-ui-badge vvp-ui-badge--primary vvp-ui-badge--size-md vvp-co__category">Analyse</span><span class="vvp-co__feed-footer-meta"><span class="vvp-ui-meta-text vvp-co__feed-date">01.10.2026</span><span class="vvp-co__feed-footer-sep" aria-hidden="true">|</span><span class="vvp-ui-meta-text vvp-co__feed-reading-time">';
   const authors =
     '<span class="vvp-co__feed-byline-author">von Anna und Ben</span>';
 
@@ -145,7 +145,7 @@ describe("ArticleCard byline", () => {
     expect(html).toContain(
       `</h3><div class="vvp-co__feed-byline">${authors}</div><p class="vvp-co__feed-excerpt">Auszug</p><div class="vvp-co__feed-footer">${meta}`,
     );
-    expect(html).toMatch(/4 Min\.<\/span><\/div><\/div><\/a>$/);
+    expect(html).toMatch(/4 Min\.<\/span><\/span><\/div><\/div><\/a>$/);
   });
 
   it("stacks the hero like feed cards: title, authors, excerpt, meta footer", () => {
@@ -161,6 +161,25 @@ describe("ArticleCard byline", () => {
     );
     expect(html).not.toContain("vvp-co__feed-byline");
     expect(html).toContain(`<div class="vvp-co__feed-footer">${meta}`);
+  });
+
+  it("renders a linked category as a focusable badge button", () => {
+    const html = renderToStaticMarkup(
+      <ArticleCard {...props} category_link="/category/analyse/" />,
+    );
+    expect(html).toContain(
+      '<span class="vvp-ui-badge vvp-ui-badge--primary vvp-ui-badge--size-md vvp-co__category vvp-co__category--btn" role="button" tabindex="0">Analyse</span>',
+    );
+  });
+
+  it("leaves out the separator when there is no reading time", () => {
+    const html = renderToStaticMarkup(
+      <ArticleCard {...props} reading_time={0} />,
+    );
+    expect(html).not.toContain("vvp-co__feed-footer-sep");
+    expect(html).toContain(
+      '<span class="vvp-co__feed-footer-meta"><span class="vvp-ui-meta-text vvp-co__feed-date">01.10.2026</span></span>',
+    );
   });
 
   it("puts the source badge first in the feed card footer", () => {
