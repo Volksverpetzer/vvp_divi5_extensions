@@ -2,6 +2,7 @@ import * as React from "react";
 import { MetaText } from "@volksverpetzer/ui-web";
 import { type TrendingListItem } from "./types";
 import { formatAuthors } from "./formatAuthors";
+import { isExternalUrl } from "../../utils/links";
 
 interface TrendingListAppProps {
   items: TrendingListItem[];
@@ -31,21 +32,25 @@ export const TrendingListApp: React.FC<TrendingListAppProps> = ({ items }) => {
   }
   return (
     <div className="vvp-tl__list">
-      {items.map((item) => (
-        <div key={item.link} className="vvp-tl__item">
-          <a
-            href={getSafeHref(item.link)}
-            className="vvp-tl__title"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {item.title}
-          </a>
-          <MetaText className="vvp-tl__meta">
-            von {formatAuthors(item.authors)} | {item.date}
-          </MetaText>
-        </div>
-      ))}
+      {items.map((item) => {
+        const href = getSafeHref(item.link);
+        const external = isExternalUrl(href);
+        return (
+          <div key={item.link} className="vvp-tl__item">
+            <a
+              href={href}
+              className="vvp-tl__title"
+              target={external ? "_blank" : undefined}
+              rel={external ? "noopener noreferrer" : undefined}
+            >
+              {item.title}
+            </a>
+            <MetaText className="vvp-tl__meta">
+              von {formatAuthors(item.authors)} | {item.date}
+            </MetaText>
+          </div>
+        );
+      })}
     </div>
   );
 };

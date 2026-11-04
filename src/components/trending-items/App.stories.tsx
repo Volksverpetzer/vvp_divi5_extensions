@@ -21,7 +21,8 @@ const meta: Meta<typeof TrendingItemsApp> = {
 export default meta;
 type Story = StoryObj<typeof TrendingItemsApp>;
 
-export const WithThumbnails: Story = {
+/** Every prop exposed as a control. */
+export const Playground: Story = {
   args: { items: TRENDING_ALL },
 };
 

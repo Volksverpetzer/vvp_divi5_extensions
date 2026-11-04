@@ -67,9 +67,9 @@
               "props": {
                 "options": [
                   { "value": "last24hours", "label": "Letzte 24 Stunden" },
-                  { "value": "last7days",   "label": "Letzte 7 Tage" },
-                  { "value": "last30days",  "label": "Letzte 30 Tage" },
-                  { "value": "all",         "label": "Gesamt" }
+                  { "value": "last7days", "label": "Letzte 7 Tage" },
+                  { "value": "last30days", "label": "Letzte 30 Tage" },
+                  { "value": "all", "label": "Gesamt" }
                 ]
               }
             }

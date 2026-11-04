@@ -7,12 +7,31 @@ const meta: Meta<typeof CtaBoxApp> = {
   title: "Modules/CtaBox",
   component: CtaBoxApp,
   decorators: [(Story) => <PreviewCard>{Story()}</PreviewCard>],
+  argTypes: {
+    icon: {
+      control: "select",
+      options: [
+        "none",
+        "star",
+        "bookmark",
+        "bell",
+        "newspaper",
+        "heart",
+        "check",
+      ],
+    },
+    variant: {
+      control: "inline-radio",
+      options: ["accent", "outline", "subtle"],
+    },
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof CtaBoxApp>;
 
-export const PreferredSource: Story = {
+/** Every prop exposed as a control. */
+export const Playground: Story = {
   args: {
     icon: "star",
     heading: "Als bevorzugte Quelle hinzufügen",

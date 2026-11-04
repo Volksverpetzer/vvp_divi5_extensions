@@ -15,6 +15,9 @@
  *      hand-written PHP string (`margin-right:4px` vs `margin-right: 4px;`).
  *      Use a CSS class instead.
  *
+ * The image wrapper is exempt: its server markup is passed back in verbatim
+ * (`imageHtml`), since other plugins may rewrite the <img> after PHP renders it.
+ *
  * Components mounted with `createRoot` (InstagramSlideshow, trending, etc.) are
  * exempt — they re-render from scratch and never hydrate PHP markup.
  */
@@ -23,7 +26,11 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 import { InstagramSlideshow } from "./InstagramSlideshow";
 import { PodcastBanner } from "./PodcastBanner";
 import { YouTubeBanner, type YouTubeBannerProps } from "./YouTubeBanner";
-import { ArticleCard, type ArticleCardProps } from "../shared/ArticleCard";
+import {
+  ArticleCard,
+  type ArticleCardProps,
+  unwrapImageLinks,
+} from "../shared/ArticleCard";
 
 const initArticleCards = () => {
   const mounts = document.querySelectorAll(
@@ -35,7 +42,15 @@ const initArticleCards = () => {
     if (rawProps) {
       try {
         const props: ArticleCardProps = JSON.parse(rawProps);
-        hydrateRoot(mount, <ArticleCard {...props} />);
+        // Reuse the server's image markup as-is: plugins like Image Source
+        // Control wrap the <img> with its credit after PHP renders it, and
+        // re-rendering the bare <img> would fail hydration and drop the credit.
+        // Not `:scope > a > …`: a split card (see unwrapImageLinks) has the
+        // wrapper outside the card link.
+        const imageWrap = mount.querySelector(".vvp-co__feed-image-wrap");
+        if (imageWrap) unwrapImageLinks(imageWrap);
+        const imageHtml = imageWrap?.innerHTML;
+        hydrateRoot(mount, <ArticleCard {...props} imageHtml={imageHtml} />);
       } catch (e) {
         console.error("Failed to parse article card props", e);
       }

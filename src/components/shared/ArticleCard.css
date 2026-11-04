@@ -1,7 +1,7 @@
 /* ============================================================
    ArticleCard — vvp-co__* classes shared by every module that
-   renders `shared/ArticleCard.tsx` (ContentOverview, TrendingItems)
-   as well as ContentOverview's Instagram slideshow card, which
+   renders `shared/ArticleCard.tsx` (ContentOverview, Artikelkarte,
+   TrendingItems, RelatedItems) as well as ContentOverview's Instagram slideshow card, which
    reuses this same card markup pattern.
 
    Colocated with the component on purpose: these rules previously
@@ -13,13 +13,13 @@
 /* Category label */
 .vvp-co__category {
   display: inline-block;
-  font-size: 1rem;
+  font-size: var(--vvp-font-size-base, 16px);
   transition: color 0.15s ease;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--vvp-blue-2);
-  margin-right: 0.375rem;
+  margin-right: var(--vvp-spacing-sm, 8px);
 }
 
 /* Feed card base */
@@ -31,7 +31,7 @@
   color: inherit;
   background-color: var(--vvp-background, #fff);
   border: 1px solid var(--vvp-surface, #e2f0f5);
-  border-radius: 0.625rem;
+  border-radius: var(--vvp-radius-md, 12px);
   overflow: hidden;
   box-shadow: var(--vvp-elevation-xs);
   transition:
@@ -52,12 +52,13 @@
   position: relative;
 }
 
-.vvp-co__feed-image-wrap--square {
-  aspect-ratio: 1/1;
-}
-
-.vvp-co__feed-image-wrap--yt {
-  aspect-ratio: 16/9;
+/* Image Source Control wraps the <img> in an inline-block span carrying the
+   credit overlay (the markup is kept through hydration — see `imageHtml`).
+   Let it fill the wrapper so the image's 100% width/height still resolve. */
+.vvp-co__feed-image-wrap > .isc-source {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .vvp-co__feed-image {
@@ -72,28 +73,19 @@
   transform: scale(1.04);
 }
 
-.vvp-co__feed-image--insta {
-  object-position: center;
-}
-
 .vvp-co__feed-body {
-  padding: 0.875rem;
+  padding: var(--vvp-spacing-lg, 16px);
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.vvp-co__feed-meta {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  margin-bottom: var(--vvp-spacing-sm, 8px);
-}
-
+/* The gap below the title follows the Divi Blog module these cards replace
+   (title padding plus line-height leading: ~22px of visible space between
+   its title and the post meta). */
 .vvp-co__feed-title {
-  margin: 0 0 var(--vvp-spacing-sm, 8px);
-  font-size: 1.125rem;
+  margin: 0 0 var(--vvp-spacing-lg, 16px);
+  font-size: var(--vvp-font-size-lg, 18px);
   font-weight: 600;
   line-height: 1.35;
   color: var(--vvp-text, #111);
@@ -106,12 +98,8 @@
 }
 
 .vvp-co__feed-excerpt {
-  /* Fills the remaining card-body height so `.vvp-co__feed-footer`
-     lands at the same y-position across a row regardless of title
-     length, instead of leaving that job to a margin on the footer. */
-  flex: 1;
   margin: 0 0 var(--vvp-spacing-sm, 8px);
-  font-size: 1rem;
+  font-size: var(--vvp-font-size-base, 16px);
   color: #4b5563;
   line-height: 1.5;
   display: -webkit-box;
@@ -124,15 +112,10 @@
   -webkit-line-clamp: 3;
 }
 
-.vvp-co__feed-date.vvp-ui-meta-text {
-  font-size: 1rem;
-}
-
-.vvp-co__feed-date {
-  margin-top: auto;
-  padding-top: 0.375rem;
-}
-
+/* Footer row at the bottom of article cards (Prüfpunkt badge, category,
+   date, reading time; right-aligned on the hero) and of the Instagram card
+   (InstagramSlideshow.tsx), so both line up the same way. `margin-top: auto`
+   pins it to the bottom of the card, so footers line up across a grid row. */
 .vvp-co__feed-footer {
   display: flex;
   align-items: center;
@@ -140,20 +123,19 @@
   flex-wrap: nowrap;
   overflow: hidden;
   margin-top: auto;
-  padding-top: 0.375rem;
+  padding-top: var(--vvp-spacing-sm, 8px);
 }
 
 .vvp-co__feed-footer .vvp-co__feed-date {
-  margin-top: 0;
-  padding-top: 0;
+  font-size: var(--vvp-font-size-base, 16px);
   flex-shrink: 0;
 }
 
 .vvp-co__feed-footer .vvp-co__feed-reading-time {
-  font-size: 1rem;
   display: inline-flex;
   align-items: center;
   gap: var(--vvp-spacing-xs, 4px);
+  font-size: var(--vvp-font-size-base, 16px);
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -167,7 +149,7 @@
    instead of pushing them out of the (overflow: hidden) footer. */
 .vvp-co__feed-footer .vvp-co__category {
   color: var(--vvp-text-muted, #666);
-  font-size: 1rem;
+  font-size: var(--vvp-font-size-base, 16px);
   font-weight: 400;
   text-transform: none;
   letter-spacing: normal;
@@ -177,21 +159,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-button.vvp-co__category--btn {
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  font-family: inherit;
-  line-height: inherit;
-}
-
-button.vvp-co__category--btn:hover,
-.vvp-co__category:hover {
-  color: #585c67;
 }
 
 /* Copy-link button — a footer flex item, pushed to the row's end and
@@ -225,21 +192,76 @@ button.vvp-co__category--btn:hover,
   height: var(--vvp-icon-size-xs);
 }
 
-/* YouTube play button overlay */
-.vvp-co__yt-play-btn {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.35);
-  transition: background 0.2s ease;
+/* Byline under the title: the authors ("von …"). */
+.vvp-co__feed-byline {
+  margin: 0 0 var(--vvp-spacing-sm, 8px);
+  font-size: var(--vvp-font-size-base, 16px);
+  line-height: 1.5;
+  color: var(--vvp-text-muted, #666);
 }
 
-.vvp-co__feed-card:hover .vvp-co__yt-play-btn {
-  background: rgba(0, 0, 0, 0.5);
+.vvp-co__feed-footer .vvp-co__category--btn:hover {
+  /* Darker than the muted footer, so the clickable category reads as a link. */
+  color: #585c67;
 }
 
-.vvp-co__yt-play-btn svg {
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+/* Hero (lead-story) variant — `hero` prop / Artikelkarte "Als Aufmacher"
+   toggle. Same card scaled for a single wide column: larger, unclamped title,
+   larger text and roomier padding, framed like the regular cards (the Divi
+   Blog hero it replaces sat in a bordered, shadowed box too), but without
+   their hover effect. The footer is right-aligned. The image keeps the base
+   350/183 ratio, which matches the 1400×732 featured images. */
+.vvp-co__feed-card--hero:hover {
+  box-shadow: var(--vvp-elevation-xs);
+  border-color: var(--vvp-surface, #e2f0f5);
+}
+
+.vvp-co__feed-card--hero:hover .vvp-co__feed-image {
+  transform: none;
+}
+
+.vvp-co__feed-card--hero .vvp-co__feed-body {
+  padding: var(--vvp-spacing-xxxl, 30px) var(--vvp-spacing-huge, 40px);
+}
+
+.vvp-co__feed-card--hero .vvp-co__feed-footer {
+  justify-content: flex-end;
+}
+
+/* The same size on phones: the Divi Blog hero it replaces keeps 27–28px at
+   every width, so the next token down (24px) read as too small. Long German
+   compounds hyphenate instead of overflowing the narrow card (lang="de"). */
+.vvp-co__feed-card--hero .vvp-co__feed-title {
+  font-size: var(--vvp-font-size-xxxl, 30px);
+  hyphens: auto;
+  overflow-wrap: break-word;
+  font-weight: 700;
+  line-height: 1.25;
+  -webkit-line-clamp: unset;
+}
+
+.vvp-co__feed-card--hero .vvp-co__feed-byline {
+  margin-bottom: var(--vvp-spacing-md, 10px);
+  font-size: var(--vvp-font-size-lg, 18px);
+}
+
+/* Unclamped: SEO meta descriptions are ~160 chars max, so the excerpt stays
+   short anyway, and the lead story shouldn't end mid-sentence. */
+.vvp-co__feed-card--hero .vvp-co__feed-excerpt {
+  font-size: var(--vvp-font-size-lg, 18px);
+  -webkit-line-clamp: unset;
+}
+
+@media (max-width: 767px) {
+  .vvp-co__feed-card--hero .vvp-co__feed-body {
+    padding: var(--vvp-spacing-lg, 16px);
+  }
+
+  .vvp-co__feed-card--hero .vvp-co__feed-excerpt {
+    font-size: var(--vvp-font-size-base, 16px);
+  }
+
+  .vvp-co__feed-card--hero .vvp-co__feed-byline {
+    font-size: var(--vvp-font-size-base, 16px);
+  }
 }

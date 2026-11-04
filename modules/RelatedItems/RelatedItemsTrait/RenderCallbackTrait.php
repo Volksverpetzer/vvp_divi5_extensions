@@ -13,13 +13,20 @@ if (!defined('ABSPATH')) {
 }
 
 use ET\Builder\Packages\Module\Module;
-use ET\Builder\Framework\Utility\HTMLUtility;
 use ET\Builder\FrontEnd\BlockParser\BlockParserStore;
 use ET\Builder\Packages\Module\Options\Element\ElementComponents;
+use VVP\Divi5\ContentOverview\ContentOverview;
 use VVP\Divi5\RelatedItems\RelatedItems;
 
 trait RenderCallbackTrait
 {
+    /**
+     * `sizes` for the card images' srcset, matching this module's grid in
+     * src/components/related-items/style.css: one column up to 640px, three above
+     * (about a third of the viewport until the content width caps them).
+     */
+    private const CARD_IMAGE_SIZES = '(max-width: 640px) 100vw, (max-width: 1023px) 33vw, 400px';
+
     /**
      * vectorcrawl's recommend endpoint. Same host FactCheckSearch already
      * calls for search/import (ai.volksverpetzer-app.de/api/...).
@@ -45,7 +52,18 @@ trait RenderCallbackTrait
 
     public static function render_callback($attrs, $content, $block, $elements)
     {
-        $items = self::get_related_items(self::current_post_id());
+        // Server-rendered cards, hydrated by content-overview-frontend.js
+        // like the feed's; mirrors src/components/related-items/App.tsx.
+        // Re-checked here: a cached post may since have been unpublished.
+        $cards = '';
+        foreach (self::get_related_ids(self::current_post_id()) as $related_id) {
+            $post = get_post($related_id);
+            if (ContentOverview::is_card_post($post)) {
+                $cards .= '<div class="vvp-ri__item">'
+                    . ContentOverview::render_article_card($post, false, 'related', true, self::CARD_IMAGE_SIZES)
+                    . '</div>';
+            }
+        }
 
         $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
         $parent_attrs = $parent->attrs ?? [];
@@ -71,27 +89,21 @@ trait RenderCallbackTrait
                     'orderIndex'    => $block->parsed_block['orderIndex'],
                     'storeInstance' => $block->parsed_block['storeInstance'],
                 ]),
-                HTMLUtility::render([
-                    'tag'               => 'div',
-                    'attributes'        => [
-                        'class'         => 'vvp-ri__mount',
-                        'data-articles' => esc_attr(wp_json_encode($items)),
-                    ],
-                    'childrenSanitizer' => 'esc_html',
-                    'children'          => '',
-                ]),
+                '' !== $cards ? '<div class="vvp-ri__list">' . $cards . '</div>' : '',
             ],
         ]);
     }
 
     /**
-     * Recommendations for a given post, resolved to local post data and
-     * cached locally. Empty array (never an error string) on any failure,
-     * so the module just renders nothing rather than a broken card.
+     * Recommendations for a given post, resolved to local post IDs and
+     * cached locally. Only the IDs are cached; the cards are rendered fresh,
+     * so edits to a post show up right away. Empty array (never an error
+     * string) on any failure, so the module just renders nothing rather
+     * than a broken card.
      *
-     * @return list<array{type:string,title:string,link:string,date:string,image_url:string,excerpt:string,category:string,category_link:string,source:string,reading_time:int}>
+     * @return list<int>
      */
-    private static function get_related_items(int $post_id): array
+    private static function get_related_ids(int $post_id): array
     {
         if ($post_id <= 0) {
             return [];
@@ -104,7 +116,7 @@ trait RenderCallbackTrait
 
         $cache_key = self::cache_key($post_id);
         $cached    = get_transient($cache_key);
-        if (false !== $cached) {
+        if (is_array($cached)) {
             return $cached;
         }
 
@@ -115,18 +127,18 @@ trait RenderCallbackTrait
             return [];
         }
 
-        $items = self::fetch_related_items($permalink);
-        $ttl   = empty($items) ? self::EMPTY_RESULT_CACHE_TTL : self::CACHE_TTL;
-        set_transient($cache_key, $items, $ttl);
+        $ids = self::fetch_related_ids($permalink);
+        $ttl = empty($ids) ? self::EMPTY_RESULT_CACHE_TTL : self::CACHE_TTL;
+        set_transient($cache_key, $ids, $ttl);
         self::release_refresh_lock($cache_key);
 
-        return $items;
+        return $ids;
     }
 
     /**
-     * @return list<array{type:string,title:string,link:string,date:string,image_url:string,excerpt:string,category:string,category_link:string,source:string,reading_time:int}>
+     * @return list<int>
      */
-    private static function fetch_related_items(string $permalink): array
+    private static function fetch_related_ids(string $permalink): array
     {
         $request_url = self::RECOMMEND_API_URL . '?' . http_build_query(['url' => $permalink]);
 
@@ -146,9 +158,9 @@ trait RenderCallbackTrait
 
         $own_host = self::normalize_host(wp_parse_url(home_url(), PHP_URL_HOST));
 
-        $items = [];
+        $ids = [];
         foreach ($data['results'] as $result) {
-            if (count($items) >= 3) {
+            if (count($ids) >= 3) {
                 break;
             }
             if (!is_array($result) || empty($result['url'])) {
@@ -165,64 +177,17 @@ trait RenderCallbackTrait
             }
 
             // Resolve to a local post rather than trusting the API's own
-            // title/URL directly -- gives us the current title/thumbnail/
-            // excerpt even if vectorcrawl's copy is stale (see the
-            // create-only indexing webhook), and skips silently if the URL
-            // no longer resolves to a published post at all.
+            // title/URL directly -- the card then shows the current
+            // title/thumbnail/excerpt even if vectorcrawl's copy is stale
+            // (see the create-only indexing webhook), and skips silently if
+            // the URL no longer resolves to a published post at all.
             $post_id = url_to_postid($result['url']);
-            $post    = self::build_post_data($post_id);
-            if ($post !== null) {
-                $items[] = $post;
+            if ($post_id > 0 && !in_array($post_id, $ids, true) && ContentOverview::is_card_post(get_post($post_id))) {
+                $ids[] = $post_id;
             }
         }
 
-        return $items;
-    }
-
-    /**
-     * @return array{type:string,title:string,link:string,date:string,image_url:string,excerpt:string,category:string,category_link:string,source:string,reading_time:int}|null
-     */
-    private static function build_post_data(int $post_id): ?array
-    {
-        if ($post_id <= 0) {
-            return null;
-        }
-
-        $post = get_post($post_id);
-        if (!$post || $post->post_status !== 'publish') {
-            return null;
-        }
-
-        $categories    = get_the_category($post_id);
-        $category      = $categories[0] ?? null;
-        $category_name = $category ? $category->name : '';
-        $category_link = $category ? (string) get_category_link($category->term_id) : '';
-
-        $reading_time = (int) get_post_meta($post_id, '_yoast_wpseo_estimated-reading-time-minutes', true);
-
-        // Many posts have no native excerpt (post_excerpt) set, only a
-        // Yoast SEO meta description -- vvp_app already shows these same
-        // articles' descriptions via the REST API's yoast_head_json.description
-        // field, which reads from this same meta key. Fall back to it here
-        // so this module matches what the app already displays instead of
-        // rendering a blank excerpt.
-        $excerpt = wp_strip_all_tags(get_the_excerpt($post_id));
-        if ('' === trim($excerpt)) {
-            $excerpt = trim((string) get_post_meta($post_id, '_yoast_wpseo_metadesc', true));
-        }
-
-        return [
-            'type'          => 'article',
-            'title'         => html_entity_decode((string) get_the_title($post_id), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-            'link'          => (string) get_permalink($post_id),
-            'date'          => get_the_date('d.m.Y', $post_id),
-            'image_url'     => (string) (get_the_post_thumbnail_url($post_id, 'medium_large') ?: ''),
-            'excerpt'       => $excerpt,
-            'category'      => $category_name,
-            'category_link' => $category_link,
-            'source'        => 'volksverpetzer',
-            'reading_time'  => $reading_time ?: 0,
-        ];
+        return $ids;
     }
 
     /**
@@ -262,14 +227,14 @@ trait RenderCallbackTrait
 
     /**
      * Bump whenever a code change to what gets cached here (e.g. what
-     * build_post_data() computes) should invalidate every existing
+     * fetch_related_ids() returns) should invalidate every existing
      * per-post transient immediately, instead of each one silently
      * carrying stale data for up to CACHE_TTL until it naturally expires
      * or that specific post gets re-saved. Cheap: old-version entries are
      * simply orphaned under the old key and expire on their original
      * schedule, never read again.
      */
-    private const CACHE_VERSION = 2;
+    private const CACHE_VERSION = 4;
 
     /**
      * Public (unlike the rest of this trait) so the main plugin file's

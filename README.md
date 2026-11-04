@@ -1,6 +1,6 @@
 # VVPs Divi5 Extensions for WordPress
 
-A WordPress plugin that adds custom modules to the **DIVI 5 Visual Builder** for Volksverpetzer. Five modules are included:
+A WordPress plugin that adds custom modules to the **DIVI 5 Visual Builder** for Volksverpetzer. The following modules are included:
 
 | Module                | DIVI slug               | Description                                                                   |
 | --------------------- | ----------------------- | ----------------------------------------------------------------------------- |
@@ -10,6 +10,7 @@ A WordPress plugin that adds custom modules to the **DIVI 5 Visual Builder** for
 | **Trending Beiträge** | `vvp/trending-items`    | Card grid of trending articles with thumbnails, configurable time range       |
 | **Trending Liste**    | `vvp/trending-list`     | Compact list of trending article titles and authors, configurable time range  |
 | **Audio-Player**      | `vvp/audio-embed`       | Embeds the vvp_wp_audio_converter player for the current article              |
+| **Artikelkarte**      | `vvp/article-card`      | The ContentOverview feed card for the current post, for use inside Divi Loops |
 
 ---
 
@@ -90,9 +91,8 @@ Renders a card grid of the most-read articles within a configurable time range, 
 
 **Architecture:**
 
-- PHP fetches trending data and server-renders the module (`modules/TrendingItems/TrendingItemsTrait/RenderCallbackTrait.php`)
-- React app (`src/components/trending-items/App.tsx`) is mounted by `scripts/trending-items-frontend.js`
-- DIVI Visual Builder preview: `src/components/trending-items/edit.tsx` (placeholder article cards)
+- PHP fetches the trending post IDs (cached) and server-renders the cards via `ContentOverview::render_article_card()` (`modules/TrendingItems/TrendingItemsTrait/RenderCallbackTrait.php`) — the same cards as the feed, hydrated by `scripts/content-overview-frontend.js`
+- DIVI Visual Builder preview: `src/components/trending-items/edit.tsx` renders `App.tsx` (the client-side mirror of the server list) with placeholder article cards
 
 ### Trending Liste (`vvp/trending-list`)
 
@@ -124,6 +124,22 @@ Embeds the [vvp_wp_audio_converter](https://github.com/Volksverpetzer/vvp_wp_aud
 - React app (`src/components/audio-embed/App.tsx`) is mounted by `scripts/audio-embed-frontend.js`. It renders the iframe at height `0` and listens for a `postMessage` of `{ type: "vvp-audio-embed-resize", height }` from vvp_wp_audio_converter's `EmbedHeightReporter` component, validating both `event.source` (against the iframe's own `contentWindow`) and `event.origin` before trusting it — the page can carry other third-party iframes, and the embedded iframe could in principle navigate elsewhere.
 - `audioBaseUrl` and `slug` are resolved into the iframe `src` via the `URL` API (`new URL(slug, audioBaseUrl)`, checking `.protocol`) rather than string concatenation — both round-trip through DOM `data-*` attributes before reaching React, so both are treated as untrusted.
 - DIVI Visual Builder preview: `src/components/audio-embed/edit.tsx` renders a static mockup (`App.tsx`'s `preview` prop) instead of a live iframe — no real article slug exists while editing a shared Theme Builder template, and a fake slug would just resolve to vvp_wp_audio_converter's silent "not yet available" state, leaving the module looking completely empty in the builder.
+
+### Artikelkarte (`vvp/article-card`)
+
+Renders the current post as the same article card the Inhaltsübersicht feed uses (image, title, Yoast description, co-authors, category, date, reading time). It is meant to sit inside a **Divi 5 Loop**: enable Loop on a row/column, pick query type **"Current Page"** on an archive template (author, category, tag, search), and place one Artikelkarte inside — Divi repeats it per post and the main query handles filtering (e.g. PublishPress co-authors on author archives) and `/page/N/` pagination.
+
+**Settings (DIVI):**
+
+- Als Aufmacher (Hero) anzeigen (`hero`, toggle, off by default): lead-story layout for the front page — larger title as `<h2>` and text, framed like the regular cards but without hover effect, right-aligned meta data footer, unclamped excerpt, `large` image size loaded eagerly with `fetchpriority="high"` (the hero image is usually the LCP element; feed cards keep `loading="lazy"`). Only the first hero card rendered on a page gets this layout; any further ones render as normal cards.
+
+**Front-page hero setup:** a Loop with query type **"Post Types" → Post**, **1 post per page**, newest first, containing one Artikelkarte with the hero toggle on. The hero card registers the post it rendered (`ContentOverview::$rendered_hero_id`), and the Inhaltsübersicht feed further down excludes exactly that post — so the feed stays duplicate-free whatever the Loop shows (e.g. a sticky post). This relies on the hero rendering before the feed, i.e. sitting above it on the page; otherwise the feed falls back to excluding the newest published post.
+
+**Architecture:**
+
+- PHP renders the card via `ContentOverview::render_article_card()` (`modules/ContentOverview/ContentOverview.php`), so the WP_Post mapping and card markup are shared with the feed, not duplicated. Outputs nothing for anything other than a published `post`.
+- The emitted `.vvp-co-article-mount` is hydrated by `scripts/content-overview-frontend.js` (enqueued on every page) — the same hydration guardrail as the feed applies (see `CardRenderTrait.php`).
+- DIVI Visual Builder preview: `src/components/article-card/edit.tsx` renders a placeholder article; the builder doesn't resolve loop posts for third-party modules.
 
 ---
 
@@ -184,9 +200,8 @@ Embeds the [vvp_wp_audio_converter](https://github.com/Volksverpetzer/vvp_wp_aud
 ├── scripts/                       # Compiled JS (Vite output)
 │   ├── bundle.js                  # DIVI Visual Builder module
 │   ├── fact-check-frontend.js     # Mounts FactCheckSearchApp
-│   ├── content-overview-frontend.js  # Mounts InstagramSlideshow + PodcastBanner
+│   ├── content-overview-frontend.js  # Hydrates article cards; mounts InstagramSlideshow + PodcastBanner
 │   ├── author-profile-frontend.js # Mounts AuthorProfileApp
-│   ├── trending-items-frontend.js # Mounts TrendingItemsApp
 │   └── trending-list-frontend.js  # Mounts TrendingListApp
 ├── styles/                        # Compiled CSS (Vite output)
 │   └── main.css
@@ -242,9 +257,8 @@ Embeds the [vvp_wp_audio_converter](https://github.com/Volksverpetzer/vvp_wp_aud
 │   │   │   └── module.css        # VB editor styles
 │   │   ├── trending-items/
 │   │   │   ├── module.json
-│   │   │   ├── App.tsx
+│   │   │   ├── App.tsx           # VB/Storybook mirror of the server-rendered list
 │   │   │   ├── edit.tsx
-│   │   │   ├── frontend.tsx
 │   │   │   ├── index.ts
 │   │   │   ├── types.ts
 │   │   │   ├── placeholder-content.ts
@@ -327,7 +341,7 @@ pnpm install --frozen-lockfile
 pnpm start
 ```
 
-Watches `src/` and recompiles `scripts/bundle.js`, `scripts/fact-check-frontend.js`, `scripts/content-overview-frontend.js`, `scripts/author-profile-frontend.js`, `scripts/trending-items-frontend.js`, `scripts/trending-list-frontend.js`, and `styles/main.css` on every save.
+Watches `src/` and recompiles `scripts/bundle.js`, `scripts/fact-check-frontend.js`, `scripts/content-overview-frontend.js`, `scripts/author-profile-frontend.js`, `scripts/trending-list-frontend.js`, and `styles/main.css` on every save.
 
 ### 4. Vite component preview (no WordPress needed)
 
@@ -378,7 +392,6 @@ Vite in production mode outputs:
 | `scripts/fact-check-frontend.js`       | FactCheckSearch frontend bundle (standalone)                |
 | `scripts/content-overview-frontend.js` | ContentOverview frontend bundle (standalone)                |
 | `scripts/author-profile-frontend.js`   | AuthorProfile frontend bundle (standalone)                  |
-| `scripts/trending-items-frontend.js`   | TrendingItems frontend bundle (standalone)                  |
 | `scripts/trending-list-frontend.js`    | TrendingList frontend bundle (standalone)                   |
 | `styles/main.css`                      | All component CSS                                           |
 | `modules-json/*/module.json`           | Copied module schemas                                       |

@@ -19,32 +19,79 @@ namespace VVP\Divi5\ContentOverview\ContentOverviewTrait;
 trait CardRenderTrait
 {
     /**
-     * Render a featured article card for the feed grid.
-     * Emits a React mount point hydrated by content-overview-frontend.js.
+     * Default `sizes` for the card image's srcset: one column of the feed
+     * grid (content-overview/style.css: full width below 700px, half up to
+     * 1023px, roughly a third of the content width above), or the single
+     * wide column of the hero. Modules with other grids pass their own —
+     * see render_featured_card()'s $image_sizes.
+     */
+    private const CARD_IMAGE_SIZES = '(max-width: 699px) 100vw, (max-width: 1023px) 50vw, 400px';
+    private const HERO_IMAGE_SIZES = '(max-width: 767px) 100vw, 750px';
+
+    /**
+     * Render an article card: the feed's cards, and through
+     * ContentOverview::render_article_card() also the Artikelkarte, Trending
+     * and Related cards. Emits a React mount point hydrated by
+     * content-overview-frontend.js.
      *
-     * @param array $post WP post array.
+     * @param array  $post             WP post array.
+     * @param bool   $hero             Lead-story layout (see ArticleCard.tsx's
+     *                                 `hero` prop): larger title as <h2>,
+     *                                 larger image that loads eagerly with
+     *                                 high fetch priority.
+     * @param string $tracking_context Which Plausible click event the card
+     *                                 sends (ArticleCard.tsx's
+     *                                 `trackingContext`).
+     * @param string $image_sizes      `sizes` for the image's srcset, matching
+     *                                 the grid the card sits in; '' for the
+     *                                 feed (or hero) default.
      *
      * @return string HTML.
      */
-    private static function render_featured_card($post)
+    private static function render_featured_card($post, bool $hero = false, string $tracking_context = 'feed', string $image_sizes = '')
     {
         $props = [
-            'type'          => 'article',
             'title'         => html_entity_decode(wp_strip_all_tags($post['title']['rendered'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-            'link'          => $post['link'] ?? '',
+            // esc_url_raw() drops non-web schemes (javascript:, data:) before
+            // these reach the hydration props, where the static HTML's
+            // esc_url() no longer protects them.
+            'link'          => esc_url_raw($post['link'] ?? ''),
             'date'          => self::format_date($post['date'] ?? ''),
-            'image_url'     => self::get_post_image($post, 'medium_large'),
+            // Fallback for browsers without srcset support; the hero renders
+            // at ~750 CSS px, too wide for medium_large (768w) on
+            // high-density screens.
+            'image_url'     => self::get_post_image($post, $hero ? 'large' : 'medium_large'),
             'excerpt'       => $post['yoast_head_json']['description'] ?? '',
             'author'        => self::format_authors($post['_embedded']['author'] ?? []),
             'reading_time'  => (int) ($post['reading_time'] ?? 0),
             'category'      => self::get_post_category($post),
-            'category_link' => self::get_post_category_link($post),
+            'category_link' => esc_url_raw(self::get_post_category_link($post)),
             'source'        => $post['_vvp_source'] ?? 'volksverpetzer',
         ];
+        $props['external'] = self::is_external_url($props['link']);
+        // Only set when they differ from ArticleCard.tsx's defaults, so feed
+        // cards' hydration props stay lean.
+        if ($hero) {
+            $props['hero'] = true;
+        }
+        if ('feed' !== $tracking_context) {
+            $props['trackingContext'] = $tracking_context;
+        }
+
+        // Not part of the props: the client keeps the server's image markup
+        // as-is when hydrating (`imageHtml`), so only PHP needs the srcset.
+        $srcset = $props['image_url'] ? self::get_post_image_srcset($post) : '';
+        if ('' === $image_sizes) {
+            $image_sizes = $hero ? self::HERO_IMAGE_SIZES : self::CARD_IMAGE_SIZES;
+        }
 
         $image_html = $props['image_url']
             ? '<div class="vvp-co__feed-image-wrap">'
-            .   '<img src="' . esc_url($props['image_url']) . '" alt="' . esc_attr($props['title']) . '" class="vvp-co__feed-image" loading="lazy" decoding="async">'
+            .   '<img src="' . esc_url($props['image_url']) . '"'
+            .   ($srcset ? ' srcset="' . esc_attr($srcset) . '" sizes="' . esc_attr($image_sizes) . '"' : '')
+            .   ' alt="' . esc_attr($props['title']) . '" class="vvp-co__feed-image"'
+            .   ($hero ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"')
+            .   ' decoding="async">'
             . '</div>'
             : '';
 
@@ -70,26 +117,41 @@ trait CardRenderTrait
             ? '<span class="vvp-ui-meta-text vvp-co__feed-reading-time">' . $clock_svg . (int) $props['reading_time'] . ' Min.</span>'
             : '';
 
-        $excerpt_html = '';
-        if ($props['excerpt']) {
-            $excerpt_html = '<p class="vvp-co__feed-excerpt">' . esc_html($props['excerpt']);
-            if ($props['author']) {
-                $excerpt_html .= '<em class="vvp-co__feed-author"> – ' . esc_html($props['author']) . '</em>';
-            }
-            $excerpt_html .= '</p>';
-        }
+        // Under the title: the authors ("von …"). The rest of the meta data
+        // sits in the footer at the bottom of the card, like the Instagram
+        // card's footer (right-aligned on the hero). Mirrors
+        // `authorItem`/`metaItems` in ArticleCard.tsx.
+        $byline_html = $props['author']
+            ? '<div class="vvp-co__feed-byline"><span class="vvp-co__feed-byline-author">von ' . esc_html($props['author']) . '</span></div>'
+            : '';
+        $footer_html = '<div class="vvp-co__feed-footer">'
+            . $source_badge
+            . $category_html
+            . '<span class="vvp-ui-meta-text vvp-co__feed-date">' . esc_html($props['date']) . '</span>'
+            . $reading_time_html
+            . '</div>';
 
-        $static_html = '<a href="' . esc_url($props['link']) . '" class="vvp-co__feed-card vvp-co__feed-card--article" target="_blank" rel="noopener noreferrer">'
+        $excerpt_html = $props['excerpt']
+            ? '<p class="vvp-co__feed-excerpt">' . esc_html($props['excerpt']) . '</p>'
+            : '';
+
+        // Only external links (e.g. Prüfpunkt articles) open a new tab;
+        // attribute order must match ArticleCard.tsx for hydration.
+        $target_attrs = $props['external'] ? ' target="_blank" rel="noopener noreferrer"' : '';
+
+        // `show-source` makes Image Source Control show the hero's image
+        // credit, which the site's ISC CSS hides outside such an element.
+        // Mirrors `cardClass` in ArticleCard.tsx.
+        $card_class = 'vvp-co__feed-card vvp-co__feed-card--article' . ($hero ? ' vvp-co__feed-card--hero show-source' : '');
+        $title_tag  = $hero ? 'h2' : 'h3';
+
+        $static_html = '<a href="' . esc_url($props['link']) . '" class="' . $card_class . '"' . $target_attrs . '>'
             . $image_html
             . '<div class="vvp-co__feed-body">'
-            .   '<h3 class="vvp-co__feed-title">' . esc_html($props['title']) . '</h3>'
+            .   '<' . $title_tag . ' class="vvp-co__feed-title">' . esc_html($props['title']) . '</' . $title_tag . '>'
+            .   $byline_html
             .   $excerpt_html
-            .   '<div class="vvp-co__feed-footer">'
-            .     $source_badge
-            .     $category_html
-            .     '<span class="vvp-ui-meta-text vvp-co__feed-date">' . esc_html($props['date']) . '</span>'
-            .     $reading_time_html
-            .   '</div>'
+            .   $footer_html
             . '</div>'
             . '</a>';
 
@@ -99,9 +161,29 @@ trait CardRenderTrait
     }
 
     /**
+     * Whether a URL points to another host than this site — mirrors
+     * isExternalUrl() in src/utils/links.ts. Relative URLs are internal, and
+     * "www." is ignored so www/non-www variants of our domain stay internal
+     * (same normalization as RelatedItems::normalize_host()).
+     *
+     * @param string $url URL to check.
+     */
+    private static function is_external_url(string $url): bool
+    {
+        $host = wp_parse_url($url, PHP_URL_HOST);
+        if (!$host) {
+            return false;
+        }
+
+        $normalize = static fn (string $h): string => preg_replace('/^www\./i', '', strtolower($h));
+
+        return $normalize($host) !== $normalize((string) wp_parse_url(home_url(), PHP_URL_HOST));
+    }
+
+    /**
      * Joins the `name` field of each _embedded.author entry into a
      * German-style list ("A", "A und B", "A, B und C") for display in the
-     * feed card excerpt. Handles both locally-sourced posts (one entry per
+     * card byline. Handles both locally-sourced posts (one entry per
      * PublishPress co-author, see DataFetchTrait::get_author_names) and
      * posts fetched from a remote WP REST source, which may embed more
      * than one author entry too.

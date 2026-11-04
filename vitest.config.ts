@@ -8,6 +8,8 @@ export default defineConfig({
     globals: true,
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
     passWithNoTests: true,
+    // ui-web ships extensionless ESM imports that Node can't resolve.
+    server: { deps: { inline: ["@volksverpetzer/ui-web"] } },
     coverage: {
       provider: "v8",
       include: ["src/**/*.{ts,tsx}"],

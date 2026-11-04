@@ -363,16 +363,22 @@ trait RenderCallbackTrait
     /**
      * Remove the post shown in the frontpage hero from the article list.
      *
-     * The hero module queries the local database live and always shows the
-     * newest published post, while this feed mixes sources that can lag
-     * behind it: the local article list sits in a short transient, and the
-     * Prüfpunkt/REST-fallback data comes over HTTP with far longer caching.
-     * Dropping "our newest" (the old array_slice($all_articles, 1)) therefore
-     * removed the wrong article whenever the list was stale or a Prüfpunkt
-     * post happened to be newest. Matching the hero by its actual post ID
-     * cannot misfire: if the hero post is not in the (stale) list yet,
-     * nothing is dropped — the hero post is not in the feed anyway, so no
-     * duplicate can appear.
+     * The hero post is identified by ID, in this order:
+     *  1. The post a hero Artikelkarte already rendered on this page
+     *     (ContentOverview::$rendered_hero_id). The hero Loop can show any
+     *     post (e.g. a sticky one), so this need not be the newest.
+     *  2. Fallback for the legacy Divi Blog hero, which queries the local
+     *     database live and always shows the newest published post: that
+     *     post, looked up live.
+     *
+     * This feed mixes sources that can lag behind the hero: the local
+     * article list sits in a short transient, and the Prüfpunkt/REST-fallback
+     * data comes over HTTP with far longer caching. Dropping "our newest"
+     * (the old array_slice($all_articles, 1)) therefore removed the wrong
+     * article whenever the list was stale or a Prüfpunkt post happened to be
+     * newest. Matching the hero by its actual post ID cannot misfire: if the
+     * hero post is not in the (stale) list yet, nothing is dropped — the hero
+     * post is not in the feed anyway, so no duplicate can appear.
      *
      * @param array $articles Merged, deduped, date-sorted article list.
      *
@@ -386,13 +392,16 @@ trait RenderCallbackTrait
             return array_slice($articles, 1);
         }
 
-        $hero_ids = get_posts([
-            'numberposts'  => 1,
-            'post_status'  => 'publish',
-            'fields'       => 'ids',
-            'no_found_rows' => true,
-        ]);
-        $hero_id = $hero_ids ? (int) $hero_ids[0] : 0;
+        $hero_id = self::$rendered_hero_id ?? 0;
+        if (0 === $hero_id) {
+            $hero_ids = get_posts([
+                'numberposts'  => 1,
+                'post_status'  => 'publish',
+                'fields'       => 'ids',
+                'no_found_rows' => true,
+            ]);
+            $hero_id = $hero_ids ? (int) $hero_ids[0] : 0;
+        }
 
         if (0 === $hero_id) {
             // Cannot determine the hero post (empty site or query failure):

@@ -22,6 +22,7 @@ use VVP\Divi5\CampaignProgress\CampaignProgress;
 use VVP\Divi5\CampaignDonate\CampaignDonate;
 use VVP\Divi5\CtaBox\CtaBox;
 use VVP\Divi5\AudioEmbed\AudioEmbed;
+use VVP\Divi5\ArticleCard\ArticleCard;
 
 add_action(
     'divi_module_library_modules_dependency_tree',
@@ -36,5 +37,6 @@ add_action(
         $dependency_tree->add_dependency(new CampaignDonate());
         $dependency_tree->add_dependency(new CtaBox());
         $dependency_tree->add_dependency(new AudioEmbed());
+        $dependency_tree->add_dependency(new ArticleCard());
     }
 );

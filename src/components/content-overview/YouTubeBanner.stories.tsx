@@ -10,6 +10,7 @@ const meta: Meta<typeof YouTubeBanner> = {
 export default meta;
 type Story = StoryObj<typeof YouTubeBanner>;
 
-export const Default: Story = {
+/** Every prop exposed as a control. */
+export const Playground: Story = {
   args: FEED_YT,
 };

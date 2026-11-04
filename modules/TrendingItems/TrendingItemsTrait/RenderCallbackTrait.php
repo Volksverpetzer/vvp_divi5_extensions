@@ -13,13 +13,20 @@ if (!defined('ABSPATH')) {
 }
 
 use ET\Builder\Packages\Module\Module;
-use ET\Builder\Framework\Utility\HTMLUtility;
 use ET\Builder\FrontEnd\BlockParser\BlockParserStore;
 use ET\Builder\Packages\Module\Options\Element\ElementComponents;
+use VVP\Divi5\ContentOverview\ContentOverview;
 use VVP\Divi5\TrendingItems\TrendingItems;
 
 trait RenderCallbackTrait
 {
+    /**
+     * `sizes` for the card images' srcset, matching this module's grid in
+     * src/components/trending-items/style.css: one column up to 640px, three above
+     * (about a third of the viewport until the content width caps them).
+     */
+    private const CARD_IMAGE_SIZES = '(max-width: 640px) 100vw, (max-width: 1023px) 33vw, 400px';
+
     /**
      * TTL for an empty result (WPP inactive/misconfigured, or the range
      * yields no posts). Caching that at the full 1h TTL like a normal
@@ -54,15 +61,6 @@ trait RenderCallbackTrait
             $headline_text = 'Trending';
         }
 
-        $items = self::get_trending_items(3, $range);
-
-        if (!$show_thumb) {
-            $items = array_map(function ($item) {
-                $item['image_url'] = '';
-                return $item;
-            }, $items);
-        }
-
         $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
         $parent_attrs = $parent->attrs ?? [];
 
@@ -95,46 +93,65 @@ trait RenderCallbackTrait
                         . self::HEADLINE_ICON
                         . '</h2>'
                     : '',
-                HTMLUtility::render([
-                    'tag'               => 'div',
-                    'attributes'        => [
-                        'class'          => 'vvp-ti__mount',
-                        'data-articles'  => esc_attr(wp_json_encode($items)),
-                    ],
-                    'childrenSanitizer' => 'esc_html',
-                    'children'          => '',
-                ]),
+                self::render_list($range, $show_thumb),
             ],
         ]);
     }
 
     /**
-     * @return list<array{type:string,title:string,link:string,date:string,image_url:string,excerpt:string,category:string,category_link:string,source:string}>
+     * The card list, or the empty-state message. Server-rendered cards,
+     * hydrated by content-overview-frontend.js like the feed's; mirrors
+     * src/components/trending-items/App.tsx.
      */
-    private static function get_trending_items(int $item_count, string $range): array
+    private static function render_list(string $range, bool $show_thumb): string
     {
-        $cache_key = 'vvp_trending_' . md5("{$item_count}_{$range}");
+        $cards = '';
+        foreach (self::get_trending_ids(3, $range) as $post_id) {
+            // Re-checked: a cached post may since have been unpublished.
+            $post = get_post($post_id);
+            if (ContentOverview::is_card_post($post)) {
+                $cards .= '<div class="vvp-ti__item">'
+                    . ContentOverview::render_article_card($post, false, 'trending', $show_thumb, self::CARD_IMAGE_SIZES)
+                    . '</div>';
+            }
+        }
+
+        return '' !== $cards
+            ? '<div class="vvp-ti__list">' . $cards . '</div>'
+            : '<div class="vvp-ti__empty">Keine Trending-Beiträge gefunden.</div>';
+    }
+
+    /**
+     * IDs of the most-read articles in the range, cached. Only the IDs are
+     * cached; the cards are rendered fresh, so edits to a post show up
+     * right away.
+     *
+     * @return list<int>
+     */
+    private static function get_trending_ids(int $item_count, string $range): array
+    {
+        // Versioned: bump when what's cached here changes, so entries in the
+        // old format aren't served until they expire.
+        $cache_key = 'vvp_trending_v3_' . md5("{$item_count}_{$range}");
         $cached    = get_transient($cache_key);
-        if ($cached !== false) {
+        if (is_array($cached)) {
             return $cached;
         }
 
-        $ids   = self::fetch_wpp_ids(min($item_count * 5, 100), $range);
-        $items = [];
-
-        foreach ($ids as $post_id) {
-            if (count($items) >= $item_count) {
+        $ids = [];
+        foreach (self::fetch_wpp_ids(min($item_count * 5, 100), $range) as $post_id) {
+            if (count($ids) >= $item_count) {
                 break;
             }
-            $post = self::build_post_data((int) $post_id);
-            if ($post !== null) {
-                $items[] = $post;
+            if (ContentOverview::is_card_post(get_post($post_id))) {
+                $ids[] = $post_id;
             }
         }
 
-        $ttl = empty($items) ? self::EMPTY_RESULT_CACHE_TTL : HOUR_IN_SECONDS;
-        set_transient($cache_key, $items, $ttl);
-        return $items;
+        $ttl = empty($ids) ? self::EMPTY_RESULT_CACHE_TTL : HOUR_IN_SECONDS;
+        set_transient($cache_key, $ids, $ttl);
+
+        return $ids;
     }
 
     /**
@@ -155,36 +172,5 @@ trait RenderCallbackTrait
         ]);
 
         return is_array($ids) ? array_map('intval', $ids) : [];
-    }
-
-    /**
-     * @return array{type:string,title:string,link:string,date:string,image_url:string,excerpt:string,category:string,category_link:string,source:string}|null
-     */
-    private static function build_post_data(int $post_id): ?array
-    {
-        $post = get_post($post_id);
-        if (!$post || $post->post_status !== 'publish') {
-            return null;
-        }
-
-        $categories    = get_the_category($post_id);
-        $category      = $categories[0] ?? null;
-        $category_name = $category ? $category->name : '';
-        $category_link = $category ? (string) get_category_link($category->term_id) : '';
-
-        $reading_time = (int) get_post_meta($post_id, '_yoast_wpseo_estimated-reading-time-minutes', true);
-
-        return [
-            'type'          => 'article',
-            'title'         => html_entity_decode((string) get_the_title($post_id), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-            'link'          => (string) get_permalink($post_id),
-            'date'          => get_the_date('d.m.Y', $post_id),
-            'image_url'     => (string) (get_the_post_thumbnail_url($post_id, 'medium_large') ?: ''),
-            'excerpt'       => wp_strip_all_tags(get_the_excerpt($post_id)),
-            'category'      => $category_name,
-            'category_link' => $category_link,
-            'source'        => 'volksverpetzer',
-            'reading_time'  => $reading_time ?: 0,
-        ];
     }
 }

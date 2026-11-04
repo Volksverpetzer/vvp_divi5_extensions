@@ -8,6 +8,7 @@ import * as campaignProgressIcon from "./icons/campaign-progress";
 import * as campaignDonateIcon from "./icons/campaign-donate";
 import * as ctaBoxIcon from "./icons/cta-box";
 import * as audioEmbedIcon from "./icons/audio-embed";
+import * as articleCardIcon from "./icons/article-card";
 
 // Add module icons to the icon library.
 addFilter("divi.iconLibrary.icon.map", "vvp/divi5", (icons) => {
@@ -22,5 +23,6 @@ addFilter("divi.iconLibrary.icon.map", "vvp/divi5", (icons) => {
     [campaignDonateIcon.name]: campaignDonateIcon,
     [ctaBoxIcon.name]: ctaBoxIcon,
     [audioEmbedIcon.name]: audioEmbedIcon,
+    [articleCardIcon.name]: articleCardIcon,
   };
 });

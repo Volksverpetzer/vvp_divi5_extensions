@@ -12,12 +12,17 @@ const meta: Meta<typeof AuthorProfileApp> = {
       <PreviewCard moduleClass="vvp-author-profile">{Story()}</PreviewCard>
     ),
   ],
+  argTypes: {
+    layout: { control: "inline-radio", options: ["vertical", "horizontal"] },
+    avatarSize: { control: { type: "range", min: 40, max: 200, step: 10 } },
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof AuthorProfileApp>;
 
-export const Vertical: Story = {
+/** Every prop exposed as a control. */
+export const Playground: Story = {
   args: {
     authors: AUTHOR_SINGLE,
     showAvatar: true,

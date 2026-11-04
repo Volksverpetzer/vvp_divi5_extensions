@@ -1,0 +1,6 @@
+/* Artikelkarte — Visual Builder specific styles */
+
+/* The preview card is a real link; keep clicks selecting the module. */
+.et-fb .vvp-article-card .vvp-co__feed-card {
+  pointer-events: none;
+}

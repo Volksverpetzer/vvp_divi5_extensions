@@ -97,7 +97,18 @@ export const CampaignDonateApp = ({
   certificateUrl,
   preview = false,
 }: CampaignDonateAppProps): ReactElement => {
-  const [selected, setSelected] = useState(presets[1] ?? presets[0] ?? 25);
+  const defaultPreset = presets[1] ?? presets[0] ?? 25;
+  const [selected, setSelected] = useState(defaultPreset);
+  // Re-select the default when the presets change (Visual Builder edits,
+  // Storybook controls) — otherwise the old amount stays selected without
+  // a matching button. Compared by value: edit.tsx builds a new array on
+  // every render.
+  const presetsKey = presets.join(",");
+  const [prevPresetsKey, setPrevPresetsKey] = useState(presetsKey);
+  if (presetsKey !== prevPresetsKey) {
+    setPrevPresetsKey(presetsKey);
+    setSelected(defaultPreset);
+  }
   const [customAmount, setCustomAmount] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -138,9 +149,9 @@ export const CampaignDonateApp = ({
     window.dispatchEvent(new CustomEvent(DONATION_COMPLETE_EVENT));
   };
 
-  // Some Stripe payment methods (3D Secure, Klarna, Sofort, ...) leave the
-  // page entirely instead of completing inline, so onComplete below never
-  // fires for them. Stripe's return_url brings the browser back here with
+  // Some Stripe payment methods (3D Secure, Klarna, Bancontact, PayPal, ...)
+  // leave the page entirely instead of completing inline, so onComplete below
+  // never fires for them. Stripe's return_url brings the browser back here with
   // this marker instead, and we finalize the session client-side the same
   // way onComplete does.
   useEffect(() => {

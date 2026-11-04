@@ -9,7 +9,8 @@ const meta: Meta<typeof FactCheckSearchApp> = {
 export default meta;
 type Story = StoryObj<typeof FactCheckSearchApp>;
 
-export const Default: Story = {
+/** Every prop exposed as a control. */
+export const Playground: Story = {
   args: {
     searchApiUrl: "https://ai.volksverpetzer-app.de/api/vector-search/",
     importApiUrl: "https://ai.volksverpetzer-app.de/api/import-url/",

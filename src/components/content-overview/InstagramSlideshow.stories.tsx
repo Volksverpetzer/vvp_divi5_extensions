@@ -13,8 +13,9 @@ const meta: Meta<typeof InstagramSlideshow> = {
 export default meta;
 type Story = StoryObj<typeof InstagramSlideshow>;
 
-export const Default: Story = {
-  args: IG_PROPS,
+/** Every prop exposed as a control. */
+export const Playground: Story = {
+  args: { ...IG_PROPS, postId: "", mediaCategory: "Faktencheck" },
 };
 
 export const BrokenImage: Story = {
@@ -22,6 +23,21 @@ export const BrokenImage: Story = {
     ...IG_PROPS,
     slides: [
       { thumb: "https://example.invalid/does-not-exist.jpg", video: "" },
+      ...IG_PROPS.slides.slice(1),
+    ],
+  },
+};
+
+/**
+ * First slide's image never answers (a non-routable address), like a hanging
+ * media proxy: the loading placeholder turns into the fallback after
+ * IMAGE_LOAD_TIMEOUT_MS.
+ */
+export const HangingImage: Story = {
+  args: {
+    ...IG_PROPS,
+    slides: [
+      { thumb: "http://10.255.255.1/hangs.jpg", video: "" },
       ...IG_PROPS.slides.slice(1),
     ],
   },
