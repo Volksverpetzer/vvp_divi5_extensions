@@ -30,7 +30,7 @@
     "update:deps": "pnpx npm-check-updates -c 1d -i --format group"
   },
   "dependencies": {
-    "@stripe/stripe-js": "^10.2.0",
+    "@stripe/stripe-js": "^10.2.1",
     "@volksverpetzer/design-tokens": "0.9.1",
     "@volksverpetzer/ui-web": "0.15.0",
     "classnames": "^2.5.1"
@@ -48,10 +48,10 @@
     "@types/react-dom": "^19.3.0",
     "@typescript-eslint/eslint-plugin": "^8.72.1",
     "@typescript-eslint/parser": "^8.72.1",
-    "@vitejs/plugin-react": "^6.1.2",
-    "@vitest/coverage-v8": "^5.0.5",
-    "@wordpress/hooks": "^5.0.0",
-    "@wordpress/i18n": "^7.0.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "@vitest/coverage-v8": "^5.1.0",
+    "@wordpress/hooks": "^5.1.0",
+    "@wordpress/i18n": "^7.1.0",
     "autoprefixer": "^10.6.2",
     "cspell": "^10.4.0",
     "eslint": "^10.14.0",
@@ -71,6 +71,6 @@
     "storybook": "^10.6.5",
     "typescript": "^6.0.3",
     "vite": "^8.3.5",
-    "vitest": "^5.0.5"
+    "vitest": "^5.1.0"
   }
 }

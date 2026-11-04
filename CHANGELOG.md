@@ -6,17 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-11-04
+
 ### Added
 
+- Artikelkarte (`vvp/article-card`): new module that renders the current post as the ContentOverview feed card. Placed inside a Divi 5 Loop (query type "Current Page"), it replaces the Divi Blog module on archive templates such as author pages, keeping the main query's filtering and pagination.
 - Artikelkarte: "Als Aufmacher (Hero) anzeigen" toggle for the front-page lead story — larger title (as `<h2>`) and text, roomier padding, framed like the regular cards but without their hover effect, the meta data footer right-aligned, an unclamped excerpt, a larger image size, and the image loads eagerly with `fetchpriority="high"` instead of lazily, since the hero image is typically the page's largest (LCP) element. Only the first hero card on a page gets the hero layout. The hero always shows its image credit (Image Source Control): the card carries the `show-source` class that the site's ISC CSS requires, instead of relying on a CSS class in the module settings.
 
 ### Changed
 
+- Article cards (ContentOverview, TrendingItems, RelatedItems, Artikelkarte) and TrendingList entries open internal links, including category links, in the same tab; only external links (e.g. Prüfpunkt articles) still open a new tab.
 - All article cards (ContentOverview feed, Trending, Related, Artikelkarte) show their authors on a line under the title ("von …", a little further below the title, like the Divi Blog module's post meta) instead of appended to the excerpt. The rest of the meta data (Prüfpunkt badge, category, date, reading time) sits in a footer at the bottom of the card, laid out like the Instagram card's footer — right-aligned on the hero.
 - Trending and Related render their cards on the server through the same code as the feed and the Artikelkarte (`ContentOverview::render_article_card()`), hydrated by `content-overview-frontend.js`. Their cards now show the same excerpt (the Yoast meta description), authors (PublishPress co-authors included) and image credits as the feed, and no longer leave an empty box until JavaScript has loaded. They cache only the post IDs, so edits to a post show up right away, and their caches from earlier versions are invalidated once on update. `trending-items-frontend.js` and `related-items-frontend.js` are gone.
 - Article card images come with `srcset`/`sizes`, so browsers load a size that fits the card instead of always the 768px (feed) or 1024px (hero) version.
 - ContentOverview excludes the post the hero Artikelkarte actually rendered, instead of assuming the hero is the newest published post, so a hero Loop showing e.g. a sticky post no longer duplicates it in the feed and hides the newest article. The newest-post assumption remains the fallback for the legacy Divi Blog hero.
 - Module icons in the Visual Builder use the Volksverpetzer accent colour (`--vvp-color-accent`, default `#DB2685`) instead of Divi's teal, so our modules stand out in the module inserter.
+- Campaign Donate loads Stripe.js from the `endive` release train (`@stripe/stripe-js` 10), matching the crowdfunding backend's switch to Stripe API `2026-10-28.endive` ([vvp_crowdfunding#89](https://github.com/Volksverpetzer/vvp_crowdfunding/pull/89)).
+- Bumped dependencies, including `@wordpress/hooks` 5.1, `@wordpress/i18n` 7.1, `@stripe/stripe-js` 10.2.1, `@volksverpetzer/ui-web` 0.15, the `@divi/*` packages, `vitest` 5.1, and `happy-dom` 21 (dev-only, fixes a Dependabot security alert) ([#223](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/223), [#237](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/237)).
 
 ### Removed
 
@@ -29,16 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Article cards whose image credit links to its source (Image Source Control's "Image Source URL", or a licence URL) were split by the browser: the credit link sat inside the card's link, which HTML doesn't allow, so the title, excerpt and footer fell out of the card link. Links inside a card's image are now unwrapped after Image Source Control adds the credit (`the_content`, priority 30), keeping the credit text; cards that still arrive split are repaired before hydrating.
 - Artikelkarte rendered nothing inside a Divi 5 Loop: Divi doesn't switch the global post while rendering a Loop, so the card now reads the current Loop item's post ID from the `__loop_post_id` attribute Divi stamps on each Loop item.
 - Module icons in the Visual Builder's module inserter now match Divi's own icons: redrawn as filled shapes on Divi's 16×16 grid, so they are no longer white, cropped or oversized.
-
-## [1.6.0] - 2026-10-09
-
-### Added
-
-- Artikelkarte (`vvp/article-card`): new module that renders the current post as the ContentOverview feed card. Placed inside a Divi 5 Loop (query type "Current Page"), it replaces the Divi Blog module on archive templates such as author pages, keeping the main query's filtering and pagination.
-
-### Changed
-
-- Article cards (ContentOverview, TrendingItems, RelatedItems, Artikelkarte) and TrendingList entries open internal links, including category links, in the same tab; only external links (e.g. Prüfpunkt articles) still open a new tab.
 
 ## [1.5.0] - 2026-10-08
 
@@ -147,5 +143,10 @@ First release with a maintained changelog; entries cover everything since v1.0.6
 
 - Both deploy workflows now purge the Bunny CDN cache for this plugin's assets after each deploy. Bunny previously ignored the `?ver=` cache-buster and served the plugin's JS/CSS for up to 30 days regardless of how many times it was redeployed ([#117](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/117)).
 
+[Unreleased]: https://github.com/Volksverpetzer/vvp_divi5_extensions/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/Volksverpetzer/vvp_divi5_extensions/compare/v1.5.0...v1.6.0
+[1.5.0]: https://github.com/Volksverpetzer/vvp_divi5_extensions/compare/v1.4.0...v1.5.0
+[1.4.0]: https://github.com/Volksverpetzer/vvp_divi5_extensions/compare/v1.3.0...v1.4.0
+[1.3.0]: https://github.com/Volksverpetzer/vvp_divi5_extensions/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/Volksverpetzer/vvp_divi5_extensions/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/Volksverpetzer/vvp_divi5_extensions/compare/v1.0.6...v1.1.0
