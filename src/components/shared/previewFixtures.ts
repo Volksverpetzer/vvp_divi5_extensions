@@ -145,6 +145,11 @@ export const FEED_ARTICLES: ArticleCardProps[] = [
     category_link: "#",
     source: "volksverpetzer",
     image_url: pimg("katze1"),
+    image_credit: {
+      source: "Minka Fellstein / Katzenagentur",
+      source_url: "https://example.org/katzenagentur",
+      licence: "CC BY-SA 4.0",
+    },
   },
   {
     title: "Schmusekatze oder Schreibtischtäter: Eine kritische Bilanz",
@@ -157,6 +162,7 @@ export const FEED_ARTICLES: ArticleCardProps[] = [
     category_link: "#",
     source: "volksverpetzer",
     image_url: pimg("katze2"),
+    image_credit: { source: "Tom Kater" },
   },
   {
     title: "Bartöl-Mythen: Was stimmt wirklich an den Wirkstoffen?",

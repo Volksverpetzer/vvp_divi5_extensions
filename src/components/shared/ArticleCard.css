@@ -335,3 +335,96 @@
     font-size: var(--vvp-font-size-base, 16px);
   }
 }
+
+/* Image credit badge (ImageCreditBadge.tsx; CardRenderTrait.php's
+   $credit_html): an "i" over the image's bottom-right corner, like vvp_app's
+   ImageCreditBadge. It follows the image wrapper in the card's column and is
+   pulled up over the image by its negative top margin; the margins add up to
+   its height, so it takes no room in the card. The row spans the card (less
+   the insets), so the popover can be capped at its width; the row itself lets
+   clicks through to the card, only the badge and popover catch them. */
+.vvp-co__credit {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: flex-end;
+  height: 28px;
+  margin: -36px var(--vvp-spacing-sm, 8px) var(--vvp-spacing-sm, 8px);
+  line-height: 0;
+  pointer-events: none;
+}
+
+.vvp-co__credit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--vvp-radius-full, 9999px);
+  background: rgb(0 0 0 / 45%);
+  color: #fff;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background 0.15s ease;
+}
+
+.vvp-co__credit-btn:hover,
+.vvp-co__credit-btn[aria-expanded="true"] {
+  background: rgb(0 0 0 / 70%);
+}
+
+.vvp-co__credit-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Opens upwards over the image, right-aligned with the badge. The card clips
+   its overflow, so it never gets wider than the badge row (the card) — and
+   ImageCreditBadge.tsx flips it below the badge when there's more room there
+   and caps its height at the room it has, with longer credits scrolling. */
+.vvp-co__credit-popover {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + var(--vvp-spacing-xs, 4px));
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: max-content;
+  max-width: min(240px, 100%);
+  box-sizing: border-box;
+  overflow-y: auto;
+  padding: var(--vvp-spacing-sm, 8px) var(--vvp-spacing-md, 10px);
+  border: 1px solid var(--vvp-surface-disabled, #ddd);
+  border-radius: var(--vvp-radius-sm, 8px);
+  background: var(--vvp-background, #fff);
+  box-shadow: var(--vvp-elevation-md);
+  color: var(--vvp-text, #111);
+  font-size: var(--vvp-font-size-sm, 14px);
+  line-height: 1.4;
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: auto;
+  pointer-events: auto;
+}
+
+/* Not enough room above the badge (ImageCreditBadge.tsx): open downwards,
+   over the card's text. */
+.vvp-co__credit-popover--below {
+  top: calc(100% + var(--vvp-spacing-xs, 4px));
+  bottom: auto;
+}
+
+.vvp-co__credit-title {
+  font-weight: 600;
+}
+
+.vvp-co__credit-licence {
+  color: var(--vvp-text-muted, #666);
+}
+
+.vvp-co__credit-link {
+  margin-top: 2px;
+  color: var(--vvp-link-text, var(--vvp-primary, #1b7194));
+  text-decoration: underline;
+  cursor: pointer;
+}
