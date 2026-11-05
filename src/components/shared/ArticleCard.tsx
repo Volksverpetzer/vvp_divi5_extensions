@@ -2,6 +2,7 @@ import * as React from "react";
 import { Badge, MetaText } from "@volksverpetzer/ui-web";
 import { trackEvent } from "../../utils/plausible";
 import { isExternalUrl, toHttpUrl } from "../../utils/links";
+import { ImageCreditBadge, type ImageCredit } from "./ImageCreditBadge";
 import "./ArticleCard.css";
 
 export interface ArticleCardProps {
@@ -28,6 +29,12 @@ export interface ArticleCardProps {
    * page's LCP element. Mirrored in CardRenderTrait.php for hydration.
    */
   hero?: boolean;
+  /**
+   * The featured image's credit (Image Source Control), shown behind an
+   * info badge on the image. PHP leaves it out on the hero, which shows
+   * ISC's own credit overlay instead (`show-source`).
+   */
+  image_credit?: ImageCredit;
   /**
    * Inner HTML of the image wrapper, taken verbatim from the server-rendered
    * card at hydration time (content-overview frontend.tsx). Plugins such as
@@ -76,6 +83,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   trackingContext = "feed",
   external,
   hero = false,
+  image_credit,
   imageHtml,
 }) => {
   const opensNewTab = external ?? isExternalUrl(link);
@@ -220,6 +228,9 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             />
           </div>
         ))}
+      {image_url && image_credit && !hero && (
+        <ImageCreditBadge credit={image_credit} />
+      )}
       <div className="vvp-co__feed-body">
         <TitleTag className="vvp-co__feed-title">{title}</TitleTag>
         {authorItem && <div className="vvp-co__feed-byline">{authorItem}</div>}

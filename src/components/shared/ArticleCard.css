@@ -335,3 +335,80 @@
     font-size: var(--vvp-font-size-base, 16px);
   }
 }
+
+/* Image credit badge (ImageCreditBadge.tsx; CardRenderTrait.php's
+   $credit_html): an "i" over the image's bottom-right corner, like vvp_app's
+   ImageCreditBadge. It follows the image wrapper in the card's column and is
+   pulled up over the image by its negative top margin; the margins add up to
+   its height, so it takes no room in the card. */
+.vvp-co__credit {
+  position: relative;
+  z-index: 1;
+  display: block;
+  align-self: flex-end;
+  height: 28px;
+  margin: -36px var(--vvp-spacing-sm, 8px) var(--vvp-spacing-sm, 8px) 0;
+  line-height: 0;
+}
+
+.vvp-co__credit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--vvp-radius-full, 9999px);
+  background: rgb(0 0 0 / 45%);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.vvp-co__credit-btn:hover,
+.vvp-co__credit-btn[aria-expanded="true"] {
+  background: rgb(0 0 0 / 70%);
+}
+
+.vvp-co__credit-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Opens upwards over the image, right-aligned with the badge. Narrow enough
+   for the smallest card column, since the card clips its overflow. */
+.vvp-co__credit-popover {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + var(--vvp-spacing-xs, 4px));
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: max-content;
+  max-width: 240px;
+  padding: var(--vvp-spacing-sm, 8px) var(--vvp-spacing-md, 10px);
+  border: 1px solid var(--vvp-surface-disabled, #ddd);
+  border-radius: var(--vvp-radius-sm, 8px);
+  background: var(--vvp-background, #fff);
+  box-shadow: var(--vvp-elevation-md);
+  color: var(--vvp-text, #111);
+  font-size: var(--vvp-font-size-sm, 14px);
+  line-height: 1.4;
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: auto;
+}
+
+.vvp-co__credit-title {
+  font-weight: 600;
+}
+
+.vvp-co__credit-licence {
+  color: var(--vvp-text-muted, #666);
+}
+
+.vvp-co__credit-link {
+  margin-top: 2px;
+  color: var(--vvp-link-text, var(--vvp-primary, #1b7194));
+  text-decoration: underline;
+  cursor: pointer;
+}

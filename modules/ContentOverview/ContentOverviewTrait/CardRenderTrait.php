@@ -29,6 +29,16 @@ trait CardRenderTrait
     private const HERO_IMAGE_SIZES = '(max-width: 767px) 100vw, 750px';
 
     /**
+     * Lucide's "info" icon (as in vvp_app's ImageCreditBadge), byte-matching
+     * `InfoIcon` in ArticleCard.tsx.
+     */
+    private const INFO_ICON_SVG = '<svg aria-hidden="true" focusable="false" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">'
+        . '<circle cx="12" cy="12" r="10"></circle>'
+        . '<path d="M12 16v-4"></path>'
+        . '<path d="M12 8h.01"></path>'
+        . '</svg>';
+
+    /**
      * Render an article card: the feed's cards, and through
      * ContentOverview::render_article_card() also the Artikelkarte, Trending
      * and Related cards. Emits a React mount point hydrated by
@@ -76,6 +86,12 @@ trait CardRenderTrait
         }
         if ('feed' !== $tracking_context) {
             $props['trackingContext'] = $tracking_context;
+        }
+        // The hero shows Image Source Control's own credit overlay
+        // (`show-source` below); the other cards get the info badge instead.
+        $image_credit = $props['image_url'] && !$hero ? self::get_post_image_credit($post) : null;
+        if ($image_credit) {
+            $props['image_credit'] = $image_credit;
         }
 
         // Not part of the props: the client keeps the server's image markup
@@ -162,8 +178,21 @@ trait CardRenderTrait
         $card_class = 'vvp-co__feed-card vvp-co__feed-card--article' . ($hero ? ' vvp-co__feed-card--hero show-source' : '');
         $title_tag  = $hero ? 'h2' : 'h3';
 
+        // The image credit badge (ArticleCard.tsx's `creditBadge`): sits
+        // right after the image wrapper and is pulled up over the image's
+        // bottom-right corner by CSS. Its popover only exists once opened,
+        // on the client.
+        $credit_html = $image_credit
+            ? '<span class="vvp-co__credit">'
+            .   '<span class="vvp-co__credit-btn" role="button" tabindex="0" aria-label="Bildquelle anzeigen" aria-expanded="false">'
+            .     self::INFO_ICON_SVG
+            .   '</span>'
+            . '</span>'
+            : '';
+
         $static_html = '<a href="' . esc_url($props['link']) . '" class="' . $card_class . '"' . $target_attrs . '>'
             . $image_html
+            . $credit_html
             . '<div class="vvp-co__feed-body">'
             .   '<' . $title_tag . ' class="vvp-co__feed-title">' . esc_html($props['title']) . '</' . $title_tag . '>'
             .   $byline_html

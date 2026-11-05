@@ -280,3 +280,127 @@ describe("ArticleCard hydration with rewritten image markup", () => {
     expect(wrap.innerHTML).toBe(before);
   });
 });
+
+describe("ArticleCard image credit badge", () => {
+  const props = {
+    title: "Titel",
+    link: "/article/",
+    date: "01.10.2026",
+    image_url: "https://example.org/image.jpg",
+    image_credit: {
+      source: "dpa / Max Muster",
+      source_url: "https://example.org/source",
+      licence: "CC BY 2.0",
+    },
+  };
+
+  // CardRenderTrait.php's $credit_html (with INFO_ICON_SVG), verbatim.
+  const PHP_BADGE =
+    '<span class="vvp-co__credit"><span class="vvp-co__credit-btn" role="button" tabindex="0" aria-label="Bildquelle anzeigen" aria-expanded="false">' +
+    '<svg aria-hidden="true" focusable="false" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
+    '<circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>' +
+    "</span></span>";
+
+  it("renders the same closed badge as PHP, right after the image", () => {
+    const html = renderToStaticMarkup(<ArticleCard {...props} />);
+    expect(html).toContain(`</div>${PHP_BADGE}<div class="vvp-co__feed-body">`);
+  });
+
+  it("is left out on the hero and without a credit or image", () => {
+    expect(renderToStaticMarkup(<ArticleCard {...props} hero />)).not.toContain(
+      "vvp-co__credit",
+    );
+    expect(
+      renderToStaticMarkup(<ArticleCard {...props} image_credit={undefined} />),
+    ).not.toContain("vvp-co__credit");
+    expect(
+      renderToStaticMarkup(<ArticleCard {...props} image_url={undefined} />),
+    ).not.toContain("vvp-co__credit");
+  });
+
+  const mountCard = (
+    cardProps: React.ComponentProps<typeof ArticleCard> = props,
+  ) => {
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+    const root = createRoot(container);
+    act(() => root.render(<ArticleCard {...cardProps} />));
+    const button = container.querySelector<HTMLElement>(".vvp-co__credit-btn")!;
+    const cleanup = () => {
+      act(() => root.unmount());
+      container.remove();
+    };
+    return { container, button, cleanup };
+  };
+
+  const click = (el: Element) => {
+    const event = new MouseEvent("click", { bubbles: true, cancelable: true });
+    act(() => {
+      el.dispatchEvent(event);
+    });
+    return event;
+  };
+
+  afterEach(() => vi.restoreAllMocks());
+
+  it("opens the credit without following the card link", () => {
+    const { container, button, cleanup } = mountCard();
+    const event = click(button);
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(button.getAttribute("aria-expanded")).toBe("true");
+    const popover = container.querySelector(".vvp-co__credit-popover")!;
+    expect(button.getAttribute("aria-controls")).toBe(popover.id);
+    expect(popover.textContent).toContain("dpa / Max Muster");
+    expect(popover.textContent).toContain("CC BY 2.0");
+
+    // Clicks on the popover's text don't follow the card link either.
+    expect(click(popover).defaultPrevented).toBe(true);
+    cleanup();
+  });
+
+  it("closes on a second click, Escape and clicks elsewhere", () => {
+    const { container, button, cleanup } = mountCard();
+    const isOpen = () => !!container.querySelector(".vvp-co__credit-popover");
+
+    click(button);
+    click(button);
+    expect(isOpen()).toBe(false);
+
+    click(button);
+    act(() => {
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    });
+    expect(isOpen()).toBe(false);
+
+    click(button);
+    act(() => {
+      document.body.dispatchEvent(
+        new PointerEvent("pointerdown", { bubbles: true }),
+      );
+    });
+    expect(isOpen()).toBe(false);
+    cleanup();
+  });
+
+  it("opens the source link in a new tab, only for http(s) URLs", () => {
+    const open = vi.spyOn(window, "open").mockImplementation(() => null);
+    const { container, button, cleanup } = mountCard();
+    click(button);
+    click(container.querySelector(".vvp-co__credit-link")!);
+    expect(open).toHaveBeenCalledWith(
+      "https://example.org/source",
+      "_blank",
+      "noopener,noreferrer",
+    );
+    cleanup();
+
+    const unsafe = mountCard({
+      ...props,
+      image_credit: { source: "dpa", source_url: "javascript:alert(1)" },
+    });
+    click(unsafe.button);
+    expect(unsafe.container.querySelector(".vvp-co__credit-link")).toBeNull();
+    unsafe.cleanup();
+  });
+});

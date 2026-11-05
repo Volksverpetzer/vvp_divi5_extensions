@@ -422,6 +422,46 @@ trait DataFetchTrait
     }
 
     /**
+     * The featured image's credit from Image Source Control's attachment
+     * meta (`isc_image_source`, `isc_image_source_url`, `isc_image_licence`),
+     * as the media REST endpoint returns it — and as map_local_post() fills
+     * it in for local posts. Same fields and rules as vvp_app's
+     * WordPressAPI.extractImageCredit(): no source, no credit (e.g. our own
+     * images); the URL only when it is an http(s) URL.
+     *
+     * @param array $post WP post array with _embedded data.
+     *
+     * @return array{source: string, source_url?: string, licence?: string}|null
+     */
+    private static function get_post_image_credit($post): ?array
+    {
+        $meta = $post['_embedded']['wp:featuredmedia'][0]['meta'] ?? null;
+        if (!is_array($meta)) {
+            return null;
+        }
+
+        $field  = static fn (string $key): string => is_string($meta[$key] ?? null) ? trim($meta[$key]) : '';
+        $source = $field('isc_image_source');
+        if ('' === $source) {
+            return null;
+        }
+
+        $credit = ['source' => $source];
+        // Free-form admin input: esc_url_raw() drops non-web schemes, the
+        // check drops what it would turn into a relative or http-less URL.
+        $url = esc_url_raw($field('isc_image_source_url'), ['http', 'https']);
+        if (preg_match('#^https?://#i', $url)) {
+            $credit['source_url'] = $url;
+        }
+        $licence = $field('isc_image_licence');
+        if ('' !== $licence) {
+            $credit['licence'] = $licence;
+        }
+
+        return $credit;
+    }
+
+    /**
      * Extract the category name from a WP REST post array.
      *
      * @param array $post WP post array with _embedded data.
@@ -733,9 +773,16 @@ trait DataFetchTrait
             }
             $full_url = $sizes['full']['source_url'] ?? wp_get_attachment_url($thumb_id);
             if ($full_url) {
+                // `meta`: Image Source Control's credit fields, in the shape
+                // the media REST endpoint returns them (get_post_image_credit()).
                 $post['_embedded']['wp:featuredmedia'] = [[
                     'source_url'    => $full_url,
                     'media_details' => ['sizes' => $sizes],
+                    'meta'          => [
+                        'isc_image_source'     => (string) get_post_meta($thumb_id, 'isc_image_source', true),
+                        'isc_image_source_url' => (string) get_post_meta($thumb_id, 'isc_image_source_url', true),
+                        'isc_image_licence'    => (string) get_post_meta($thumb_id, 'isc_image_licence', true),
+                    ],
                 ]];
             }
         }
