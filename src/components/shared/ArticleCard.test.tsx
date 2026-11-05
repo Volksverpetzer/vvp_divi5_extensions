@@ -182,7 +182,7 @@ describe("ArticleCard byline", () => {
     );
   });
 
-  it("shows only the Prüfpunkt badge, no category, on Prüfpunkt cards", () => {
+  it("puts the Prüfpunkt badge left and its category before the date", () => {
     const html = renderToStaticMarkup(
       <ArticleCard
         {...props}
@@ -191,9 +191,9 @@ describe("ArticleCard byline", () => {
       />,
     );
     expect(html).toContain(
-      '<div class="vvp-co__feed-footer"><span class="vvp-ui-badge vvp-ui-badge--pruefpunkt vvp-ui-badge--size-md">Prüfpunkt</span><span class="vvp-co__feed-footer-meta">',
+      '<div class="vvp-co__feed-footer"><span class="vvp-ui-badge vvp-ui-badge--pruefpunkt vvp-ui-badge--size-md">Prüfpunkt</span><span class="vvp-co__feed-footer-meta"><span class="vvp-co__category vvp-co__category--btn" role="button" tabindex="0">Analyse</span><span class="vvp-co__feed-footer-sep" aria-hidden="true">|</span><span class="vvp-ui-meta-text vvp-co__feed-date">01.10.2026</span>',
     );
-    expect(html).not.toContain("vvp-co__category");
+    expect(html).not.toContain("vvp-ui-badge--primary");
   });
 });
 
