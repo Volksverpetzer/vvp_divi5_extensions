@@ -42,6 +42,11 @@ const InfoIcon: React.FC = () => (
 // on the opened popover — so this can't cause a hydration mismatch.
 let nextPopoverId = 0;
 
+// Gap kept between the popover and the card's edges, and between the
+// popover and the badge (px; the latter matches ArticleCard.css).
+const POPOVER_INSET = 8;
+const POPOVER_GAP = 4;
+
 const isActivationKey = (e: React.KeyboardEvent) =>
   (e.key === "Enter" || e.key === " ") && !e.repeat;
 
@@ -62,7 +67,28 @@ export const ImageCreditBadge: React.FC<{ credit: ImageCredit }> = ({
   const [open, setOpen] = React.useState(false);
   const rootRef = React.useRef<HTMLSpanElement>(null);
   const buttonRef = React.useRef<HTMLSpanElement>(null);
+  const popoverRef = React.useRef<HTMLSpanElement>(null);
   const [popoverId] = React.useState(() => `vvp-co-credit-${++nextPopoverId}`);
+
+  // The card clips its overflow (its width is capped by CSS: the badge row
+  // spans the card). The popover opens upwards over the image; when the
+  // credit doesn't fit there (small cards) and there's more room below the
+  // badge, over the card's text, it opens downwards instead. Either way its
+  // height is capped at the room it has, and longer credits scroll.
+  React.useLayoutEffect(() => {
+    const popover = popoverRef.current;
+    const button = buttonRef.current;
+    const card = rootRef.current?.closest(".vvp-co__feed-card");
+    if (!open || !popover || !button || !card) return;
+    const btn = button.getBoundingClientRect();
+    const box = card.getBoundingClientRect();
+    const above = btn.top - POPOVER_GAP - box.top - POPOVER_INSET;
+    const below = box.bottom - POPOVER_INSET - btn.bottom - POPOVER_GAP;
+    const downwards = popover.scrollHeight > above && below > above;
+    popover.classList.toggle("vvp-co__credit-popover--below", downwards);
+    const room = downwards ? below : above;
+    if (room > 0) popover.style.maxHeight = `${room}px`;
+  }, [open]);
 
   React.useEffect(() => {
     if (!open) return;
@@ -121,6 +147,7 @@ export const ImageCreditBadge: React.FC<{ credit: ImageCredit }> = ({
       </span>
       {open && (
         <span
+          ref={popoverRef}
           id={popoverId}
           className="vvp-co__credit-popover"
           role="dialog"
