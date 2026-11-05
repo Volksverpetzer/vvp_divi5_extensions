@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Badge, MetaText } from "@volksverpetzer/ui-web";
 import classnames from "classnames";
 import { CopyLinkButton } from "../shared/CopyLinkButton";
+// The card reuses the article cards' markup classes (feed card, footer).
+import "../shared/ArticleCard.css";
 
 interface Slide {
   thumb: string;
@@ -818,21 +820,33 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
             >
               {badgeLabel}
             </Badge>
-            {mediaCategory && (
-              <span
-                className="vvp-co__category"
+            {/* Right-aligned like the article cards' footer meta:
+                media category | date | copy-link button. */}
+            <span className="vvp-co__feed-footer-meta">
+              {mediaCategory && (
+                <>
+                  <span
+                    className="vvp-co__category"
+                    style={{ pointerEvents: "none" }}
+                  >
+                    {mediaCategory}
+                  </span>
+                  <span className="vvp-co__feed-footer-sep" aria-hidden="true">
+                    |
+                  </span>
+                </>
+              )}
+              <MetaText
+                className="vvp-co__feed-date"
                 style={{ pointerEvents: "none" }}
               >
-                {mediaCategory}
+                {date}
+              </MetaText>
+              <span className="vvp-co__feed-footer-sep" aria-hidden="true">
+                |
               </span>
-            )}
-            <MetaText
-              className="vvp-co__feed-date"
-              style={{ pointerEvents: "none" }}
-            >
-              {date}
-            </MetaText>
-            <CopyLinkButton link={permalink} />
+              <CopyLinkButton link={permalink} />
+            </span>
           </div>
         </div>
       </div>

@@ -155,14 +155,23 @@
   row-gap: var(--vvp-spacing-xs, 4px);
 }
 
-/* Article cards' right-hand group: date | reading time. Pushed to the row's
-   end; never shrinks. */
+/* The footer's right-hand group, items separated by "|"
+   (.vvp-co__feed-footer-sep): article cards' date | reading time (Prüfpunkt
+   cards: category | date | reading time), the Instagram card's media
+   category | date | copy-link button. Pushed to the row's end. It may shrink
+   only as far as its plain-text category label truncates (below); date,
+   reading time and the copy button keep their size. */
 .vvp-co__feed-footer-meta {
   display: inline-flex;
   align-items: center;
   gap: var(--vvp-spacing-sm, 8px);
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 0;
   margin-left: auto;
+}
+
+.vvp-co__feed-footer-meta .vvp-co__copy-link-btn {
+  margin-left: 0;
 }
 
 .vvp-co__feed-footer-sep {
@@ -204,9 +213,9 @@
   background: color-mix(in srgb, var(--vvp-primary, #1b7194) 15%, white);
 }
 
-/* The Instagram card's plain media-category label ("Foto", "Karussell", …):
-   muted text that shrinks and truncates first, like the article cards'
-   category badge above. */
+/* Plain-text category labels in the right-hand meta group: the Instagram
+   card's media category ("Foto", "Karussell", …) and the Prüfpunkt cards'
+   category. Muted text that shrinks and truncates first. */
 .vvp-co__feed-footer .vvp-co__category:not(.vvp-ui-badge) {
   color: var(--vvp-text-muted, #666);
   font-size: var(--vvp-font-size-base, 16px);
@@ -219,6 +228,16 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Darker than the muted meta text, so the linked category reads as a link. */
+.vvp-co__feed-footer .vvp-co__category--btn:not(.vvp-ui-badge) {
+  cursor: pointer;
+}
+
+.vvp-co__feed-footer .vvp-co__category--btn:not(.vvp-ui-badge):hover,
+.vvp-co__feed-footer .vvp-co__category--btn:not(.vvp-ui-badge):focus-visible {
+  color: var(--vvp-text, #111);
 }
 
 /* Copy-link button — a footer flex item, pushed to the row's end and

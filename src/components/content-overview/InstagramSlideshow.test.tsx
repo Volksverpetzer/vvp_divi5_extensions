@@ -1,6 +1,7 @@
 import * as React from "react";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
+import { renderToStaticMarkup } from "react-dom/server";
 import {
   IMAGE_LOAD_TIMEOUT_MS,
   InstagramSlideshow,
@@ -37,6 +38,24 @@ const props = {
 };
 
 const FALLBACK_TEXT = "Bild nicht verfügbar";
+
+describe("InstagramSlideshow footer", () => {
+  it("keeps the badge left and right-aligns media category | date | copy link", () => {
+    const html = renderToStaticMarkup(<InstagramSlideshow {...props} />);
+    const footer = html.slice(
+      html.indexOf('<div class="vvp-co__feed-footer">'),
+    );
+    const meta = footer.slice(
+      footer.indexOf('<span class="vvp-co__feed-footer-meta">'),
+    );
+    expect(footer.indexOf("Instagram")).toBeLessThan(
+      footer.indexOf("vvp-co__feed-footer-meta"),
+    );
+    expect(meta).toMatch(
+      /^<span class="vvp-co__feed-footer-meta"><span class="vvp-co__category"[^>]*>Karussell<\/span><span class="vvp-co__feed-footer-sep" aria-hidden="true">\|<\/span><span class="vvp-ui-meta-text vvp-co__feed-date"[^>]*>01\.10\.2026<\/span><span class="vvp-co__feed-footer-sep" aria-hidden="true">\|<\/span><span role="button"[^>]*vvp-co__copy-link-btn/,
+    );
+  });
+});
 
 describe("InstagramSlideshow image loading", () => {
   let container: HTMLDivElement;

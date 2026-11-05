@@ -115,40 +115,51 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   // Under the title: the authors ("von …"). The rest of the meta data sits
   // in the footer at the bottom of the card, laid out like the Instagram and
   // YouTube cards' footers: a badge on the left (the category, linking to
-  // its archive; on Prüfpunkt articles just the Prüfpunkt badge instead),
-  // date and reading time on the right,
+  // its archive; on Prüfpunkt articles the Prüfpunkt badge instead, with the
+  // category moved in front of the date as plain text), date and reading
+  // time on the right,
   // separated by a "|". Same on the hero. Mirrored in CardRenderTrait.php.
   const authorItem = author && (
     <span className="vvp-co__feed-byline-author">{`von ${author}`}</span>
   );
   const isPruefpunkt = source === "pruefpunkt";
+  // A badge on regular cards; plain text (like the Instagram card's media
+  // category) in the right-hand meta on Prüfpunkt cards. Linked either way.
+  const categoryProps: React.HTMLAttributes<HTMLSpanElement> = category_link
+    ? {
+        className: "vvp-co__category vvp-co__category--btn",
+        role: "button",
+        tabIndex: 0,
+        onClick: handleCategoryClick,
+        onKeyDown: (e) => {
+          if ((e.key === "Enter" || e.key === " ") && !e.repeat) {
+            handleCategoryClick(e);
+          }
+        },
+      }
+    : { className: "vvp-co__category" };
+  const categoryItem =
+    category &&
+    (isPruefpunkt ? (
+      <span {...categoryProps}>{category}</span>
+    ) : (
+      <Badge variant="primary" size="md" {...categoryProps}>
+        {category}
+      </Badge>
+    ));
   const metaItems = (
     <>
       {isPruefpunkt && <PruefpunktBadge />}
-      {!isPruefpunkt &&
-        category &&
-        (category_link ? (
-          <Badge
-            variant="primary"
-            size="md"
-            className="vvp-co__category vvp-co__category--btn"
-            role="button"
-            tabIndex={0}
-            onClick={handleCategoryClick}
-            onKeyDown={(e) => {
-              if ((e.key === "Enter" || e.key === " ") && !e.repeat) {
-                handleCategoryClick(e);
-              }
-            }}
-          >
-            {category}
-          </Badge>
-        ) : (
-          <Badge variant="primary" size="md" className="vvp-co__category">
-            {category}
-          </Badge>
-        ))}
+      {!isPruefpunkt && categoryItem}
       <span className="vvp-co__feed-footer-meta">
+        {isPruefpunkt && categoryItem && (
+          <>
+            {categoryItem}
+            <span className="vvp-co__feed-footer-sep" aria-hidden="true">
+              |
+            </span>
+          </>
+        )}
         <MetaText className="vvp-co__feed-date">{date}</MetaText>
         {!!reading_time && (
           <>

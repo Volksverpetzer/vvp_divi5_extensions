@@ -104,16 +104,23 @@ trait CardRenderTrait
             ? '<span class="vvp-ui-badge vvp-ui-badge--pruefpunkt vvp-ui-badge--size-md">Prüfpunkt</span>'
             : '';
 
-        // The category as a ui-web <Badge variant="primary" size="md">: its
-        // classes come first, then the role/tabindex React spreads after them
-        // (Badge renders `className` before `...rest`). Prüfpunkt articles
-        // show only their Prüfpunkt badge, no category.
+        // The category: a ui-web <Badge variant="primary" size="md"> on the
+        // left of regular cards; on Prüfpunkt cards (whose left side holds the
+        // Prüfpunkt badge) plain text in front of the date, followed by a
+        // separator. Classes come first, then role/tabindex, as React renders
+        // `categoryProps` in ArticleCard.tsx.
         $category_html = '';
-        if (!$is_pruefpunkt && $props['category']) {
-            $category_html = $props['category_link']
-                ? '<span class="vvp-ui-badge vvp-ui-badge--primary vvp-ui-badge--size-md vvp-co__category vvp-co__category--btn" role="button" tabindex="0">' . esc_html($props['category']) . '</span>'
-                : '<span class="vvp-ui-badge vvp-ui-badge--primary vvp-ui-badge--size-md vvp-co__category">' . esc_html($props['category']) . '</span>';
+        if ($props['category']) {
+            $category_class = ($is_pruefpunkt ? '' : 'vvp-ui-badge vvp-ui-badge--primary vvp-ui-badge--size-md ')
+                . 'vvp-co__category' . ($props['category_link'] ? ' vvp-co__category--btn' : '');
+            $category_html = '<span class="' . $category_class . '"'
+                . ($props['category_link'] ? ' role="button" tabindex="0"' : '')
+                . '>' . esc_html($props['category']) . '</span>';
         }
+        $badge_category_html = $is_pruefpunkt ? '' : $category_html;
+        $meta_category_html  = $is_pruefpunkt && $category_html
+            ? $category_html . '<span class="vvp-co__feed-footer-sep" aria-hidden="true">|</span>'
+            : '';
 
         $clock_svg = '<svg aria-hidden="true" focusable="false" data-icon="clock" width="14" height="14" fill="none" stroke="currentColor" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">'
             . '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>'
@@ -125,16 +132,17 @@ trait CardRenderTrait
 
         // Under the title: the authors ("von …"). The rest of the meta data
         // sits in the footer at the bottom of the card, laid out like the
-        // Instagram and YouTube cards' footers: badges on the left, date and
-        // reading time ("|"-separated) on the right. Mirrors
+        // Instagram and YouTube cards' footers: a badge on the left, the
+        // ("|"-separated) meta data on the right. Mirrors
         // `authorItem`/`metaItems` in ArticleCard.tsx.
         $byline_html = $props['author']
             ? '<div class="vvp-co__feed-byline"><span class="vvp-co__feed-byline-author">von ' . esc_html($props['author']) . '</span></div>'
             : '';
         $footer_html = '<div class="vvp-co__feed-footer">'
             . $source_badge
-            . $category_html
+            . $badge_category_html
             . '<span class="vvp-co__feed-footer-meta">'
+            .   $meta_category_html
             .   '<span class="vvp-ui-meta-text vvp-co__feed-date">' . esc_html($props['date']) . '</span>'
             .   $reading_time_html
             . '</span>'
