@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Article card footer (ContentOverview feed, Trending, Related, Artikelkarte — hero and regular) is laid out like the Instagram and YouTube cards' footers: the category is a badge on the left that opens the category archive (Prüfpunkt articles show only their Prüfpunkt badge there, no category), and date and reading time sit on the right, separated by a "|". The hero no longer right-aligns the whole footer. When the badges and the meta data don't fit one line, the meta data wraps to a second, right-aligned line.
+
 ## [1.6.0] - 2026-11-04
 
 ### Added
