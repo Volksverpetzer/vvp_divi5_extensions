@@ -359,6 +359,18 @@ describe("ArticleCard image credit badge", () => {
     cleanup();
   });
 
+  it("gives popovers in separately hydrated cards distinct ids", () => {
+    const first = mountCard();
+    const second = mountCard();
+    click(first.button);
+    click(second.button);
+    const firstId = first.button.getAttribute("aria-controls");
+    expect(firstId).toBeTruthy();
+    expect(second.button.getAttribute("aria-controls")).not.toBe(firstId);
+    first.cleanup();
+    second.cleanup();
+  });
+
   it("closes on a second click, Escape and clicks elsewhere", () => {
     const { container, button, cleanup } = mountCard();
     const isOpen = () => !!container.querySelector(".vvp-co__credit-popover");

@@ -35,6 +35,13 @@ const InfoIcon: React.FC = () => (
   </svg>
 );
 
+// Popover ids, unique across the page. Not React's useId(): every card
+// hydrates through its own hydrateRoot() (content-overview frontend.tsx),
+// and useId() is scoped per root, so two cards' popovers could share an id
+// (see PodcastBanner.tsx). The id never appears in the server markup — only
+// on the opened popover — so this can't cause a hydration mismatch.
+let nextPopoverId = 0;
+
 const isActivationKey = (e: React.KeyboardEvent) =>
   (e.key === "Enter" || e.key === " ") && !e.repeat;
 
@@ -55,7 +62,7 @@ export const ImageCreditBadge: React.FC<{ credit: ImageCredit }> = ({
   const [open, setOpen] = React.useState(false);
   const rootRef = React.useRef<HTMLSpanElement>(null);
   const buttonRef = React.useRef<HTMLSpanElement>(null);
-  const popoverId = React.useId();
+  const [popoverId] = React.useState(() => `vvp-co-credit-${++nextPopoverId}`);
 
   React.useEffect(() => {
     if (!open) return;
