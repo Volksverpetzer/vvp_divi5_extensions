@@ -243,15 +243,25 @@
     align-items: center;
   }
 }
+/*
+ * The square artwork matches the height of the 16:9 YouTube thumbnail
+ * (220px wide → ~124px tall; 33.333% wide → 18.75% tall), so both
+ * banners come out the same height and sit flush with the card padding.
+ */
 .vvp-co__podcast-artwork-wrap {
-  flex: 0 0 33.333%;
+  flex: 0 0 auto;
   box-sizing: border-box;
   padding: 0;
 }
 
 @media (min-width: 700px) {
   .vvp-co__podcast-artwork-wrap {
-    padding: var(--vvp-spacing-xl, 20px) var(--vvp-spacing-huge, 40px);
+    width: 124px;
+  }
+}
+@media (min-width: 1024px) {
+  .vvp-co__podcast-artwork-wrap {
+    width: 18.75%;
   }
 }
 .vvp-co__podcast-artwork {
@@ -303,7 +313,7 @@
   color: #4b5563;
   line-height: 1.5;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

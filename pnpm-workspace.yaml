@@ -1,9 +1,9 @@
 allowBuilds:
   "@parcel/watcher": true
   esbuild: true
-minimumReleaseAgeExclude:
-  - "@wordpress/hooks@5.1.0"
-  - "@wordpress/i18n@7.1.0"
 nodeLinker: hoisted # see https://pnpm.io/settings#nodelinker
 packages:
   - .
+overrides:
+  # GHSA-w5hq-g745-h8pq: uuid <11.1.1, pulled in via @wordpress/blocks (Divi packages)
+  "uuid@<11.1.1": "^11.1.1"
