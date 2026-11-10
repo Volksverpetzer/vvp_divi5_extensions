@@ -162,6 +162,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  uuid@<11.1.1: ^11.1.1
+
 importers:
 
   .:
@@ -3367,9 +3370,8 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  uuid@9.0.1:
-    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
-    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+  uuid@11.1.1:
+    resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
     hasBin: true
 
   vite@8.3.5:
@@ -4823,7 +4825,7 @@ snapshots:
       remove-accents: 0.5.0
       showdown: 1.9.1
       simple-html-tokenizer: 0.5.11
-      uuid: 9.0.1
+      uuid: 11.1.1
 
   '@wordpress/compose@6.35.0(react@18.2.0)':
     dependencies:
@@ -6904,7 +6906,7 @@ snapshots:
     dependencies:
       react: 19.3.1
 
-  uuid@9.0.1: {}
+  uuid@11.1.1: {}
 
   vite@8.3.5(@types/node@26.4.1)(esbuild@0.28.2)(yaml@2.9.1):
     dependencies:
