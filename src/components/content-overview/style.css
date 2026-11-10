@@ -348,6 +348,112 @@
   background: #4c1d95;
 }
 
+/* Player open/close: height (via grid rows, so no fixed max-height),
+   fade and a small slide. PodcastBanner advances its phase on
+   animationend and unmounts the player after closing. */
+.vvp-co__podcast-player-wrap {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+.vvp-co__podcast-player-wrap--opening {
+  animation: vvp-co-podcast-player-in 0.25s ease-out;
+}
+
+.vvp-co__podcast-player-wrap--closing {
+  animation: vvp-co-podcast-player-in 0.2s ease-in reverse forwards;
+}
+
+.vvp-co__podcast-player-clip {
+  min-height: 0;
+}
+
+/* Clip only while animating, so focus rings and the slider thumb aren't
+   cut off once the player is open. */
+.vvp-co__podcast-player-wrap--opening .vvp-co__podcast-player-clip,
+.vvp-co__podcast-player-wrap--closing .vvp-co__podcast-player-clip {
+  overflow: hidden;
+}
+
+@keyframes vvp-co-podcast-player-in {
+  from {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+  to {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vvp-co__podcast-player-wrap--opening {
+    animation: none;
+  }
+  .vvp-co__podcast-player-wrap--closing {
+    display: none;
+  }
+}
+
+/* Custom podcast player — mirrors the player on audio.volksverpetzer.de
+   (vvp_wp_audio_converter app/globals.css .player). */
+.vvp-co__podcast-player {
+  display: flex;
+  align-items: center;
+  gap: var(--vvp-spacing-lg, 1rem);
+  margin: 0.5rem 0 0.75rem;
+}
+
+.vvp-co__podcast-player-audio {
+  display: none;
+}
+
+.vvp-co__podcast-player .vvp-co__podcast-player-btn {
+  width: var(--vvp-icon-size-xl, 56px);
+  height: var(--vvp-icon-size-xl, 56px);
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.vvp-co__podcast-player-spinner {
+  width: var(--vvp-icon-size-sm, 20px);
+  height: var(--vvp-icon-size-sm, 20px);
+  border-radius: var(--vvp-radius-full);
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  animation: vvp-co-podcast-spin 0.6s linear infinite;
+}
+
+@keyframes vvp-co-podcast-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.vvp-co__podcast-player-meta {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  height: var(--vvp-icon-size-xl, 56px);
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--vvp-spacing-xs, 0.25rem);
+}
+
+.vvp-co__podcast-player-times {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--vvp-text-muted, #6b7280);
+  font-size: var(--vvp-font-size-xs, 0.75rem);
+}
+
+.vvp-co__podcast-player-time {
+  font-variant-numeric: tabular-nums;
+}
+
 /* ---- YouTube banner ---- */
 .vvp-co__feed-item--youtube-banner {
   grid-column: 1/-1;

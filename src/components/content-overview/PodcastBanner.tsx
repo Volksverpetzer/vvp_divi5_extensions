@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Badge, MetaText } from "@volksverpetzer/ui-web";
 import { trackEvent } from "../../utils/plausible";
+import { PodcastPlayer } from "./PodcastPlayer";
 
 // This PR started rendering one PodcastBanner per episode instead of a
 // single one per page, so without cross-instance coordination two "Anhören"
@@ -8,6 +9,15 @@ import { trackEvent } from "../../utils/plausible";
 // lets every other mounted instance stop itself, independent of how many
 // are on the page.
 const PLAY_EVENT = "vvp-co-podcast-play";
+
+// The player slides open/closed with a CSS animation (style.css). The
+// phase normally advances on animationend; this timeout is the fallback
+// for when that never fires -- prefers-reduced-motion (animation: none),
+// a background tab, or a test environment without CSS. Slightly longer
+// than the 250ms animation so it never cuts one short.
+const PLAYER_ANIMATION_FALLBACK_MS = 400;
+
+type PlayerPhase = "closed" | "opening" | "open" | "closing";
 
 interface PodcastBannerProps {
   title: string;
@@ -44,7 +54,13 @@ export const PodcastBanner: React.FC<PodcastBannerProps> = ({
   summary,
   artworkUrl,
 }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [phase, setPhase] = useState<PlayerPhase>("closed");
+  // Bumped on every "Anhören" so re-opening while the close animation is
+  // still running mounts a fresh player (and autoplays) instead of
+  // reusing the one that was just paused.
+  const [playKey, setPlayKey] = useState(0);
+  const isPlaying = phase === "opening" || phase === "open";
+  const closePlayer = () => setPhase((p) => (p === "closed" ? p : "closing"));
   // A plain module-scoped React useId() collides across instances here:
   // each PodcastBanner hydrates through its own separate hydrateRoot()
   // call (frontend.tsx), and React's id generator is scoped per root, so
@@ -58,16 +74,28 @@ export const PodcastBanner: React.FC<PodcastBannerProps> = ({
     const handlePlay = (event: Event) => {
       const otherId = (event as CustomEvent<symbol>).detail;
       if (otherId !== instanceId) {
-        setIsPlaying(false);
+        closePlayer();
       }
     };
     window.addEventListener(PLAY_EVENT, handlePlay);
     return () => window.removeEventListener(PLAY_EVENT, handlePlay);
   }, [instanceId]);
 
+  const advancePhase = () =>
+    setPhase((p) =>
+      p === "opening" ? "open" : p === "closing" ? "closed" : p,
+    );
+
+  useEffect(() => {
+    if (phase !== "opening" && phase !== "closing") return;
+    const timer = setTimeout(advancePhase, PLAYER_ANIMATION_FALLBACK_MS);
+    return () => clearTimeout(timer);
+  }, [phase]);
+
   const startPlaying = () => {
     window.dispatchEvent(new CustomEvent(PLAY_EVENT, { detail: instanceId }));
-    setIsPlaying(true);
+    setPlayKey((k) => k + 1);
+    setPhase("opening");
     trackEvent("Podcast Play");
   };
 
@@ -104,15 +132,21 @@ export const PodcastBanner: React.FC<PodcastBannerProps> = ({
 
           {summary && <p className="vvp-co__podcast-summary">{summary}</p>}
 
-          {isPlaying && enclosure ? (
-            <div className="vvp-co__podcast-player">
-              <audio
-                controls
-                autoPlay
-                src={enclosure}
-                style={{ width: "100%", marginTop: 8 }}
-                onEnded={() => setIsPlaying(false)}
-              />
+          {phase !== "closed" && enclosure ? (
+            <div
+              key={playKey}
+              className={`vvp-co__podcast-player-wrap vvp-co__podcast-player-wrap--${phase}`}
+              onAnimationEnd={(e) => {
+                if (e.target === e.currentTarget) advancePhase();
+              }}
+            >
+              <div className="vvp-co__podcast-player-clip">
+                <PodcastPlayer
+                  src={enclosure}
+                  stopped={phase === "closing"}
+                  onEnded={closePlayer}
+                />
+              </div>
             </div>
           ) : null}
 
@@ -143,20 +177,23 @@ export const PodcastBanner: React.FC<PodcastBannerProps> = ({
               <button
                 type="button"
                 className="vvp-co__podcast-listen-btn vvp-co__podcast-listen-btn--stop"
-                onClick={() => setIsPlaying(false)}
+                onClick={closePlayer}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="14"
                   height="14"
                   viewBox="0 0 24 24"
-                  fill="currentColor"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
                   aria-hidden="true"
                 >
-                  <rect x="6" y="4" width="4" height="16" />
-                  <rect x="14" y="4" width="4" height="16" />
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
                 </svg>
-                Stopp
+                Schließen
               </button>
             )}
           </div>
