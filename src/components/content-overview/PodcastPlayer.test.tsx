@@ -222,22 +222,96 @@ describe("PodcastBanner with PodcastPlayer", () => {
         ".vvp-co__podcast-listen-btn",
       ),
     ].filter((b) => b.textContent?.includes("Anhören"));
+  const closeButton = () =>
+    container.querySelector<HTMLButtonElement>(
+      ".vvp-co__podcast-listen-btn--stop",
+    );
+  const wraps = () => [
+    ...container.querySelectorAll<HTMLElement>(".vvp-co__podcast-player-wrap"),
+  ];
+  const animationEnd = (el: Element) =>
+    act(() => {
+      el.dispatchEvent(new Event("animationend", { bubbles: true }));
+    });
 
-  it("mounts the player on Anhören and removes it on Schließen", async () => {
+  it("animates the player open on Anhören", async () => {
     act(() => root.render(<PodcastBanner {...bannerProps} />));
     expect(audio()).toBeNull();
 
     act(() => listenButtons()[0].click());
     await flush();
     expect(audio()).not.toBeNull();
+    expect(wraps()[0].className).toContain(
+      "vvp-co__podcast-player-wrap--opening",
+    );
 
-    const close = container.querySelector<HTMLButtonElement>(
-      ".vvp-co__podcast-listen-btn--stop",
-    )!;
-    expect(close.textContent).toContain("Schließen");
-    act(() => close.click());
-    expect(audio()).toBeNull();
+    animationEnd(wraps()[0]);
+    expect(wraps()[0].className).toContain("vvp-co__podcast-player-wrap--open");
+    expect(wraps()[0].className).not.toContain("--opening");
+  });
+
+  it("pauses at once on Schließen and removes the player after the close animation", async () => {
+    act(() => root.render(<PodcastBanner {...bannerProps} />));
+    act(() => listenButtons()[0].click());
+    await flush();
+    animationEnd(wraps()[0]);
+
+    expect(closeButton()!.textContent).toContain("Schließen");
+    act(() => closeButton()!.click());
+
+    // Still mounted while it animates out, but already paused, and the
+    // footer is back to "Anhören".
+    expect(audio()).not.toBeNull();
+    expect(audio()!.paused).toBe(true);
+    expect(wraps()[0].className).toContain(
+      "vvp-co__podcast-player-wrap--closing",
+    );
     expect(listenButtons()).toHaveLength(1);
+
+    // An animationend bubbling up from a child must not end it early.
+    animationEnd(slider());
+    expect(audio()).not.toBeNull();
+
+    animationEnd(wraps()[0]);
+    expect(audio()).toBeNull();
+  });
+
+  it("falls back to a timeout when animationend never fires (reduced motion)", async () => {
+    vi.useFakeTimers();
+    try {
+      act(() => root.render(<PodcastBanner {...bannerProps} />));
+      act(() => listenButtons()[0].click());
+      await flush();
+      act(() => vi.advanceTimersByTime(400));
+      expect(wraps()[0].className).toContain(
+        "vvp-co__podcast-player-wrap--open",
+      );
+
+      act(() => closeButton()!.click());
+      act(() => vi.advanceTimersByTime(399));
+      expect(audio()).not.toBeNull();
+      act(() => vi.advanceTimersByTime(1));
+      expect(audio()).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("mounts a fresh, playing player when re-opened during the close animation", async () => {
+    act(() => root.render(<PodcastBanner {...bannerProps} />));
+    act(() => listenButtons()[0].click());
+    await flush();
+    const firstAudio = audio();
+    act(() => closeButton()!.click());
+
+    act(() => listenButtons()[0].click());
+    await flush();
+    expect(wraps()).toHaveLength(1);
+    expect(audio()).not.toBe(firstAudio);
+    expect(audio()!.paused).toBe(false);
+    expect(wraps()[0].className).toContain(
+      "vvp-co__podcast-player-wrap--opening",
+    );
   });
 
   it("closes the player when the episode ends", async () => {
@@ -248,6 +322,10 @@ describe("PodcastBanner with PodcastPlayer", () => {
     act(() => {
       audio()!.dispatchEvent(new Event("ended"));
     });
+    expect(wraps()[0].className).toContain(
+      "vvp-co__podcast-player-wrap--closing",
+    );
+    animationEnd(wraps()[0]);
     expect(audio()).toBeNull();
   });
 
@@ -263,17 +341,24 @@ describe("PodcastBanner with PodcastPlayer", () => {
 
     act(() => listenButtons()[0].click());
     await flush();
-    expect(container.querySelectorAll(".vvp-co__podcast-player")).toHaveLength(
-      1,
-    );
+    const firstAudio = audio()!;
 
+    // Banner 1's "Anhören" is hidden while it plays, so banner 2's is
+    // the only one left.
+    expect(listenButtons()).toHaveLength(1);
     act(() => listenButtons()[0].click());
     await flush();
-    const players = container.querySelectorAll(".vvp-co__podcast-player");
-    expect(players).toHaveLength(1);
+    expect(firstAudio.paused).toBe(true);
+    const [first, second] = wraps();
+    expect(first.className).toContain("vvp-co__podcast-player-wrap--closing");
+    expect(second.className).toContain("vvp-co__podcast-player-wrap--opening");
+
+    animationEnd(first);
+    const remaining = wraps();
+    expect(remaining).toHaveLength(1);
     // The surviving player belongs to the second banner.
     expect(
-      players[0]
+      remaining[0]
         .closest(".vvp-co__podcast-banner")!
         .querySelector(".vvp-co__podcast-title")!.textContent,
     ).toBe("Folge 2");

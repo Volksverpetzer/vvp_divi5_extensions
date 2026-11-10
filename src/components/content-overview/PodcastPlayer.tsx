@@ -3,6 +3,8 @@ import { Button, Slider } from "@volksverpetzer/ui-web";
 
 interface PodcastPlayerProps {
   src: string;
+  /** Pause playback, e.g. while the banner animates the player closed. */
+  stopped?: boolean;
   onEnded?: () => void;
 }
 
@@ -51,6 +53,7 @@ const PauseIcon = () => (
  */
 export const PodcastPlayer: React.FC<PodcastPlayerProps> = ({
   src,
+  stopped = false,
   onEnded,
 }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -68,6 +71,10 @@ export const PodcastPlayer: React.FC<PodcastPlayerProps> = ({
       setIsLoading(false);
     });
   }, [src]);
+
+  useEffect(() => {
+    if (stopped) audioRef.current?.pause();
+  }, [stopped]);
 
   const togglePlayPause = async () => {
     const audio = audioRef.current;

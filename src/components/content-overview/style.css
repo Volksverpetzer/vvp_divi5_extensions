@@ -348,6 +348,55 @@
   background: #4c1d95;
 }
 
+/* Player open/close: height (via grid rows, so no fixed max-height),
+   fade and a small slide. PodcastBanner advances its phase on
+   animationend and unmounts the player after closing. */
+.vvp-co__podcast-player-wrap {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+.vvp-co__podcast-player-wrap--opening {
+  animation: vvp-co-podcast-player-in 0.25s ease-out;
+}
+
+.vvp-co__podcast-player-wrap--closing {
+  animation: vvp-co-podcast-player-in 0.2s ease-in reverse forwards;
+}
+
+.vvp-co__podcast-player-clip {
+  min-height: 0;
+}
+
+/* Clip only while animating, so focus rings and the slider thumb aren't
+   cut off once the player is open. */
+.vvp-co__podcast-player-wrap--opening .vvp-co__podcast-player-clip,
+.vvp-co__podcast-player-wrap--closing .vvp-co__podcast-player-clip {
+  overflow: hidden;
+}
+
+@keyframes vvp-co-podcast-player-in {
+  from {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+  to {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vvp-co__podcast-player-wrap--opening {
+    animation: none;
+  }
+  .vvp-co__podcast-player-wrap--closing {
+    display: none;
+  }
+}
+
 /* Custom podcast player — mirrors the player on audio.volksverpetzer.de
    (vvp_wp_audio_converter app/globals.css .player). */
 .vvp-co__podcast-player {
