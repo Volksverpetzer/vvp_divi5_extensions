@@ -146,13 +146,16 @@ export const PodcastBanner: React.FC<PodcastBannerProps> = ({
                   width="14"
                   height="14"
                   viewBox="0 0 24 24"
-                  fill="currentColor"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
                   aria-hidden="true"
                 >
-                  <rect x="6" y="4" width="4" height="16" />
-                  <rect x="14" y="4" width="4" height="16" />
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
                 </svg>
-                Stopp
+                Schließen
               </button>
             )}
           </div>

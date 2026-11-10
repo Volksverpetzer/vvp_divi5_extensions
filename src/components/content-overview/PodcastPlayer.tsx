@@ -46,7 +46,7 @@ const PauseIcon = () => (
  * components/audio-player.tsx): a round play/pause button next to a ui-web
  * Slider with elapsed/total time underneath, instead of the browser's
  * native <audio controls>. It's only mounted after "Anhören" is clicked,
- * so it starts playback right away; unmounting it (Stopp, or another
+ * so it starts playback right away; unmounting it (Schließen, or another
  * banner starting) stops the audio.
  */
 export const PodcastPlayer: React.FC<PodcastPlayerProps> = ({
