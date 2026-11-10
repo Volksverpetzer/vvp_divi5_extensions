@@ -753,6 +753,16 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
   const images = useSlideImages(slides);
   const trackedSwipe = React.useRef(false);
   const trackedPlay = React.useRef(false);
+  const trackedFullscreen = React.useRef(false);
+
+  // Count the fullscreen view once per card, however often it is reopened.
+  const openFullscreen = () => {
+    setFullscreen(true);
+    if (!trackedFullscreen.current) {
+      trackedFullscreen.current = true;
+      trackInstaView(postId);
+    }
+  };
 
   const handleVideoPlay = () => {
     if (!trackedPlay.current) {
@@ -791,17 +801,14 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
           caption={caption}
           playingVideos={playingVideos}
           setPlayingVideos={setPlayingVideos}
-          onCenterClick={() => {
-            setFullscreen(true);
-            trackInstaView(postId);
-          }}
+          onCenterClick={openFullscreen}
           onVideoPlay={handleVideoPlay}
           permalink={permalink}
         />
 
         <div
           className="vvp-co__feed-body vvp-co__feed-body--link"
-          onClick={() => setFullscreen(true)}
+          onClick={openFullscreen}
           style={{ cursor: "pointer" }}
         >
           <div className="vvp-co__feed-footer">
