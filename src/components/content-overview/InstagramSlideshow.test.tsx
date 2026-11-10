@@ -181,3 +181,49 @@ describe("InstagramSlideshow image loading", () => {
     root = createRoot(container);
   });
 });
+
+describe("InstagramSlideshow tracking", () => {
+  let container: HTMLDivElement;
+  let root: Root;
+  const plausible = vi.fn();
+
+  beforeEach(() => {
+    plausible.mockClear();
+    window.plausible = plausible;
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+    act(() => root.render(<InstagramSlideshow {...props} postId="ABC" />));
+  });
+
+  afterEach(() => {
+    act(() => root.unmount());
+    container.remove();
+    delete window.plausible;
+  });
+
+  const openAndClose = (opener: HTMLElement) => {
+    act(() => opener.click());
+    const close = Array.from(
+      document.querySelectorAll<HTMLElement>("div"),
+    ).find((d) => d.style.position === "fixed");
+    act(() => close!.click());
+  };
+
+  it("counts the fullscreen view once per card, however often it opens", () => {
+    const center = container.querySelector<HTMLElement>(
+      'button[aria-label="Vollbild öffnen"]',
+    )!;
+    const footer = container.querySelector<HTMLElement>(
+      ".vvp-co__feed-body--link",
+    )!;
+    openAndClose(center);
+    openAndClose(center);
+    openAndClose(footer);
+
+    expect(plausible).toHaveBeenCalledTimes(1);
+    expect(plausible).toHaveBeenCalledWith("pageview", {
+      u: window.location.origin + "/insta/ABC",
+    });
+  });
+});

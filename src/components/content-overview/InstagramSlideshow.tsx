@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Badge, MetaText } from "@volksverpetzer/ui-web";
 import classnames from "classnames";
 import { CopyLinkButton } from "../shared/CopyLinkButton";
+import { trackPageview } from "../../utils/plausible";
 // The card reuses the article cards' markup classes (feed card, footer).
 import "../shared/ArticleCard.css";
 
@@ -22,13 +23,7 @@ interface InstagramSlideshowProps {
 
 const trackInstaView = (postId: string) => {
   if (!postId) return;
-  try {
-    if (typeof window.plausible === "function") {
-      window.plausible("pageview", {
-        u: window.location.origin + "/insta/" + postId,
-      });
-    }
-  } catch (_) {}
+  trackPageview(window.location.origin + "/insta/" + postId);
 };
 
 const parseCaption = (text: string): React.ReactNode[] => {
@@ -758,6 +753,16 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
   const images = useSlideImages(slides);
   const trackedSwipe = React.useRef(false);
   const trackedPlay = React.useRef(false);
+  const trackedFullscreen = React.useRef(false);
+
+  // Count the fullscreen view once per card, however often it is reopened.
+  const openFullscreen = () => {
+    setFullscreen(true);
+    if (!trackedFullscreen.current) {
+      trackedFullscreen.current = true;
+      trackInstaView(postId);
+    }
+  };
 
   const handleVideoPlay = () => {
     if (!trackedPlay.current) {
@@ -796,17 +801,14 @@ export const InstagramSlideshow: React.FC<InstagramSlideshowProps> = ({
           caption={caption}
           playingVideos={playingVideos}
           setPlayingVideos={setPlayingVideos}
-          onCenterClick={() => {
-            setFullscreen(true);
-            trackInstaView(postId);
-          }}
+          onCenterClick={openFullscreen}
           onVideoPlay={handleVideoPlay}
           permalink={permalink}
         />
 
         <div
           className="vvp-co__feed-body vvp-co__feed-body--link"
-          onClick={() => setFullscreen(true)}
+          onClick={openFullscreen}
           style={{ cursor: "pointer" }}
         >
           <div className="vvp-co__feed-footer">
