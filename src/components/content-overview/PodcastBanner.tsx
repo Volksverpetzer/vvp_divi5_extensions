@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Badge, MetaText } from "@volksverpetzer/ui-web";
 import { trackEvent } from "../../utils/plausible";
+import { PodcastPlayer } from "./PodcastPlayer";
 
 // This PR started rendering one PodcastBanner per episode instead of a
 // single one per page, so without cross-instance coordination two "Anhören"
@@ -105,15 +106,10 @@ export const PodcastBanner: React.FC<PodcastBannerProps> = ({
           {summary && <p className="vvp-co__podcast-summary">{summary}</p>}
 
           {isPlaying && enclosure ? (
-            <div className="vvp-co__podcast-player">
-              <audio
-                controls
-                autoPlay
-                src={enclosure}
-                style={{ width: "100%", marginTop: 8 }}
-                onEnded={() => setIsPlaying(false)}
-              />
-            </div>
+            <PodcastPlayer
+              src={enclosure}
+              onEnded={() => setIsPlaying(false)}
+            />
           ) : null}
 
           <div className="vvp-co__podcast-footer">
