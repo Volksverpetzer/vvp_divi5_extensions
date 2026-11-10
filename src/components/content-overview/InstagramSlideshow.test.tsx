@@ -32,7 +32,6 @@ const props = {
   caption: "Bildunterschrift",
   date: "01.10.2026",
   badgeLabel: "Instagram",
-  mediaCategory: "Karussell",
   slides,
   isCarousel: true,
 };
@@ -40,7 +39,7 @@ const props = {
 const FALLBACK_TEXT = "Bild nicht verfügbar";
 
 describe("InstagramSlideshow footer", () => {
-  it("keeps the badge left and right-aligns media category | date | copy link", () => {
+  it("keeps the badge left and right-aligns date | copy link", () => {
     const html = renderToStaticMarkup(<InstagramSlideshow {...props} />);
     const footer = html.slice(
       html.indexOf('<div class="vvp-co__feed-footer">'),
@@ -52,7 +51,7 @@ describe("InstagramSlideshow footer", () => {
       footer.indexOf("vvp-co__feed-footer-meta"),
     );
     expect(meta).toMatch(
-      /^<span class="vvp-co__feed-footer-meta"><span class="vvp-co__category"[^>]*>Karussell<\/span><span class="vvp-co__feed-footer-sep" aria-hidden="true">\|<\/span><span class="vvp-ui-meta-text vvp-co__feed-date"[^>]*>01\.10\.2026<\/span><span class="vvp-co__feed-footer-sep" aria-hidden="true">\|<\/span><span role="button"[^>]*vvp-co__copy-link-btn/,
+      /^<span class="vvp-co__feed-footer-meta"><span class="vvp-ui-meta-text vvp-co__feed-date"[^>]*>01\.10\.2026<\/span><span class="vvp-co__feed-footer-sep" aria-hidden="true">\|<\/span><span role="button"[^>]*vvp-co__copy-link-btn/,
     );
   });
 });

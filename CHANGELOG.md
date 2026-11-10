@@ -8,12 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Article cards (ContentOverview feed, Trending, Related, Artikelkarte — not the hero) show a small info icon in the bottom-right corner of the image when it has an Image Source Control credit, like vvp_app's image credit badge. Clicking it opens a "Bildquelle" popover with the source, the licence and a link to the source URL (http(s) only), without following the card link; it closes on a second click, Escape or a click elsewhere. The hero keeps ISC's own credit overlay.
+- Article cards (ContentOverview feed, Trending, Related, Artikelkarte — not the hero) show a small info icon in the top-right corner of the image (clear of the white logo bar along the bottom of our featured images) when it has an Image Source Control credit, like vvp_app's image credit badge. Clicking it opens a "Bildquelle" popover with the source, the licence and a link to the source URL (http(s) only), without following the card link; it closes on a second click, Escape or a click elsewhere. The hero keeps ISC's own credit overlay, moved to the image's top-right corner on these cards (article pages' hero images keep ISC's bottom-right position).
 
 ### Changed
 
 - Article card footer (ContentOverview feed, Trending, Related, Artikelkarte — hero and regular) is laid out like the Instagram and YouTube cards' footers: the category is a badge on the left that opens the category archive (Prüfpunkt articles show their Prüfpunkt badge there instead, and the category as linked plain text in front of the date), and date and reading time sit on the right, separated by a "|". The hero no longer right-aligns the whole footer. When the badges and the meta data don't fit one line, the meta data wraps to a second, right-aligned line.
-- Instagram card footer: the Instagram badge stays on the left; media type (Foto/Video/Karussell), date and the copy-link button sit right-aligned, separated by "|".
+- Instagram card footer: the Instagram badge stays on the left; date and the copy-link button sit right-aligned, separated by "|". The media type (Foto/Video/Karussell) is no longer shown — it's evident from the card itself.
 
 ### Fixed
 
