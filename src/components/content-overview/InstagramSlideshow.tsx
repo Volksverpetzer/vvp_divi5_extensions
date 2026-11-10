@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Badge, MetaText } from "@volksverpetzer/ui-web";
 import classnames from "classnames";
 import { CopyLinkButton } from "../shared/CopyLinkButton";
+import { trackPageview } from "../../utils/plausible";
 // The card reuses the article cards' markup classes (feed card, footer).
 import "../shared/ArticleCard.css";
 
@@ -22,13 +23,7 @@ interface InstagramSlideshowProps {
 
 const trackInstaView = (postId: string) => {
   if (!postId) return;
-  try {
-    if (typeof window.plausible === "function") {
-      window.plausible("pageview", {
-        u: window.location.origin + "/insta/" + postId,
-      });
-    }
-  } catch (_) {}
+  trackPageview(window.location.origin + "/insta/" + postId);
 };
 
 const parseCaption = (text: string): React.ReactNode[] => {
