@@ -51,8 +51,9 @@ const isActivationKey = (e: React.KeyboardEvent) =>
   (e.key === "Enter" || e.key === " ") && !e.repeat;
 
 /**
- * Small "i" badge over the bottom-right corner of an article card's image —
- * the web counterpart of vvp_app's ImageCreditBadge. Clicking it opens a
+ * Small "i" badge over the top-right corner of an article card's image —
+ * the web counterpart of vvp_app's ImageCreditBadge (which sits bottom-right;
+ * on the web that clashes with our featured images' white logo bar). Clicking it opens a
  * popover with the image credit (source, licence, source link).
  *
  * It sits inside the card's <a>, which allows no nested links or buttons, so
@@ -71,22 +72,19 @@ export const ImageCreditBadge: React.FC<{ credit: ImageCredit }> = ({
   const [popoverId] = React.useState(() => `vvp-co-credit-${++nextPopoverId}`);
 
   // The card clips its overflow (its width is capped by CSS: the badge row
-  // spans the card). The popover opens upwards over the image; when the
-  // credit doesn't fit there (small cards) and there's more room below the
-  // badge, over the card's text, it opens downwards instead. Either way its
-  // height is capped at the room it has, and longer credits scroll.
+  // spans the card). The popover opens downwards from the badge, over the
+  // image and, if need be, the card's text; its height is capped at the room
+  // left there, and longer credits scroll.
   React.useLayoutEffect(() => {
     const popover = popoverRef.current;
     const button = buttonRef.current;
     const card = rootRef.current?.closest(".vvp-co__feed-card");
     if (!open || !popover || !button || !card) return;
-    const btn = button.getBoundingClientRect();
-    const box = card.getBoundingClientRect();
-    const above = btn.top - POPOVER_GAP - box.top - POPOVER_INSET;
-    const below = box.bottom - POPOVER_INSET - btn.bottom - POPOVER_GAP;
-    const downwards = popover.scrollHeight > above && below > above;
-    popover.classList.toggle("vvp-co__credit-popover--below", downwards);
-    const room = downwards ? below : above;
+    const room =
+      card.getBoundingClientRect().bottom -
+      POPOVER_INSET -
+      button.getBoundingClientRect().bottom -
+      POPOVER_GAP;
     if (room > 0) popover.style.maxHeight = `${room}px`;
   }, [open]);
 

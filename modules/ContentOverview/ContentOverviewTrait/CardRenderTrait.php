@@ -179,8 +179,8 @@ trait CardRenderTrait
         $title_tag  = $hero ? 'h2' : 'h3';
 
         // The image credit badge (ArticleCard.tsx's `creditBadge`): sits
-        // right after the image wrapper and is pulled up over the image's
-        // bottom-right corner by CSS. Its popover only exists once opened,
+        // right after the image wrapper and is laid over the image's
+        // top-right corner by CSS. Its popover only exists once opened,
         // on the client.
         $credit_html = $image_credit
             ? '<span class="vvp-co__credit">'
@@ -310,8 +310,7 @@ trait CardRenderTrait
             return '';
         }
 
-        $is_carousel   = count($slides) > 1;
-        $media_category = 'VIDEO' === $media_type ? 'Video' : ($is_carousel ? 'Karussell' : 'Foto');
+        $is_carousel = count($slides) > 1;
 
         // Extract the shortcode from e.g. https://www.instagram.com/p/ABC123/
         // or https://www.instagram.com/reel/ABC123/ — Reels and IGTV posts use
@@ -327,7 +326,6 @@ trait CardRenderTrait
             'caption'       => $caption,
             'date'          => $date,
             'badgeLabel'    => 'Instagram',
-            'mediaCategory' => $media_category,
             'slides'        => $slides,
             'isCarousel'    => $is_carousel,
         ];

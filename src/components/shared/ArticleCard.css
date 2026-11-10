@@ -61,6 +61,19 @@
   height: 100%;
 }
 
+/* The hero card shows ISC's own credit overlay (`show-source`). ISC's
+   captions.js places it from the plugin-wide caption position (bottom-right,
+   which the article pages' hero images keep) with inline left/top styles;
+   on these cards it goes top-right instead, clear of the white logo bar
+   along the bottom of our featured images. Only !important beats the
+   inline styles. The 5px inset matches ISC's default caption margin. */
+.vvp-co__feed-card--hero .vvp-co__feed-image-wrap .isc-source-text {
+  top: 5px !important;
+  right: 5px !important;
+  bottom: auto !important;
+  left: auto !important;
+}
+
 .vvp-co__feed-image {
   width: 100%;
   height: 100%;
@@ -213,9 +226,8 @@
   background: color-mix(in srgb, var(--vvp-primary, #1b7194) 15%, white);
 }
 
-/* Plain-text category labels in the right-hand meta group: the Instagram
-   card's media category ("Foto", "Karussell", …) and the Prüfpunkt cards'
-   category. Muted text that shrinks and truncates first. */
+/* Plain-text category labels in the right-hand meta group (the Prüfpunkt
+   cards' category). Muted text that shrinks and truncates first. */
 .vvp-co__feed-footer .vvp-co__category:not(.vvp-ui-badge) {
   color: var(--vvp-text-muted, #666);
   font-size: var(--vvp-font-size-base, 16px);
@@ -337,19 +349,26 @@
 }
 
 /* Image credit badge (ImageCreditBadge.tsx; CardRenderTrait.php's
-   $credit_html): an "i" over the image's bottom-right corner, like vvp_app's
-   ImageCreditBadge. It follows the image wrapper in the card's column and is
-   pulled up over the image by its negative top margin; the margins add up to
-   its height, so it takes no room in the card. The row spans the card (less
-   the insets), so the popover can be capped at its width; the row itself lets
-   clicks through to the card, only the badge and popover catch them. */
-.vvp-co__credit {
+   $credit_html): an "i" over the image's top-right corner (vvp_app puts it
+   bottom-right, but on the web that clashes with the white logo bar along
+   the bottom of our featured images). It follows the image wrapper in the
+   card's markup and is laid over the top of the card, so it takes no room.
+   The row spans the card (less the insets), so the popover can be capped at
+   its width; the row itself lets clicks through to the card, only the badge
+   and popover catch them. */
+.vvp-co__feed-card:has(> .vvp-co__credit) {
   position: relative;
+}
+
+.vvp-co__credit {
+  position: absolute;
+  top: var(--vvp-spacing-sm, 8px);
+  right: var(--vvp-spacing-sm, 8px);
+  left: var(--vvp-spacing-sm, 8px);
   z-index: 1;
   display: flex;
   justify-content: flex-end;
   height: 28px;
-  margin: -36px var(--vvp-spacing-sm, 8px) var(--vvp-spacing-sm, 8px);
   line-height: 0;
   pointer-events: none;
 }
@@ -378,14 +397,14 @@
   outline-offset: 2px;
 }
 
-/* Opens upwards over the image, right-aligned with the badge. The card clips
-   its overflow, so it never gets wider than the badge row (the card) — and
-   ImageCreditBadge.tsx flips it below the badge when there's more room there
-   and caps its height at the room it has, with longer credits scrolling. */
+/* Opens downwards over the image (and the card's text, if need be),
+   right-aligned with the badge. The card clips its overflow, so it never gets
+   wider than the badge row (the card) — and ImageCreditBadge.tsx caps its
+   height at the room left below the badge, with longer credits scrolling. */
 .vvp-co__credit-popover {
   position: absolute;
   right: 0;
-  bottom: calc(100% + var(--vvp-spacing-xs, 4px));
+  top: calc(100% + var(--vvp-spacing-xs, 4px));
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -405,13 +424,6 @@
   overflow-wrap: anywhere;
   cursor: auto;
   pointer-events: auto;
-}
-
-/* Not enough room above the badge (ImageCreditBadge.tsx): open downwards,
-   over the card's text. */
-.vvp-co__credit-popover--below {
-  top: calc(100% + var(--vvp-spacing-xs, 4px));
-  bottom: auto;
 }
 
 .vvp-co__credit-title {
