@@ -190,8 +190,8 @@ importers:
         specifier: ^1.0.14
         version: 1.0.14
       '@divi/module-library':
-        specifier: ^1.0.15
-        version: 1.0.15
+        specifier: ^1.0.16
+        version: 1.0.16
       '@divi/types':
         specifier: ^1.0.13
         version: 1.0.13
@@ -618,11 +618,17 @@ packages:
   '@divi/context-library@1.0.3':
     resolution: {integrity: sha512-BDYZQs1BmUbYUNPjLXcswyYaqi6wLN0JbGN6toOziexj2XGKQ5D7t7SdxUIYR+BHmCKriLztchz1xNZ5joYOAw==}
 
+  '@divi/context-library@1.0.4':
+    resolution: {integrity: sha512-BD6oSGDjFgPK1/+wmCF3V7Ah86Saf+AYGVYMVyTnddSKgYnVxiwvgcSYPjEAvWXLOwF3nMOG5JWwHF4R4bsJSA==}
+
   '@divi/conversion@1.0.4':
     resolution: {integrity: sha512-VcPaK9g+rxNl51Sp4btWWN+aAA61laV6Ee82xUcGxhfWmYo3eDn/ukQ0KLAnYiPqR47BaUHFRsPW3JHuniAMbA==}
 
   '@divi/data@1.0.2':
     resolution: {integrity: sha512-IscXcxQfTV9CopixQLce8Z+JtE+fw6fMFIy6P0d8Ap1gS4rSLqjHDugCG9+lyCKH7W4v95KbnhJiNQa8te+dfg==}
+
+  '@divi/data@1.0.3':
+    resolution: {integrity: sha512-r7woDs78OpEX7degXyX8A2Tjqz/32Ujzz0WM3H/OZDUjlceENPheu0KhgCiRNwLuHHdR2jeDHaJOtZx9adt1Sg==}
 
   '@divi/draggable@1.0.1':
     resolution: {integrity: sha512-e/KSgrrw01hCuzS2CeojexHm4Gw2pVmtOXkAQhHqGTWXk5ygqycdcCPgRXWwBT37ko7MHIUMRcGfzdch+DCCHA==}
@@ -630,23 +636,41 @@ packages:
   '@divi/field-library@1.0.13':
     resolution: {integrity: sha512-utKqfZ7/QsixUVLlXFZY7Wlgnb0bsrCWBBEt4r1ljA8j5u6XnBugQpToNTmvitETRm20quT4VIvFHDEDM9cbgA==}
 
+  '@divi/field-library@1.0.14':
+    resolution: {integrity: sha512-/4CvVEFNzebzLwyXygNCVAc/paLBxNhwfnq07IgS8Zo+SXHgEJ3niW06lAFhZz6ww0K3ANJo4MzMVyIIOxmQiQ==}
+
   '@divi/hooks@1.0.1':
     resolution: {integrity: sha512-Zy04D4ZTd/SVNKFVXQ4BEOQ90/80f49XgGnQbsUVwW8faBAuimyf5WVTiLitqQF5IG40bLxUUkLCBOBntraGnA==}
 
   '@divi/icon-library@1.0.2':
     resolution: {integrity: sha512-pX7nkKHQf8uq3L4Cm9Ee9DyKO3UyjuNbwiZr1Sf3vZS7nqIvldUXJb7G/iTzX5CyE2RLRB2LCrlgByfqNTnPQw==}
 
+  '@divi/icon-library@1.0.3':
+    resolution: {integrity: sha512-/K7PGPRV+4oN89gno3q2kp6QSDQP9Cr+x/rHlr2h6l/j/7sRAdRcRnbqXQCv0twgYBsIamibQbM7Ox7nycd3/g==}
+
   '@divi/modal@1.0.7':
     resolution: {integrity: sha512-QHMtJJYxqFAYsDg5jhfthz4wIhlBekLsvQy4/zweTA8bABzqf+96yiwaA+QtMW7yZe7xp5M2zJxljR1v7pk0hg==}
 
-  '@divi/module-library@1.0.15':
-    resolution: {integrity: sha512-ARnyXLssCitL5tp0Y19eO71k6cSnvHuEm8C5xE0VigBoQcXUW/kH6aYmhWeXuubfjMSwoJmCChEv0c4vt5KRUQ==}
+  '@divi/modal@1.0.8':
+    resolution: {integrity: sha512-6/bZdAM3NzgqPTBm96bzXspQ5UY33pdiX1ko+5Ct94bsQ7KEhkvb5TmJD4WEmNKEQufAjzoxub2iQdYzN5vocA==}
+
+  '@divi/module-library@1.0.16':
+    resolution: {integrity: sha512-UwJ5OwV0kInB0dLlR10UOWm/KDJpVgwbs5m0XwTcTf1m5/owf1mqS8Ck1IUzWzUPLWou+z3zYmiBdf/gL+LzUw==}
 
   '@divi/module-utils@1.0.14':
     resolution: {integrity: sha512-516THN8LlHxRKuavLWiiNY3JuyZ2LSi6iYKMJn2cjPsbO3oj2+HMa8MsxzbRlCW7XryxXZo1/7JIkpRKsaBi/g==}
 
+  '@divi/module-utils@1.0.15':
+    resolution: {integrity: sha512-Y4FC5W+mpW/cUFbFHmABA1YmC/htTv5uHokjgbmadKrblW0YmHysODjx39eMAwoNhyRs8D+kzeSILIS8+Tpsxg==}
+
   '@divi/module@1.0.14':
     resolution: {integrity: sha512-FfJ/S+zBsn0P3Na1ubAWekqfwNXEPY54W0BT5vBKjpwKdMTbu/5AfKyhFty/Bm4g5enul1FqowwnyVJdvl/9NA==}
+
+  '@divi/module@1.0.15':
+    resolution: {integrity: sha512-2U746L2TjDiBvp/nQ8A3urLbEFqAwdxaLiGEAm3b74lL0FA1R2zXA/ImB5Ld6JXcZCZhr5JpnROXz2FOjvlKQw==}
+
+  '@divi/right-click-options@1.0.10':
+    resolution: {integrity: sha512-N+aQgfr5atHAWe2LVhtDWbgR8HMZQYpmpUWe8Ykityp4sbv5dT/hNrGavQ8UcxR2MS30EuFuoeZtA02dBBtzsw==}
 
   '@divi/right-click-options@1.0.9':
     resolution: {integrity: sha512-/LDeXcPfn9r5/w3PbCU3sbd/DNUOCh0m2wjorKKTW8Vv1xGps1SUFBT/BgBCCgAhLeTlZW/w7dTdNiGLfCZNWQ==}
@@ -654,14 +678,23 @@ packages:
   '@divi/script-library@1.0.12':
     resolution: {integrity: sha512-hjUAIBcxUdPKZIMjwDfYWBylUQIYAb3oMXV8pIvBlw7mDTSPydAUhMZ3TJ4ygjHlN/AZHSO8OidwHSfKBnBdLg==}
 
+  '@divi/script-library@1.0.13':
+    resolution: {integrity: sha512-aP2GuXf+GxtHWPOw6rCoBbpRTgQqXPXv6v3szLCi5uBQrNJcmuFyJp5nXc30Lqq3iNBoROzx5l42racZqDhLQA==}
+
   '@divi/style-library@1.0.10':
     resolution: {integrity: sha512-YeUzhGUxbd6rnw1R6+sGdnhoY97ItEgZTcnlAF7Db9ezd7kjTM6cGWihZrUjuhf0RMHqJerWSDAYKbrQydBtzw==}
+
+  '@divi/style-library@1.0.11':
+    resolution: {integrity: sha512-vO2u1zeYw2x2uDezXbJtCCcy8sEx6r59uOuPI5+wieC0hhFAZij7BMCCFVSUBTo07V5eYNu0SKZm+B2YleGXmw==}
 
   '@divi/types-external@1.0.2':
     resolution: {integrity: sha512-ukS/Uud+1kQXpX69phIDbxupYpy8+/VGBRpHJ+LXQGMh+/uO3Qhc84ZFxm8KGzCTKH12Q/9PoaPm74uNpUNu7A==}
 
   '@divi/types@1.0.13':
     resolution: {integrity: sha512-QQXhYWfjWSzfTgVuy9YFkkjMpo3LAiZDsGp0/ZW12klxxpL/8gBm9LorhCMzKYiJBTPQ8cn+ei7HMTcJ/zMbOA==}
+
+  '@divi/types@1.0.14':
+    resolution: {integrity: sha512-MDcMdCPVPhFDfiMnAXnDURT/aP21HaNyXkoK8klXqIBHJ3qxn7lp7edJQmojACEvlRmbEdrGdHRLnYd6eLlNYQ==}
 
   '@dual-bundle/import-meta-resolve@4.2.1':
     resolution: {integrity: sha512-id+7YRUgoUX6CgV0DtuhirQWodeeA7Lf4i2x71JS/vtA5pRb/hIGWlw+G6MeXvsM+MXrz0VAydTGElX1rAfgPg==}
@@ -3912,6 +3945,11 @@ snapshots:
       '@divi/types': 1.0.13
       react: 18.2.0
 
+  '@divi/context-library@1.0.4':
+    dependencies:
+      '@divi/types': 1.0.14
+      react: 18.2.0
+
   '@divi/conversion@1.0.4(react@18.2.0)':
     dependencies:
       '@divi/types': 1.0.13
@@ -3922,6 +3960,12 @@ snapshots:
   '@divi/data@1.0.2':
     dependencies:
       '@divi/types': 1.0.13
+      '@wordpress/data': 9.20.0(react@18.2.0)
+      react: 18.2.0
+
+  '@divi/data@1.0.3':
+    dependencies:
+      '@divi/types': 1.0.14
       '@wordpress/data': 9.20.0(react@18.2.0)
       react: 18.2.0
 
@@ -3948,6 +3992,27 @@ snapshots:
       - codemirror
       - moment
 
+  '@divi/field-library@1.0.14':
+    dependencies:
+      '@divi/data': 1.0.3
+      '@divi/draggable': 1.0.1
+      '@divi/icon-library': 1.0.3
+      '@divi/module-utils': 1.0.15
+      '@divi/script-library': 1.0.13
+      '@divi/style-library': 1.0.11
+      '@divi/types': 1.0.14
+      '@divi/types-external': 1.0.2
+      '@types/codemirror': 5.60.18
+      '@types/css-tree': 2.3.11
+      '@types/react-dates': 21.8.8
+      '@types/seamless-immutable': 7.1.19
+      codemirror-colorpicker: 1.9.80
+      react: 18.2.0
+      tinymce: 5.10.9
+    transitivePeerDependencies:
+      - codemirror
+      - moment
+
   '@divi/hooks@1.0.1':
     dependencies:
       react: 18.2.0
@@ -3957,6 +4022,12 @@ snapshots:
       '@divi/types': 1.0.13
       react: 18.2.0
 
+  '@divi/icon-library@1.0.3':
+    dependencies:
+      '@divi/types': 1.0.14
+      react: 18.2.0
+      zod: 4.5.4
+
   '@divi/modal@1.0.7':
     dependencies:
       '@divi/draggable': 1.0.1
@@ -3965,12 +4036,20 @@ snapshots:
       '@types/seamless-immutable': 7.1.19
       react: 18.2.0
 
-  '@divi/module-library@1.0.15':
+  '@divi/modal@1.0.8':
     dependencies:
-      '@divi/module': 1.0.14
-      '@divi/module-utils': 1.0.14
-      '@divi/style-library': 1.0.10
-      '@divi/types': 1.0.13
+      '@divi/draggable': 1.0.1
+      '@divi/hooks': 1.0.1
+      '@divi/types': 1.0.14
+      '@types/seamless-immutable': 7.1.19
+      react: 18.2.0
+
+  '@divi/module-library@1.0.16':
+    dependencies:
+      '@divi/module': 1.0.15
+      '@divi/module-utils': 1.0.15
+      '@divi/style-library': 1.0.11
+      '@divi/types': 1.0.14
       '@divi/types-external': 1.0.2
       '@types/seamless-immutable': 7.1.19
       '@wordpress/blocks': 12.19.13(react@18.2.0)
@@ -3987,6 +4066,15 @@ snapshots:
       '@types/seamless-immutable': 7.1.19
       react: 18.2.0
 
+  '@divi/module-utils@1.0.15':
+    dependencies:
+      '@divi/data': 1.0.3
+      '@divi/types': 1.0.14
+      '@divi/types-external': 1.0.2
+      '@types/seamless-immutable': 7.1.19
+      react: 18.2.0
+      zod: 4.5.4
+
   '@divi/module@1.0.14':
     dependencies:
       '@divi/context-library': 1.0.3
@@ -4002,6 +4090,28 @@ snapshots:
       '@types/seamless-immutable': 7.1.19
       react: 18.2.0
 
+  '@divi/module@1.0.15':
+    dependencies:
+      '@divi/context-library': 1.0.4
+      '@divi/conversion': 1.0.4(react@18.2.0)
+      '@divi/field-library': 1.0.14
+      '@divi/modal': 1.0.8
+      '@divi/module-utils': 1.0.15
+      '@divi/right-click-options': 1.0.10
+      '@divi/script-library': 1.0.13
+      '@divi/style-library': 1.0.11
+      '@divi/types': 1.0.14
+      '@divi/types-external': 1.0.2
+      '@types/seamless-immutable': 7.1.19
+      react: 18.2.0
+
+  '@divi/right-click-options@1.0.10':
+    dependencies:
+      '@divi/module-utils': 1.0.15
+      '@divi/types': 1.0.14
+      '@types/seamless-immutable': 7.1.19
+      react: 18.2.0
+
   '@divi/right-click-options@1.0.9':
     dependencies:
       '@divi/module-utils': 1.0.14
@@ -4014,14 +4124,30 @@ snapshots:
       '@divi/types': 1.0.13
       react: 18.2.0
 
+  '@divi/script-library@1.0.13':
+    dependencies:
+      '@divi/types': 1.0.14
+      react: 18.2.0
+
   '@divi/style-library@1.0.10':
     dependencies:
       '@divi/module': 1.0.14
       '@divi/types': 1.0.13
 
+  '@divi/style-library@1.0.11':
+    dependencies:
+      '@divi/module': 1.0.15
+      '@divi/types': 1.0.14
+
   '@divi/types-external@1.0.2': {}
 
   '@divi/types@1.0.13':
+    dependencies:
+      '@wordpress/blocks': 12.19.13(react@18.2.0)
+      react: 18.2.0
+      seamless-immutable: 7.1.4
+
+  '@divi/types@1.0.14':
     dependencies:
       '@wordpress/blocks': 12.19.13(react@18.2.0)
       react: 18.2.0
