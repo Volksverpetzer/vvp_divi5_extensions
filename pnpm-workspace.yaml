@@ -12,3 +12,8 @@ minimumReleaseAgeExclude:
 overrides:
   # GHSA-w5hq-g745-h8pq: uuid <11.1.1, pulled in via @wordpress/blocks (Divi packages)
   "uuid@<11.1.1": "^11.1.1"
+  # GHSA-g3hv-75wg-m249: minimatch 10.2.6 via @eslint/config-array 0.23.5 and
+  # @typescript-eslint/typescript-estree 8.72.x (only calls minimatch(path, pattern,
+  # { dot: true }), unchanged in 11). Drop once both ask for minimatch 11
+  # (eslint 10.15.0 already does).
+  "minimatch@>=7.0.0 <11.0.1": "^11.0.1"
