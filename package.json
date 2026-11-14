@@ -31,8 +31,8 @@
   },
   "dependencies": {
     "@stripe/stripe-js": "^10.2.1",
-    "@volksverpetzer/design-tokens": "0.9.1",
-    "@volksverpetzer/ui-web": "0.16.0",
+    "@volksverpetzer/design-tokens": "0.10.0",
+    "@volksverpetzer/ui-web": "0.17.0",
     "classnames": "^2.5.1"
   },
   "devDependencies": {
