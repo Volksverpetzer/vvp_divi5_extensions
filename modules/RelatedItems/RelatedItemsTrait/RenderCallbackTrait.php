@@ -50,6 +50,15 @@ trait RenderCallbackTrait
      */
     private const EMPTY_RESULT_CACHE_TTL = 5 * \MINUTE_IN_SECONDS;
 
+    /**
+     * How long the last *successful, non-empty* list for a post is kept as a
+     * fallback. Unlike the main cache entry it is not purged when the post is
+     * saved, and it is only ever read when a fresh fetch fails -- so a
+     * transient hiccup (timeout, cold start, rate limit) keeps showing the
+     * previous recommendations instead of an empty section.
+     */
+    private const LAST_GOOD_TTL = 30 * \DAY_IN_SECONDS;
+
     public static function render_callback($attrs, $content, $block, $elements)
     {
         // Server-rendered cards, hydrated by content-overview-frontend.js
@@ -127,18 +136,42 @@ trait RenderCallbackTrait
             return [];
         }
 
-        $ids = self::fetch_related_ids($permalink);
-        $ttl = empty($ids) ? self::EMPTY_RESULT_CACHE_TTL : self::CACHE_TTL;
-        set_transient($cache_key, $ids, $ttl);
+        $ids = self::fetch_related_ids($permalink, $post_id);
+        $good_key = self::last_good_key($cache_key);
+
+        if (null === $ids) {
+            // Fetch failed (already logged with its reason). Serve the last
+            // good list if there is one; either way retry after the short
+            // TTL rather than the full 6h.
+            $good = get_transient($good_key);
+            $ids  = is_array($good) ? $good : [];
+            $ttl  = self::EMPTY_RESULT_CACHE_TTL;
+        } else {
+            $ttl = empty($ids) ? self::EMPTY_RESULT_CACHE_TTL : self::CACHE_TTL;
+            if (!empty($ids)) {
+                set_transient($good_key, $ids, self::LAST_GOOD_TTL);
+            }
+        }
+
+        // Editors always hit the origin (no CDN copy to fall back on), so an
+        // empty result cached for 5 minutes would show them an empty section
+        // while visitors still see the CDN's older copy. Don't cache empty
+        // results for them; the next view retries.
+        if (!empty($ids) || !current_user_can('edit_posts')) {
+            set_transient($cache_key, $ids, $ttl);
+        }
         self::release_refresh_lock($cache_key);
 
         return $ids;
     }
 
     /**
-     * @return list<int>
+     * @return list<int>|null Related post IDs (possibly empty when the API
+     *                        genuinely has no matches), or null when the fetch
+     *                        failed -- the reason is logged -- so the caller
+     *                        can fall back to the last good list.
      */
-    private static function fetch_related_ids(string $permalink): array
+    private static function fetch_related_ids(string $permalink, int $post_id): ?array
     {
         $request_url = self::RECOMMEND_API_URL . '?' . http_build_query(['url' => $permalink]);
 
@@ -147,13 +180,22 @@ trait RenderCallbackTrait
             'user-agent' => 'VVP-RelatedItems/1.0',
         ]);
 
-        if (is_wp_error($response) || 200 !== (int) wp_remote_retrieve_response_code($response)) {
-            return [];
+        if (is_wp_error($response)) {
+            self::log_failure($post_id, 'request failed: ' . $response->get_error_message());
+            return null;
+        }
+
+        $code = (int) wp_remote_retrieve_response_code($response);
+        if (200 !== $code) {
+            // 404 means the post isn't in vectorcrawl's index (yet).
+            self::log_failure($post_id, 'recommend API returned HTTP ' . $code);
+            return null;
         }
 
         $data = json_decode(wp_remote_retrieve_body($response), true);
         if (!is_array($data) || !is_array($data['results'] ?? null)) {
-            return [];
+            self::log_failure($post_id, 'recommend API returned an unexpected body');
+            return null;
         }
 
         $own_host = self::normalize_host(wp_parse_url(home_url(), PHP_URL_HOST));
@@ -181,13 +223,34 @@ trait RenderCallbackTrait
             // title/thumbnail/excerpt even if vectorcrawl's copy is stale
             // (see the create-only indexing webhook), and skips silently if
             // the URL no longer resolves to a published post at all.
-            $post_id = url_to_postid($result['url']);
-            if ($post_id > 0 && !in_array($post_id, $ids, true) && ContentOverview::is_card_post(get_post($post_id))) {
-                $ids[] = $post_id;
+            $related_id = url_to_postid($result['url']);
+            if ($related_id > 0 && !in_array($related_id, $ids, true) && ContentOverview::is_card_post(get_post($related_id))) {
+                $ids[] = $related_id;
             }
         }
 
+        if (empty($ids) && !empty($data['results'])) {
+            // The API had matches, but none resolved to a published local post.
+            self::log_failure($post_id, 'recommend API returned ' . count($data['results']) . ' results, none resolved to a published post');
+            return null;
+        }
+
         return $ids;
+    }
+
+    /**
+     * One line per failed fetch (at most one per post per EMPTY_RESULT_CACHE_TTL,
+     * since the failure itself is cached), so "why is this section empty?" is
+     * answerable from the PHP error log instead of being swallowed.
+     */
+    private static function log_failure(int $post_id, string $reason): void
+    {
+        error_log(sprintf('[VVP RelatedItems] post %d: %s', $post_id, $reason));
+    }
+
+    private static function last_good_key(string $cache_key): string
+    {
+        return $cache_key . '_good';
     }
 
     /**

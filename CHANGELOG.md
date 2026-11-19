@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Artikelkarte fills the height of its column, so in a Loop grid (e.g. category archives) shorter cards no longer stop above the cell's bottom and all footers line up.
+- Related items ("Passende Artikel dazu"): a failed fetch from the recommendation API no longer empties the section. The last good list is kept for 30 days and shown while the API is unavailable, the failure reason (timeout, HTTP status, unexpected body, no results matching a published post) is written to the PHP error log as `[VVP RelatedItems] post <id>: …`, and editors, who always see the uncached origin render, no longer get an empty result cached for 5 minutes.
 
 ## [1.6.0] - 2026-11-04
 
