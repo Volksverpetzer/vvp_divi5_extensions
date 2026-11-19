@@ -125,7 +125,11 @@ trait RenderCallbackTrait
 
         $cache_key = self::cache_key($post_id);
         $cached    = get_transient($cache_key);
-        if (is_array($cached)) {
+        // An empty cached list (a failed or empty fetch, cached for a few
+        // minutes) is treated as a miss for editors, so they retry instead of
+        // inheriting one an anonymous request cached; a successful retry then
+        // heals the entry for everyone.
+        if (is_array($cached) && (!empty($cached) || !current_user_can('edit_posts'))) {
             return $cached;
         }
 
