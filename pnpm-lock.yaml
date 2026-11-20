@@ -235,8 +235,8 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1(vitest@5.1.1)
       '@wordpress/hooks':
-        specifier: ^5.1.0
-        version: 5.1.0
+        specifier: ^5.2.0
+        version: 5.2.0
       '@wordpress/i18n':
         specifier: ^7.1.0
         version: 7.1.0
@@ -1694,8 +1694,8 @@ packages:
     resolution: {integrity: sha512-9LB0ZHnZRQlORttux9t/xbAskF+dk2ujqzPGsVzc92mSKpQP3K2a5Wy74fUnInguB1vLUNHT6nrNdkVom5qX1Q==}
     engines: {node: '>=12'}
 
-  '@wordpress/hooks@5.1.0':
-    resolution: {integrity: sha512-EvHdv0beYOcINcY91jj+brsoLu87AEp2k7gzJC/Xdux3Ng0WLk2VL9A66vpsyZ61J1/Uiivmo3zR/LhC3Y0UzA==}
+  '@wordpress/hooks@5.2.0':
+    resolution: {integrity: sha512-DlLzkHOVaC4Pt1B8AXQ/46whhMaefuoAAwXETGo0xoSKF6UVapdIwe3WjiMiaaqja2+b5d8RfWeG5/sdDI5eMQ==}
     engines: {node: '>=22.13.0'}
 
   '@wordpress/html-entities@3.58.0':
@@ -4940,7 +4940,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.29.7
 
-  '@wordpress/hooks@5.1.0': {}
+  '@wordpress/hooks@5.2.0': {}
 
   '@wordpress/html-entities@3.58.0':
     dependencies:
@@ -4958,7 +4958,7 @@ snapshots:
   '@wordpress/i18n@7.1.0':
     dependencies:
       '@tannin/sprintf': 1.3.4
-      '@wordpress/hooks': 5.1.0
+      '@wordpress/hooks': 5.2.0
       gettext-parser: 1.4.0
       tannin: 1.2.0
 
