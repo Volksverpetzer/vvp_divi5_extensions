@@ -238,8 +238,8 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0
       '@wordpress/i18n':
-        specifier: ^7.1.0
-        version: 7.1.0
+        specifier: ^7.2.0
+        version: 7.2.0
       autoprefixer:
         specifier: ^10.6.2
         version: 10.6.2(postcss@8.5.33)
@@ -1698,6 +1698,10 @@ packages:
     resolution: {integrity: sha512-EvHdv0beYOcINcY91jj+brsoLu87AEp2k7gzJC/Xdux3Ng0WLk2VL9A66vpsyZ61J1/Uiivmo3zR/LhC3Y0UzA==}
     engines: {node: '>=22.13.0'}
 
+  '@wordpress/hooks@5.2.0':
+    resolution: {integrity: sha512-DlLzkHOVaC4Pt1B8AXQ/46whhMaefuoAAwXETGo0xoSKF6UVapdIwe3WjiMiaaqja2+b5d8RfWeG5/sdDI5eMQ==}
+    engines: {node: '>=22.13.0'}
+
   '@wordpress/html-entities@3.58.0':
     resolution: {integrity: sha512-FU7b6QZdwTCuLKq6wCl0IZqqOMcMRxMcekVVytzTse7hYk9dvL1qQL/U4eQ/CNyKqiT9u7fb5NKTQILOzoolVQ==}
     engines: {node: '>=12'}
@@ -1707,8 +1711,8 @@ packages:
     engines: {node: '>=12'}
     hasBin: true
 
-  '@wordpress/i18n@7.1.0':
-    resolution: {integrity: sha512-WCwJZLUlyI5rbdCBdBDxPGgD405JjiQPzyHRcqS2FwZZDb1+dFnMuDBgeewzWKEtsXlOLJnrJQWKggNJVXnOKQ==}
+  '@wordpress/i18n@7.2.0':
+    resolution: {integrity: sha512-xVKQhLGp/JTH4yH445tNjuMmNnGsVGUFWJAVpgibgg3l5UFw5PYs8/D9rFRgAwY+If1RadSs0NGnB/6R7VRvKw==}
     engines: {node: '>=22.13.0'}
     hasBin: true
 
@@ -4942,6 +4946,8 @@ snapshots:
 
   '@wordpress/hooks@5.1.0': {}
 
+  '@wordpress/hooks@5.2.0': {}
+
   '@wordpress/html-entities@3.58.0':
     dependencies:
       '@babel/runtime': 7.29.7
@@ -4955,10 +4961,10 @@ snapshots:
       sprintf-js: 1.1.3
       tannin: 1.2.0
 
-  '@wordpress/i18n@7.1.0':
+  '@wordpress/i18n@7.2.0':
     dependencies:
       '@tannin/sprintf': 1.3.4
-      '@wordpress/hooks': 5.1.0
+      '@wordpress/hooks': 5.2.0
       gettext-parser: 1.4.0
       tannin: 1.2.0
 
