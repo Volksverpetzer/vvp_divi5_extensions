@@ -137,13 +137,14 @@
               "name": "divi/select",
               "type": "field",
               "props": {
-                "options": [
-                  { "value": "vertical", "label": "Vertikal (übereinander)" },
-                  {
-                    "value": "horizontal",
+                "options": {
+                  "vertical": {
+                    "label": "Vertikal (übereinander)"
+                  },
+                  "horizontal": {
                     "label": "Horizontal (nebeneinander)"
                   }
-                ]
+                }
               }
             }
           }

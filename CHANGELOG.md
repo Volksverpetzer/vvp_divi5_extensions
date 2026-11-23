@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Dropdown settings in the Visual Builder can be changed again: "Spendenart" (Einmalig/Monatlich) in Campaign Donate, "Icon" and "Darstellung" in CTA Box, "Layout" in Author Profile, and "Zeitraum" in Trending Items and Trending List. Their options were defined as a list, the format of Divi's checkbox fields, but Divi's select field expects them keyed by value, so clicking an entry didn't set it.
 - Spenden-Formular: the API base URL help text names the right example domain (`crowdfunding.volksverpetzer.de`, not `crowdfund.`).
 - Campaign Progress stretches to the full width of its column. In a Divi 5 column with centered alignment the bar shrank to the width of the "0 € von 20.000 €" line.
 - Artikelkarte fills the height of its column, so in a Loop grid (e.g. category archives) shorter cards no longer stop above the cell's bottom and all footers line up.
