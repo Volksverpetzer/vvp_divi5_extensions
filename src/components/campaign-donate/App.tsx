@@ -11,6 +11,10 @@ import {
   type StripeEmbeddedCheckout,
 } from "@stripe/stripe-js";
 import { Alert, Button } from "@volksverpetzer/ui-web";
+import {
+  isPayPalCaptureSuccessful,
+  type PayPalCaptureResponse,
+} from "./paypal";
 import { type CampaignDonateAppProps } from "./types";
 
 // Inline (not delegated to an imported helper) so static analysis tracking
@@ -277,8 +281,8 @@ export const CampaignDonateApp = ({
                 body: JSON.stringify({ orderID: data.orderID }),
               },
             );
-            const json = await response.json();
-            if (!response.ok || !json?.recorded) {
+            const json = (await response.json()) as PayPalCaptureResponse;
+            if (!isPayPalCaptureSuccessful(response.ok, json)) {
               setError(json?.error ?? "PayPal-Zahlung fehlgeschlagen.");
               return;
             }
