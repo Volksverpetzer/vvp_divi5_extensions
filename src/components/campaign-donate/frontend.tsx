@@ -1,6 +1,7 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { CampaignDonateApp } from "./App";
+import { resolveMountSettings } from "./mount-config";
 import { parseSteadyPlans } from "./steady";
 
 const parsePresets = (input: string): number[] => {
@@ -22,16 +23,18 @@ const initAll = () => {
     const paypalClientId = mount.getAttribute("data-paypal-client-id") || "";
     const interval =
       mount.getAttribute("data-interval") === "month" ? "month" : "once";
-    const steadyPlans = parseSteadyPlans(
-      mount.getAttribute("data-steady-plans") || "",
-    );
 
-    // Monthly mode hides PayPal but can show Steady plans instead.
-    const hasPaymentOption =
-      interval === "month"
-        ? Boolean(stripePublicKey) || steadyPlans.length > 0
-        : Boolean(stripePublicKey) || Boolean(paypalClientId);
-    if (!apiBaseUrl || !campaignKey || !hasPaymentOption) {
+    const settings = resolveMountSettings({
+      apiBaseUrl,
+      campaignKey,
+      interval,
+      stripePublicKey,
+      paypalClientId,
+      steadyPlans: parseSteadyPlans(
+        mount.getAttribute("data-steady-plans") || "",
+      ),
+    });
+    if (!settings) {
       return;
     }
 
@@ -45,13 +48,8 @@ const initAll = () => {
 
     createRoot(mount).render(
       <CampaignDonateApp
-        apiBaseUrl={apiBaseUrl}
-        campaignKey={campaignKey}
-        interval={interval}
-        stripePublicKey={stripePublicKey}
-        paypalClientId={paypalClientId}
+        {...settings}
         presets={presets}
-        steadyPlans={steadyPlans}
         certificateUrl={certificateUrl}
       />,
     );
