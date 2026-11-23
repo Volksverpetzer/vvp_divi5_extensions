@@ -11,12 +11,14 @@ const PLAN_ID_PATTERN =
 
 /**
  * Parses the module's Steady plan setting: one "amount=plan-id" entry per
- * line (commas work too), e.g. "5=a5fcfc59-8848-4359-9b03-585cfedb54b5".
+ * line (";" also separates entries), e.g.
+ * "5=a5fcfc59-8848-4359-9b03-585cfedb54b5". Not commas: they're the
+ * decimal separator in German amounts ("3,50=…").
  * Entries with an invalid amount or plan ID are skipped.
  */
 export const parseSteadyPlans = (input: string): SteadyPlan[] =>
   input
-    .split(/[\n,]/)
+    .split(/[\n;]/)
     .map((entry) => entry.split("="))
     .filter((parts) => parts.length === 2)
     .map(([amount, planId]) => ({

@@ -212,7 +212,7 @@
             "render": true,
             "attrName": "steadyPlans.innerContent",
             "label": "Steady-Pläne (nur bei „Monatlich“)",
-            "description": "Ein Plan pro Zeile im Format Betrag=Plan-ID, z. B. 5=a5fcfc59-8848-4359-9b03-585cfedb54b5. Die Plan-ID ist der letzte Teil des Teilen-Links (steady.page/plans/…). Leer lassen, um Steady auszublenden.",
+            "description": "Ein Plan pro Zeile im Format Betrag=Plan-ID, z. B. 5=a5fcfc59-8848-4359-9b03-585cfedb54b5 (auch mit Komma, z. B. 3,50=…). Die Plan-ID ist der letzte Teil des Teilen-Links (steady.page/plans/…). Leer lassen, um Steady auszublenden.",
             "features": {
               "sticky": false,
               "dynamicContent": false
