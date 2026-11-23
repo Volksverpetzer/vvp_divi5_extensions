@@ -113,16 +113,14 @@
               "name": "divi/select",
               "type": "field",
               "props": {
-                "options": [
-                  {
-                    "value": "once",
+                "options": {
+                  "once": {
                     "label": "Einmalig"
                   },
-                  {
-                    "value": "month",
+                  "month": {
                     "label": "Monatlich"
                   }
-                ]
+                }
               }
             }
           }
