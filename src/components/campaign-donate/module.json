@@ -56,7 +56,7 @@
             "render": true,
             "attrName": "apiBaseUrl.innerContent",
             "label": "Kampagnen-API Basis-URL",
-            "description": "Basis-URL der Spenden-App, ohne abschließenden Slash, z. B. https://crowdfund.volksverpetzer.de. Ruft dort /api/create-checkout-session und /api/finalize-session auf.",
+            "description": "Basis-URL der Spenden-App, ohne abschließenden Slash, z. B. https://crowdfunding.volksverpetzer.de. Ruft dort /api/create-checkout-session und /api/finalize-session auf.",
             "features": {
               "sticky": false,
               "dynamicContent": false
@@ -88,6 +88,42 @@
             "component": {
               "name": "divi/text",
               "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "donationInterval": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 17,
+            "render": true,
+            "attrName": "donationInterval.innerContent",
+            "label": "Spendenart",
+            "description": "Einmalig: Karte/SEPA und PayPal. Monatlich: monatliche Spende per Karte/SEPA (Stripe-Abo) und die Steady-Pläne unten; PayPal wird ausgeblendet.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/select",
+              "type": "field",
+              "props": {
+                "options": [
+                  {
+                    "value": "once",
+                    "label": "Einmalig"
+                  },
+                  {
+                    "value": "month",
+                    "label": "Monatlich"
+                  }
+                ]
+              }
             }
           }
         }
@@ -159,6 +195,30 @@
             },
             "component": {
               "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "steadyPlans": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 35,
+            "render": true,
+            "attrName": "steadyPlans.innerContent",
+            "label": "Steady-Pläne (nur bei „Monatlich“)",
+            "description": "Ein Plan pro Zeile im Format Betrag=Plan-ID, z. B. 5=a5fcfc59-8848-4359-9b03-585cfedb54b5 (auch mit Komma, z. B. 3,50=…). Die Plan-ID ist der letzte Teil des Teilen-Links (steady.page/plans/…). Leer lassen, um Steady auszublenden.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/textarea",
               "type": "field"
             }
           }

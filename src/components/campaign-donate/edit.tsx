@@ -5,6 +5,7 @@ import { ModuleStyles } from "./styles";
 import { moduleClassnames } from "./module-classnames";
 import { ModuleScriptData } from "./module-script-data";
 import { CampaignDonateApp } from "./App";
+import { parseSteadyPlans } from "./steady";
 import "./style.css";
 
 const parsePresets = (input: string): number[] => {
@@ -27,6 +28,10 @@ export const CampaignDonateEdit = (
     (attrs as any).apiBaseUrl?.innerContent?.desktop?.value?.trim() ?? "";
   const campaignKey =
     (attrs as any).campaignKey?.innerContent?.desktop?.value?.trim() ?? "";
+  const interval =
+    (attrs as any).donationInterval?.innerContent?.desktop?.value === "month"
+      ? "month"
+      : "once";
   const stripePublicKey =
     (attrs as any).stripePublicKey?.innerContent?.desktop?.value?.trim() ?? "";
   const paypalClientId =
@@ -35,6 +40,9 @@ export const CampaignDonateEdit = (
     (attrs as any).presets?.innerContent?.desktop?.value?.trim() ?? "10,50,100";
   const certificateUrl =
     (attrs as any).certificateUrl?.innerContent?.desktop?.value?.trim() ?? "";
+  const steadyPlans = parseSteadyPlans(
+    (attrs as any).steadyPlans?.innerContent?.desktop?.value ?? "",
+  );
 
   return (
     <ModuleContainer
@@ -59,9 +67,11 @@ export const CampaignDonateEdit = (
         <CampaignDonateApp
           apiBaseUrl={apiBaseUrl}
           campaignKey={campaignKey}
+          interval={interval}
           stripePublicKey={stripePublicKey}
           paypalClientId={paypalClientId}
           presets={parsePresets(presetsInput)}
+          steadyPlans={steadyPlans}
           certificateUrl={certificateUrl}
           preview
         />

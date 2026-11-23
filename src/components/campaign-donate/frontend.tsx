@@ -1,6 +1,8 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { CampaignDonateApp } from "./App";
+import { resolveMountSettings } from "./mount-config";
+import { parseSteadyPlans } from "./steady";
 
 const parsePresets = (input: string): number[] => {
   const values = input
@@ -19,8 +21,20 @@ const initAll = () => {
     const campaignKey = mount.getAttribute("data-campaign-key") || "";
     const stripePublicKey = mount.getAttribute("data-stripe-key") || "";
     const paypalClientId = mount.getAttribute("data-paypal-client-id") || "";
+    const interval =
+      mount.getAttribute("data-interval") === "month" ? "month" : "once";
 
-    if (!apiBaseUrl || !campaignKey || (!stripePublicKey && !paypalClientId)) {
+    const settings = resolveMountSettings({
+      apiBaseUrl,
+      campaignKey,
+      interval,
+      stripePublicKey,
+      paypalClientId,
+      steadyPlans: parseSteadyPlans(
+        mount.getAttribute("data-steady-plans") || "",
+      ),
+    });
+    if (!settings) {
       return;
     }
 
@@ -34,10 +48,7 @@ const initAll = () => {
 
     createRoot(mount).render(
       <CampaignDonateApp
-        apiBaseUrl={apiBaseUrl}
-        campaignKey={campaignKey}
-        stripePublicKey={stripePublicKey}
-        paypalClientId={paypalClientId}
+        {...settings}
         presets={presets}
         certificateUrl={certificateUrl}
       />,
