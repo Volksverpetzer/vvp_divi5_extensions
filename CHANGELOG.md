@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Spenden-Formular: new setting „Spendenart“ (Einmalig / Monatlich). „Monatlich“ starts a monthly Stripe subscription through the crowdfunding app (only its first payment counts towards the campaign) and hides PayPal. New setting „Steady-Pläne“: one `Betrag=Plan-ID` per line; in monthly mode each plan is shown as a „<Betrag> € / Monat“ button linking to `https://steady.page/plans/<Plan-ID>` (e.g. the campaign's hidden plans). With only Steady plans and no Stripe key, the amount picker is hidden.
 - Article cards (ContentOverview feed, Trending, Related, Artikelkarte — not the hero) show a small info icon in the top-right corner of the image (clear of the white logo bar along the bottom of our featured images) when it has an Image Source Control credit, like vvp_app's image credit badge. Clicking it opens a "Bildquelle" popover with the source, the licence and a link to the source URL (http(s) only), without following the card link; it closes on a second click, Escape or a click elsewhere. The hero keeps ISC's own credit overlay, moved to the image's top-right corner on these cards (article pages' hero images keep ISC's bottom-right position).
 
 ### Changed
@@ -18,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Spenden-Formular: the API base URL help text names the right example domain (`crowdfunding.volksverpetzer.de`, not `crowdfund.`).
 - Campaign Progress stretches to the full width of its column. In a Divi 5 column with centered alignment the bar shrank to the width of the "0 € von 20.000 €" line.
 - Artikelkarte fills the height of its column, so in a Loop grid (e.g. category archives) shorter cards no longer stop above the cell's bottom and all footers line up.
 - Related items ("Passende Artikel dazu"): a failed fetch from the recommendation API no longer empties the section. The last good list is kept for 30 days and shown while the API is unavailable, the failure reason (timeout, HTTP status, unexpected body, no results matching a published post) is written to the PHP error log as `[VVP RelatedItems] post <id>: …`, and editors, who always see the uncached origin render, no longer get an empty result cached for 5 minutes.

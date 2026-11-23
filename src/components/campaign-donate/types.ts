@@ -1,12 +1,15 @@
 import { type ModuleLibrary } from "@divi/types";
+import { type SteadyPlan } from "./steady";
 
 export interface CampaignDonateAttrs {
   module: object;
   apiBaseUrl: object;
   campaignKey: object;
+  donationInterval: object;
   stripePublicKey: object;
   paypalClientId: object;
   presets: object;
+  steadyPlans: object;
   certificateUrl: object;
 }
 
@@ -16,11 +19,18 @@ export type CampaignDonateEditProps =
 export interface CampaignDonateAppProps {
   apiBaseUrl: string;
   campaignKey: string;
+  /**
+   * "month" offers a monthly Stripe donation plus the Steady plans and hides
+   * PayPal; "once" (default) offers one-time Stripe and PayPal payments.
+   */
+  interval?: "once" | "month";
   /** Empty string hides the Stripe payment option. */
   stripePublicKey: string;
   /** Empty string hides the PayPal payment option. */
   paypalClientId: string;
   presets: number[];
+  /** Shown as links to their Steady checkout in monthly mode only. */
+  steadyPlans?: SteadyPlan[];
   certificateUrl?: string;
   /** Builder preview only — skips network calls, form is inert. */
   preview?: boolean;

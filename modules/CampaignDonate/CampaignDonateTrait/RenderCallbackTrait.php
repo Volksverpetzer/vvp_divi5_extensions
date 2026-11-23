@@ -44,10 +44,12 @@ trait RenderCallbackTrait
         // — attrs.<name>.desktop.value is a separate, unused shadow default.
         $api_base_url      = rtrim(trim($attrs['apiBaseUrl']['innerContent']['desktop']['value'] ?? ''), '/');
         $campaign_key      = trim($attrs['campaignKey']['innerContent']['desktop']['value'] ?? '');
+        $interval          = 'month' === ($attrs['donationInterval']['innerContent']['desktop']['value'] ?? '') ? 'month' : 'once';
         $stripe_public_key = trim($attrs['stripePublicKey']['innerContent']['desktop']['value'] ?? '');
         $paypal_client_id  = trim($attrs['paypalClientId']['innerContent']['desktop']['value'] ?? '');
         $presets           = trim($attrs['presets']['innerContent']['desktop']['value'] ?? '') ?: '10,50,100';
         $certificate_url   = trim($attrs['certificateUrl']['innerContent']['desktop']['value'] ?? '');
+        $steady_plans      = trim($attrs['steadyPlans']['innerContent']['desktop']['value'] ?? '');
 
         $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
         $parent_attrs = $parent->attrs ?? [];
@@ -79,10 +81,12 @@ trait RenderCallbackTrait
                         'class'                 => 'vvp-cd__mount',
                         'data-api-base'         => esc_attr($api_base_url),
                         'data-campaign-key'     => esc_attr($campaign_key),
+                        'data-interval'         => esc_attr($interval),
                         'data-stripe-key'       => esc_attr($stripe_public_key),
                         'data-paypal-client-id' => esc_attr($paypal_client_id),
                         'data-presets'          => esc_attr($presets),
                         'data-certificate-url'  => esc_attr($certificate_url),
+                        'data-steady-plans'     => esc_attr($steady_plans),
                     ],
                     'childrenSanitizer' => 'esc_html',
                     'children'          => '',

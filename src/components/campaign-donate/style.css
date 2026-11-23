@@ -124,3 +124,22 @@
   color: var(--vvp-pink-main);
   font-weight: 700;
 }
+.vvp-campaign-donate .vvp-cd__steady {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--vvp-spacing-md, 10px);
+  width: 100%;
+  max-width: 50%;
+  min-width: 280px;
+}
+.vvp-campaign-donate .vvp-cd__steady-plan {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+.vvp-campaign-donate .vvp-cd__steady-plan:hover,
+.vvp-campaign-donate .vvp-cd__steady-plan:focus-visible {
+  border-color: var(--vvp-pink-main);
+  color: var(--vvp-pink-main);
+}

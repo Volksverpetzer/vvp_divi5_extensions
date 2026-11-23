@@ -1,6 +1,7 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { CampaignDonateApp } from "./App";
+import { parseSteadyPlans } from "./steady";
 
 const parsePresets = (input: string): number[] => {
   const values = input
@@ -19,8 +20,18 @@ const initAll = () => {
     const campaignKey = mount.getAttribute("data-campaign-key") || "";
     const stripePublicKey = mount.getAttribute("data-stripe-key") || "";
     const paypalClientId = mount.getAttribute("data-paypal-client-id") || "";
+    const interval =
+      mount.getAttribute("data-interval") === "month" ? "month" : "once";
+    const steadyPlans = parseSteadyPlans(
+      mount.getAttribute("data-steady-plans") || "",
+    );
 
-    if (!apiBaseUrl || !campaignKey || (!stripePublicKey && !paypalClientId)) {
+    // Monthly mode hides PayPal but can show Steady plans instead.
+    const hasPaymentOption =
+      interval === "month"
+        ? Boolean(stripePublicKey) || steadyPlans.length > 0
+        : Boolean(stripePublicKey) || Boolean(paypalClientId);
+    if (!apiBaseUrl || !campaignKey || !hasPaymentOption) {
       return;
     }
 
@@ -36,9 +47,11 @@ const initAll = () => {
       <CampaignDonateApp
         apiBaseUrl={apiBaseUrl}
         campaignKey={campaignKey}
+        interval={interval}
         stripePublicKey={stripePublicKey}
         paypalClientId={paypalClientId}
         presets={presets}
+        steadyPlans={steadyPlans}
         certificateUrl={certificateUrl}
       />,
     );
