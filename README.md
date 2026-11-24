@@ -177,6 +177,8 @@ Renders the current post as the same article card the Inhaltsübersicht feed use
 │   │       ├── ModuleClassnamesTrait.php
 │   │       ├── ModuleStylesTrait.php
 │   │       └── ModuleScriptDataTrait.php
+│   ├── Trending/
+│   │   └── TrendingSource.php         # Most-read ranking: Plausible, WPP fallback
 │   ├── TrendingItems/
 │   │   ├── TrendingItems.php
 │   │   └── TrendingItemsTrait/
@@ -483,7 +485,14 @@ The module reads the author(s) for the current context (PublishPress Authors if 
 
 ### Trending Beiträge / Trending Liste
 
-Both modules read trending data from the WordPress database (populated by `modules/CronManager.php`). The DIVI settings expose a time-range selector (`range`). TrendingItems additionally has a thumbnail toggle.
+Both modules rank articles with `VVP\Divi5\Trending\TrendingSource` (`modules/Trending/TrendingSource.php`): unique visitors per page from the [Plausible Stats API](https://plausible.io/docs/stats-api) over a rolling window ending now (`last24hours`, `last7days`, `last30days`), mapped to published posts. When Plausible isn't configured, the request fails, or no result maps to a published post, they fall back to **WordPress Popular Posts** (`wpp_get_ids`). Plausible errors are logged as `[vvp-divi5] Plausible trending query …`. Results are cached for an hour (5 minutes when empty). The DIVI settings expose a time-range selector (`range`). TrendingItems additionally has a thumbnail toggle.
+
+Plausible is configured in `wp-config.php`:
+
+```php
+define( 'VVP_PLAUSIBLE_TOKEN', '<Stats API key>' );    // required for Plausible ranking
+define( 'VVP_PLAUSIBLE_SITE_ID', 'volksverpetzer.de' ); // optional, this is the default
+```
 
 TrendingList reads each article's author(s) from **PublishPress Authors** (if available) and falls back to the single WordPress core post author, so co-authored posts show all assigned authors (e.g. "von A und B").
 
