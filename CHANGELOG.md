@@ -6,16 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-11-25
+
 ### Added
 
 - Spenden-Formular: new setting „Spendenart“ (Einmalig / Monatlich). „Monatlich“ starts a monthly Stripe subscription through the crowdfunding app (only its first payment counts towards the campaign) and hides PayPal. New setting „Steady-Pläne“: one `Betrag=Plan-ID` per line; in monthly mode each plan is shown as a „<Betrag> € / Monat“ button linking to `https://steady.page/plans/<Plan-ID>` (e.g. the campaign's hidden plans). With only Steady plans and no Stripe key, the amount picker is hidden.
 - Article cards (ContentOverview feed, Trending, Related, Artikelkarte — not the hero) show a small info icon in the top-right corner of the image (clear of the white logo bar along the bottom of our featured images) when it has an Image Source Control credit, like vvp_app's image credit badge. Clicking it opens a "Bildquelle" popover with the source, the licence and a link to the source URL (http(s) only), without following the card link; it closes on a second click, Escape or a click elsewhere. The hero keeps ISC's own credit overlay, moved to the image's top-right corner on these cards (article pages' hero images keep ISC's bottom-right position).
+- Podcast banner on the start page: a custom player instead of the browser's own `<audio controls>`, which looked different in every browser. It matches the player on audio.volksverpetzer.de: a round play/pause button with a spinner while buffering, a progress slider for seeking, and elapsed/total time underneath ([#248](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/248)).
 
 ### Changed
 
 - `@volksverpetzer/design-tokens` 0.10.0 and `@volksverpetzer/ui-web` 0.17.0: `styles/main.css`, which every page loads, now also contains ui-web's Callout styles (`vvp-ui-callout`) and the new `--vvp-warning` / `--vvp-success` colours, plus a `--vvp-link-text` alias. vvp_wp_patches uses the Callout classes for the old WPBakery message boxes in articles.
 - Article card footer (ContentOverview feed, Trending, Related, Artikelkarte — hero and regular) is laid out like the Instagram and YouTube cards' footers: the category is a badge on the left that opens the category archive (Prüfpunkt articles show their Prüfpunkt badge there instead, and the category as linked plain text in front of the date), and date and reading time sit on the right, separated by a "|". The hero no longer right-aligns the whole footer. When the badges and the meta data don't fit one line, the meta data wraps to a second, right-aligned line.
 - Instagram card footer: the Instagram badge stays on the left; date and the copy-link button sit right-aligned, separated by "|". The media type (Foto/Video/Karussell) is no longer shown — it's evident from the card itself.
+- Podcast banner (ContentOverview) is as compact as the YouTube card: no extra padding around the artwork, the square artwork has the YouTube thumbnail's height, and the summary is clamped to 3 lines. Mobile is unchanged ([#247](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/247)).
+- Instagram cards count an opened fullscreen view once per card in Plausible, like swipes and video plays, instead of on every reopen. Opening fullscreen by clicking the card body or footer now counts too. All Plausible calls (including the „Nur Artikel Filter“ toggle) go through the shared helpers in `src/utils/plausible.ts` ([#250](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/250)).
+- Bumped dependencies: `@volksverpetzer/ui-web` 0.16 (then 0.17, see above), `@wordpress/hooks` and `@wordpress/i18n`, the `@divi/*` packages (`@divi/module` 1.0.15, `@divi/module-library` 1.0.16, `@divi/types` 1.0.14), storybook, vite and transitive updates. `uuid` is forced to 11.1.1 or later (GHSA-w5hq-g745-h8pq, via `@wordpress/blocks`). The open tinymce and showdown alerts come from the Divi packages and have no fix that can be applied here ([#247](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/247), [#261](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/261), [#266](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/266)).
 
 ### Fixed
 
@@ -25,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Campaign Progress stretches to the full width of its column. In a Divi 5 column with centered alignment the bar shrank to the width of the "0 € von 20.000 €" line.
 - Artikelkarte fills the height of its column, so in a Loop grid (e.g. category archives) shorter cards no longer stop above the cell's bottom and all footers line up.
 - Related items ("Passende Artikel dazu"): a failed fetch from the recommendation API no longer empties the section. The last good list is kept for 30 days and shown while the API is unavailable, the failure reason (timeout, HTTP status, unexpected body, no results matching a published post) is written to the PHP error log as `[VVP RelatedItems] post <id>: …`, and editors, who always see the uncached origin render, no longer get an empty result cached for 5 minutes.
+- Spenden-Formular: after a PayPal payment the donor sees the thank-you screen whenever PayPal has captured the money, even if the crowdfunding app couldn't record it right away (its PayPal webhook records it later). Previously the form showed „PayPal-Zahlung fehlgeschlagen.“ and the donor might pay twice. Works with old and new crowdfunding deployments ([#260](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/260), [vvp_crowdfunding#109](https://github.com/Volksverpetzer/vvp_crowdfunding/pull/109)).
 
 ## [1.6.0] - 2026-11-04
 
@@ -163,7 +170,8 @@ First release with a maintained changelog; entries cover everything since v1.0.6
 
 - Both deploy workflows now purge the Bunny CDN cache for this plugin's assets after each deploy. Bunny previously ignored the `?ver=` cache-buster and served the plugin's JS/CSS for up to 30 days regardless of how many times it was redeployed ([#117](https://github.com/Volksverpetzer/vvp_divi5_extensions/pull/117)).
 
-[Unreleased]: https://github.com/Volksverpetzer/vvp_divi5_extensions/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/Volksverpetzer/vvp_divi5_extensions/compare/v1.7.0...HEAD
+[1.7.0]: https://github.com/Volksverpetzer/vvp_divi5_extensions/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/Volksverpetzer/vvp_divi5_extensions/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/Volksverpetzer/vvp_divi5_extensions/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/Volksverpetzer/vvp_divi5_extensions/compare/v1.3.0...v1.4.0
