@@ -8,8 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Spenden-Formular: the Steady plan buttons look like Volksverpetzer's "Unterstützen mit Steady" buttons: Steady coral (`#ff7264`), white uppercase label, the white Steady "S" mark with a dark divider, 6 px corners. Two per row where they fit, one per row on narrow screens. The divider reads "oder mit Steady unterstützen", and each link has an accessible name ("3 € im Monat mit Steady unterstützen").
 - Trending Beiträge and Trending Liste rank articles by unique visitors from Plausible instead of WordPress Popular Posts, over a rolling window ending now (the last 24 hours, 7 or 30 days). Needs `VVP_PLAUSIBLE_TOKEN` (a Plausible Stats API key) in `wp-config.php`; without it, or while Plausible is unavailable, both modules keep using WordPress Popular Posts.
-- 
+-
+
 ## [1.7.0] - 2026-11-25
 
 ### Added

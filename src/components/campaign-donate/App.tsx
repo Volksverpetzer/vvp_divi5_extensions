@@ -465,7 +465,7 @@ export const CampaignDonateApp = ({
 
           {hasStripe && hasSteady && (
             <div className="vvp-cd__divider">
-              <span>oder über Steady</span>
+              <span>oder mit Steady unterstützen</span>
             </div>
           )}
 
@@ -473,19 +473,28 @@ export const CampaignDonateApp = ({
             <div
               className="vvp-cd__steady"
               role="group"
-              aria-label="Monatlich über Steady unterstützen"
+              aria-label="Monatlich mit Steady unterstützen"
             >
-              {steadyPlans.map((plan) => (
-                <a
-                  key={plan.planId}
-                  className="vvp-cd__preset vvp-cd__steady-plan"
-                  href={steadyPlanUrl(plan.planId)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {plan.amount.toLocaleString("de-DE")} € / Monat
-                </a>
-              ))}
+              {steadyPlans.map((plan) => {
+                const amountLabel = `${plan.amount.toLocaleString("de-DE")} €`;
+                return (
+                  <a
+                    key={plan.planId}
+                    className="vvp-cd__steady-plan"
+                    href={steadyPlanUrl(plan.planId)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${amountLabel} im Monat mit Steady unterstützen`}
+                  >
+                    {/* Styled like Volksverpetzer's "Unterstützen mit Steady"
+                        buttons: Steady "S" mark, divider, uppercase label. */}
+                    <span className="vvp-cd__steady-mark" aria-hidden="true" />
+                    <span className="vvp-cd__steady-label">
+                      {amountLabel} / Monat
+                    </span>
+                  </a>
+                );
+              })}
             </div>
           )}
         </div>

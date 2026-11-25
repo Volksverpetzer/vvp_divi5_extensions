@@ -128,20 +128,58 @@
 }
 .vvp-campaign-donate .vvp-cd__steady {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  /* Two columns where they fit, one on narrow screens, so "25 € / MONAT"
+     never wraps next to the mark. */
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   gap: var(--vvp-spacing-md, 10px);
   width: 100%;
   max-width: 50%;
   min-width: 280px;
 }
+/* Steady plan buttons, matching Volksverpetzer's "Unterstützen mit Steady"
+   button assets (wp-content/uploads/2023/01/ButtonSteady.png and
+   2024/03/Button-Steady-O@2x.png): Steady coral, white uppercase label,
+   white "S" mark separated by a dark divider. */
 .vvp-campaign-donate .vvp-cd__steady-plan {
-  display: block;
-  text-align: center;
+  --vvp-steady-coral: #ff7264;
+  --vvp-steady-coral-hover: #f2584a;
+  --vvp-steady-ink: #291e38;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  background: var(--vvp-steady-coral);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   text-decoration: none;
-  color: inherit;
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
 }
 .vvp-campaign-donate .vvp-cd__steady-plan:hover,
 .vvp-campaign-donate .vvp-cd__steady-plan:focus-visible {
-  border-color: var(--vvp-pink-main);
-  color: var(--vvp-pink-main);
+  background: var(--vvp-steady-coral-hover);
+  color: #fff;
+}
+.vvp-campaign-donate .vvp-cd__steady-plan:focus-visible {
+  outline: 2px solid var(--vvp-steady-ink);
+  outline-offset: 2px;
+}
+/* The "S" mark, cut from Button-Steady-O@2x.png (39x55 px) with the coral
+   background turned transparent, so it also works on the hover colour. */
+.vvp-campaign-donate .vvp-cd__steady-mark {
+  flex: none;
+  width: 14px;
+  height: 20px;
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACcAAAA3CAYAAACPdVOuAAACZ0lEQVR42u2Zr0/DQBTHJycrJ+eYrCGZIalEViJrSJBTZIr0X6ibKxIHAoUgRZBMNhgMJE0QSJogkMdr8hqWpu193/WuQ+wlX7X09undvZ+dKKUm/1WTA9ye4HxSSIobikjBPuAqmDtSqTDLSSuS5xKugiqUuZW8q55NuGqxTNmzAj1y5E6Vyo1FQ+BcgkGAXT/MRwDTAnbBZWo8K3kzILjI4A9yfqFa0l3PULjCUmgIGRo1XwfnC8KBD8arFFjvk3Slg4vBHfOF0b7tDr+RHkkb/t+VDg5xhMQg5QX87AvplteIW9QLh9wR04QeA5r3wSmHcNEYcOG+dg451tQAbGEDLrORExuasicicINDSW1IbVaFnDUItrIVhJupJ+a7eExaks4EULVObaYvXQZ5ZfBrEM5D4EIHlccPO1sXaCgpmVLlzooG5JqdBobzhBWFiW0ZbGZSph+RPhwDPvd5PBKbto4BMylcMw9uLHmxqNJpA1v2uHvCO/nlADDQwU0FwbMCveFjKVwcb1uGiIW64LeukvsJX4nEELg38UcCqDMgtwbCkBTrEj8iSU0niZlZF5wHgknKpd21kV627IKbg3ALw0o4AXdvENzUEC4cA242oMExhutziCpD3JPeSeeGcEilk/fB7db6VYB94FFB5wKg0JFa2gd3SXoifVvswCShJLLVQ+RAgx0JxmFlM6jbGByW/Ew9/0gNh4/a1tC0A7NRukMNjrR/dVIu6cr0dCQw8cB6LECjUb/rIy6RykYymbQ1/k+7RvtDvxoG/MXQZKdgKGXhe2uw00tkLaonR746fKk+wP3pFygR2D6kM+HJAAAAAElFTkSuQmCC")
+    center / contain no-repeat;
+}
+.vvp-campaign-donate .vvp-cd__steady-label {
+  padding-left: 12px;
+  border-left: 2px solid var(--vvp-steady-ink);
+  line-height: 1.25;
 }
