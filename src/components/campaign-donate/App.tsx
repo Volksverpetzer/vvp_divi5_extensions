@@ -21,6 +21,7 @@ import {
   steadyPlanForAmount,
   steadyPlanUrl,
 } from "./steady";
+import { parseCustomAmount } from "./amount";
 import { type CampaignDonateAppProps } from "./types";
 
 // Inline (not delegated to an imported helper) so static analysis tracking
@@ -145,17 +146,16 @@ export const CampaignDonateApp = ({
   const idPrefix = useId();
   const customInputId = `${idPrefix}-custom`;
   const steadyHintId = `${idPrefix}-steady-hint`;
+  const customHintId = `${idPrefix}-custom-hint`;
 
   const amount = useMemo(() => {
     if (!customAmount) return selected;
-    // Accept German-style decimal commas ("35,50") in addition to dots.
-    const custom = Number(customAmount.replace(",", "."));
     // Custom input is active but not (yet) a valid amount — don't silently
     // fall back to the last preset, or the donor could end up charged an
     // amount that doesn't match what's shown as selected in the UI.
-    if (Number.isNaN(custom) || custom <= 0) return 0;
-    return Math.round(custom);
+    return parseCustomAmount(customAmount);
   }, [customAmount, selected]);
+  const customAmountInvalid = Boolean(customAmount.trim()) && amount <= 0;
 
   // PayPal's Buttons are only initialized once per mount; createOrder/onApprove
   // are closures captured at that time, so they read the current amount via
@@ -431,7 +431,9 @@ export const CampaignDonateApp = ({
               ref={customInputRef}
               className={`vvp-cd__preset vvp-cd__preset-input ${customAmount ? "is-active" : ""}`}
               type="text"
-              inputMode="decimal"
+              inputMode="numeric"
+              aria-invalid={customAmountInvalid || undefined}
+              aria-describedby={customAmountInvalid ? customHintId : undefined}
               placeholder={
                 monthly ? "Eigener Betrag/Monat..." : "Eigener Betrag..."
               }
@@ -445,6 +447,12 @@ export const CampaignDonateApp = ({
             />
           )}
         </div>
+
+        {customAmountInvalid && (
+          <p id={customHintId} className="vvp-cd__custom-hint" role="alert">
+            Bitte einen ganzen Euro-Betrag eingeben, z. B. 35.
+          </p>
+        )}
 
         <div className="vvp-cd__methods">
           {hasStripe && (

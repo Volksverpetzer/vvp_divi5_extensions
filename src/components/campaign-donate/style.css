@@ -187,6 +187,7 @@
 .vvp-campaign-donate .vvp-cd__steady-button.is-disabled:hover {
   background: var(--vvp-steady-coral);
 }
+.vvp-campaign-donate .vvp-cd__custom-hint,
 .vvp-campaign-donate .vvp-cd__steady-hint {
   margin: 0;
   color: var(--vvp-text, #111);
