@@ -11,14 +11,3 @@ overrides:
   # and typescript-estree already ask for minimatch 11; glob only calls it with
   # standard options, unchanged in 11). Drop once glob asks for minimatch 11.
   "minimatch@>=7.0.0 <11.0.1": "^11.0.1"
-minimumReleaseAgeExclude:
-  - "@typescript-eslint/eslint-plugin@8.74.0"
-  - "@typescript-eslint/parser@8.74.0"
-  - "@typescript-eslint/project-service@8.74.0"
-  - "@typescript-eslint/scope-manager@8.74.0"
-  - "@typescript-eslint/tsconfig-utils@8.74.0"
-  - "@typescript-eslint/type-utils@8.74.0"
-  - "@typescript-eslint/types@8.74.0"
-  - "@typescript-eslint/typescript-estree@8.74.0"
-  - "@typescript-eslint/utils@8.74.0"
-  - "@typescript-eslint/visitor-keys@8.74.0"
