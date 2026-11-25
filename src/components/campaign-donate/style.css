@@ -151,6 +151,9 @@
   /* As tall as the Stripe button above it (ui-web Button, size lg). */
   min-height: 50px;
   padding: 0.7rem 1rem;
+  /* Also rendered as a <button> (disabled state). */
+  border: 0;
+  font-family: inherit;
   border-radius: 6px;
   background: var(--vvp-steady-coral);
   color: var(--vvp-steady-ink);

@@ -518,10 +518,12 @@ export const CampaignDonateApp = ({
               </a>
             ) : (
               <>
-                {/* No href while disabled, so there's nothing to follow. */}
-                <a
+                {/* A real button, so keyboard and screen reader users reach
+                    it and hear that it's unavailable and why (the hint).
+                    aria-disabled rather than disabled keeps it focusable. */}
+                <button
+                  type="button"
                   className="vvp-cd__steady-button is-disabled"
-                  role="link"
                   aria-disabled="true"
                   aria-describedby={steadyHintId}
                 >
@@ -529,7 +531,7 @@ export const CampaignDonateApp = ({
                   <span className="vvp-cd__steady-label">
                     Mit Steady unterstützen
                   </span>
-                </a>
+                </button>
                 <p id={steadyHintId} className="vvp-cd__steady-hint">
                   Steady gibt es nur für {formatSteadyAmounts(steadyPlans)} € im
                   Monat.
