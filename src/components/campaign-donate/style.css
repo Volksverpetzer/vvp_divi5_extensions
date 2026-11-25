@@ -70,7 +70,8 @@
   width: 100%;
 }
 .vvp-campaign-donate .vvp-cd__submit,
-.vvp-campaign-donate .vvp-cd__paypal {
+.vvp-campaign-donate .vvp-cd__paypal,
+.vvp-campaign-donate .vvp-cd__steady-button {
   max-width: 50%;
   min-width: 280px;
   width: 100%;
@@ -126,21 +127,11 @@
   color: var(--vvp-pink-main);
   font-weight: 700;
 }
-.vvp-campaign-donate .vvp-cd__steady {
-  display: grid;
-  /* Two columns where they fit, one on narrow screens, so "25 € / MONAT"
-     never wraps next to the mark. */
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-  gap: var(--vvp-spacing-md, 10px);
-  width: 100%;
-  max-width: 50%;
-  min-width: 280px;
-}
-/* Steady plan buttons, matching Volksverpetzer's "Unterstützen mit Steady"
+/* The Steady button, matching Volksverpetzer's "Unterstützen mit Steady"
    button assets (wp-content/uploads/2023/01/ButtonSteady.png and
    2024/03/Button-Steady-O@2x.png): Steady coral, white uppercase label,
    white "S" mark separated by a dark divider. */
-.vvp-campaign-donate .vvp-cd__steady-plan {
+.vvp-campaign-donate .vvp-cd__steady-button {
   --vvp-steady-coral: #ff7264;
   --vvp-steady-coral-hover: #f2584a;
   --vvp-steady-ink: #291e38;
@@ -148,6 +139,8 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
+  /* As tall as the Stripe button above it (ui-web Button, size lg). */
+  min-height: 50px;
   padding: 0.7rem 1rem;
   border-radius: 6px;
   background: var(--vvp-steady-coral);
@@ -158,14 +151,17 @@
   text-transform: uppercase;
   text-decoration: none;
   white-space: nowrap;
-  transition: background-color 0.15s ease;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    opacity 0.15s ease;
 }
-.vvp-campaign-donate .vvp-cd__steady-plan:hover,
-.vvp-campaign-donate .vvp-cd__steady-plan:focus-visible {
+.vvp-campaign-donate .vvp-cd__steady-button:hover,
+.vvp-campaign-donate .vvp-cd__steady-button:focus-visible {
   background: var(--vvp-steady-coral-hover);
   color: #fff;
 }
-.vvp-campaign-donate .vvp-cd__steady-plan:focus-visible {
+.vvp-campaign-donate .vvp-cd__steady-button:focus-visible {
   outline: 2px solid var(--vvp-steady-ink);
   outline-offset: 2px;
 }
@@ -182,4 +178,18 @@
   padding-left: 12px;
   border-left: 2px solid var(--vvp-steady-ink);
   line-height: 1.25;
+}
+/* Custom amount or a preset without a Steady plan. */
+.vvp-campaign-donate .vvp-cd__steady-button.is-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.vvp-campaign-donate .vvp-cd__steady-button.is-disabled:hover {
+  background: var(--vvp-steady-coral);
+}
+.vvp-campaign-donate .vvp-cd__steady-hint {
+  margin: 0;
+  color: var(--vvp-text, #111);
+  font-size: 0.85rem;
+  text-align: center;
 }
