@@ -276,7 +276,15 @@ export const CampaignDonateApp = ({
 
         buttons = window.paypal.Buttons({
           style: { layout: "horizontal", tagline: false, height: 45 },
+          // The container is also disabled while the amount is invalid (see
+          // below); this catches anything that still gets through, e.g. a
+          // click right as the donor types.
+          onClick: (_data, actions) =>
+            amountRef.current > 0 ? actions.resolve() : actions.reject(),
           createOrder: async () => {
+            if (amountRef.current <= 0) {
+              throw new Error("Bitte einen ganzen Euro-Betrag eingeben.");
+            }
             const response = await fetch(
               `${apiBaseUrl}/api/paypal-create-order`,
               {
@@ -484,8 +492,11 @@ export const CampaignDonateApp = ({
           {hasPaypal && (
             <div
               ref={paypalContainerRef}
-              className="vvp-cd__paypal"
+              // Not unmounted while the amount is invalid, so the PayPal
+              // SDK's buttons stay rendered; just greyed out and not clickable.
+              className={`vvp-cd__paypal ${amount <= 0 ? "is-disabled" : ""}`}
               aria-label="Mit PayPal spenden"
+              aria-disabled={amount <= 0 || undefined}
             />
           )}
 

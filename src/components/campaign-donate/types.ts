@@ -40,6 +40,11 @@ export interface CampaignDonateAppProps {
 export interface PayPalNamespace {
   Buttons(options: {
     style?: Record<string, unknown>;
+    /** Called before the PayPal popup opens; `actions.reject()` cancels it. */
+    onClick?: (
+      data: unknown,
+      actions: { resolve: () => Promise<void>; reject: () => Promise<void> },
+    ) => Promise<void> | void;
     createOrder: () => Promise<string>;
     onApprove: (data: { orderID: string }) => Promise<void>;
     onError?: (err: unknown) => void;

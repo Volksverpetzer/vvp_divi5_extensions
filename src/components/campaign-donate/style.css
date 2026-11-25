@@ -108,6 +108,12 @@
   min-height: 45px;
   overflow: hidden;
 }
+/* Invalid amount: the PayPal buttons (an iframe) can't be disabled
+   themselves, so the container takes no clicks. */
+.vvp-campaign-donate .vvp-cd__paypal.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
 .vvp-campaign-donate .vvp-cd__checkout {
   min-height: 500px;
   width: 100%;
