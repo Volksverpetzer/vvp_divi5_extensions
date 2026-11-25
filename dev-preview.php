@@ -20,6 +20,7 @@ namespace {
     define('ABSPATH', __DIR__ . '/');
     define('MINUTE_IN_SECONDS', 60);
     define('HOUR_IN_SECONDS', 3600);
+    define('DAY_IN_SECONDS', 86400);
 
     // ── Flush cache ───────────────────────────────────────────────────────────
     $is_flush = in_array('--flush', $argv ?? [], true)
@@ -397,6 +398,15 @@ namespace VVP\Divi5\ContentOverview {
     }
 
 } // end namespace VVP\Divi5\ContentOverview
+
+// ── Trending namespace: the real shared ranking source ───────────────────────
+// VVP_PLAUSIBLE_TOKEN is never defined here, so TrendingSource skips
+// Plausible and falls back to the wpp_get_ids() stub above.
+namespace VVP\Divi5\Trending {
+
+    require __DIR__ . '/modules/Trending/TrendingSource.php';
+
+} // end namespace VVP\Divi5\Trending
 
 // ── TrendingItems namespace: stub + preview wrapper ──────────────────────────
 namespace VVP\Divi5\TrendingItems {

@@ -16,6 +16,7 @@ use ET\Builder\Packages\Module\Module;
 use ET\Builder\FrontEnd\BlockParser\BlockParserStore;
 use ET\Builder\Packages\Module\Options\Element\ElementComponents;
 use VVP\Divi5\ContentOverview\ContentOverview;
+use VVP\Divi5\Trending\TrendingSource;
 use VVP\Divi5\TrendingItems\TrendingItems;
 
 trait RenderCallbackTrait
@@ -28,7 +29,7 @@ trait RenderCallbackTrait
     private const CARD_IMAGE_SIZES = '(max-width: 640px) 100vw, (max-width: 1023px) 33vw, 400px';
 
     /**
-     * TTL for an empty result (WPP inactive/misconfigured, or the range
+     * TTL for an empty result (Plausible and WPP both unavailable, or the range
      * yields no posts). Caching that at the full 1h TTL like a normal
      * successful result would leave the list looking empty for up to an
      * hour after a transient hiccup, with no way to force a retry sooner
@@ -132,14 +133,14 @@ trait RenderCallbackTrait
     {
         // Versioned: bump when what's cached here changes, so entries in the
         // old format aren't served until they expire.
-        $cache_key = 'vvp_trending_v3_' . md5("{$item_count}_{$range}");
+        $cache_key = 'vvp_trending_v4_' . md5("{$item_count}_{$range}");
         $cached    = get_transient($cache_key);
         if (is_array($cached)) {
             return $cached;
         }
 
         $ids = [];
-        foreach (self::fetch_wpp_ids(min($item_count * 5, 100), $range) as $post_id) {
+        foreach (TrendingSource::get_top_post_ids(min($item_count * 5, 100), $range) as $post_id) {
             if (count($ids) >= $item_count) {
                 break;
             }
@@ -152,25 +153,5 @@ trait RenderCallbackTrait
         set_transient($cache_key, $ids, $ttl);
 
         return $ids;
-    }
-
-    /**
-     * Fetches top post IDs via wpp_get_ids. Returns [] silently when WPP is not active.
-     *
-     * @return list<int>
-     */
-    private static function fetch_wpp_ids(int $limit, string $range): array
-    {
-        if (!function_exists('wpp_get_ids')) {
-            return [];
-        }
-
-        $ids = wpp_get_ids([
-            'limit'     => $limit,
-            'range'     => $range,
-            'post_type' => 'post',
-        ]);
-
-        return is_array($ids) ? array_map('intval', $ids) : [];
     }
 }
