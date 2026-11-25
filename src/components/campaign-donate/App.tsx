@@ -133,7 +133,8 @@ export const CampaignDonateApp = ({
   // the preset is deselected and Steady (fixed amounts only) is disabled.
   // Leaving it empty switches back to the preset.
   const [customFocused, setCustomFocused] = useState(false);
-  const customActive = customFocused || Boolean(customAmount);
+  // Trimmed, so a whitespace-only value counts as empty (back to the preset).
+  const customActive = customFocused || Boolean(customAmount.trim());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [checkoutClientSecret, setCheckoutClientSecret] = useState<
