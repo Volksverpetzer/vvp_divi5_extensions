@@ -381,6 +381,10 @@ namespace VVP\Divi5\ContentOverview {
     {
         use ContentOverviewTrait\RenderCallbackTrait;
 
+        // The trait reads self::YT_SHORT_MAX_SECONDS, which lives on the real
+        // ContentOverview class (stubbed above). Keep in sync with it.
+        public const YT_SHORT_MAX_SECONDS = 180;
+
         public static function render(): string
         {
             return self::build_overview_html();
