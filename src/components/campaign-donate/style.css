@@ -86,7 +86,9 @@
   display: flex;
   align-items: center;
   text-align: center;
-  color: var(--vvp-surface, #e2f0f5);
+  /* The lines stay light (--vvp-surface, below); the text needs the dark
+     body color to be readable on the white page. */
+  color: var(--vvp-text, #111);
   font-size: 0.85rem;
   width: 100%;
   max-width: 50%;
@@ -123,4 +125,23 @@
   margin-top: var(--vvp-spacing-lg, 16px);
   color: var(--vvp-pink-main);
   font-weight: 700;
+}
+.vvp-campaign-donate .vvp-cd__steady {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--vvp-spacing-md, 10px);
+  width: 100%;
+  max-width: 50%;
+  min-width: 280px;
+}
+.vvp-campaign-donate .vvp-cd__steady-plan {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+.vvp-campaign-donate .vvp-cd__steady-plan:hover,
+.vvp-campaign-donate .vvp-cd__steady-plan:focus-visible {
+  border-color: var(--vvp-pink-main);
+  color: var(--vvp-pink-main);
 }

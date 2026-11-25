@@ -65,15 +65,29 @@
               "name": "divi/select",
               "type": "field",
               "props": {
-                "options": [
-                  { "value": "none", "label": "Kein Icon" },
-                  { "value": "star", "label": "Stern" },
-                  { "value": "bookmark", "label": "Lesezeichen" },
-                  { "value": "bell", "label": "Glocke" },
-                  { "value": "newspaper", "label": "Zeitung" },
-                  { "value": "heart", "label": "Herz" },
-                  { "value": "check", "label": "Häkchen" }
-                ]
+                "options": {
+                  "none": {
+                    "label": "Kein Icon"
+                  },
+                  "star": {
+                    "label": "Stern"
+                  },
+                  "bookmark": {
+                    "label": "Lesezeichen"
+                  },
+                  "bell": {
+                    "label": "Glocke"
+                  },
+                  "newspaper": {
+                    "label": "Zeitung"
+                  },
+                  "heart": {
+                    "label": "Herz"
+                  },
+                  "check": {
+                    "label": "Häkchen"
+                  }
+                }
               }
             }
           }
@@ -220,17 +234,17 @@
               "name": "divi/select",
               "type": "field",
               "props": {
-                "options": [
-                  {
-                    "value": "accent",
+                "options": {
+                  "accent": {
                     "label": "Akzent (gefüllter Hintergrund)"
                   },
-                  { "value": "outline", "label": "Outline (nur Rahmen)" },
-                  {
-                    "value": "subtle",
+                  "outline": {
+                    "label": "Outline (nur Rahmen)"
+                  },
+                  "subtle": {
                     "label": "Dezent (leichter Hintergrund)"
                   }
-                ]
+                }
               }
             }
           }

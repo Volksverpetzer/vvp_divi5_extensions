@@ -1,6 +1,7 @@
 import * as React from "react";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
+import { renderToStaticMarkup } from "react-dom/server";
 import {
   IMAGE_LOAD_TIMEOUT_MS,
   InstagramSlideshow,
@@ -31,12 +32,29 @@ const props = {
   caption: "Bildunterschrift",
   date: "01.10.2026",
   badgeLabel: "Instagram",
-  mediaCategory: "Karussell",
   slides,
   isCarousel: true,
 };
 
 const FALLBACK_TEXT = "Bild nicht verfügbar";
+
+describe("InstagramSlideshow footer", () => {
+  it("keeps the badge left and right-aligns date | copy link", () => {
+    const html = renderToStaticMarkup(<InstagramSlideshow {...props} />);
+    const footer = html.slice(
+      html.indexOf('<div class="vvp-co__feed-footer">'),
+    );
+    const meta = footer.slice(
+      footer.indexOf('<span class="vvp-co__feed-footer-meta">'),
+    );
+    expect(footer.indexOf("Instagram")).toBeLessThan(
+      footer.indexOf("vvp-co__feed-footer-meta"),
+    );
+    expect(meta).toMatch(
+      /^<span class="vvp-co__feed-footer-meta"><span class="vvp-ui-meta-text vvp-co__feed-date"[^>]*>01\.10\.2026<\/span><span class="vvp-co__feed-footer-sep" aria-hidden="true">\|<\/span><span role="button"[^>]*vvp-co__copy-link-btn/,
+    );
+  });
+});
 
 describe("InstagramSlideshow image loading", () => {
   let container: HTMLDivElement;
@@ -161,5 +179,51 @@ describe("InstagramSlideshow image loading", () => {
     expect(pending.onerror).toBeNull();
     // afterEach unmounts again; give it a fresh root.
     root = createRoot(container);
+  });
+});
+
+describe("InstagramSlideshow tracking", () => {
+  let container: HTMLDivElement;
+  let root: Root;
+  const plausible = vi.fn();
+
+  beforeEach(() => {
+    plausible.mockClear();
+    window.plausible = plausible;
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+    act(() => root.render(<InstagramSlideshow {...props} postId="ABC" />));
+  });
+
+  afterEach(() => {
+    act(() => root.unmount());
+    container.remove();
+    delete window.plausible;
+  });
+
+  const openAndClose = (opener: HTMLElement) => {
+    act(() => opener.click());
+    const close = Array.from(
+      document.querySelectorAll<HTMLElement>("div"),
+    ).find((d) => d.style.position === "fixed");
+    act(() => close!.click());
+  };
+
+  it("counts the fullscreen view once per card, however often it opens", () => {
+    const center = container.querySelector<HTMLElement>(
+      'button[aria-label="Vollbild öffnen"]',
+    )!;
+    const footer = container.querySelector<HTMLElement>(
+      ".vvp-co__feed-body--link",
+    )!;
+    openAndClose(center);
+    openAndClose(center);
+    openAndClose(footer);
+
+    expect(plausible).toHaveBeenCalledTimes(1);
+    expect(plausible).toHaveBeenCalledWith("pageview", {
+      u: window.location.origin + "/insta/ABC",
+    });
   });
 });

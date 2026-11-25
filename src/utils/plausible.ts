@@ -17,3 +17,12 @@ export const trackEvent = (
     }
   } catch (_) {}
 };
+
+/** Record a pageview for a virtual URL (e.g. one per Instagram post). */
+export const trackPageview = (url: string): void => {
+  try {
+    if (typeof window.plausible === "function") {
+      window.plausible("pageview", { u: url });
+    }
+  } catch (_) {}
+};

@@ -1,6 +1,30 @@
-/* Artikelkarte — Visual Builder specific styles */
+/* Artikelkarte styles (bundled into styles/main.css, loaded in the builder
+   and on the frontend). */
 
-/* The preview card is a real link; keep clicks selecting the module. */
+/* Fill the column. In a Loop grid (rows with grid-auto-rows: 1fr) or a flex
+   row, the column is stretched to the tallest card, but the card's own
+   `height: 100%` (ArticleCard.css) resolves against this module wrapper,
+   whose height is auto, so shorter cards stopped short and their footers
+   didn't line up. Divi 5 columns are flex columns: let the wrapper and the
+   mount grow instead. */
+.vvp-article-card {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.vvp-article-card > .vvp-co-article-mount {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.vvp-article-card .vvp-co__feed-card {
+  flex-grow: 1;
+}
+
+/* Visual Builder: the preview card is a real link; keep clicks selecting the
+   module. */
 .et-fb .vvp-article-card .vvp-co__feed-card {
   pointer-events: none;
 }

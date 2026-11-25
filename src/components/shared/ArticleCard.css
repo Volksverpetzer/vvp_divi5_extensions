@@ -61,6 +61,19 @@
   height: 100%;
 }
 
+/* The hero card shows ISC's own credit overlay (`show-source`). ISC's
+   captions.js places it from the plugin-wide caption position (bottom-right,
+   which the article pages' hero images keep) with inline left/top styles;
+   on these cards it goes top-right instead, clear of the white logo bar
+   along the bottom of our featured images. Only !important beats the
+   inline styles. The 5px inset matches ISC's default caption margin. */
+.vvp-co__feed-card--hero .vvp-co__feed-image-wrap .isc-source-text {
+  top: 5px !important;
+  right: 5px !important;
+  bottom: auto !important;
+  left: auto !important;
+}
+
 .vvp-co__feed-image {
   width: 100%;
   height: 100%;
@@ -112,10 +125,12 @@
   -webkit-line-clamp: 3;
 }
 
-/* Footer row at the bottom of article cards (Prüfpunkt badge, category,
-   date, reading time; right-aligned on the hero) and of the Instagram card
-   (InstagramSlideshow.tsx), so both line up the same way. `margin-top: auto`
-   pins it to the bottom of the card, so footers line up across a grid row. */
+/* Footer row at the bottom of article cards and of the Instagram card
+   (InstagramSlideshow.tsx), so both line up the same way: badges on the left
+   (article cards: the category, or the Prüfpunkt badge), the meta data on the right (article
+   cards: date | reading time, `.vvp-co__feed-footer-meta`). Same layout on
+   the hero. `margin-top: auto` pins it to the bottom of the card, so footers
+   line up across a grid row. */
 .vvp-co__feed-footer {
   display: flex;
   align-items: center;
@@ -144,10 +159,76 @@
   flex-shrink: 0;
 }
 
-/* Date and reading time are the footer's must-haves; the category
-   label is the first thing to give — it shrinks and truncates
-   instead of pushing them out of the (overflow: hidden) footer. */
-.vvp-co__feed-footer .vvp-co__category {
+/* Article cards wrap their footer rather than squeezing the category badge
+   down to a letter when the badges and the meta data don't fit one line
+   (e.g. a long category in a narrow column): the meta data moves to a
+   second line, still right-aligned. */
+.vvp-co__feed-card--article .vvp-co__feed-footer {
+  flex-wrap: wrap;
+  row-gap: var(--vvp-spacing-xs, 4px);
+}
+
+/* The footer's right-hand group, items separated by "|"
+   (.vvp-co__feed-footer-sep): article cards' date | reading time (Prüfpunkt
+   cards: category | date | reading time), the Instagram card's media
+   category | date | copy-link button. Pushed to the row's end. It may shrink
+   only as far as its plain-text category label truncates (below); date,
+   reading time and the copy button keep their size. */
+.vvp-co__feed-footer-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vvp-spacing-sm, 8px);
+  flex-shrink: 1;
+  min-width: 0;
+  margin-left: auto;
+}
+
+.vvp-co__feed-footer-meta .vvp-co__copy-link-btn {
+  margin-left: 0;
+}
+
+.vvp-co__feed-footer-sep {
+  color: var(--vvp-text-muted, #666);
+  font-size: var(--vvp-font-size-base, 16px);
+  line-height: 1.4;
+}
+
+/* The article cards' category badge (ui-web Badge, "primary"). A category
+   too long for a whole footer line truncates instead of overflowing the
+   (overflow: hidden) footer. Block display, since text-overflow doesn't
+   apply to the Badge's inline-flex text. */
+.vvp-co__feed-footer .vvp-ui-badge.vvp-co__category {
+  display: block;
+  flex-shrink: 1;
+  min-width: 0;
+  margin-right: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Restate the Badge's color over the base .vvp-co__category rule, which
+     has the same specificity and could win depending on stylesheet order. */
+  color: var(--vvp-primary, #1b7194);
+  text-transform: none;
+  letter-spacing: normal;
+  transition: background 0.15s ease;
+}
+
+.vvp-co__feed-footer .vvp-ui-badge.vvp-co__category--btn {
+  cursor: pointer;
+}
+
+.vvp-co__feed-footer .vvp-ui-badge.vvp-co__category--btn:hover,
+.vvp-co__feed-footer .vvp-ui-badge.vvp-co__category--btn:focus-visible {
+  background: color-mix(in srgb, var(--vvp-primary, #1b7194) 25%, white);
+}
+
+.dark .vvp-co__feed-footer .vvp-ui-badge.vvp-co__category--btn:hover,
+.dark .vvp-co__feed-footer .vvp-ui-badge.vvp-co__category--btn:focus-visible {
+  background: color-mix(in srgb, var(--vvp-primary, #1b7194) 15%, white);
+}
+
+/* Plain-text category labels in the right-hand meta group (the Prüfpunkt
+   cards' category). Muted text that shrinks and truncates first. */
+.vvp-co__feed-footer .vvp-co__category:not(.vvp-ui-badge) {
   color: var(--vvp-text-muted, #666);
   font-size: var(--vvp-font-size-base, 16px);
   font-weight: 400;
@@ -159,6 +240,16 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Darker than the muted meta text, so the linked category reads as a link. */
+.vvp-co__feed-footer .vvp-co__category--btn:not(.vvp-ui-badge) {
+  cursor: pointer;
+}
+
+.vvp-co__feed-footer .vvp-co__category--btn:not(.vvp-ui-badge):hover,
+.vvp-co__feed-footer .vvp-co__category--btn:not(.vvp-ui-badge):focus-visible {
+  color: var(--vvp-text, #111);
 }
 
 /* Copy-link button — a footer flex item, pushed to the row's end and
@@ -200,16 +291,11 @@
   color: var(--vvp-text-muted, #666);
 }
 
-.vvp-co__feed-footer .vvp-co__category--btn:hover {
-  /* Darker than the muted footer, so the clickable category reads as a link. */
-  color: #585c67;
-}
-
 /* Hero (lead-story) variant — `hero` prop / Artikelkarte "Als Aufmacher"
    toggle. Same card scaled for a single wide column: larger, unclamped title,
    larger text and roomier padding, framed like the regular cards (the Divi
    Blog hero it replaces sat in a bordered, shadowed box too), but without
-   their hover effect. The footer is right-aligned. The image keeps the base
+   their hover effect. The footer is laid out as on the regular cards. The image keeps the base
    350/183 ratio, which matches the 1400×732 featured images. */
 .vvp-co__feed-card--hero:hover {
   box-shadow: var(--vvp-elevation-xs);
@@ -222,10 +308,6 @@
 
 .vvp-co__feed-card--hero .vvp-co__feed-body {
   padding: var(--vvp-spacing-xxxl, 30px) var(--vvp-spacing-huge, 40px);
-}
-
-.vvp-co__feed-card--hero .vvp-co__feed-footer {
-  justify-content: flex-end;
 }
 
 /* The same size on phones: the Divi Blog hero it replaces keeps 27–28px at
@@ -264,4 +346,97 @@
   .vvp-co__feed-card--hero .vvp-co__feed-byline {
     font-size: var(--vvp-font-size-base, 16px);
   }
+}
+
+/* Image credit badge (ImageCreditBadge.tsx; CardRenderTrait.php's
+   $credit_html): an "i" over the image's top-right corner (vvp_app puts it
+   bottom-right, but on the web that clashes with the white logo bar along
+   the bottom of our featured images). It follows the image wrapper in the
+   card's markup and is laid over the top of the card, so it takes no room.
+   The row spans the card (less the insets), so the popover can be capped at
+   its width; the row itself lets clicks through to the card, only the badge
+   and popover catch them. */
+.vvp-co__feed-card:has(> .vvp-co__credit) {
+  position: relative;
+}
+
+.vvp-co__credit {
+  position: absolute;
+  top: var(--vvp-spacing-sm, 8px);
+  right: var(--vvp-spacing-sm, 8px);
+  left: var(--vvp-spacing-sm, 8px);
+  z-index: 1;
+  display: flex;
+  justify-content: flex-end;
+  height: 28px;
+  line-height: 0;
+  pointer-events: none;
+}
+
+.vvp-co__credit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--vvp-radius-full, 9999px);
+  background: rgb(0 0 0 / 45%);
+  color: #fff;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background 0.15s ease;
+}
+
+.vvp-co__credit-btn:hover,
+.vvp-co__credit-btn[aria-expanded="true"] {
+  background: rgb(0 0 0 / 70%);
+}
+
+.vvp-co__credit-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Opens downwards over the image (and the card's text, if need be),
+   right-aligned with the badge. The card clips its overflow, so it never gets
+   wider than the badge row (the card) — and ImageCreditBadge.tsx caps its
+   height at the room left below the badge, with longer credits scrolling. */
+.vvp-co__credit-popover {
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--vvp-spacing-xs, 4px));
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: max-content;
+  max-width: min(240px, 100%);
+  box-sizing: border-box;
+  overflow-y: auto;
+  padding: var(--vvp-spacing-sm, 8px) var(--vvp-spacing-md, 10px);
+  border: 1px solid var(--vvp-surface-disabled, #ddd);
+  border-radius: var(--vvp-radius-sm, 8px);
+  background: var(--vvp-background, #fff);
+  box-shadow: var(--vvp-elevation-md);
+  color: var(--vvp-text, #111);
+  font-size: var(--vvp-font-size-sm, 14px);
+  line-height: 1.4;
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: auto;
+  pointer-events: auto;
+}
+
+.vvp-co__credit-title {
+  font-weight: 600;
+}
+
+.vvp-co__credit-licence {
+  color: var(--vvp-text-muted, #666);
+}
+
+.vvp-co__credit-link {
+  margin-top: 2px;
+  color: var(--vvp-link-text, var(--vvp-primary, #1b7194));
+  text-decoration: underline;
+  cursor: pointer;
 }

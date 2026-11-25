@@ -26,6 +26,7 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 import { InstagramSlideshow } from "./InstagramSlideshow";
 import { PodcastBanner } from "./PodcastBanner";
 import { YouTubeBanner, type YouTubeBannerProps } from "./YouTubeBanner";
+import { trackEvent } from "../../utils/plausible";
 import {
   ArticleCard,
   type ArticleCardProps,
@@ -143,13 +144,7 @@ const initArticlesToggle = (wrapper: Element) => {
       localStorage.setItem(LS_KEY, String(toggle.checked));
     } catch (_) {}
     if (toggle.checked) {
-      try {
-        if (typeof window.plausible === "function") {
-          window.plausible("Nur Artikel Filter", {
-            props: { action: "aktiviert" },
-          });
-        }
-      } catch (_) {}
+      trackEvent("Nur Artikel Filter", { action: "aktiviert" });
     }
     apply(toggle.checked);
   });

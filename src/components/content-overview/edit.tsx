@@ -105,7 +105,6 @@ const MOCK_IG_ITEMS = [
       "Wusstet ihr das? Hier sind fünf Fakten über Katzen, die ihr kennen solltet 🐾 #Pfotenfuchs #Katzenkompetenz",
     date: "Gestern",
     badgeLabel: "Instagram",
-    mediaCategory: "Karussell",
     isCarousel: true,
     slides: [
       { thumb: img("ig1a", 600, 800), video: "" },
@@ -119,7 +118,6 @@ const MOCK_IG_ITEMS = [
       "So erkennst du Fake News über Katzen auf einen Blick 🔍 Teile diesen Post mit jemandem, der das wissen sollte!",
     date: "Vor 2 Tagen",
     badgeLabel: "Instagram",
-    mediaCategory: "Karussell",
     isCarousel: true,
     slides: [
       { thumb: img("ig2a", 600, 800), video: "" },
@@ -132,7 +130,6 @@ const MOCK_IG_ITEMS = [
       "Danke für 500.000 Follower! 🐱 Gemeinsam gegen Katzen-Desinformation – das ist möglich.",
     date: "Vor 3 Tagen",
     badgeLabel: "Instagram",
-    mediaCategory: "Karussell",
     isCarousel: true,
     slides: [
       { thumb: img("ig3a", 600, 800), video: "" },

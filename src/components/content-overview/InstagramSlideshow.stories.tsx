@@ -15,7 +15,7 @@ type Story = StoryObj<typeof InstagramSlideshow>;
 
 /** Every prop exposed as a control. */
 export const Playground: Story = {
-  args: { ...IG_PROPS, postId: "", mediaCategory: "Faktencheck" },
+  args: { ...IG_PROPS, postId: "" },
 };
 
 export const BrokenImage: Story = {

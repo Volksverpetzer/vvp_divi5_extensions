@@ -8,5 +8,13 @@
  * style locally.
  */
 .vvp-campaign-progress {
+  /*
+   * Divi 5 columns are flex containers; with centered alignment a module
+   * without an explicit width shrinks to its content, so the bar collapsed
+   * to the width of the "0 € von 20.000 €" line. Same fix as Campaign Donate.
+   */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   text-align: center;
 }

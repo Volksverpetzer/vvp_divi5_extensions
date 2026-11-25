@@ -11,6 +11,11 @@ import {
   type StripeEmbeddedCheckout,
 } from "@stripe/stripe-js";
 import { Alert, Button } from "@volksverpetzer/ui-web";
+import {
+  isPayPalCaptureSuccessful,
+  type PayPalCaptureResponse,
+} from "./paypal";
+import { steadyPlanUrl } from "./steady";
 import { type CampaignDonateAppProps } from "./types";
 
 // Inline (not delegated to an imported helper) so static analysis tracking
@@ -24,9 +29,11 @@ const DONATION_COMPLETE_EVENT = "vvp-donation-completed";
 export const CampaignDonateThanks = ({
   amount,
   certificateUrl,
+  monthly = false,
 }: {
   amount: number;
   certificateUrl?: string;
+  monthly?: boolean;
 }): ReactElement => {
   let safeCertificateUrl: string | undefined;
   if (certificateUrl && SAFE_URL_PATTERN.test(certificateUrl)) {
@@ -38,10 +45,10 @@ export const CampaignDonateThanks = ({
       <div className="vvp-cd__thanks">
         <strong>Danke für deine Unterstützung!</strong>
         <p>
-          Deine Spende über {amount.toLocaleString("de-DE")} € wurde gezählt.
-          Durch deine Spende ermöglichst du unsere Arbeit weiterzuführen und
-          mehr Aktionen wie diese durchzuführen. Gemeinsam mit dir kämpfen wir
-          für die Demokratie!
+          Deine {monthly ? "monatliche Spende" : "Spende"} über{" "}
+          {amount.toLocaleString("de-DE")} € wurde gezählt. Durch deine Spende
+          ermöglichst du unsere Arbeit weiterzuführen und mehr Aktionen wie
+          diese durchzuführen. Gemeinsam mit dir kämpfen wir für die Demokratie!
         </p>
         {safeCertificateUrl && (
           <a
@@ -91,12 +98,18 @@ const loadPayPalSdk = (clientId: string): Promise<void> => {
 export const CampaignDonateApp = ({
   apiBaseUrl,
   campaignKey,
+  interval = "once",
   stripePublicKey,
   paypalClientId,
   presets,
+  steadyPlans = [],
   certificateUrl,
   preview = false,
 }: CampaignDonateAppProps): ReactElement => {
+  const monthly = interval === "month";
+  // Monthly donations go through Stripe subscriptions or Steady; PayPal
+  // here only does one-time payments, so it's hidden in monthly mode.
+  const paypalActive = !monthly && Boolean(paypalClientId);
   const defaultPreset = presets[1] ?? presets[0] ?? 25;
   const [selected, setSelected] = useState(defaultPreset);
   // Re-select the default when the presets change (Visual Builder edits,
@@ -233,9 +246,10 @@ export const CampaignDonateApp = ({
   ]);
 
   // Renders the PayPal button once (not re-rendered per amount change — see
-  // amountRef above) as soon as a paypalClientId is configured.
+  // amountRef above) as soon as a paypalClientId is configured (one-time
+  // mode only).
   useEffect(() => {
-    if (preview || !paypalClientId || !paypalContainerRef.current) return;
+    if (preview || !paypalActive || !paypalContainerRef.current) return;
 
     let cancelled = false;
     let buttons: ReturnType<
@@ -277,8 +291,8 @@ export const CampaignDonateApp = ({
                 body: JSON.stringify({ orderID: data.orderID }),
               },
             );
-            const json = await response.json();
-            if (!response.ok || !json?.recorded) {
+            const json = (await response.json()) as PayPalCaptureResponse;
+            if (!isPayPalCaptureSuccessful(response.ok, json)) {
               setError(json?.error ?? "PayPal-Zahlung fehlgeschlagen.");
               return;
             }
@@ -299,7 +313,7 @@ export const CampaignDonateApp = ({
       cancelled = true;
       buttons?.close?.();
     };
-  }, [preview, paypalClientId, apiBaseUrl, campaignKey]);
+  }, [preview, paypalActive, paypalClientId, apiBaseUrl, campaignKey]);
 
   const handleStripeSubmit = async (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -323,7 +337,14 @@ export const CampaignDonateApp = ({
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount, campaign: campaignKey, returnUrl }),
+          body: JSON.stringify({
+            amount,
+            campaign: campaignKey,
+            returnUrl,
+            // The crowdfunding app starts a Stripe subscription for "month";
+            // only its first payment counts towards the campaign.
+            ...(monthly ? { interval: "month" } : {}),
+          }),
         },
       );
       const json = await response.json();
@@ -348,6 +369,7 @@ export const CampaignDonateApp = ({
       <CampaignDonateThanks
         amount={completedAmount}
         certificateUrl={certificateUrl}
+        monthly={monthly}
       />
     );
   }
@@ -361,41 +383,53 @@ export const CampaignDonateApp = ({
   }
 
   const hasStripe = Boolean(stripePublicKey);
-  const hasPaypal = Boolean(paypalClientId);
+  const hasPaypal = paypalActive;
+  const hasSteady = monthly && steadyPlans.length > 0;
+  // Steady plans have fixed amounts, so the amount picker is only needed
+  // for Stripe/PayPal.
+  const hasAmountPicker = hasStripe || hasPaypal;
 
   return (
     <div className="vvp-cd">
       <div className="vvp-cd__form">
-        <div
-          className="vvp-cd__presets"
-          role="group"
-          aria-label="Schnellauswahl Betrag"
-        >
-          {presets.map((value) => (
-            <button
-              type="button"
-              key={value}
-              className={`vvp-cd__preset ${amount === value && !customAmount ? "is-active" : ""}`}
-              onClick={() => {
-                setCustomAmount("");
-                setSelected(value);
-              }}
-            >
-              {value} €
-            </button>
-          ))}
-          <input
-            id="vvp-cd-custom"
-            ref={customInputRef}
-            className={`vvp-cd__preset vvp-cd__preset-input ${customAmount ? "is-active" : ""}`}
-            type="text"
-            inputMode="decimal"
-            placeholder="Eigener Betrag..."
-            value={customAmount}
-            onChange={(event) => setCustomAmount(event.target.value)}
-            aria-label="Eigener Betrag eingeben"
-          />
-        </div>
+        {hasAmountPicker && (
+          <div
+            className="vvp-cd__presets"
+            role="group"
+            aria-label="Schnellauswahl Betrag"
+          >
+            {presets.map((value) => (
+              <button
+                type="button"
+                key={value}
+                className={`vvp-cd__preset ${amount === value && !customAmount ? "is-active" : ""}`}
+                onClick={() => {
+                  setCustomAmount("");
+                  setSelected(value);
+                }}
+              >
+                {value} €
+              </button>
+            ))}
+            <input
+              id="vvp-cd-custom"
+              ref={customInputRef}
+              className={`vvp-cd__preset vvp-cd__preset-input ${customAmount ? "is-active" : ""}`}
+              type="text"
+              inputMode="decimal"
+              placeholder={
+                monthly ? "Eigener Betrag/Monat..." : "Eigener Betrag..."
+              }
+              value={customAmount}
+              onChange={(event) => setCustomAmount(event.target.value)}
+              aria-label={
+                monthly
+                  ? "Eigenen monatlichen Betrag eingeben"
+                  : "Eigener Betrag eingeben"
+              }
+            />
+          </div>
+        )}
 
         <div className="vvp-cd__methods">
           {hasStripe && (
@@ -407,7 +441,11 @@ export const CampaignDonateApp = ({
               disabled={loading || amount <= 0}
               onClick={handleStripeSubmit}
             >
-              {loading ? "Lädt…" : "Mit Karte/SEPA spenden"}
+              {loading
+                ? "Lädt…"
+                : monthly
+                  ? "Monatlich mit Karte/SEPA spenden"
+                  : "Mit Karte/SEPA spenden"}
             </Button>
           )}
 
@@ -423,6 +461,32 @@ export const CampaignDonateApp = ({
               className="vvp-cd__paypal"
               aria-label="Mit PayPal spenden"
             />
+          )}
+
+          {hasStripe && hasSteady && (
+            <div className="vvp-cd__divider">
+              <span>oder über Steady</span>
+            </div>
+          )}
+
+          {hasSteady && (
+            <div
+              className="vvp-cd__steady"
+              role="group"
+              aria-label="Monatlich über Steady unterstützen"
+            >
+              {steadyPlans.map((plan) => (
+                <a
+                  key={plan.planId}
+                  className="vvp-cd__preset vvp-cd__steady-plan"
+                  href={steadyPlanUrl(plan.planId)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {plan.amount.toLocaleString("de-DE")} € / Monat
+                </a>
+              ))}
+            </div>
           )}
         </div>
 

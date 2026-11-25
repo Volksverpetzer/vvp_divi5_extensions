@@ -2,6 +2,7 @@ import * as React from "react";
 import { Badge, MetaText } from "@volksverpetzer/ui-web";
 import { trackEvent } from "../../utils/plausible";
 import { isExternalUrl, toHttpUrl } from "../../utils/links";
+import { ImageCreditBadge, type ImageCredit } from "./ImageCreditBadge";
 import "./ArticleCard.css";
 
 export interface ArticleCardProps {
@@ -28,6 +29,12 @@ export interface ArticleCardProps {
    * page's LCP element. Mirrored in CardRenderTrait.php for hydration.
    */
   hero?: boolean;
+  /**
+   * The featured image's credit (Image Source Control), shown behind an
+   * info badge on the image. PHP leaves it out on the hero, which shows
+   * ISC's own credit overlay instead (`show-source`).
+   */
+  image_credit?: ImageCredit;
   /**
    * Inner HTML of the image wrapper, taken verbatim from the server-rendered
    * card at hydration time (content-overview frontend.tsx). Plugins such as
@@ -76,6 +83,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   trackingContext = "feed",
   external,
   hero = false,
+  image_credit,
   imageHtml,
 }) => {
   const opensNewTab = external ?? isExternalUrl(link);
@@ -112,59 +120,85 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     }
   };
 
-  // Under the title: the authors ("von …"). The rest of the meta data —
-  // Prüfpunkt badge, category, date, reading time — sits in the footer at
-  // the bottom of the card, like the Instagram card's footer (right-aligned
-  // on the hero). Mirrored in CardRenderTrait.php.
+  // Under the title: the authors ("von …"). The rest of the meta data sits
+  // in the footer at the bottom of the card, laid out like the Instagram and
+  // YouTube cards' footers: a badge on the left (the category, linking to
+  // its archive; on Prüfpunkt articles the Prüfpunkt badge instead, with the
+  // category moved in front of the date as plain text), date and reading
+  // time on the right,
+  // separated by a "|". Same on the hero. Mirrored in CardRenderTrait.php.
   const authorItem = author && (
     <span className="vvp-co__feed-byline-author">{`von ${author}`}</span>
   );
+  const isPruefpunkt = source === "pruefpunkt";
+  // A badge on regular cards; plain text (like the Instagram card's media
+  // category) in the right-hand meta on Prüfpunkt cards. Linked either way.
+  const categoryProps: React.HTMLAttributes<HTMLSpanElement> = category_link
+    ? {
+        className: "vvp-co__category vvp-co__category--btn",
+        role: "button",
+        tabIndex: 0,
+        onClick: handleCategoryClick,
+        onKeyDown: (e) => {
+          if ((e.key === "Enter" || e.key === " ") && !e.repeat) {
+            handleCategoryClick(e);
+          }
+        },
+      }
+    : { className: "vvp-co__category" };
+  const categoryItem =
+    category &&
+    (isPruefpunkt ? (
+      <span {...categoryProps}>{category}</span>
+    ) : (
+      <Badge variant="primary" size="md" {...categoryProps}>
+        {category}
+      </Badge>
+    ));
   const metaItems = (
     <>
-      {source === "pruefpunkt" && <PruefpunktBadge />}
-      {category &&
-        (category_link ? (
-          <span
-            role="button"
-            tabIndex={0}
-            className="vvp-co__category vvp-co__category--btn"
-            onClick={handleCategoryClick}
-            onKeyDown={(e) => {
-              if ((e.key === "Enter" || e.key === " ") && !e.repeat) {
-                handleCategoryClick(e);
-              }
-            }}
-          >
-            {category}
-          </span>
-        ) : (
-          <span className="vvp-co__category">{category}</span>
-        ))}
-      <MetaText className="vvp-co__feed-date">{date}</MetaText>
-      {!!reading_time && (
-        <MetaText className="vvp-co__feed-reading-time">
-          <svg
-            aria-hidden="true"
-            focusable="false"
-            data-icon="clock"
-            width="14"
-            height="14"
-            fill="none"
-            stroke="currentColor"
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-            ></path>
-          </svg>
-          {`${reading_time} Min.`}
-        </MetaText>
-      )}
+      {isPruefpunkt && <PruefpunktBadge />}
+      {!isPruefpunkt && categoryItem}
+      <span className="vvp-co__feed-footer-meta">
+        {isPruefpunkt && categoryItem && (
+          <>
+            {categoryItem}
+            <span className="vvp-co__feed-footer-sep" aria-hidden="true">
+              |
+            </span>
+          </>
+        )}
+        <MetaText className="vvp-co__feed-date">{date}</MetaText>
+        {!!reading_time && (
+          <>
+            <span className="vvp-co__feed-footer-sep" aria-hidden="true">
+              |
+            </span>
+            <MetaText className="vvp-co__feed-reading-time">
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                data-icon="clock"
+                width="14"
+                height="14"
+                fill="none"
+                stroke="currentColor"
+                role="img"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+              {`${reading_time} Min.`}
+            </MetaText>
+          </>
+        )}
+      </span>
     </>
   );
 
@@ -194,6 +228,9 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             />
           </div>
         ))}
+      {image_url && image_credit && !hero && (
+        <ImageCreditBadge credit={image_credit} />
+      )}
       <div className="vvp-co__feed-body">
         <TitleTag className="vvp-co__feed-title">{title}</TitleTag>
         {authorItem && <div className="vvp-co__feed-byline">{authorItem}</div>}

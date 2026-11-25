@@ -29,6 +29,16 @@ trait CardRenderTrait
     private const HERO_IMAGE_SIZES = '(max-width: 767px) 100vw, 750px';
 
     /**
+     * Lucide's "info" icon (as in vvp_app's ImageCreditBadge), byte-matching
+     * `InfoIcon` in ArticleCard.tsx.
+     */
+    private const INFO_ICON_SVG = '<svg aria-hidden="true" focusable="false" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">'
+        . '<circle cx="12" cy="12" r="10"></circle>'
+        . '<path d="M12 16v-4"></path>'
+        . '<path d="M12 8h.01"></path>'
+        . '</svg>';
+
+    /**
      * Render an article card: the feed's cards, and through
      * ContentOverview::render_article_card() also the Artikelkarte, Trending
      * and Related cards. Emits a React mount point hydrated by
@@ -77,6 +87,12 @@ trait CardRenderTrait
         if ('feed' !== $tracking_context) {
             $props['trackingContext'] = $tracking_context;
         }
+        // The hero shows Image Source Control's own credit overlay
+        // (`show-source` below); the other cards get the info badge instead.
+        $image_credit = $props['image_url'] && !$hero ? self::get_post_image_credit($post) : null;
+        if ($image_credit) {
+            $props['image_credit'] = $image_credit;
+        }
 
         // Not part of the props: the client keeps the server's image markup
         // as-is when hydrating (`imageHtml`), so only PHP needs the srcset.
@@ -99,36 +115,53 @@ trait CardRenderTrait
         // (see ArticleCard.tsx's PruefpunktBadge) — the hydration guardrail above
         // requires it, and it's also what actually carries the badge's styling
         // (Badge.css), unlike the old vvp-co__badge classes which were never styled.
-        $source_badge = $props['source'] === 'pruefpunkt'
+        $is_pruefpunkt = $props['source'] === 'pruefpunkt';
+        $source_badge  = $is_pruefpunkt
             ? '<span class="vvp-ui-badge vvp-ui-badge--pruefpunkt vvp-ui-badge--size-md">Prüfpunkt</span>'
             : '';
 
+        // The category: a ui-web <Badge variant="primary" size="md"> on the
+        // left of regular cards; on Prüfpunkt cards (whose left side holds the
+        // Prüfpunkt badge) plain text in front of the date, followed by a
+        // separator. Classes come first, then role/tabindex, as React renders
+        // `categoryProps` in ArticleCard.tsx.
         $category_html = '';
         if ($props['category']) {
-            $category_html = $props['category_link']
-                ? '<span role="button" tabindex="0" class="vvp-co__category vvp-co__category--btn">' . esc_html($props['category']) . '</span>'
-                : '<span class="vvp-co__category">' . esc_html($props['category']) . '</span>';
+            $category_class = ($is_pruefpunkt ? '' : 'vvp-ui-badge vvp-ui-badge--primary vvp-ui-badge--size-md ')
+                . 'vvp-co__category' . ($props['category_link'] ? ' vvp-co__category--btn' : '');
+            $category_html = '<span class="' . $category_class . '"'
+                . ($props['category_link'] ? ' role="button" tabindex="0"' : '')
+                . '>' . esc_html($props['category']) . '</span>';
         }
+        $badge_category_html = $is_pruefpunkt ? '' : $category_html;
+        $meta_category_html  = $is_pruefpunkt && $category_html
+            ? $category_html . '<span class="vvp-co__feed-footer-sep" aria-hidden="true">|</span>'
+            : '';
 
         $clock_svg = '<svg aria-hidden="true" focusable="false" data-icon="clock" width="14" height="14" fill="none" stroke="currentColor" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">'
             . '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>'
             . '</svg>';
         $reading_time_html = $props['reading_time']
-            ? '<span class="vvp-ui-meta-text vvp-co__feed-reading-time">' . $clock_svg . (int) $props['reading_time'] . ' Min.</span>'
+            ? '<span class="vvp-co__feed-footer-sep" aria-hidden="true">|</span>'
+            . '<span class="vvp-ui-meta-text vvp-co__feed-reading-time">' . $clock_svg . (int) $props['reading_time'] . ' Min.</span>'
             : '';
 
         // Under the title: the authors ("von …"). The rest of the meta data
-        // sits in the footer at the bottom of the card, like the Instagram
-        // card's footer (right-aligned on the hero). Mirrors
+        // sits in the footer at the bottom of the card, laid out like the
+        // Instagram and YouTube cards' footers: a badge on the left, the
+        // ("|"-separated) meta data on the right. Mirrors
         // `authorItem`/`metaItems` in ArticleCard.tsx.
         $byline_html = $props['author']
             ? '<div class="vvp-co__feed-byline"><span class="vvp-co__feed-byline-author">von ' . esc_html($props['author']) . '</span></div>'
             : '';
         $footer_html = '<div class="vvp-co__feed-footer">'
             . $source_badge
-            . $category_html
-            . '<span class="vvp-ui-meta-text vvp-co__feed-date">' . esc_html($props['date']) . '</span>'
-            . $reading_time_html
+            . $badge_category_html
+            . '<span class="vvp-co__feed-footer-meta">'
+            .   $meta_category_html
+            .   '<span class="vvp-ui-meta-text vvp-co__feed-date">' . esc_html($props['date']) . '</span>'
+            .   $reading_time_html
+            . '</span>'
             . '</div>';
 
         $excerpt_html = $props['excerpt']
@@ -145,8 +178,21 @@ trait CardRenderTrait
         $card_class = 'vvp-co__feed-card vvp-co__feed-card--article' . ($hero ? ' vvp-co__feed-card--hero show-source' : '');
         $title_tag  = $hero ? 'h2' : 'h3';
 
+        // The image credit badge (ArticleCard.tsx's `creditBadge`): sits
+        // right after the image wrapper and is laid over the image's
+        // top-right corner by CSS. Its popover only exists once opened,
+        // on the client.
+        $credit_html = $image_credit
+            ? '<span class="vvp-co__credit">'
+            .   '<span class="vvp-co__credit-btn" role="button" tabindex="0" aria-label="Bildquelle anzeigen" aria-expanded="false">'
+            .     self::INFO_ICON_SVG
+            .   '</span>'
+            . '</span>'
+            : '';
+
         $static_html = '<a href="' . esc_url($props['link']) . '" class="' . $card_class . '"' . $target_attrs . '>'
             . $image_html
+            . $credit_html
             . '<div class="vvp-co__feed-body">'
             .   '<' . $title_tag . ' class="vvp-co__feed-title">' . esc_html($props['title']) . '</' . $title_tag . '>'
             .   $byline_html
@@ -264,8 +310,7 @@ trait CardRenderTrait
             return '';
         }
 
-        $is_carousel   = count($slides) > 1;
-        $media_category = 'VIDEO' === $media_type ? 'Video' : ($is_carousel ? 'Karussell' : 'Foto');
+        $is_carousel = count($slides) > 1;
 
         // Extract the shortcode from e.g. https://www.instagram.com/p/ABC123/
         // or https://www.instagram.com/reel/ABC123/ — Reels and IGTV posts use
@@ -281,7 +326,6 @@ trait CardRenderTrait
             'caption'       => $caption,
             'date'          => $date,
             'badgeLabel'    => 'Instagram',
-            'mediaCategory' => $media_category,
             'slides'        => $slides,
             'isCarousel'    => $is_carousel,
         ];

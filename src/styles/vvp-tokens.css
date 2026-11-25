@@ -61,7 +61,7 @@
 
 /*
  * Un-prefixed aliases for @volksverpetzer/ui-web's component CSS (Button,
- * Badge, Card, ProgressBar, Alert, Input, InputButton, ...): that package's
+ * Badge, Card, ProgressBar, Alert, Callout, Input, InputButton, ...): that package's
  * own stylesheets read --vvp-primary, --vvp-surface, etc. (the plain
  * ./css/volksverpetzer.css naming), not the --vvp-color-* names the brand
  * import above defines. Without these, every ui-web component silently
@@ -80,7 +80,10 @@
   --vvp-primary: var(--vvp-color-primary);
   --vvp-primary-muted: var(--vvp-color-primary-muted);
   --vvp-accent: var(--vvp-color-accent);
+  --vvp-link-text: var(--vvp-color-link-text);
   --vvp-error: var(--vvp-color-error);
+  --vvp-warning: var(--vvp-color-warning);
+  --vvp-success: var(--vvp-color-success);
   --vvp-pruefpunkt: var(--vvp-color-pruefpunkt);
 }
 
