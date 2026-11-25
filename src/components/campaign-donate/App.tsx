@@ -129,6 +129,11 @@ export const CampaignDonateApp = ({
     setSelected(defaultPreset);
   }
   const [customAmount, setCustomAmount] = useState("");
+  // Focusing the custom field switches to a custom amount right away:
+  // the preset is deselected and Steady (fixed amounts only) is disabled.
+  // Leaving it empty switches back to the preset.
+  const [customFocused, setCustomFocused] = useState(false);
+  const customActive = customFocused || Boolean(customAmount);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [checkoutClientSecret, setCheckoutClientSecret] = useState<
@@ -149,12 +154,12 @@ export const CampaignDonateApp = ({
   const customHintId = `${idPrefix}-custom-hint`;
 
   const amount = useMemo(() => {
-    if (!customAmount) return selected;
+    if (!customActive) return selected;
     // Custom input is active but not (yet) a valid amount — don't silently
     // fall back to the last preset, or the donor could end up charged an
     // amount that doesn't match what's shown as selected in the UI.
     return parseCustomAmount(customAmount);
-  }, [customAmount, selected]);
+  }, [customActive, customAmount, selected]);
   const customAmountInvalid = Boolean(customAmount.trim()) && amount <= 0;
 
   // PayPal's Buttons are only initialized once per mount; createOrder/onApprove
@@ -397,11 +402,7 @@ export const CampaignDonateApp = ({
   // Steady plans have fixed amounts: the Steady button links to the plan
   // matching the selected preset, and is disabled for a custom amount or a
   // preset without a plan. Custom amounts work with Stripe/PayPal only.
-  const steadyPlan = steadyPlanForAmount(
-    steadyPlans,
-    selected,
-    Boolean(customAmount),
-  );
+  const steadyPlan = steadyPlanForAmount(steadyPlans, selected, customActive);
   const hasCustomAmount = hasStripe || hasPaypal;
 
   return (
@@ -416,7 +417,7 @@ export const CampaignDonateApp = ({
             <button
               type="button"
               key={value}
-              className={`vvp-cd__preset ${amount === value && !customAmount ? "is-active" : ""}`}
+              className={`vvp-cd__preset ${selected === value && !customActive ? "is-active" : ""}`}
               onClick={() => {
                 setCustomAmount("");
                 setSelected(value);
@@ -429,7 +430,7 @@ export const CampaignDonateApp = ({
             <input
               id={customInputId}
               ref={customInputRef}
-              className={`vvp-cd__preset vvp-cd__preset-input ${customAmount ? "is-active" : ""}`}
+              className={`vvp-cd__preset vvp-cd__preset-input ${customActive ? "is-active" : ""}`}
               type="text"
               inputMode="numeric"
               aria-invalid={customAmountInvalid || undefined}
@@ -438,6 +439,8 @@ export const CampaignDonateApp = ({
                 monthly ? "Eigener Betrag/Monat..." : "Eigener Betrag..."
               }
               value={customAmount}
+              onFocus={() => setCustomFocused(true)}
+              onBlur={() => setCustomFocused(false)}
               onChange={(event) => setCustomAmount(event.target.value)}
               aria-label={
                 monthly
