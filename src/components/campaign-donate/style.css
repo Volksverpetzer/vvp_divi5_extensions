@@ -73,7 +73,8 @@
 .vvp-campaign-donate .vvp-cd__paypal,
 .vvp-campaign-donate .vvp-cd__steady-button {
   max-width: 50%;
-  min-width: 280px;
+  /* At least 280px, but never wider than a narrower container. */
+  min-width: min(280px, 100%);
   width: 100%;
 }
 .vvp-campaign-donate .vvp-cd__input {
@@ -129,8 +130,10 @@
 }
 /* The Steady button, matching Volksverpetzer's "Unterstützen mit Steady"
    button assets (wp-content/uploads/2023/01/ButtonSteady.png and
-   2024/03/Button-Steady-O@2x.png): Steady coral, white uppercase label,
-   white "S" mark separated by a dark divider. */
+   2024/03/Button-Steady-O@2x.png): Steady coral, uppercase label,
+   white "S" mark separated by a dark divider. The label uses Steady's dark
+   ink instead of the assets' white: white on the coral is only 2.68:1,
+   ink is 5.87:1 (4.69:1 on the hover colour), so it passes WCAG AA. */
 .vvp-campaign-donate .vvp-cd__steady-button {
   --vvp-steady-coral: #ff7264;
   --vvp-steady-coral-hover: #f2584a;
@@ -144,7 +147,7 @@
   padding: 0.7rem 1rem;
   border-radius: 6px;
   background: var(--vvp-steady-coral);
-  color: #fff;
+  color: var(--vvp-steady-ink);
   font-weight: 700;
   font-size: 0.95rem;
   letter-spacing: 0.06em;
@@ -159,7 +162,7 @@
 .vvp-campaign-donate .vvp-cd__steady-button:hover,
 .vvp-campaign-donate .vvp-cd__steady-button:focus-visible {
   background: var(--vvp-steady-coral-hover);
-  color: #fff;
+  color: var(--vvp-steady-ink);
 }
 .vvp-campaign-donate .vvp-cd__steady-button:focus-visible {
   outline: 2px solid var(--vvp-steady-ink);
