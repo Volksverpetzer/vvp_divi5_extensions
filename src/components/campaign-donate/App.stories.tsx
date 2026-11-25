@@ -19,32 +19,34 @@ const meta: Meta<typeof CampaignDonateApp> = {
 export default meta;
 type Story = StoryObj<typeof CampaignDonateApp>;
 
-/** Every prop exposed as a control (Stripe + PayPal, with presets). */
+/**
+ * Every prop exposed as a control. One-time mode as on /weihnachten
+ * (XMAS 2026): Stripe + PayPal, no certificate.
+ */
 export const Playground: Story = {
   args: {
     apiBaseUrl: "https://crowdfunding.volksverpetzer.de",
-    campaignKey: "flyer2026",
+    campaignKey: "xmas2026",
+    interval: "once",
     stripePublicKey: "pk_test_51234567890",
     paypalClientId: "AWJvLVwI_example",
     presets: [10, 50, 100],
-    certificateUrl: "/",
     preview: true,
   },
 };
 
 export const StripeOnly: Story = {
   args: {
-    apiBaseUrl: "https://crowdfunding.volksverpetzer.de",
-    campaignKey: "flyer2026",
+    ...Playground.args,
     stripePublicKey: "pk_test_01234567890",
     paypalClientId: "",
-    presets: [15, 30, 75, 150],
-    certificateUrl: "/",
-    preview: true,
   },
 };
 
-/** Monthly mode: Stripe subscription plus the campaign's hidden Steady plans; PayPal is hidden. */
+/**
+ * Monthly mode as on /weihnachten (XMAS 2026): Stripe subscription plus one
+ * button per Steady plan; PayPal is hidden.
+ */
 export const Monthly: Story = {
   args: {
     apiBaseUrl: "https://crowdfunding.volksverpetzer.de",
