@@ -44,6 +44,9 @@
   font-size: 1rem;
   cursor: pointer;
 }
+/* Hover like the selected amount; not the custom amount field, which
+   shares the class but only turns pink on focus. */
+.vvp-campaign-donate button.vvp-cd__preset:hover,
 .vvp-campaign-donate .vvp-cd__preset.is-active {
   border-color: var(--vvp-pink-main);
   color: var(--vvp-pink-main);
