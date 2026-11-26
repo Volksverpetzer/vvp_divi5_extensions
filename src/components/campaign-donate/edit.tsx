@@ -40,6 +40,8 @@ export const CampaignDonateEdit = (
     (attrs as any).presets?.innerContent?.desktop?.value?.trim() ?? "10,50,100";
   const certificateUrl =
     (attrs as any).certificateUrl?.innerContent?.desktop?.value?.trim() ?? "";
+  const headline =
+    (attrs as any).headline?.innerContent?.desktop?.value?.trim() ?? "";
   const steadyPlans = parseSteadyPlans(
     (attrs as any).steadyPlans?.innerContent?.desktop?.value ?? "",
   );
@@ -73,6 +75,7 @@ export const CampaignDonateEdit = (
           presets={parsePresets(presetsInput)}
           steadyPlans={steadyPlans}
           certificateUrl={certificateUrl}
+          headline={headline}
           preview
         />
       </div>

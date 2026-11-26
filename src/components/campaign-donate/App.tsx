@@ -23,6 +23,12 @@ import {
 } from "./steady";
 import { parseCustomAmount } from "./amount";
 import { trackDonateEvent, type DonateEventProps } from "./tracking";
+import {
+  formatHeadline,
+  headlineHasPlaceholders,
+  PREVIEW_SUMMARY,
+  type HeadlineSummary,
+} from "./headline";
 import { type CampaignDonateAppProps } from "./types";
 
 // Inline (not delegated to an imported helper) so static analysis tracking
@@ -107,6 +113,62 @@ const takeCheckoutAmount = (sessionId: string): number | undefined => {
   }
 };
 
+/**
+ * The headline with its placeholders filled, or null while it can't be shown:
+ * a headline with placeholders waits for the campaign summary and stays
+ * hidden when it can't be loaded, rather than showing "{ziel}". Reloaded
+ * after a donation on this page (also one in another donation module), like
+ * the progress module.
+ */
+const useHeadline = (
+  headline: string,
+  apiBaseUrl: string,
+  campaignKey: string,
+  preview: boolean,
+): string | null => {
+  const needsSummary = headlineHasPlaceholders(headline);
+  const [summary, setSummary] = useState<HeadlineSummary | null>(null);
+
+  useEffect(() => {
+    if (preview || !needsSummary || !apiBaseUrl) return;
+    let cancelled = false;
+    const query = campaignKey
+      ? `?campaign=${encodeURIComponent(campaignKey)}`
+      : "";
+    const load = async () => {
+      try {
+        const response = await fetch(
+          `${apiBaseUrl}/api/campaign-summary${query}`,
+          { headers: { Accept: "application/json" } },
+        );
+        if (!response.ok) return;
+        const data = await response.json();
+        if (
+          !cancelled &&
+          typeof data?.goal === "number" &&
+          typeof data?.totalRaised === "number"
+        ) {
+          setSummary({ goal: data.goal, totalRaised: data.totalRaised });
+        }
+      } catch {
+        // Keep the last known amounts (or keep the headline hidden).
+      }
+    };
+    load();
+    window.addEventListener(DONATION_COMPLETE_EVENT, load);
+    return () => {
+      cancelled = true;
+      window.removeEventListener(DONATION_COMPLETE_EVENT, load);
+    };
+  }, [preview, needsSummary, apiBaseUrl, campaignKey]);
+
+  const trimmed = headline.trim();
+  if (!trimmed) return null;
+  if (!needsSummary) return trimmed;
+  if (preview) return formatHeadline(trimmed, PREVIEW_SUMMARY);
+  return summary ? formatHeadline(trimmed, summary) : null;
+};
+
 const paypalSdkPromises = new Map<string, Promise<void>>();
 const loadPayPalSdk = (clientId: string): Promise<void> => {
   if (!paypalSdkPromises.has(clientId)) {
@@ -138,9 +200,11 @@ export const CampaignDonateApp = ({
   presets,
   steadyPlans = [],
   certificateUrl,
+  headline = "",
   preview = false,
 }: CampaignDonateAppProps): ReactElement => {
   const monthly = interval === "month";
+  const headlineText = useHeadline(headline, apiBaseUrl, campaignKey, preview);
   // Monthly donations go through Stripe subscriptions or Steady; PayPal
   // here only does one-time payments, so it's hidden in monthly mode.
   const paypalActive = !monthly && Boolean(paypalClientId);
@@ -578,6 +642,7 @@ export const CampaignDonateApp = ({
   return (
     <div className="vvp-cd">
       <div className="vvp-cd__form">
+        {headlineText && <h3 className="vvp-cd__headline">{headlineText}</h3>}
         <div
           className="vvp-cd__presets"
           role="group"
@@ -643,11 +708,7 @@ export const CampaignDonateApp = ({
               disabled={loading || amount <= 0}
               onClick={handleStripeSubmit}
             >
-              {loading
-                ? "Lädt…"
-                : monthly
-                  ? "Monatlich mit Karte/SEPA spenden"
-                  : "Mit Karte/SEPA spenden"}
+              {loading ? "Lädt…" : "Mit Karte/SEPA spenden"}
             </Button>
           )}
 
