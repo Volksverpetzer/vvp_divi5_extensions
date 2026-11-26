@@ -32,6 +32,9 @@ import { type CampaignDonateAppProps } from "./types";
 const SAFE_URL_PATTERN = /^(https?:\/\/|\/(?!\/))/i;
 
 const DONATION_COMPLETE_EVENT = "vvp-donation-completed";
+// Delay before leaving for the thank-you page, so the DonateConversion event
+// (and the progress bar's refresh) can go out first.
+const THANK_YOU_REDIRECT_DELAY_MS = 400;
 // Share of the Stripe button that must be visible for "Checkout Button Viewed".
 const VIEWED_THRESHOLD = 0.5;
 
@@ -138,6 +141,7 @@ export const CampaignDonateApp = ({
   presets,
   steadyPlans = [],
   certificateUrl,
+  thankYouUrl,
   preview = false,
 }: CampaignDonateAppProps): ReactElement => {
   const monthly = interval === "month";
@@ -232,6 +236,15 @@ export const CampaignDonateApp = ({
     setCompletedAmount(finalAmount);
     setDonationComplete(true);
     window.dispatchEvent(new CustomEvent(DONATION_COMPLETE_EVENT));
+    // Guard inline, like the certificate link: only http(s) or
+    // root-relative URLs may reach location.assign.
+    if (thankYouUrl && SAFE_URL_PATTERN.test(thankYouUrl)) {
+      const target = thankYouUrl;
+      window.setTimeout(
+        () => window.location.assign(target),
+        THANK_YOU_REDIRECT_DELAY_MS,
+      );
+    }
   };
 
   // Some Stripe payment methods (3D Secure, Klarna, Bancontact, PayPal, ...)
@@ -306,6 +319,8 @@ export const CampaignDonateApp = ({
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ session_id: checkoutSessionId }),
+                // Survives leaving for the thank-you page right after.
+                keepalive: true,
               }).catch(() => {});
             }
             finishDonation(amount, "stripe");
