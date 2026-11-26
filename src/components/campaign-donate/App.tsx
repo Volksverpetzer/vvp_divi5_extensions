@@ -75,7 +75,10 @@ export const CampaignDonateThanks = ({
 const stripePromises = new Map<string, Promise<Stripe | null>>();
 const getStripe = (publicKey: string) => {
   if (!stripePromises.has(publicKey)) {
-    stripePromises.set(publicKey, loadStripe(publicKey));
+    const promise = loadStripe(publicKey);
+    // Forget a failed load, so the next attempt tries again.
+    promise.catch(() => stripePromises.delete(publicKey));
+    stripePromises.set(publicKey, promise);
   }
   return stripePromises.get(publicKey)!;
 };
@@ -254,30 +257,42 @@ export const CampaignDonateApp = ({
     let instance: StripeEmbeddedCheckout | null = null;
     let cancelled = false;
 
-    getStripe(stripePublicKey).then(async (stripe) => {
-      if (cancelled || !stripe || !checkoutContainerRef.current) return;
-      // @stripe/stripe-js v9 renamed initEmbeddedCheckout -> createEmbeddedCheckoutPage
-      // (matches the crowdfunding app's Checkout Session ui_mode: 'embedded_page');
-      // same options/return shape, method renamed only.
-      instance = await stripe.createEmbeddedCheckoutPage({
-        clientSecret: checkoutClientSecret,
-        onComplete: () => {
-          if (checkoutSessionId) {
-            fetch(`${apiBaseUrl}/api/finalize-session`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ session_id: checkoutSessionId }),
-            }).catch(() => {});
-          }
-          finishDonation(amount, "stripe");
-        },
+    getStripe(stripePublicKey)
+      .then(async (stripe) => {
+        if (cancelled || !checkoutContainerRef.current) return;
+        // Handled like a failed load by the catch below.
+        if (!stripe) throw new Error("stripe-unavailable");
+        // @stripe/stripe-js v9 renamed initEmbeddedCheckout -> createEmbeddedCheckoutPage
+        // (matches the crowdfunding app's Checkout Session ui_mode: 'embedded_page');
+        // same options/return shape, method renamed only.
+        instance = await stripe.createEmbeddedCheckoutPage({
+          clientSecret: checkoutClientSecret,
+          onComplete: () => {
+            if (checkoutSessionId) {
+              fetch(`${apiBaseUrl}/api/finalize-session`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ session_id: checkoutSessionId }),
+              }).catch(() => {});
+            }
+            finishDonation(amount, "stripe");
+          },
+        });
+        if (cancelled) {
+          instance.destroy();
+          return;
+        }
+        instance.mount(checkoutContainerRef.current);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        track("Checkout Error", {
+          amount,
+          provider: "stripe",
+          message: err instanceof Error ? err.message : "stripe-init",
+        });
+        setError("Die Zahlung konnte nicht geladen werden.");
       });
-      if (cancelled) {
-        instance.destroy();
-        return;
-      }
-      instance.mount(checkoutContainerRef.current);
-    });
 
     return () => {
       cancelled = true;
