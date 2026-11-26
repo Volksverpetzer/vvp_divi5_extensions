@@ -35,6 +35,18 @@ export const Playground: Story = {
   },
 };
 
+/**
+ * With a headline: the Visual Builder and Storybook fill its placeholders
+ * with example amounts (12.345 € of 20.000 €); on the page they come from
+ * the crowdfunding app's campaign summary.
+ */
+export const WithHeadline: Story = {
+  args: {
+    ...Playground.args,
+    headline: "Schon {gesammelt} von {ziel} gesammelt!",
+  },
+};
+
 export const StripeOnly: Story = {
   args: {
     ...Playground.args,

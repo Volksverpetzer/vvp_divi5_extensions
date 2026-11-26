@@ -11,6 +11,7 @@ export interface CampaignDonateAttrs {
   presets: object;
   steadyPlans: object;
   certificateUrl: object;
+  headline: object;
 }
 
 export type CampaignDonateEditProps =
@@ -32,6 +33,11 @@ export interface CampaignDonateAppProps {
   /** Shown as links to their Steady checkout in monthly mode only. */
   steadyPlans?: SteadyPlan[];
   certificateUrl?: string;
+  /**
+   * Shown above the amounts. {gesammelt}, {ziel}, {fehlt} and {prozent} are
+   * filled from the crowdfunding app's campaign summary (see headline.ts).
+   */
+  headline?: string;
   /** Builder preview only — skips network calls, form is inert. */
   preview?: boolean;
 }

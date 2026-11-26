@@ -8,4 +8,5 @@ export const placeholderContent = {
   presets: { innerContent: { desktop: { value: "10,50,100" } } },
   steadyPlans: { innerContent: { desktop: { value: "" } } },
   certificateUrl: { innerContent: { desktop: { value: "" } } },
+  headline: { innerContent: { desktop: { value: "" } } },
 };
