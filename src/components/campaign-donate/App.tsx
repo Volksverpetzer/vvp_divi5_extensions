@@ -83,6 +83,28 @@ const getStripe = (publicKey: string) => {
   return stripePromises.get(publicKey)!;
 };
 
+// The amount of a Stripe checkout, kept across the redirect some payment
+// methods make, so failure events after the return still carry it. Only in
+// this tab's sessionStorage, keyed by the checkout session; best effort.
+const pendingAmountKey = (sessionId: string) => `vvp_cd_amount:${sessionId}`;
+const rememberCheckoutAmount = (sessionId: string, amount: number): void => {
+  try {
+    window.sessionStorage.setItem(pendingAmountKey(sessionId), String(amount));
+  } catch {
+    // Storage unavailable (private mode, blocked): events go without amount.
+  }
+};
+const takeCheckoutAmount = (sessionId: string): number | undefined => {
+  try {
+    const value = window.sessionStorage.getItem(pendingAmountKey(sessionId));
+    window.sessionStorage.removeItem(pendingAmountKey(sessionId));
+    const amount = Number(value);
+    return value && amount > 0 ? amount : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
 const paypalSdkPromises = new Map<string, Promise<void>>();
 const loadPayPalSdk = (clientId: string): Promise<void> => {
   if (!paypalSdkPromises.has(clientId)) {
@@ -225,6 +247,7 @@ export const CampaignDonateApp = ({
       "",
       `${window.location.pathname}${cleanedSearch ? `?${cleanedSearch}` : ""}${window.location.hash}`,
     );
+    const checkoutAmount = takeCheckoutAmount(sessionId);
 
     fetch(`${apiBaseUrl}/api/finalize-session`, {
       method: "POST",
@@ -237,6 +260,7 @@ export const CampaignDonateApp = ({
           finishDonation(json.amount ?? 0, "stripe");
         } else {
           track("Checkout Failed", {
+            amount: checkoutAmount,
             provider: "stripe",
             reason: json?.error ?? "unconfirmed",
           });
@@ -244,7 +268,11 @@ export const CampaignDonateApp = ({
         }
       })
       .catch(() => {
-        track("Checkout Error", { provider: "stripe", message: "finalize" });
+        track("Checkout Error", {
+          amount: checkoutAmount,
+          provider: "stripe",
+          message: "finalize",
+        });
         setError("Zahlung konnte nicht bestätigt werden.");
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -490,6 +518,7 @@ export const CampaignDonateApp = ({
       }
 
       track("Checkout Embedded Mounted", { amount, provider: "stripe" });
+      rememberCheckoutAmount(json.sessionId as string, amount);
       setCheckoutSessionId(json.sessionId as string);
       setCheckoutClientSecret(json.clientSecret as string);
     } catch (err) {
