@@ -27,11 +27,11 @@ describe("trackDonateEvent", () => {
     const plausible = vi.fn();
     window.plausible = plausible;
     trackDonateEvent(
-      "Steady Clicked",
+      "Steady",
       { campaign: "xmas2026", interval: "month" },
       { amount: 12 },
     );
-    expect(plausible).toHaveBeenCalledWith("Steady Clicked", {
+    expect(plausible).toHaveBeenCalledWith("Steady", {
       props: { campaign: "xmas2026", interval: "month", amount: "12" },
     });
   });

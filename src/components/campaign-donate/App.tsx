@@ -669,9 +669,7 @@ export const CampaignDonateApp = ({
             (steadyPlan ? (
               <a
                 className="vvp-cd__steady-button"
-                onClick={() =>
-                  track("Steady Clicked", { amount: steadyPlan.amount })
-                }
+                onClick={() => track("Steady", { amount: steadyPlan.amount })}
                 href={steadyPlanUrl(steadyPlan.planId)}
                 target="_blank"
                 rel="noopener noreferrer"
