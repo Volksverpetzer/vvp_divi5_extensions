@@ -2,7 +2,7 @@ import React, { type ReactElement, useEffect, useState } from "react";
 import { ProgressBar } from "@volksverpetzer/ui-web";
 import { type CampaignProgressAppProps, type CampaignSummary } from "./types";
 import { POLL_INTERVAL_MS, DONATION_COMPLETE_EVENT } from "./constants";
-import { formatHeadline } from "./headline";
+import { formatHeadline, splitHeadline } from "./headline";
 
 export const CampaignProgressApp = ({
   total: initialTotal,
@@ -77,7 +77,19 @@ export const CampaignProgressApp = ({
 
   return (
     <>
-      {headlineText && <h3 className="vvp-cp__headline">{headlineText}</h3>}
+      {headlineText && (
+        <h3 className="vvp-cp__headline">
+          {splitHeadline(headlineText).map((part, index) =>
+            part.small ? (
+              <small key={index} className="vvp-cp__headline-small">
+                {part.text}
+              </small>
+            ) : (
+              <React.Fragment key={index}>{part.text}</React.Fragment>
+            ),
+          )}
+        </h3>
+      )}
       <ProgressBar total={total} goal={goal} />
     </>
   );

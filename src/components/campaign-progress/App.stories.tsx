@@ -38,6 +38,15 @@ export const WithHeadline: Story = {
   },
 };
 
+/** <small>…</small> renders smaller, grey and not bold. */
+export const HeadlineWithSmallPart: Story = {
+  args: {
+    total: 7340,
+    goal: 20000,
+    headline: "Monatlich: {gesammelt} <small>von {ziel}</small>",
+  },
+};
+
 export const GoalReached: Story = {
   args: { total: 21450, goal: 20000 },
 };

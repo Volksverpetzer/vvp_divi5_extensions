@@ -40,3 +40,31 @@ export const formatHeadline = (
       }
     }
   });
+
+export type HeadlinePart = { text: string; small: boolean };
+
+const SMALL_PATTERN = /<small>([\s\S]*?)<\/small>/gi;
+
+/**
+ * Splits a filled headline into plain and <small>…</small> parts, so the
+ * component can render the small parts in a <small> element. Only this one
+ * tag is recognised (case-insensitively); everything else, including an
+ * unclosed <small> or any other HTML, stays plain text that React escapes.
+ * Empty parts are dropped.
+ */
+export const splitHeadline = (headline: string): HeadlinePart[] => {
+  const parts: HeadlinePart[] = [];
+  let last = 0;
+  for (const match of headline.matchAll(SMALL_PATTERN)) {
+    const index = match.index ?? 0;
+    if (index > last) {
+      parts.push({ text: headline.slice(last, index), small: false });
+    }
+    if (match[1]) parts.push({ text: match[1], small: true });
+    last = index + match[0].length;
+  }
+  if (last < headline.length) {
+    parts.push({ text: headline.slice(last), small: false });
+  }
+  return parts;
+};
