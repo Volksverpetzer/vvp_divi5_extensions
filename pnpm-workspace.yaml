@@ -12,6 +12,10 @@ overrides:
   # standard options, unchanged in 11). Drop once glob asks for minimatch 11.
   "minimatch@>=7.0.0 <11.0.1": "^11.0.1"
 minimumReleaseAgeExclude:
+  # Temporary: design-tokens 0.12.0 / ui-web 0.17.1 (2026-11-26 13:12 UTC,
+  # surfaceAccent + PillGroup tab stop). Remove after 2026-11-27 13:13 UTC.
+  - "@volksverpetzer/design-tokens@0.12.0"
+  - "@volksverpetzer/ui-web@0.17.1"
   - "@cspell/dict-de-de@4.1.4"
   - "@types/react@19.3.3"
   - "@vitest/coverage-v8@5.1.2"
