@@ -225,7 +225,10 @@ export const CampaignDonateApp = ({
     finalAmount: number,
     provider: "stripe" | "paypal",
   ) => {
-    track("Donation Success", { amount: finalAmount, provider });
+    // "DonateConversion", not the crowdfunding site's "Donation Success":
+    // the app sends it to the same Plausible site (volksverpetzer.de), and
+    // it keeps the goal's history.
+    track("DonateConversion", { amount: finalAmount, provider });
     setCompletedAmount(finalAmount);
     setDonationComplete(true);
     window.dispatchEvent(new CustomEvent(DONATION_COMPLETE_EVENT));

@@ -38,7 +38,7 @@ describe("trackDonateEvent", () => {
 
   it("does nothing without the Plausible script", () => {
     expect(() =>
-      trackDonateEvent("Donation Success", {
+      trackDonateEvent("DonateConversion", {
         campaign: "xmas2026",
         interval: "once",
       }),

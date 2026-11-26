@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Spenden-Formular sends Plausible events, named like the crowdfunding app's (crowdfunding.volksverpetzer.de), so /weihnachten and the crowdfunding site can be compared with the same goals: `Donation Option Selected` (`amount`, `type` preset/custom), `Checkout Button Viewed`, `Checkout Attempted`, `Checkout Embedded Mounted`, `Checkout Failed` (`reason`), `Checkout Error` (`message`), `Donation Success` (`amount`) and `Steady` (`amount`, same name as the app's Steady button event). Every event carries `campaign` and `interval` (once/month); checkout and success events also `provider` (stripe/paypal). No events in the Visual Builder or Storybook. The events only show in Plausible once they are set up as goals for volksverpetzer.de.
+- Spenden-Formular sends Plausible events, named like the crowdfunding app's (crowdfunding.volksverpetzer.de), so /weihnachten and the crowdfunding site can be compared with the same goals: `Donation Option Selected` (`amount`, `type` preset/custom), `Checkout Button Viewed`, `Checkout Attempted`, `Checkout Embedded Mounted`, `Checkout Failed` (`reason`), `Checkout Error` (`message`), `DonateConversion` (`amount`) and `Steady` (`amount`); the last two have the same names as the app's events, which go to the same Plausible site. Every event carries `campaign` and `interval` (once/month); checkout and success events also `provider` (stripe/paypal). No events in the Visual Builder or Storybook. The events only show in Plausible once they are set up as goals for volksverpetzer.de.
 
 ### Changed
 
