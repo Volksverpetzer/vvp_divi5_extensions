@@ -11,7 +11,7 @@ import {
   type Stripe,
   type StripeEmbeddedCheckout,
 } from "@stripe/stripe-js";
-import { Alert, Button } from "@volksverpetzer/ui-web";
+import { Alert, Button, PillGroup } from "@volksverpetzer/ui-web";
 import {
   isPayPalCaptureSuccessful,
   type PayPalCaptureResponse,
@@ -578,53 +578,50 @@ export const CampaignDonateApp = ({
   return (
     <div className="vvp-cd">
       <div className="vvp-cd__form">
-        <div
+        {/* The design system's PillGroup (radio group, arrow keys). No pill
+            is selected while the custom amount is active. */}
+        <PillGroup
           className="vvp-cd__presets"
-          role="group"
           aria-label="Schnellauswahl Betrag"
-        >
-          {presets.map((value) => (
-            <button
-              type="button"
-              key={value}
-              className={`vvp-cd__preset ${selected === value && !customActive ? "is-active" : ""}`}
-              onClick={() => {
-                setCustomAmount("");
-                setSelected(value);
-                trackSelection(value, "preset");
-              }}
-            >
-              {value} €
-            </button>
-          ))}
-          {hasCustomAmount && (
-            <input
-              id={customInputId}
-              ref={customInputRef}
-              className={`vvp-cd__preset vvp-cd__preset-input ${customActive ? "is-active" : ""}`}
-              type="text"
-              inputMode="numeric"
-              aria-invalid={customAmountInvalid || undefined}
-              aria-describedby={customAmountInvalid ? customHintId : undefined}
-              placeholder={
-                monthly ? "Eigener Betrag/Monat..." : "Eigener Betrag..."
-              }
-              value={customAmount}
-              onFocus={() => setCustomFocused(true)}
-              onBlur={() => setCustomFocused(false)}
-              onChange={(event) => {
-                setCustomAmount(event.target.value);
-                const parsed = parseCustomAmount(event.target.value);
-                if (parsed > 0) trackSelection(parsed, "custom");
-              }}
-              aria-label={
-                monthly
-                  ? "Eigenen monatlichen Betrag eingeben"
-                  : "Eigener Betrag eingeben"
-              }
-            />
-          )}
-        </div>
+          options={presets.map((value) => ({
+            value: String(value),
+            label: `${value} €`,
+          }))}
+          value={customActive ? "" : String(selected)}
+          onChange={(next) => {
+            const value = Number(next);
+            setCustomAmount("");
+            setSelected(value);
+            trackSelection(value, "preset");
+          }}
+        />
+        {hasCustomAmount && (
+          <input
+            id={customInputId}
+            ref={customInputRef}
+            className={`vvp-cd__preset-input ${customActive ? "is-active" : ""}`}
+            type="text"
+            inputMode="numeric"
+            aria-invalid={customAmountInvalid || undefined}
+            aria-describedby={customAmountInvalid ? customHintId : undefined}
+            placeholder={
+              monthly ? "Eigener Betrag/Monat..." : "Eigener Betrag..."
+            }
+            value={customAmount}
+            onFocus={() => setCustomFocused(true)}
+            onBlur={() => setCustomFocused(false)}
+            onChange={(event) => {
+              setCustomAmount(event.target.value);
+              const parsed = parseCustomAmount(event.target.value);
+              if (parsed > 0) trackSelection(parsed, "custom");
+            }}
+            aria-label={
+              monthly
+                ? "Eigenen monatlichen Betrag eingeben"
+                : "Eigener Betrag eingeben"
+            }
+          />
+        )}
 
         {customAmountInvalid && (
           <p id={customHintId} className="vvp-cd__custom-hint" role="alert">
