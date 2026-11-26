@@ -1,4 +1,8 @@
-import { resolveMountSettings, type MountSettings } from "./mount-config";
+import {
+  normalizeApiBaseUrl,
+  resolveMountSettings,
+  type MountSettings,
+} from "./mount-config";
 
 const plans = [{ amount: 5, planId: "a5fcfc59-8848-4359-9b03-585cfedb54b5" }];
 
@@ -59,5 +63,35 @@ describe("resolveMountSettings", () => {
         stripePublicKey: "",
       }),
     ).toBeNull();
+  });
+});
+
+describe("normalizeApiBaseUrl", () => {
+  const root = "https://crowdfunding.volksverpetzer.de";
+
+  it.each([
+    [root, root],
+    [`${root}/`, root],
+    [`  ${root}//  `, root],
+    [`${root}/api`, root],
+    [`${root}/api/`, root],
+    [`${root}/api/campaign-summary`, root],
+    [`${root}/api/campaign-summary/`, root],
+    [`${root}/api/campaign-summary?campaign=xmas2026`, root],
+    [`${root}/api/create-checkout-session`, root],
+    [`${root}/spenden`, `${root}/spenden`],
+    [`${root}/spenden/api/campaign-summary`, `${root}/spenden`],
+    [`${root}/api-docs`, `${root}/api-docs`],
+    ["", ""],
+  ])("%s -> %s", (input, expected) => {
+    expect(normalizeApiBaseUrl(input)).toBe(expected);
+  });
+
+  it("is applied by resolveMountSettings", () => {
+    const resolved = resolveMountSettings({
+      ...base,
+      apiBaseUrl: `${root}/api/campaign-summary`,
+    });
+    expect(resolved?.apiBaseUrl).toBe(root);
   });
 });
