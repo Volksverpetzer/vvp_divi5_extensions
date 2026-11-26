@@ -50,7 +50,6 @@ trait RenderCallbackTrait
         $presets           = trim($attrs['presets']['innerContent']['desktop']['value'] ?? '') ?: '10,50,100';
         $certificate_url   = trim($attrs['certificateUrl']['innerContent']['desktop']['value'] ?? '');
         $steady_plans      = trim($attrs['steadyPlans']['innerContent']['desktop']['value'] ?? '');
-        $headline          = trim($attrs['headline']['innerContent']['desktop']['value'] ?? '');
 
         $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
         $parent_attrs = $parent->attrs ?? [];
@@ -88,7 +87,6 @@ trait RenderCallbackTrait
                         'data-presets'          => esc_attr($presets),
                         'data-certificate-url'  => esc_attr($certificate_url),
                         'data-steady-plans'     => esc_attr($steady_plans),
-                        'data-headline'         => esc_attr($headline),
                     ],
                     'childrenSanitizer' => 'esc_html',
                     'children'          => '',

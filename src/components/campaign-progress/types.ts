@@ -4,6 +4,7 @@ export interface CampaignProgressAttrs {
   module: object;
   summaryApiUrl: object;
   goal: object;
+  headline: object;
 }
 
 export type CampaignProgressEditProps =
@@ -25,4 +26,9 @@ export interface CampaignProgressAppProps {
   goalOverride?: number;
   /** When set, the component fetches this URL itself and polls for updates. */
   apiUrl?: string;
+  /**
+   * Shown above the bar. {gesammelt}, {ziel}, {fehlt} and {prozent} are
+   * filled with the bar's current amounts (see headline.ts).
+   */
+  headline?: string;
 }

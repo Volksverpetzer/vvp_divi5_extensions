@@ -45,14 +45,12 @@ const initAll = () => {
     );
     const certificateUrl =
       mount.getAttribute("data-certificate-url") || undefined;
-    const headline = mount.getAttribute("data-headline") || "";
 
     createRoot(mount).render(
       <CampaignDonateApp
         {...settings}
         presets={presets}
         certificateUrl={certificateUrl}
-        headline={headline}
       />,
     );
   });
