@@ -246,6 +246,30 @@
           }
         }
       }
+    },
+    "thankYouUrl": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 45,
+            "render": true,
+            "attrName": "thankYouUrl.innerContent",
+            "label": "Danke-Seite (optional)",
+            "description": "Nach abgeschlossener Spende wird hierhin weitergeleitet, z. B. https://volksverpetzer.de/weihnachten-danke/. Leer lassen, um den Dank im Formular anzuzeigen.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
     }
   },
   "settings": {

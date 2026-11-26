@@ -32,21 +32,65 @@ import { type CampaignDonateAppProps } from "./types";
 const SAFE_URL_PATTERN = /^(https?:\/\/|\/(?!\/))/i;
 
 const DONATION_COMPLETE_EVENT = "vvp-donation-completed";
+// Delay before leaving for the thank-you page, so the DonateConversion event
+// (and the progress bar's refresh) can go out first.
+const THANK_YOU_REDIRECT_DELAY_MS = 400;
 // Share of the Stripe button that must be visible for "Checkout Button Viewed".
 const VIEWED_THRESHOLD = 0.5;
 
 export const CampaignDonateThanks = ({
   amount,
   certificateUrl,
+  thankYouUrl,
   monthly = false,
 }: {
   amount: number;
   certificateUrl?: string;
+  /** When set, the notice links to this page and follows the link itself. */
+  thankYouUrl?: string;
   monthly?: boolean;
 }): ReactElement => {
   let safeCertificateUrl: string | undefined;
   if (certificateUrl && SAFE_URL_PATTERN.test(certificateUrl)) {
     safeCertificateUrl = certificateUrl;
+  }
+  let safeThankYouUrl: string | undefined;
+  if (thankYouUrl && SAFE_URL_PATTERN.test(thankYouUrl)) {
+    safeThankYouUrl = thankYouUrl;
+  }
+
+  // Leaves for the thank-you page by following the link below rather than
+  // calling location.assign: the link stays visible as a fallback, and the
+  // URL only reaches the guarded href. The delay lets DonateConversion and
+  // the progress bar refresh go out first.
+  const thankYouLinkRef = useRef<HTMLAnchorElement>(null);
+  useEffect(() => {
+    if (!safeThankYouUrl) return;
+    const timer = window.setTimeout(
+      () => thankYouLinkRef.current?.click(),
+      THANK_YOU_REDIRECT_DELAY_MS,
+    );
+    return () => window.clearTimeout(timer);
+  }, [safeThankYouUrl]);
+
+  // With a thank-you page, only a short redirect notice: the page itself
+  // thanks the donor (and offers the certificate, if any).
+  if (safeThankYouUrl) {
+    return (
+      <div className="vvp-cd">
+        <div className="vvp-cd__thanks" role="status">
+          <strong>Danke für deine Unterstützung!</strong>
+          <p>Du wirst zur Danke-Seite weitergeleitet …</p>
+          <a
+            ref={thankYouLinkRef}
+            className="vvp-cd__certificate"
+            href={safeThankYouUrl}
+          >
+            Weiter zur Danke-Seite
+          </a>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -138,6 +182,7 @@ export const CampaignDonateApp = ({
   presets,
   steadyPlans = [],
   certificateUrl,
+  thankYouUrl,
   preview = false,
 }: CampaignDonateAppProps): ReactElement => {
   const monthly = interval === "month";
@@ -306,6 +351,8 @@ export const CampaignDonateApp = ({
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ session_id: checkoutSessionId }),
+                // Survives leaving for the thank-you page right after.
+                keepalive: true,
               }).catch(() => {});
             }
             finishDonation(amount, "stripe");
@@ -553,6 +600,7 @@ export const CampaignDonateApp = ({
       <CampaignDonateThanks
         amount={completedAmount}
         certificateUrl={certificateUrl}
+        thankYouUrl={thankYouUrl}
         monthly={monthly}
       />
     );

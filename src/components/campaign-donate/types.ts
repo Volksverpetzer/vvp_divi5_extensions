@@ -11,6 +11,7 @@ export interface CampaignDonateAttrs {
   presets: object;
   steadyPlans: object;
   certificateUrl: object;
+  thankYouUrl: object;
 }
 
 export type CampaignDonateEditProps =
@@ -32,6 +33,11 @@ export interface CampaignDonateAppProps {
   /** Shown as links to their Steady checkout in monthly mode only. */
   steadyPlans?: SteadyPlan[];
   certificateUrl?: string;
+  /**
+   * Page the donor is sent to once a donation is complete, instead of the
+   * thank-you notice in the form. Only http(s) or root-relative URLs.
+   */
+  thankYouUrl?: string;
   /** Builder preview only — skips network calls, form is inert. */
   preview?: boolean;
 }
