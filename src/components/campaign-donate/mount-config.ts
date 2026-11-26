@@ -10,6 +10,19 @@ export type MountSettings = {
 };
 
 /**
+ * Reduces the configured API base URL to the crowdfunding app's root. The
+ * form appends /api/create-checkout-session etc. itself, so an editor who
+ * pastes a full endpoint (e.g. the progress module's .../api/campaign-summary)
+ * would otherwise produce .../api/campaign-summary/api/create-checkout-session
+ * and a 404. Drops trailing slashes and everything from an /api path segment.
+ */
+export const normalizeApiBaseUrl = (url: string): string =>
+  url
+    .trim()
+    .replace(/\/api(?:[/?#].*)?$/, "")
+    .replace(/\/+$/, "");
+
+/**
  * Decides which payment options a mounted form can actually offer, or null
  * when there's nothing to show. Stripe and PayPal both go through the
  * crowdfunding app, so without its API base URL and campaign key they're
@@ -19,11 +32,13 @@ export type MountSettings = {
 export const resolveMountSettings = (
   settings: MountSettings,
 ): MountSettings | null => {
-  const apiConfigured = Boolean(settings.apiBaseUrl && settings.campaignKey);
+  const apiBaseUrl = normalizeApiBaseUrl(settings.apiBaseUrl);
+  const apiConfigured = Boolean(apiBaseUrl && settings.campaignKey);
   const monthly = settings.interval === "month";
 
   const resolved: MountSettings = {
     ...settings,
+    apiBaseUrl,
     stripePublicKey: apiConfigured ? settings.stripePublicKey : "",
     // PayPal only does one-time payments here.
     paypalClientId: apiConfigured && !monthly ? settings.paypalClientId : "",

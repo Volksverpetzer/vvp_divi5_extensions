@@ -11,3 +11,10 @@ overrides:
   # and typescript-estree already ask for minimatch 11; glob only calls it with
   # standard options, unchanged in 11). Drop once glob asks for minimatch 11.
   "minimatch@>=7.0.0 <11.0.1": "^11.0.1"
+minimumReleaseAgeExclude:
+  - "@cspell/dict-de-de@4.1.4"
+  - "@types/react@19.3.3"
+  - "@vitest/coverage-v8@5.1.2"
+  - "@vitest/mocker@5.1.2"
+  - "@vitest/spy@5.1.2"
+  - vitest@5.1.2
