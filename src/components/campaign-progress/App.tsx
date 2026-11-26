@@ -2,12 +2,14 @@ import React, { type ReactElement, useEffect, useState } from "react";
 import { ProgressBar } from "@volksverpetzer/ui-web";
 import { type CampaignProgressAppProps, type CampaignSummary } from "./types";
 import { POLL_INTERVAL_MS, DONATION_COMPLETE_EVENT } from "./constants";
+import { formatHeadline } from "./headline";
 
 export const CampaignProgressApp = ({
   total: initialTotal,
   goal: initialGoal,
   goalOverride,
   apiUrl,
+  headline = "",
 }: CampaignProgressAppProps): ReactElement => {
   const [total, setTotal] = useState(initialTotal);
   const [goal, setGoal] = useState(initialGoal);
@@ -69,5 +71,14 @@ export const CampaignProgressApp = ({
     };
   }, [apiUrl, goalOverride]);
 
-  return <ProgressBar total={total} goal={goal} />;
+  const headlineText = headline.trim()
+    ? formatHeadline(headline.trim(), { goal, totalRaised: total })
+    : "";
+
+  return (
+    <>
+      {headlineText && <h3 className="vvp-cp__headline">{headlineText}</h3>}
+      <ProgressBar total={total} goal={goal} />
+    </>
+  );
 };

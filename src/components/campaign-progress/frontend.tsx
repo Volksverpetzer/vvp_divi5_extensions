@@ -24,6 +24,7 @@ const initAll = () => {
         goal={initialGoal}
         goalOverride={goalOverride}
         apiUrl={apiUrl || undefined}
+        headline={mount.getAttribute("data-headline") || ""}
       />,
     );
   });

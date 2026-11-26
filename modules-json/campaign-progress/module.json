@@ -45,6 +45,30 @@
         }
       }
     },
+    "headline": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 5,
+            "render": true,
+            "attrName": "headline.innerContent",
+            "label": "Überschrift (optional)",
+            "description": "Wird über dem Fortschrittsbalken angezeigt. Platzhalter für die Zahlen des Balkens: {gesammelt} (bisher gesammelt), {ziel} (Spendenziel), {fehlt} (bis zum Ziel), {prozent} (Anteil am Ziel), z. B. „Schon {gesammelt} von {ziel} gesammelt!“. Die Zahlen aktualisieren sich mit dem Balken. Leer lassen, um keine Überschrift anzuzeigen.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
     "summaryApiUrl": {
       "type": "object",
       "settings": {

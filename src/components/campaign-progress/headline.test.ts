@@ -1,4 +1,4 @@
-import { formatHeadline, headlineHasPlaceholders } from "./headline";
+import { formatHeadline } from "./headline";
 
 describe("formatHeadline", () => {
   const summary = { goal: 20000, totalRaised: 12345.6 };
@@ -30,16 +30,5 @@ describe("formatHeadline", () => {
     expect(formatHeadline("{prozent}", { goal: 0, totalRaised: 5 })).toBe(
       "0 %",
     );
-  });
-});
-
-describe("headlineHasPlaceholders", () => {
-  it("detects known placeholders only", () => {
-    expect(headlineHasPlaceholders("Ziel: {ziel}")).toBe(true);
-    expect(headlineHasPlaceholders("Jetzt spenden")).toBe(false);
-    expect(headlineHasPlaceholders("{unbekannt}")).toBe(false);
-    // Repeated calls give the same answer (no shared lastIndex state).
-    expect(headlineHasPlaceholders("{ziel}")).toBe(true);
-    expect(headlineHasPlaceholders("{ziel}")).toBe(true);
   });
 });

@@ -6,10 +6,6 @@ export type HeadlineSummary = {
 
 const PLACEHOLDER_PATTERN = /\{(gesammelt|ziel|fehlt|prozent)\}/gi;
 
-/** Whether the headline needs the campaign summary to be shown. */
-export const headlineHasPlaceholders = (template: string): boolean =>
-  new RegExp(PLACEHOLDER_PATTERN.source, "i").test(template);
-
 const formatEuro = (value: number): string =>
   `${Math.round(value).toLocaleString("de-DE")} €`;
 
@@ -44,9 +40,3 @@ export const formatHeadline = (
       }
     }
   });
-
-/** Example amounts for the Visual Builder and Storybook, which don't fetch. */
-export const PREVIEW_SUMMARY: HeadlineSummary = {
-  goal: 20000,
-  totalRaised: 12345,
-};

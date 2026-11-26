@@ -45,6 +45,7 @@ trait RenderCallbackTrait
         // .innerContent) silently always read the empty/placeholder default.
         $summary_api_url = trim($attrs['summaryApiUrl']['innerContent']['desktop']['value'] ?? '');
         $goal_input      = trim($attrs['goal']['innerContent']['desktop']['value'] ?? '');
+        $headline        = trim($attrs['headline']['innerContent']['desktop']['value'] ?? '');
 
         // A goal explicitly configured in the Divi module always takes
         // precedence over whatever the campaign API reports — the API's
@@ -88,6 +89,7 @@ trait RenderCallbackTrait
                         'data-goal-override' => esc_attr(null !== $divi_goal ? (string) $divi_goal : ''),
                         'data-initial-total' => esc_attr((string) $initial_total),
                         'data-initial-goal'  => esc_attr((string) $initial_goal),
+                        'data-headline'      => esc_attr($headline),
                     ],
                     'childrenSanitizer' => 'esc_html',
                     'children'          => '',

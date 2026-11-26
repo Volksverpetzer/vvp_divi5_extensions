@@ -18,6 +18,8 @@ export const CampaignProgressEdit = (
   const goalInput =
     (attrs as any).goal?.innerContent?.desktop?.value?.trim() ?? "";
   const goal = Number(goalInput) > 0 ? Number(goalInput) : DEFAULT_GOAL_EUR;
+  const headline =
+    (attrs as any).headline?.innerContent?.desktop?.value?.trim() ?? "";
 
   return (
     <ModuleContainer
@@ -39,7 +41,11 @@ export const CampaignProgressEdit = (
           .vvp-campaign-progress-scoped selectors in style.css never matched. */}
       <div className="vvp-campaign-progress">
         {/* Preview: static placeholder values, no live network call in the builder. */}
-        <CampaignProgressApp total={Math.round(goal * 0.5)} goal={goal} />
+        <CampaignProgressApp
+          total={Math.round(goal * 0.5)}
+          goal={goal}
+          headline={headline}
+        />
       </div>
     </ModuleContainer>
   );

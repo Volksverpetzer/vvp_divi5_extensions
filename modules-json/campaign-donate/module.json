@@ -69,30 +69,6 @@
         }
       }
     },
-    "headline": {
-      "type": "object",
-      "settings": {
-        "innerContent": {
-          "groupType": "group-item",
-          "item": {
-            "groupName": "mainContent",
-            "priority": 5,
-            "render": true,
-            "attrName": "headline.innerContent",
-            "label": "Überschrift (optional)",
-            "description": "Wird über den Beträgen angezeigt. Platzhalter für die Kampagnen-Zahlen: {gesammelt} (bisher gesammelt), {ziel} (Spendenziel), {fehlt} (bis zum Ziel), {prozent} (Anteil am Ziel), z. B. „Schon {gesammelt} von {ziel} gesammelt!“. Die Zahlen kommen von der Kampagnen-API (Basis-URL und Kennung unten); kann sie nicht erreicht werden, wird eine Überschrift mit Platzhaltern ausgeblendet. Leer lassen, um keine Überschrift anzuzeigen.",
-            "features": {
-              "sticky": false,
-              "dynamicContent": false
-            },
-            "component": {
-              "name": "divi/text",
-              "type": "field"
-            }
-          }
-        }
-      }
-    },
     "campaignKey": {
       "type": "object",
       "settings": {
