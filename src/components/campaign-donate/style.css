@@ -36,6 +36,9 @@
   font-size: 1rem;
   cursor: pointer;
 }
+/* Hover like the selected amount; not the custom amount field, which
+   shares the class but only turns pink on focus. */
+.vvp-campaign-donate button.vvp-cd__preset:hover,
 .vvp-campaign-donate .vvp-cd__preset.is-active {
   border-color: var(--vvp-pink-main);
   color: var(--vvp-pink-main);
@@ -154,7 +157,8 @@
   /* Also rendered as a <button> (disabled state). */
   border: 0;
   font-family: inherit;
-  border-radius: 6px;
+  /* Same pill shape as the Stripe button (ui-web Button). */
+  border-radius: var(--vvp-radius-full, 9999px);
   background: var(--vvp-steady-coral);
   color: var(--vvp-steady-ink);
   font-weight: 700;
