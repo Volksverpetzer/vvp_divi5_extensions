@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Spenden-Formular sends Plausible events, named like the crowdfunding app's (crowdfunding.volksverpetzer.de), so /weihnachten and the crowdfunding site can be compared with the same goals: `Donation Option Selected` (`amount`, `type` preset/custom), `Checkout Button Viewed`, `Checkout Attempted`, `Checkout Embedded Mounted`, `Checkout Failed` (`reason`), `Checkout Error` (`message`), `Donation Success` (`amount`) and `Steady Clicked` (`amount`). Every event carries `campaign` and `interval` (once/month); checkout and success events also `provider` (stripe/paypal). No events in the Visual Builder or Storybook. The events only show in Plausible once they are set up as goals for volksverpetzer.de.
+
 ### Changed
 
 - Spenden-Formular, monthly mode: one Steady button instead of one per plan. The donor picks the amount in the presets above, then chooses „Monatlich mit Karte/SEPA spenden“ or „Mit Steady unterstützen“ (separated by „oder“). The Steady button links to the plan whose amount matches the selected preset; for a custom amount or a preset without a plan it is disabled, with a hint listing the Steady amounts („Steady gibt es nur für 3, 8, 12, 20 oder 30 € im Monat.“). Without a Stripe key, the presets are shown without the custom amount field. The button looks like Volksverpetzer's "Unterstützen mit Steady" buttons: Steady coral (`#ff7264`), uppercase label in Steady's dark ink (`#291e38`, for WCAG AA contrast; white on the coral is only 2.68:1), the white Steady "S" mark with a dark divider, 6 px corners, as wide as the Stripe button. The ids of the custom amount field and the Steady hint are unique per form, so two donation modules on one page no longer share them.

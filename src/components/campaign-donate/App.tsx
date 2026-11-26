@@ -22,6 +22,7 @@ import {
   steadyPlanUrl,
 } from "./steady";
 import { parseCustomAmount } from "./amount";
+import { trackDonateEvent, type DonateEventProps } from "./tracking";
 import { type CampaignDonateAppProps } from "./types";
 
 // Inline (not delegated to an imported helper) so static analysis tracking
@@ -153,6 +154,28 @@ export const CampaignDonateApp = ({
   const customInputId = `${idPrefix}-custom`;
   const steadyHintId = `${idPrefix}-steady-hint`;
   const customHintId = `${idPrefix}-custom-hint`;
+  const submitRef = useRef<HTMLButtonElement | null>(null);
+
+  // Plausible events, named like the crowdfunding app's so /weihnachten and
+  // crowdfunding.volksverpetzer.de can be compared. Never in the Visual
+  // Builder or Storybook (preview).
+  const track = (event: string, props?: DonateEventProps) => {
+    if (preview) return;
+    trackDonateEvent(
+      event,
+      { campaign: campaignKey, interval: monthly ? "month" : "once" },
+      props,
+    );
+  };
+  // Only when the selection actually changes, not on every keystroke that
+  // leaves the same amount.
+  const lastSelectionRef = useRef<string | null>(null);
+  const trackSelection = (value: number, type: "preset" | "custom") => {
+    const key = `${type}:${value}`;
+    if (lastSelectionRef.current === key) return;
+    lastSelectionRef.current = key;
+    track("Donation Option Selected", { amount: value, type });
+  };
 
   const amount = useMemo(() => {
     if (!customActive) return selected;
@@ -171,7 +194,11 @@ export const CampaignDonateApp = ({
     amountRef.current = amount;
   }, [amount]);
 
-  const finishDonation = (finalAmount: number) => {
+  const finishDonation = (
+    finalAmount: number,
+    provider: "stripe" | "paypal",
+  ) => {
+    track("Donation Success", { amount: finalAmount, provider });
     setCompletedAmount(finalAmount);
     setDonationComplete(true);
     window.dispatchEvent(new CustomEvent(DONATION_COMPLETE_EVENT));
@@ -204,12 +231,17 @@ export const CampaignDonateApp = ({
       .then((response) => response.json())
       .then((json) => {
         if (json?.recorded) {
-          finishDonation(json.amount ?? 0);
+          finishDonation(json.amount ?? 0, "stripe");
         } else {
+          track("Checkout Failed", {
+            provider: "stripe",
+            reason: json?.error ?? "unconfirmed",
+          });
           setError(json?.error ?? "Zahlung konnte nicht bestätigt werden.");
         }
       })
       .catch(() => {
+        track("Checkout Error", { provider: "stripe", message: "finalize" });
         setError("Zahlung konnte nicht bestätigt werden.");
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -237,7 +269,7 @@ export const CampaignDonateApp = ({
               body: JSON.stringify({ session_id: checkoutSessionId }),
             }).catch(() => {});
           }
-          finishDonation(amount);
+          finishDonation(amount, "stripe");
         },
       });
       if (cancelled) {
@@ -286,6 +318,10 @@ export const CampaignDonateApp = ({
             if (amountRef.current <= 0) {
               throw new Error("Bitte einen ganzen Euro-Betrag eingeben.");
             }
+            track("Checkout Attempted", {
+              amount: amountRef.current,
+              provider: "paypal",
+            });
             const response = await fetch(
               `${apiBaseUrl}/api/paypal-create-order`,
               {
@@ -316,12 +352,21 @@ export const CampaignDonateApp = ({
             );
             const json = (await response.json()) as PayPalCaptureResponse;
             if (!isPayPalCaptureSuccessful(response.ok, json)) {
+              track("Checkout Failed", {
+                amount: amountRef.current,
+                provider: "paypal",
+                reason: json?.error ?? "unknown",
+              });
               setError(json?.error ?? "PayPal-Zahlung fehlgeschlagen.");
               return;
             }
-            finishDonation(json.amount ?? amountRef.current);
+            finishDonation(json.amount ?? amountRef.current, "paypal");
           },
           onError: () => {
+            track("Checkout Error", {
+              amount: amountRef.current,
+              provider: "paypal",
+            });
             setError("PayPal-Zahlung fehlgeschlagen. Bitte erneut versuchen.");
           },
         });
@@ -336,7 +381,30 @@ export const CampaignDonateApp = ({
       cancelled = true;
       buttons?.close?.();
     };
+    // track/finishDonation are new functions on every render; adding them
+    // would re-create the PayPal buttons each time. What they read
+    // (preview, campaignKey, the interval) is covered: PayPal only renders
+    // in one-time mode, and the amount comes from amountRef.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preview, paypalActive, paypalClientId, apiBaseUrl, campaignKey]);
+
+  // Once per page view, when the Stripe button is half visible.
+  useEffect(() => {
+    const node = submitRef.current;
+    if (preview || !node || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          track("Checkout Button Viewed");
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once per mount
+  }, [preview]);
 
   const handleStripeSubmit = async (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -346,6 +414,7 @@ export const CampaignDonateApp = ({
 
     setError(null);
     setLoading(true);
+    track("Checkout Attempted", { amount, provider: "stripe" });
 
     try {
       // Plain string concat, not URLSearchParams: the {CHECKOUT_SESSION_ID}
@@ -373,12 +442,23 @@ export const CampaignDonateApp = ({
       const json = await response.json();
 
       if (!response.ok || !json?.clientSecret) {
+        track("Checkout Failed", {
+          amount,
+          provider: "stripe",
+          reason: json?.error ?? "unknown",
+        });
         throw new Error(json?.error ?? "Konnte die Zahlung nicht starten.");
       }
 
+      track("Checkout Embedded Mounted", { amount, provider: "stripe" });
       setCheckoutSessionId(json.sessionId as string);
       setCheckoutClientSecret(json.clientSecret as string);
     } catch (err) {
+      track("Checkout Error", {
+        amount,
+        provider: "stripe",
+        message: err instanceof Error ? err.message : "unknown",
+      });
       setError(
         err instanceof Error ? err.message : "Etwas ist schief gelaufen.",
       );
@@ -430,6 +510,7 @@ export const CampaignDonateApp = ({
               onClick={() => {
                 setCustomAmount("");
                 setSelected(value);
+                trackSelection(value, "preset");
               }}
             >
               {value} €
@@ -450,7 +531,11 @@ export const CampaignDonateApp = ({
               value={customAmount}
               onFocus={() => setCustomFocused(true)}
               onBlur={() => setCustomFocused(false)}
-              onChange={(event) => setCustomAmount(event.target.value)}
+              onChange={(event) => {
+                setCustomAmount(event.target.value);
+                const parsed = parseCustomAmount(event.target.value);
+                if (parsed > 0) trackSelection(parsed, "custom");
+              }}
               aria-label={
                 monthly
                   ? "Eigenen monatlichen Betrag eingeben"
@@ -471,6 +556,7 @@ export const CampaignDonateApp = ({
             <Button
               variant="accent"
               size="lg"
+              ref={submitRef}
               className="vvp-cd__submit"
               type="button"
               disabled={loading || amount <= 0}
@@ -505,6 +591,9 @@ export const CampaignDonateApp = ({
             (steadyPlan ? (
               <a
                 className="vvp-cd__steady-button"
+                onClick={() =>
+                  track("Steady Clicked", { amount: steadyPlan.amount })
+                }
                 href={steadyPlanUrl(steadyPlan.planId)}
                 target="_blank"
                 rel="noopener noreferrer"
