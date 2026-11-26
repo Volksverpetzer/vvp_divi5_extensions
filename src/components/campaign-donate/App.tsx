@@ -73,6 +73,26 @@ export const CampaignDonateThanks = ({
     return () => window.clearTimeout(timer);
   }, [safeThankYouUrl]);
 
+  // With a thank-you page, only a short redirect notice: the page itself
+  // thanks the donor (and offers the certificate, if any).
+  if (safeThankYouUrl) {
+    return (
+      <div className="vvp-cd">
+        <div className="vvp-cd__thanks" role="status">
+          <strong>Danke für deine Unterstützung!</strong>
+          <p>Du wirst zur Danke-Seite weitergeleitet …</p>
+          <a
+            ref={thankYouLinkRef}
+            className="vvp-cd__certificate"
+            href={safeThankYouUrl}
+          >
+            Weiter zur Danke-Seite
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="vvp-cd">
       <div className="vvp-cd__thanks">
@@ -83,15 +103,6 @@ export const CampaignDonateThanks = ({
           ermöglichst du unsere Arbeit weiterzuführen und mehr Aktionen wie
           diese durchzuführen. Gemeinsam mit dir kämpfen wir für die Demokratie!
         </p>
-        {safeThankYouUrl && (
-          <a
-            ref={thankYouLinkRef}
-            className="vvp-cd__certificate"
-            href={safeThankYouUrl}
-          >
-            Weiter zur Danke-Seite
-          </a>
-        )}
         {safeCertificateUrl && (
           <a
             className="vvp-cd__certificate"
