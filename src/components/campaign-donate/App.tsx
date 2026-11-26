@@ -442,12 +442,16 @@ export const CampaignDonateApp = ({
       const json = await response.json();
 
       if (!response.ok || !json?.clientSecret) {
+        // A refusal by the crowdfunding app: only "Checkout Failed", not
+        // also "Checkout Error" from the catch below, which is for network
+        // and SDK errors.
         track("Checkout Failed", {
           amount,
           provider: "stripe",
           reason: json?.error ?? "unknown",
         });
-        throw new Error(json?.error ?? "Konnte die Zahlung nicht starten.");
+        setError(json?.error ?? "Konnte die Zahlung nicht starten.");
+        return;
       }
 
       track("Checkout Embedded Mounted", { amount, provider: "stripe" });
