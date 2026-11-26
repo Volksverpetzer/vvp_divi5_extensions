@@ -41,16 +41,37 @@ const VIEWED_THRESHOLD = 0.5;
 export const CampaignDonateThanks = ({
   amount,
   certificateUrl,
+  thankYouUrl,
   monthly = false,
 }: {
   amount: number;
   certificateUrl?: string;
+  /** When set, the notice links to this page and follows the link itself. */
+  thankYouUrl?: string;
   monthly?: boolean;
 }): ReactElement => {
   let safeCertificateUrl: string | undefined;
   if (certificateUrl && SAFE_URL_PATTERN.test(certificateUrl)) {
     safeCertificateUrl = certificateUrl;
   }
+  let safeThankYouUrl: string | undefined;
+  if (thankYouUrl && SAFE_URL_PATTERN.test(thankYouUrl)) {
+    safeThankYouUrl = thankYouUrl;
+  }
+
+  // Leaves for the thank-you page by following the link below rather than
+  // calling location.assign: the link stays visible as a fallback, and the
+  // URL only reaches the guarded href. The delay lets DonateConversion and
+  // the progress bar refresh go out first.
+  const thankYouLinkRef = useRef<HTMLAnchorElement>(null);
+  useEffect(() => {
+    if (!safeThankYouUrl) return;
+    const timer = window.setTimeout(
+      () => thankYouLinkRef.current?.click(),
+      THANK_YOU_REDIRECT_DELAY_MS,
+    );
+    return () => window.clearTimeout(timer);
+  }, [safeThankYouUrl]);
 
   return (
     <div className="vvp-cd">
@@ -62,6 +83,15 @@ export const CampaignDonateThanks = ({
           ermöglichst du unsere Arbeit weiterzuführen und mehr Aktionen wie
           diese durchzuführen. Gemeinsam mit dir kämpfen wir für die Demokratie!
         </p>
+        {safeThankYouUrl && (
+          <a
+            ref={thankYouLinkRef}
+            className="vvp-cd__certificate"
+            href={safeThankYouUrl}
+          >
+            Weiter zur Danke-Seite
+          </a>
+        )}
         {safeCertificateUrl && (
           <a
             className="vvp-cd__certificate"
@@ -236,15 +266,6 @@ export const CampaignDonateApp = ({
     setCompletedAmount(finalAmount);
     setDonationComplete(true);
     window.dispatchEvent(new CustomEvent(DONATION_COMPLETE_EVENT));
-    // Guard inline, like the certificate link: only http(s) or
-    // root-relative URLs may reach location.assign.
-    if (thankYouUrl && SAFE_URL_PATTERN.test(thankYouUrl)) {
-      const target = thankYouUrl;
-      window.setTimeout(
-        () => window.location.assign(target),
-        THANK_YOU_REDIRECT_DELAY_MS,
-      );
-    }
   };
 
   // Some Stripe payment methods (3D Secure, Klarna, Bancontact, PayPal, ...)
@@ -568,6 +589,7 @@ export const CampaignDonateApp = ({
       <CampaignDonateThanks
         amount={completedAmount}
         certificateUrl={certificateUrl}
+        thankYouUrl={thankYouUrl}
         monthly={monthly}
       />
     );
