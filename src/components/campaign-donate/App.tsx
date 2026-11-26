@@ -32,6 +32,8 @@ import { type CampaignDonateAppProps } from "./types";
 const SAFE_URL_PATTERN = /^(https?:\/\/|\/(?!\/))/i;
 
 const DONATION_COMPLETE_EVENT = "vvp-donation-completed";
+// Share of the Stripe button that must be visible for "Checkout Button Viewed".
+const VIEWED_THRESHOLD = 0.5;
 
 export const CampaignDonateThanks = ({
   amount,
@@ -457,12 +459,20 @@ export const CampaignDonateApp = ({
     if (preview || !node || typeof IntersectionObserver === "undefined") return;
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
+        // isIntersecting is true at any visibility above 0, e.g. in the
+        // first callback right after observe(); require the threshold.
+        if (
+          entries.some(
+            (entry) =>
+              entry.isIntersecting &&
+              entry.intersectionRatio >= VIEWED_THRESHOLD,
+          )
+        ) {
           track("Checkout Button Viewed");
           observer.disconnect();
         }
       },
-      { threshold: 0.5 },
+      { threshold: VIEWED_THRESHOLD },
     );
     observer.observe(node);
     return () => observer.disconnect();
