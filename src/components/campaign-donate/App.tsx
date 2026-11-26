@@ -712,7 +712,9 @@ export const CampaignDonateApp = ({
             </Button>
           )}
 
-          {(hasStripe && hasPaypal) || (hasStripe && hasSteady) ? (
+          {/* „oder“ between Stripe and PayPal only; Steady follows the
+              Stripe button directly. */}
+          {hasStripe && hasPaypal ? (
             <div className="vvp-cd__divider">
               <span>oder</span>
             </div>
