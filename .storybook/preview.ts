@@ -10,6 +10,10 @@ import "../src/components/campaign-progress/style.css";
 import "../src/components/campaign-donate/style.css";
 import "../src/components/cta-box/style.css";
 import "../src/components/audio-embed/style.css";
+// Artikelkarte has no style.css; its frontend rules (cards fill their grid
+// cell, so footers line up) live in module.css, which the site loads via
+// styles/main.css.
+import "../src/components/article-card/module.css";
 
 const preview: Preview = {
   parameters: {

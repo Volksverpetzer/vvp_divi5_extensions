@@ -1,6 +1,7 @@
 import React, {
   type ReactElement,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -15,7 +16,12 @@ import {
   isPayPalCaptureSuccessful,
   type PayPalCaptureResponse,
 } from "./paypal";
-import { steadyPlanUrl } from "./steady";
+import {
+  formatSteadyAmounts,
+  steadyPlanForAmount,
+  steadyPlanUrl,
+} from "./steady";
+import { parseCustomAmount } from "./amount";
 import { type CampaignDonateAppProps } from "./types";
 
 // Inline (not delegated to an imported helper) so static analysis tracking
@@ -123,6 +129,12 @@ export const CampaignDonateApp = ({
     setSelected(defaultPreset);
   }
   const [customAmount, setCustomAmount] = useState("");
+  // Focusing the custom field switches to a custom amount right away:
+  // the preset is deselected and Steady (fixed amounts only) is disabled.
+  // Leaving it empty switches back to the preset.
+  const [customFocused, setCustomFocused] = useState(false);
+  // Trimmed, so a whitespace-only value counts as empty (back to the preset).
+  const customActive = customFocused || Boolean(customAmount.trim());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [checkoutClientSecret, setCheckoutClientSecret] = useState<
@@ -136,17 +148,20 @@ export const CampaignDonateApp = ({
   const checkoutContainerRef = useRef<HTMLDivElement | null>(null);
   const paypalContainerRef = useRef<HTMLDivElement | null>(null);
   const customInputRef = useRef<HTMLInputElement | null>(null);
+  // Unique per form, so two donation modules on one page don't share ids.
+  const idPrefix = useId();
+  const customInputId = `${idPrefix}-custom`;
+  const steadyHintId = `${idPrefix}-steady-hint`;
+  const customHintId = `${idPrefix}-custom-hint`;
 
   const amount = useMemo(() => {
-    if (!customAmount) return selected;
-    // Accept German-style decimal commas ("35,50") in addition to dots.
-    const custom = Number(customAmount.replace(",", "."));
+    if (!customActive) return selected;
     // Custom input is active but not (yet) a valid amount — don't silently
     // fall back to the last preset, or the donor could end up charged an
     // amount that doesn't match what's shown as selected in the UI.
-    if (Number.isNaN(custom) || custom <= 0) return 0;
-    return Math.round(custom);
-  }, [customAmount, selected]);
+    return parseCustomAmount(customAmount);
+  }, [customActive, customAmount, selected]);
+  const customAmountInvalid = Boolean(customAmount.trim()) && amount <= 0;
 
   // PayPal's Buttons are only initialized once per mount; createOrder/onApprove
   // are closures captured at that time, so they read the current amount via
@@ -262,7 +277,15 @@ export const CampaignDonateApp = ({
 
         buttons = window.paypal.Buttons({
           style: { layout: "horizontal", tagline: false, height: 45 },
+          // The container is also disabled while the amount is invalid (see
+          // below); this catches anything that still gets through, e.g. a
+          // click right as the donor types.
+          onClick: (_data, actions) =>
+            amountRef.current > 0 ? actions.resolve() : actions.reject(),
           createOrder: async () => {
+            if (amountRef.current <= 0) {
+              throw new Error("Bitte einen ganzen Euro-Betrag eingeben.");
+            }
             const response = await fetch(
               `${apiBaseUrl}/api/paypal-create-order`,
               {
@@ -385,42 +408,48 @@ export const CampaignDonateApp = ({
   const hasStripe = Boolean(stripePublicKey);
   const hasPaypal = paypalActive;
   const hasSteady = monthly && steadyPlans.length > 0;
-  // Steady plans have fixed amounts, so the amount picker is only needed
-  // for Stripe/PayPal.
-  const hasAmountPicker = hasStripe || hasPaypal;
+  // Steady plans have fixed amounts: the Steady button links to the plan
+  // matching the selected preset, and is disabled for a custom amount or a
+  // preset without a plan. Custom amounts work with Stripe/PayPal only.
+  const steadyPlan = steadyPlanForAmount(steadyPlans, selected, customActive);
+  const hasCustomAmount = hasStripe || hasPaypal;
 
   return (
     <div className="vvp-cd">
       <div className="vvp-cd__form">
-        {hasAmountPicker && (
-          <div
-            className="vvp-cd__presets"
-            role="group"
-            aria-label="Schnellauswahl Betrag"
-          >
-            {presets.map((value) => (
-              <button
-                type="button"
-                key={value}
-                className={`vvp-cd__preset ${amount === value && !customAmount ? "is-active" : ""}`}
-                onClick={() => {
-                  setCustomAmount("");
-                  setSelected(value);
-                }}
-              >
-                {value} €
-              </button>
-            ))}
+        <div
+          className="vvp-cd__presets"
+          role="group"
+          aria-label="Schnellauswahl Betrag"
+        >
+          {presets.map((value) => (
+            <button
+              type="button"
+              key={value}
+              className={`vvp-cd__preset ${selected === value && !customActive ? "is-active" : ""}`}
+              onClick={() => {
+                setCustomAmount("");
+                setSelected(value);
+              }}
+            >
+              {value} €
+            </button>
+          ))}
+          {hasCustomAmount && (
             <input
-              id="vvp-cd-custom"
+              id={customInputId}
               ref={customInputRef}
-              className={`vvp-cd__preset vvp-cd__preset-input ${customAmount ? "is-active" : ""}`}
+              className={`vvp-cd__preset vvp-cd__preset-input ${customActive ? "is-active" : ""}`}
               type="text"
-              inputMode="decimal"
+              inputMode="numeric"
+              aria-invalid={customAmountInvalid || undefined}
+              aria-describedby={customAmountInvalid ? customHintId : undefined}
               placeholder={
                 monthly ? "Eigener Betrag/Monat..." : "Eigener Betrag..."
               }
               value={customAmount}
+              onFocus={() => setCustomFocused(true)}
+              onBlur={() => setCustomFocused(false)}
               onChange={(event) => setCustomAmount(event.target.value)}
               aria-label={
                 monthly
@@ -428,7 +457,13 @@ export const CampaignDonateApp = ({
                   : "Eigener Betrag eingeben"
               }
             />
-          </div>
+          )}
+        </div>
+
+        {customAmountInvalid && (
+          <p id={customHintId} className="vvp-cd__custom-hint" role="alert">
+            Bitte einen ganzen Euro-Betrag eingeben, z. B. 35.
+          </p>
         )}
 
         <div className="vvp-cd__methods">
@@ -449,45 +484,61 @@ export const CampaignDonateApp = ({
             </Button>
           )}
 
-          {hasStripe && hasPaypal && (
+          {(hasStripe && hasPaypal) || (hasStripe && hasSteady) ? (
             <div className="vvp-cd__divider">
               <span>oder</span>
             </div>
-          )}
+          ) : null}
 
           {hasPaypal && (
             <div
               ref={paypalContainerRef}
-              className="vvp-cd__paypal"
+              // Not unmounted while the amount is invalid, so the PayPal
+              // SDK's buttons stay rendered; just greyed out and not clickable.
+              className={`vvp-cd__paypal ${amount <= 0 ? "is-disabled" : ""}`}
               aria-label="Mit PayPal spenden"
+              aria-disabled={amount <= 0 || undefined}
             />
           )}
 
-          {hasStripe && hasSteady && (
-            <div className="vvp-cd__divider">
-              <span>oder über Steady</span>
-            </div>
-          )}
-
-          {hasSteady && (
-            <div
-              className="vvp-cd__steady"
-              role="group"
-              aria-label="Monatlich über Steady unterstützen"
-            >
-              {steadyPlans.map((plan) => (
-                <a
-                  key={plan.planId}
-                  className="vvp-cd__preset vvp-cd__steady-plan"
-                  href={steadyPlanUrl(plan.planId)}
-                  target="_blank"
-                  rel="noopener noreferrer"
+          {hasSteady &&
+            (steadyPlan ? (
+              <a
+                className="vvp-cd__steady-button"
+                href={steadyPlanUrl(steadyPlan.planId)}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${steadyPlan.amount.toLocaleString("de-DE")} € im Monat mit Steady unterstützen`}
+              >
+                {/* Styled like Volksverpetzer's "Unterstützen mit Steady"
+                    buttons: Steady "S" mark, divider, uppercase label. */}
+                <span className="vvp-cd__steady-mark" aria-hidden="true" />
+                <span className="vvp-cd__steady-label">
+                  Mit Steady unterstützen
+                </span>
+              </a>
+            ) : (
+              <>
+                {/* A real button, so keyboard and screen reader users reach
+                    it and hear that it's unavailable and why (the hint).
+                    aria-disabled rather than disabled keeps it focusable. */}
+                <button
+                  type="button"
+                  className="vvp-cd__steady-button is-disabled"
+                  aria-disabled="true"
+                  aria-describedby={steadyHintId}
                 >
-                  {plan.amount.toLocaleString("de-DE")} € / Monat
-                </a>
-              ))}
-            </div>
-          )}
+                  <span className="vvp-cd__steady-mark" aria-hidden="true" />
+                  <span className="vvp-cd__steady-label">
+                    Mit Steady unterstützen
+                  </span>
+                </button>
+                <p id={steadyHintId} className="vvp-cd__steady-hint">
+                  Steady gibt es nur für {formatSteadyAmounts(steadyPlans)} € im
+                  Monat.
+                </p>
+              </>
+            ))}
         </div>
 
         {error && <Alert variant="error">{error}</Alert>}

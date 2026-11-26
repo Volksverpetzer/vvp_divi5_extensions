@@ -19,32 +19,35 @@ const meta: Meta<typeof CampaignDonateApp> = {
 export default meta;
 type Story = StoryObj<typeof CampaignDonateApp>;
 
-/** Every prop exposed as a control (Stripe + PayPal, with presets). */
+/**
+ * Every prop exposed as a control. One-time mode as on /weihnachten
+ * (XMAS 2026): Stripe + PayPal, no certificate.
+ */
 export const Playground: Story = {
   args: {
     apiBaseUrl: "https://crowdfunding.volksverpetzer.de",
-    campaignKey: "flyer2026",
+    campaignKey: "xmas2026",
+    interval: "once",
     stripePublicKey: "pk_test_51234567890",
     paypalClientId: "AWJvLVwI_example",
     presets: [10, 50, 100],
-    certificateUrl: "/",
     preview: true,
   },
 };
 
 export const StripeOnly: Story = {
   args: {
-    apiBaseUrl: "https://crowdfunding.volksverpetzer.de",
-    campaignKey: "flyer2026",
+    ...Playground.args,
     stripePublicKey: "pk_test_01234567890",
     paypalClientId: "",
-    presets: [15, 30, 75, 150],
-    certificateUrl: "/",
-    preview: true,
   },
 };
 
-/** Monthly mode: Stripe subscription plus the campaign's hidden Steady plans; PayPal is hidden. */
+/**
+ * Monthly mode as on /weihnachten (XMAS 2026): Stripe subscription and one
+ * Steady button for the selected amount; PayPal is hidden. The presets match
+ * the Steady plans, so Steady is disabled only for a custom amount.
+ */
 export const Monthly: Story = {
   args: {
     apiBaseUrl: "https://crowdfunding.volksverpetzer.de",
@@ -52,18 +55,30 @@ export const Monthly: Story = {
     interval: "month",
     stripePublicKey: "pk_test_51234567890",
     paypalClientId: "AWJvLVwI_example",
-    presets: [3, 5, 10, 25],
+    presets: [3, 8, 12, 20, 30],
     steadyPlans: [
-      { amount: 3, planId: "955a79f3-ef31-4fc3-b196-2e634ed29f20" },
-      { amount: 5, planId: "a5fcfc59-8848-4359-9b03-585cfedb54b5" },
-      { amount: 10, planId: "a9ba3756-2501-4838-b157-04b9abca1635" },
-      { amount: 25, planId: "eb744a98-4ae8-496b-848d-e4c090611bc8" },
+      { amount: 3, planId: "48fdfe83-af8b-462e-a56a-c4cfe647261f" },
+      { amount: 8, planId: "7e829883-979d-4200-ba6e-8c0ffbffd151" },
+      { amount: 12, planId: "01765082-40b1-4244-bbe6-f5311e99df7b" },
+      { amount: 20, planId: "c3fd548d-de5c-4994-a454-95577647d346" },
+      { amount: 30, planId: "7c881bbc-9c8f-46da-a0c4-2f36140ea446" },
     ],
     preview: true,
   },
 };
 
-/** Monthly mode with Steady only (no Stripe key): no amount picker. */
+/**
+ * A preset without a Steady plan (here 50 €, selected by default as the
+ * second preset): the Steady button is disabled and says which amounts work.
+ */
+export const MonthlyPresetWithoutSteadyPlan: Story = {
+  args: {
+    ...Monthly.args,
+    presets: [3, 50, 8],
+  },
+};
+
+/** Monthly mode with Steady only (no Stripe key): presets, no custom amount. */
 export const MonthlySteadyOnly: Story = {
   args: {
     ...Monthly.args,

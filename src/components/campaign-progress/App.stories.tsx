@@ -21,7 +21,8 @@ type Story = StoryObj<typeof CampaignProgressApp>;
  * fetch and poll that URL itself.
  */
 export const Playground: Story = {
-  args: { total: 62340, goal: 100000, goalOverride: undefined, apiUrl: "" },
+  // XMAS 2026: goal 20.000 € (crowdfunding app, campaign xmas2026).
+  args: { total: 7340, goal: 20000, goalOverride: undefined, apiUrl: "" },
   argTypes: {
     goalOverride: { control: "number" },
     apiUrl: { control: "text" },
@@ -29,5 +30,5 @@ export const Playground: Story = {
 };
 
 export const GoalReached: Story = {
-  args: { total: 104500, goal: 100000 },
+  args: { total: 21450, goal: 20000 },
 };
