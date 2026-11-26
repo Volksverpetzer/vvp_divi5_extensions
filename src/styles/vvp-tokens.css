@@ -72,6 +72,9 @@
   --vvp-background: var(--vvp-color-background);
   --vvp-surface: var(--vvp-color-surface);
   --vvp-surface-input: var(--vvp-color-surface-input);
+  /* Light tint of the accent (design-tokens surfaceAccent). The fallback
+     covers design-tokens < the release that adds it; drop it after bumping. */
+  --vvp-surface-accent: var(--vvp-color-surface-accent, #f5e2ec);
   --vvp-surface-disabled: var(--vvp-color-surface-disabled);
   --vvp-text: var(--vvp-color-text);
   --vvp-text-muted: var(--vvp-color-text-muted);

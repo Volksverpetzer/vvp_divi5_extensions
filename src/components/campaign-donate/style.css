@@ -27,6 +27,9 @@
   gap: var(--vvp-spacing-md, 10px);
   width: 100%;
 }
+.vvp-campaign-donate .vvp-cd__presets .vvp-ui-pill-group__option {
+  border-color: var(--vvp-surface-accent);
+}
 /* Pink instead of PillGroup's primary blue, as on the rest of the form:
    pink border and text on hover and for the selected amount. */
 .vvp-campaign-donate
@@ -45,7 +48,7 @@
 .vvp-campaign-donate .vvp-cd__preset-input {
   width: 100%;
   padding: var(--vvp-spacing-md, 10px) var(--vvp-spacing-xl, 20px);
-  border: 2px solid var(--vvp-surface, #e2f0f5);
+  border: 2px solid var(--vvp-surface-accent);
   /* Same pill shape as the amounts above. */
   border-radius: var(--vvp-radius-full, 9999px);
   background: var(--vvp-background, #fff);
