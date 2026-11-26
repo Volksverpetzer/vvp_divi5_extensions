@@ -22,6 +22,7 @@ import {
   steadyPlanUrl,
 } from "./steady";
 import { parseCustomAmount } from "./amount";
+import { trackDonateEvent, type DonateEventProps } from "./tracking";
 import { type CampaignDonateAppProps } from "./types";
 
 // Inline (not delegated to an imported helper) so static analysis tracking
@@ -31,6 +32,8 @@ import { type CampaignDonateAppProps } from "./types";
 const SAFE_URL_PATTERN = /^(https?:\/\/|\/(?!\/))/i;
 
 const DONATION_COMPLETE_EVENT = "vvp-donation-completed";
+// Share of the Stripe button that must be visible for "Checkout Button Viewed".
+const VIEWED_THRESHOLD = 0.5;
 
 export const CampaignDonateThanks = ({
   amount,
@@ -74,9 +77,34 @@ export const CampaignDonateThanks = ({
 const stripePromises = new Map<string, Promise<Stripe | null>>();
 const getStripe = (publicKey: string) => {
   if (!stripePromises.has(publicKey)) {
-    stripePromises.set(publicKey, loadStripe(publicKey));
+    const promise = loadStripe(publicKey);
+    // Forget a failed load, so the next attempt tries again.
+    promise.catch(() => stripePromises.delete(publicKey));
+    stripePromises.set(publicKey, promise);
   }
   return stripePromises.get(publicKey)!;
+};
+
+// The amount of a Stripe checkout, kept across the redirect some payment
+// methods make, so failure events after the return still carry it. Only in
+// this tab's sessionStorage, keyed by the checkout session; best effort.
+const pendingAmountKey = (sessionId: string) => `vvp_cd_amount:${sessionId}`;
+const rememberCheckoutAmount = (sessionId: string, amount: number): void => {
+  try {
+    window.sessionStorage.setItem(pendingAmountKey(sessionId), String(amount));
+  } catch {
+    // Storage unavailable (private mode, blocked): events go without amount.
+  }
+};
+const takeCheckoutAmount = (sessionId: string): number | undefined => {
+  try {
+    const value = window.sessionStorage.getItem(pendingAmountKey(sessionId));
+    window.sessionStorage.removeItem(pendingAmountKey(sessionId));
+    const amount = Number(value);
+    return value && amount > 0 ? amount : undefined;
+  } catch {
+    return undefined;
+  }
 };
 
 const paypalSdkPromises = new Map<string, Promise<void>>();
@@ -153,6 +181,28 @@ export const CampaignDonateApp = ({
   const customInputId = `${idPrefix}-custom`;
   const steadyHintId = `${idPrefix}-steady-hint`;
   const customHintId = `${idPrefix}-custom-hint`;
+  const submitRef = useRef<HTMLButtonElement | null>(null);
+
+  // Plausible events, named like the crowdfunding app's so /weihnachten and
+  // crowdfunding.volksverpetzer.de can be compared. Never in the Visual
+  // Builder or Storybook (preview).
+  const track = (event: string, props?: DonateEventProps) => {
+    if (preview) return;
+    trackDonateEvent(
+      event,
+      { campaign: campaignKey, interval: monthly ? "month" : "once" },
+      props,
+    );
+  };
+  // Only when the selection actually changes, not on every keystroke that
+  // leaves the same amount.
+  const lastSelectionRef = useRef<string | null>(null);
+  const trackSelection = (value: number, type: "preset" | "custom") => {
+    const key = `${type}:${value}`;
+    if (lastSelectionRef.current === key) return;
+    lastSelectionRef.current = key;
+    track("Donation Option Selected", { amount: value, type });
+  };
 
   const amount = useMemo(() => {
     if (!customActive) return selected;
@@ -171,7 +221,14 @@ export const CampaignDonateApp = ({
     amountRef.current = amount;
   }, [amount]);
 
-  const finishDonation = (finalAmount: number) => {
+  const finishDonation = (
+    finalAmount: number,
+    provider: "stripe" | "paypal",
+  ) => {
+    // "DonateConversion", not the crowdfunding site's "Donation Success":
+    // the app sends it to the same Plausible site (volksverpetzer.de), and
+    // it keeps the goal's history.
+    track("DonateConversion", { amount: finalAmount, provider });
     setCompletedAmount(finalAmount);
     setDonationComplete(true);
     window.dispatchEvent(new CustomEvent(DONATION_COMPLETE_EVENT));
@@ -195,6 +252,7 @@ export const CampaignDonateApp = ({
       "",
       `${window.location.pathname}${cleanedSearch ? `?${cleanedSearch}` : ""}${window.location.hash}`,
     );
+    const checkoutAmount = takeCheckoutAmount(sessionId);
 
     fetch(`${apiBaseUrl}/api/finalize-session`, {
       method: "POST",
@@ -204,12 +262,22 @@ export const CampaignDonateApp = ({
       .then((response) => response.json())
       .then((json) => {
         if (json?.recorded) {
-          finishDonation(json.amount ?? 0);
+          finishDonation(json.amount ?? 0, "stripe");
         } else {
+          track("Checkout Failed", {
+            amount: checkoutAmount,
+            provider: "stripe",
+            reason: json?.error ?? "unconfirmed",
+          });
           setError(json?.error ?? "Zahlung konnte nicht bestätigt werden.");
         }
       })
       .catch(() => {
+        track("Checkout Error", {
+          amount: checkoutAmount,
+          provider: "stripe",
+          message: "finalize",
+        });
         setError("Zahlung konnte nicht bestätigt werden.");
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -222,30 +290,42 @@ export const CampaignDonateApp = ({
     let instance: StripeEmbeddedCheckout | null = null;
     let cancelled = false;
 
-    getStripe(stripePublicKey).then(async (stripe) => {
-      if (cancelled || !stripe || !checkoutContainerRef.current) return;
-      // @stripe/stripe-js v9 renamed initEmbeddedCheckout -> createEmbeddedCheckoutPage
-      // (matches the crowdfunding app's Checkout Session ui_mode: 'embedded_page');
-      // same options/return shape, method renamed only.
-      instance = await stripe.createEmbeddedCheckoutPage({
-        clientSecret: checkoutClientSecret,
-        onComplete: () => {
-          if (checkoutSessionId) {
-            fetch(`${apiBaseUrl}/api/finalize-session`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ session_id: checkoutSessionId }),
-            }).catch(() => {});
-          }
-          finishDonation(amount);
-        },
+    getStripe(stripePublicKey)
+      .then(async (stripe) => {
+        if (cancelled || !checkoutContainerRef.current) return;
+        // Handled like a failed load by the catch below.
+        if (!stripe) throw new Error("stripe-unavailable");
+        // @stripe/stripe-js v9 renamed initEmbeddedCheckout -> createEmbeddedCheckoutPage
+        // (matches the crowdfunding app's Checkout Session ui_mode: 'embedded_page');
+        // same options/return shape, method renamed only.
+        instance = await stripe.createEmbeddedCheckoutPage({
+          clientSecret: checkoutClientSecret,
+          onComplete: () => {
+            if (checkoutSessionId) {
+              fetch(`${apiBaseUrl}/api/finalize-session`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ session_id: checkoutSessionId }),
+              }).catch(() => {});
+            }
+            finishDonation(amount, "stripe");
+          },
+        });
+        if (cancelled) {
+          instance.destroy();
+          return;
+        }
+        instance.mount(checkoutContainerRef.current);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        track("Checkout Error", {
+          amount,
+          provider: "stripe",
+          message: err instanceof Error ? err.message : "stripe-init",
+        });
+        setError("Die Zahlung konnte nicht geladen werden.");
       });
-      if (cancelled) {
-        instance.destroy();
-        return;
-      }
-      instance.mount(checkoutContainerRef.current);
-    });
 
     return () => {
       cancelled = true;
@@ -270,6 +350,10 @@ export const CampaignDonateApp = ({
     let buttons: ReturnType<
       NonNullable<typeof window.paypal>["Buttons"]
     > | null = null;
+    // Set when the crowdfunding app refuses an order. createOrder then
+    // throws and PayPal calls onError, which must not count that refusal as
+    // a "Checkout Error" too.
+    let refusal: string | null = null;
 
     loadPayPalSdk(paypalClientId)
       .then(() => {
@@ -286,6 +370,10 @@ export const CampaignDonateApp = ({
             if (amountRef.current <= 0) {
               throw new Error("Bitte einen ganzen Euro-Betrag eingeben.");
             }
+            track("Checkout Attempted", {
+              amount: amountRef.current,
+              provider: "paypal",
+            });
             const response = await fetch(
               `${apiBaseUrl}/api/paypal-create-order`,
               {
@@ -299,9 +387,13 @@ export const CampaignDonateApp = ({
             );
             const json = await response.json();
             if (!response.ok || !json?.orderID) {
-              throw new Error(
-                json?.error ?? "Konnte PayPal-Zahlung nicht starten.",
-              );
+              refusal = json?.error ?? "Konnte PayPal-Zahlung nicht starten.";
+              track("Checkout Failed", {
+                amount: amountRef.current,
+                provider: "paypal",
+                reason: json?.error ?? "unknown",
+              });
+              throw new Error(refusal);
             }
             return json.orderID as string;
           },
@@ -316,19 +408,40 @@ export const CampaignDonateApp = ({
             );
             const json = (await response.json()) as PayPalCaptureResponse;
             if (!isPayPalCaptureSuccessful(response.ok, json)) {
+              track("Checkout Failed", {
+                amount: amountRef.current,
+                provider: "paypal",
+                reason: json?.error ?? "unknown",
+              });
               setError(json?.error ?? "PayPal-Zahlung fehlgeschlagen.");
               return;
             }
-            finishDonation(json.amount ?? amountRef.current);
+            finishDonation(json.amount ?? amountRef.current, "paypal");
           },
-          onError: () => {
+          onError: (err) => {
+            if (refusal) {
+              setError(refusal);
+              refusal = null;
+              return;
+            }
+            track("Checkout Error", {
+              amount: amountRef.current,
+              provider: "paypal",
+              message: err instanceof Error ? err.message : "unknown",
+            });
             setError("PayPal-Zahlung fehlgeschlagen. Bitte erneut versuchen.");
           },
         });
 
         buttons.render(paypalContainerRef.current);
       })
-      .catch(() => {
+      .catch((err) => {
+        if (cancelled) return;
+        track("Checkout Error", {
+          amount: amountRef.current,
+          provider: "paypal",
+          message: err instanceof Error ? err.message : "paypal-sdk-load",
+        });
         setError("PayPal konnte nicht geladen werden.");
       });
 
@@ -336,7 +449,38 @@ export const CampaignDonateApp = ({
       cancelled = true;
       buttons?.close?.();
     };
+    // track/finishDonation are new functions on every render; adding them
+    // would re-create the PayPal buttons each time. What they read
+    // (preview, campaignKey, the interval) is covered: PayPal only renders
+    // in one-time mode, and the amount comes from amountRef.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preview, paypalActive, paypalClientId, apiBaseUrl, campaignKey]);
+
+  // Once per page view, when the Stripe button is half visible.
+  useEffect(() => {
+    const node = submitRef.current;
+    if (preview || !node || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // isIntersecting is true at any visibility above 0, e.g. in the
+        // first callback right after observe(); require the threshold.
+        if (
+          entries.some(
+            (entry) =>
+              entry.isIntersecting &&
+              entry.intersectionRatio >= VIEWED_THRESHOLD,
+          )
+        ) {
+          track("Checkout Button Viewed");
+          observer.disconnect();
+        }
+      },
+      { threshold: VIEWED_THRESHOLD },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once per mount
+  }, [preview]);
 
   const handleStripeSubmit = async (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -346,6 +490,7 @@ export const CampaignDonateApp = ({
 
     setError(null);
     setLoading(true);
+    track("Checkout Attempted", { amount, provider: "stripe" });
 
     try {
       // Plain string concat, not URLSearchParams: the {CHECKOUT_SESSION_ID}
@@ -373,12 +518,28 @@ export const CampaignDonateApp = ({
       const json = await response.json();
 
       if (!response.ok || !json?.clientSecret) {
-        throw new Error(json?.error ?? "Konnte die Zahlung nicht starten.");
+        // A refusal by the crowdfunding app: only "Checkout Failed", not
+        // also "Checkout Error" from the catch below, which is for network
+        // and SDK errors.
+        track("Checkout Failed", {
+          amount,
+          provider: "stripe",
+          reason: json?.error ?? "unknown",
+        });
+        setError(json?.error ?? "Konnte die Zahlung nicht starten.");
+        return;
       }
 
+      track("Checkout Embedded Mounted", { amount, provider: "stripe" });
+      rememberCheckoutAmount(json.sessionId as string, amount);
       setCheckoutSessionId(json.sessionId as string);
       setCheckoutClientSecret(json.clientSecret as string);
     } catch (err) {
+      track("Checkout Error", {
+        amount,
+        provider: "stripe",
+        message: err instanceof Error ? err.message : "unknown",
+      });
       setError(
         err instanceof Error ? err.message : "Etwas ist schief gelaufen.",
       );
@@ -430,6 +591,7 @@ export const CampaignDonateApp = ({
               onClick={() => {
                 setCustomAmount("");
                 setSelected(value);
+                trackSelection(value, "preset");
               }}
             >
               {value} €
@@ -450,7 +612,11 @@ export const CampaignDonateApp = ({
               value={customAmount}
               onFocus={() => setCustomFocused(true)}
               onBlur={() => setCustomFocused(false)}
-              onChange={(event) => setCustomAmount(event.target.value)}
+              onChange={(event) => {
+                setCustomAmount(event.target.value);
+                const parsed = parseCustomAmount(event.target.value);
+                if (parsed > 0) trackSelection(parsed, "custom");
+              }}
               aria-label={
                 monthly
                   ? "Eigenen monatlichen Betrag eingeben"
@@ -471,6 +637,7 @@ export const CampaignDonateApp = ({
             <Button
               variant="accent"
               size="lg"
+              ref={submitRef}
               className="vvp-cd__submit"
               type="button"
               disabled={loading || amount <= 0}
@@ -505,6 +672,7 @@ export const CampaignDonateApp = ({
             (steadyPlan ? (
               <a
                 className="vvp-cd__steady-button"
+                onClick={() => track("Steady", { amount: steadyPlan.amount })}
                 href={steadyPlanUrl(steadyPlan.planId)}
                 target="_blank"
                 rel="noopener noreferrer"
