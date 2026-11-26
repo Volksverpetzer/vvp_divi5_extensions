@@ -317,6 +317,10 @@ export const CampaignDonateApp = ({
     let buttons: ReturnType<
       NonNullable<typeof window.paypal>["Buttons"]
     > | null = null;
+    // Set when the crowdfunding app refuses an order. createOrder then
+    // throws and PayPal calls onError, which must not count that refusal as
+    // a "Checkout Error" too.
+    let refusal: string | null = null;
 
     loadPayPalSdk(paypalClientId)
       .then(() => {
@@ -350,9 +354,13 @@ export const CampaignDonateApp = ({
             );
             const json = await response.json();
             if (!response.ok || !json?.orderID) {
-              throw new Error(
-                json?.error ?? "Konnte PayPal-Zahlung nicht starten.",
-              );
+              refusal = json?.error ?? "Konnte PayPal-Zahlung nicht starten.";
+              track("Checkout Failed", {
+                amount: amountRef.current,
+                provider: "paypal",
+                reason: json?.error ?? "unknown",
+              });
+              throw new Error(refusal);
             }
             return json.orderID as string;
           },
@@ -377,10 +385,16 @@ export const CampaignDonateApp = ({
             }
             finishDonation(json.amount ?? amountRef.current, "paypal");
           },
-          onError: () => {
+          onError: (err) => {
+            if (refusal) {
+              setError(refusal);
+              refusal = null;
+              return;
+            }
             track("Checkout Error", {
               amount: amountRef.current,
               provider: "paypal",
+              message: err instanceof Error ? err.message : "unknown",
             });
             setError("PayPal-Zahlung fehlgeschlagen. Bitte erneut versuchen.");
           },
@@ -388,7 +402,13 @@ export const CampaignDonateApp = ({
 
         buttons.render(paypalContainerRef.current);
       })
-      .catch(() => {
+      .catch((err) => {
+        if (cancelled) return;
+        track("Checkout Error", {
+          amount: amountRef.current,
+          provider: "paypal",
+          message: err instanceof Error ? err.message : "paypal-sdk-load",
+        });
         setError("PayPal konnte nicht geladen werden.");
       });
 
