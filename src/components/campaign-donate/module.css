@@ -1,5 +1,6 @@
 /* Campaign Donate — Visual Builder specific styles */
-.et-fb .vvp-campaign-donate .vvp-cd__preset,
+.et-fb .vvp-campaign-donate .vvp-ui-pill-group__option,
+.et-fb .vvp-campaign-donate .vvp-cd__preset-input,
 .et-fb .vvp-campaign-donate .vvp-cd__submit {
   pointer-events: none;
 }

@@ -26,3 +26,9 @@
   line-height: 1.3;
   font-weight: 700;
 }
+
+/* Light pink track (design, 2026-11-26) instead of ui-web's grey/blue. */
+.vvp-campaign-progress .vvp-ui-progress__track {
+  background: var(--vvp-surface-accent);
+  border-color: var(--vvp-surface-accent);
+}
