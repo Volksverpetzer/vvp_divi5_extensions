@@ -56,7 +56,7 @@
             "render": true,
             "attrName": "headline.innerContent",
             "label": "Überschrift (optional)",
-            "description": "Wird über dem Fortschrittsbalken angezeigt. Platzhalter für die Zahlen des Balkens: {gesammelt} (bisher gesammelt), {ziel} (Spendenziel), {fehlt} (bis zum Ziel), {prozent} (Anteil am Ziel), z. B. „Schon {gesammelt} von {ziel} gesammelt!“. Die Zahlen aktualisieren sich mit dem Balken. Text in <small>…</small> wird kleiner, grau und nicht fett angezeigt, z. B. „Monatlich: {gesammelt} <small>von {ziel}</small>“; anderes HTML wird als Text angezeigt. Leer lassen, um keine Überschrift anzuzeigen.",
+            "description": "Wird über dem Fortschrittsbalken angezeigt. Platzhalter für die Zahlen des Balkens: {gesammelt} (bisher gesammelt), {ziel} (Spendenziel), {fehlt} (bis zum Ziel), {prozent} (Anteil am Ziel), z. B. „Schon {gesammelt} von {ziel} gesammelt!“. Die Zahlen aktualisieren sich mit dem Balken. Text in <small>…</small> wird kleiner, grau und nicht fett angezeigt, z. B. „Monatlich: {gesammelt} <small>von {ziel}</small>“; anderes HTML wird als Text angezeigt. Mit Überschrift wird die Zeile „7.340 € von 20.000 €“ über dem Balken ausgeblendet. Leer lassen, um keine Überschrift anzuzeigen (dann bleibt die Zeile).",
             "features": {
               "sticky": false,
               "dynamicContent": false

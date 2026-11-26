@@ -38,3 +38,8 @@
   background: var(--vvp-surface-accent);
   border-color: var(--vvp-surface-accent);
 }
+
+/* With a headline the amounts are in the headline; hide the bar's own line. */
+.vvp-campaign-progress .vvp-cp__bar--no-amounts .vvp-ui-progress__amounts {
+  display: none;
+}

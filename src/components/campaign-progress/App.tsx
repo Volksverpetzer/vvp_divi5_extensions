@@ -90,7 +90,14 @@ export const CampaignProgressApp = ({
           )}
         </h3>
       )}
-      <ProgressBar total={total} goal={goal} />
+      {/* With a headline, its placeholders show the amounts, so the bar's own
+          "7.340 € von 20.000 €" line is hidden (style.css). The track keeps
+          them for screen readers (aria-valuetext). */}
+      <ProgressBar
+        total={total}
+        goal={goal}
+        className={headlineText ? "vvp-cp__bar--no-amounts" : undefined}
+      />
     </>
   );
 };
