@@ -21,6 +21,7 @@ export type ShareLinkAppProps = {
 };
 
 const STATUS_RESET_MS = 2000;
+const COPIED_MESSAGE = "Link kopiert!";
 
 const noopSubscribe = () => () => {};
 
@@ -38,6 +39,8 @@ export const ShareLinkApp = ({
     () => false,
   );
   const [status, setStatus] = useState("");
+  // The button itself shows the success; the status line only shows errors.
+  const [copied, setCopied] = useState(false);
   const resetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(
@@ -49,10 +52,14 @@ export const ShareLinkApp = ({
 
   const svg = useMemo(() => qrSvg(url), [url]);
 
-  const showStatus = (message: string) => {
+  const showStatus = (message: string, success = false) => {
     setStatus(message);
+    setCopied(success);
     if (resetTimer.current) clearTimeout(resetTimer.current);
-    resetTimer.current = setTimeout(() => setStatus(""), STATUS_RESET_MS);
+    resetTimer.current = setTimeout(() => {
+      setStatus("");
+      setCopied(false);
+    }, STATUS_RESET_MS);
   };
 
   const handleShare = async () => {
@@ -71,7 +78,7 @@ export const ShareLinkApp = ({
       showStatus("Konnte Link nicht kopieren.");
       return;
     }
-    showStatus("Link kopiert!");
+    showStatus(COPIED_MESSAGE, true);
     if (track) trackEvent("Link Copied", { location: "share", url });
   };
 
@@ -106,13 +113,28 @@ export const ShareLinkApp = ({
           <Button
             type="button"
             variant="secondary"
-            className="vvp-share-link__btn vvp-share-link__btn--copy"
+            className={`vvp-share-link__btn vvp-share-link__btn--copy${
+              copied ? " is-copied" : ""
+            }`}
+            aria-label="Link kopieren"
             onClick={handleCopy}
           >
-            Link kopieren
+            {/* "Link" stays put; only the second word crossfades. */}
+            <span className="vvp-share-link__copy-label" aria-hidden="true">
+              Link{" "}
+              <span className="vvp-share-link__copy-swap">
+                <span className="vvp-share-link__copy-idle">kopieren</span>
+                <span className="vvp-share-link__copy-done">kopiert!</span>
+              </span>
+            </span>
           </Button>
         </div>
-        <p className="vvp-share-link__status" aria-live="polite">
+        <p
+          className={`vvp-share-link__status${
+            copied ? " vvp-share-link__status--sr" : ""
+          }`}
+          aria-live="polite"
+        >
           {status}
         </p>
       </div>
