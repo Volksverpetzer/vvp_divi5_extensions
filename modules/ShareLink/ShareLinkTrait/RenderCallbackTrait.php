@@ -39,7 +39,7 @@ trait RenderCallbackTrait
         $raw = trim((string) $raw);
 
         if ('' === $raw) {
-            return (string) get_permalink();
+            return is_singular() ? (string) get_permalink() : '';
         }
 
         if (0 === strpos($raw, '/') && 0 !== strpos($raw, '//')) {
@@ -47,7 +47,7 @@ trait RenderCallbackTrait
         }
 
         if (!preg_match('#^https?://#i', $raw)) {
-            return (string) get_permalink();
+            return is_singular() ? (string) get_permalink() : '';
         }
 
         return $raw;

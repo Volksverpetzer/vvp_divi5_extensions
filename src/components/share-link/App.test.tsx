@@ -66,6 +66,11 @@ afterEach(() => {
 });
 
 describe("ShareLinkApp", () => {
+  it("omits the QR block when the link is too long for a QR code", async () => {
+    await mount({ url: URL_FULL + "a".repeat(5000) });
+    expect(container.querySelector(".vvp-share-link__qr")).toBeNull();
+    expect(container.querySelector(".vvp-share-link__title")).not.toBeNull();
+  });
   it("renders title, text and url as plain text", async () => {
     await mount();
     const title = container.querySelector(".vvp-share-link__title");

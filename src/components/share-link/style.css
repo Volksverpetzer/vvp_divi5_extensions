@@ -73,11 +73,23 @@
 }
 
 /* Both buttons are secondary; the preferred one is emphasised via CSS:
-   copy on pointer devices, share on touch (where it also comes first). */
+   copy on pointer devices, share on touch (where it also comes first).
+   ui-web's `.vvp-ui-btn--secondary:hover:not(:disabled)` is (0,3,0), so the
+   emphasised button repeats :hover:not(:disabled) at (0,4,0). */
+.vvp-share-link .vvp-share-link__btn {
+  border: 1px solid var(--vvp-primary);
+}
+
 @media not all and (pointer: coarse) {
-  .vvp-share-link .vvp-share-link__btn--copy {
+  .vvp-share-link .vvp-share-link__btn--copy,
+  .vvp-share-link .vvp-share-link__btn--copy:hover:not(:disabled),
+  .vvp-share-link .vvp-share-link__btn--copy:focus-visible {
     background: var(--vvp-primary);
     color: var(--vvp-on-primary);
+  }
+
+  .vvp-share-link .vvp-share-link__btn--copy:hover:not(:disabled) {
+    background: var(--vvp-primary-muted);
   }
 }
 
@@ -88,8 +100,17 @@
 
   .vvp-share-link .vvp-share-link__btn--share {
     order: -1;
+  }
+
+  .vvp-share-link .vvp-share-link__btn--share,
+  .vvp-share-link .vvp-share-link__btn--share:hover:not(:disabled),
+  .vvp-share-link .vvp-share-link__btn--share:focus-visible {
     background: var(--vvp-primary);
     color: var(--vvp-on-primary);
+  }
+
+  .vvp-share-link .vvp-share-link__btn--share:hover:not(:disabled) {
+    background: var(--vvp-primary-muted);
   }
 }
 

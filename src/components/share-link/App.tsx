@@ -77,13 +77,15 @@ export const ShareLinkApp = ({
 
   return (
     <div className="vvp-share-link">
-      <div className="vvp-share-link__qr">
-        <div
-          className="vvp-share-link__qr-code"
-          dangerouslySetInnerHTML={{ __html: svg }}
-        />
-        <span className="vvp-share-link__qr-label">{qrLabel}</span>
-      </div>
+      {svg && (
+        <div className="vvp-share-link__qr">
+          <div
+            className="vvp-share-link__qr-code"
+            dangerouslySetInnerHTML={{ __html: svg }}
+          />
+          <span className="vvp-share-link__qr-label">{qrLabel}</span>
+        </div>
+      )}
       <div className="vvp-share-link__body">
         <h3 className="vvp-share-link__title">{title}</h3>
         {text && <p className="vvp-share-link__text">{text}</p>}

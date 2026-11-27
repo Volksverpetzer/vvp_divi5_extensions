@@ -35,7 +35,7 @@ export const ShareLinkEdit = (props: ShareLinkEditProps): ReactElement => {
       <ShareLinkApp
         title={title}
         text={text}
-        url={safeShareUrl(url, fallback)}
+        url={safeShareUrl(url, fallback, window.location.origin)}
         qrLabel={qrLabel}
         track={false}
       />
