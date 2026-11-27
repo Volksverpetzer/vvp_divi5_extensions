@@ -17,7 +17,7 @@
 - No third-party requests: QR generated locally (`uqr`), no external share widgets.
 - German UI copy, defaults exactly: Titel „Teile die Aktion!“, QR-Beschriftung „Scan mit dem Handy“, buttons „Teilen“ and „Link kopieren“, success „Link kopiert!“ (2 s), error „Konnte Link nicht kopieren.“
 - QR hidden on `(pointer: coarse)` via CSS only (no JS device detection, no layout shift).
-- Plausible events via `src/utils/plausible.ts` `trackEvent`: `Link Shared` `{ method: "native-share", url }`, `Link Copied` `{ location: "share-link", url }`. No events in the Visual Builder or Storybook.
+- Plausible events via `src/utils/plausible.ts` `trackEvent`: `Link Shared` `{ method: "native-share", url }`, `Link Copied` `{ location: "share", url }` (same as the crowdfunding app, decided 2026-11-27). No events in the Visual Builder or Storybook.
 - New dependency `uqr` (MIT, no deps); pnpm's 24h `minimumReleaseAge` applies (0.1.3 is old enough).
 - `pnpm check` (cspell + tsc), `pnpm lint`, `pnpm test run`, `pnpm build` must pass.
 
@@ -34,11 +34,13 @@
 ### Task 1: URL helpers and QR rendering
 
 **Files:**
+
 - Create: `src/components/share-link/share-url.ts`
 - Test: `src/components/share-link/share-url.test.ts`
 - Modify: `package.json`, `pnpm-lock.yaml` (add `uqr`)
 
 **Interfaces:**
+
 - Produces:
   - `safeShareUrl(raw: string, fallback: string): string`: trimmed `raw` if it matches `/^https?:\/\//i`, else `fallback`.
   - `displayUrl(url: string): string`: drops the scheme and one trailing `/`.
@@ -54,17 +56,25 @@ const FB = "https://volksverpetzer.de/weihnachten/";
 
 describe("safeShareUrl", () => {
   it("keeps http(s) URLs", () => {
-    expect(safeShareUrl(" https://volksverpetzer.de/x/ ", FB)).toBe("https://volksverpetzer.de/x/");
+    expect(safeShareUrl(" https://volksverpetzer.de/x/ ", FB)).toBe(
+      "https://volksverpetzer.de/x/",
+    );
     expect(safeShareUrl("HTTP://example.de", FB)).toBe("HTTP://example.de");
   });
-  it.each(["", "javascript:alert(1)", "www.example.de", "/weihnachten/", "data:text/html,x"])(
-    "falls back for %j", (raw) => expect(safeShareUrl(raw, FB)).toBe(FB),
-  );
+  it.each([
+    "",
+    "javascript:alert(1)",
+    "www.example.de",
+    "/weihnachten/",
+    "data:text/html,x",
+  ])("falls back for %j", (raw) => expect(safeShareUrl(raw, FB)).toBe(FB));
 });
 
 describe("displayUrl", () => {
   it("drops scheme and trailing slash", () => {
-    expect(displayUrl("https://volksverpetzer.de/weihnachten/")).toBe("volksverpetzer.de/weihnachten");
+    expect(displayUrl("https://volksverpetzer.de/weihnachten/")).toBe(
+      "volksverpetzer.de/weihnachten",
+    );
   });
 });
 
@@ -85,11 +95,13 @@ describe("qrSvg", () => {
 ### Task 2: `ShareLinkApp` component
 
 **Files:**
+
 - Create: `src/components/share-link/App.tsx`, `src/components/share-link/style.css`
 - Test: `src/components/share-link/App.test.tsx`
 - Create: `src/components/share-link/App.stories.tsx` (default, long URL, no text)
 
 **Interfaces:**
+
 - Consumes: `displayUrl`, `qrSvg` (Task 1); `trackEvent` from `src/utils/plausible.ts`.
 - Produces: `ShareLinkApp(props: { title: string; text: string; url: string; qrLabel: string; track?: boolean }): ReactElement`. `url` is already safe (callers run `safeShareUrl`). `track` defaults to `true`; edit/stories pass `false`.
 
@@ -114,6 +126,7 @@ Markup (class names fixed, BEM under `vvp-share-link`): root `.vvp-share-link`. 
 ### Task 3: Divi module wiring (VB + frontend + PHP)
 
 **Files** (copy the CTA-Box counterparts and adapt; names from `cta-box` → `share-link`, `CtaBox` → `ShareLink`, `ctaBox` → `shareLink`):
+
 - Create: `src/components/share-link/{module.json,types.ts,constants.ts,placeholder-content.ts,edit.tsx,frontend.tsx,index.ts,module-classnames.ts,module-script-data.tsx,styles.tsx,module.css}`
 - Create: `src/icons/share-link/` (icon like `src/icons/cta-box`, a share/QR glyph); register in `src/module-icons.ts`
 - Modify: `src/index.ts` (import + `addAction(... "vvp/shareLink" ...)`), `build.mjs` (`frontends` entry `share-link-frontend`)
@@ -121,6 +134,7 @@ Markup (class names fixed, BEM under `vvp-share-link`): root `.vvp-share-link`. 
 - Modify: `modules/Modules.php` (use + `add_dependency(new ShareLink())`), `vvp-divi5-extensions.php` (VB `register_package_build` `vvp-share-link-frontend-vb` and frontend `wp_enqueue_script('vvp-share-link-frontend', …)`, same pattern as `cta-box`)
 
 **Interfaces:**
+
 - Consumes: `ShareLinkApp` (Task 2), `safeShareUrl` (Task 1).
 - `module.json`: `name` `vvp/share-link`, `title` „Link teilen“, `titles` „Links teilen“, `moduleClassName`/`moduleOrderClassName` `share_link`. Fields (all `<name>.innerContent`, group `mainContent`): `title` (divi/text, „Titel“, default „Teile die Aktion!“), `text` (divi/textarea, „Text“), `url` (divi/text, „Link (optional)“, description „Leer lassen für die aktuelle Seite. Nur http(s)-Links oder Pfade wie /weihnachten/.“), `qrLabel` (divi/text, „QR-Beschriftung“, default „Scan mit dem Handy“).
 - PHP `render_callback`: read the four values like CtaBox (`$attrs[<name>]['innerContent']['desktop']['value']`). Resolve the link: empty, so `get_permalink()`; starts with `/` (not `//`), so `home_url($path)`; then if not `^https?://`i, `get_permalink()`. Mount `div.vvp-share-link__mount` with `data-title`, `data-text`, `data-qr-label` (`esc_attr`) and `data-url` (`esc_url`).
@@ -135,6 +149,7 @@ Markup (class names fixed, BEM under `vvp-share-link`): root `.vvp-share-link`. 
 ### Task 4: Changelog and PR
 
 **Files:**
+
 - Modify: `CHANGELOG.md` (under `[Unreleased]` → `### Added`)
 
 - [ ] **Step 1: Add an entry** describing the module in the changelog's style (German UI names, what it does on desktop vs phone, the Plausible events, that the QR is generated locally).

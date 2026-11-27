@@ -148,7 +148,7 @@ describe("ShareLinkApp", () => {
     expect(writeText).toHaveBeenCalledWith(URL_FULL);
     expect(status()).toBe("Link kopiert!");
     expect(plausible).toHaveBeenCalledWith("Link Copied", {
-      props: { location: "share-link", url: URL_FULL },
+      props: { location: "share", url: URL_FULL },
     });
     await act(async () => {
       vi.advanceTimersByTime(2000);

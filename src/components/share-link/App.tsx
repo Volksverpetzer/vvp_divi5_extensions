@@ -72,7 +72,7 @@ export const ShareLinkApp = ({
       return;
     }
     showStatus("Link kopiert!");
-    if (track) trackEvent("Link Copied", { location: "share-link", url });
+    if (track) trackEvent("Link Copied", { location: "share", url });
   };
 
   return (
