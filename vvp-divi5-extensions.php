@@ -235,6 +235,19 @@ function VVP_DIVI5_enqueue_vb_scripts() {
 
 		\ET\Builder\VisualBuilder\Assets\PackageBuildManager::register_package_build(
 			[
+				'name'    => 'vvp-share-link-frontend-vb',
+				'version' => VVP_DIVI5_VERSION,
+				'script'  => [
+					'src'                => VVP_DIVI5_URL . 'scripts/share-link-frontend.js',
+					'deps'               => [],
+					'enqueue_top_window' => false,
+					'enqueue_app_window' => true,
+				],
+			]
+		);
+
+		\ET\Builder\VisualBuilder\Assets\PackageBuildManager::register_package_build(
+			[
 				'name'    => 'vvp-audio-embed-frontend-vb',
 				'version' => VVP_DIVI5_VERSION,
 				'script'  => [
@@ -336,6 +349,17 @@ function VVP_DIVI5_enqueue_frontend_scripts() {
 		VVP_DIVI5_URL . 'scripts/cta-box-frontend.js',
 		array(),
 		$cb_frontend_ver,
+		true
+	);
+
+	$sl_frontend_path = VVP_DIVI5_PATH . 'scripts/share-link-frontend.js';
+	$sl_frontend_ver  = file_exists( $sl_frontend_path ) ? filemtime( $sl_frontend_path ) : VVP_DIVI5_VERSION;
+
+	wp_enqueue_script(
+		'vvp-share-link-frontend',
+		VVP_DIVI5_URL . 'scripts/share-link-frontend.js',
+		array(),
+		$sl_frontend_ver,
 		true
 	);
 
