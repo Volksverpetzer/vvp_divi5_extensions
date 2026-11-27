@@ -34,12 +34,31 @@ trait RenderCallbackTrait
      *
      * @return string Absolute http(s) URL (or empty if there is no current post).
      */
+    /**
+     * Permalink of the page being viewed, or '' off singular pages (the
+     * client then falls back to its own location). Uses the queried object
+     * rather than the global $post, which is the template's post when the
+     * module renders from a Divi Theme Builder template.
+     *
+     * @return string
+     */
+    private static function current_page_url()
+    {
+        if (!is_singular()) {
+            return '';
+        }
+
+        $id = get_queried_object_id();
+
+        return $id ? (string) get_permalink($id) : '';
+    }
+
     public static function resolve_share_url($raw)
     {
         $raw = trim((string) $raw);
 
         if ('' === $raw) {
-            return is_singular() ? (string) get_permalink() : '';
+            return self::current_page_url();
         }
 
         if (0 === strpos($raw, '/') && 0 !== strpos($raw, '//')) {
@@ -47,7 +66,7 @@ trait RenderCallbackTrait
         }
 
         if (!preg_match('#^https?://#i', $raw)) {
-            return is_singular() ? (string) get_permalink() : '';
+            return self::current_page_url();
         }
 
         return $raw;
