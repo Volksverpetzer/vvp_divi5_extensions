@@ -67,9 +67,13 @@
   gap: var(--vvp-spacing-sm, 8px);
 }
 
+/* The line height is set here, not left to the theme (Divi uses ~2.7 on
+   volksverpetzer.de): text in the line must not grow it past its reserved
+   min-height, or the box grows and the vertically centred QR code jumps. */
 .vvp-share-link__status {
   min-height: 1.5em;
   font-size: var(--vvp-font-size-sm, 14px);
+  line-height: 1.5;
 }
 
 /* Both buttons are secondary; the preferred one is emphasised via CSS:

@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Trending Beiträge and Trending Liste rank articles by unique visitors from Plausible instead of WordPress Popular Posts, over a rolling window ending now (the last 24 hours, 7 or 30 days). Needs `VVP_PLAUSIBLE_TOKEN` (a Plausible Stats API key) in `wp-config.php`; without it, or while Plausible is unavailable, both modules keep using WordPress Popular Posts.
 -
 
+### Fixed
+
+- Link teilen: the QR code no longer moves down by a few pixels when „Link kopiert!“ appears. The message line below the buttons took the theme's line height (38 px on volksverpetzer.de) instead of the 21 px reserved for it, so the box grew and the vertically centred QR code moved.
+
 ## [1.7.0] - 2026-11-25
 
 ### Added
