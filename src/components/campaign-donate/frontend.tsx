@@ -1,7 +1,8 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { CampaignDonateApp } from "./App";
-import { resolveMountSettings } from "./mount-config";
+import { resolveButtonLabel, resolveMountSettings } from "./mount-config";
+import { assignVariant } from "../../utils/experiment";
 import { parseSteadyPlans } from "./steady";
 
 const parsePresets = (input: string): number[] => {
@@ -46,6 +47,16 @@ const initAll = () => {
     const certificateUrl =
       mount.getAttribute("data-certificate-url") || undefined;
     const thankYouUrl = mount.getAttribute("data-thank-you-url") || undefined;
+    // Picked here in the browser, since the page HTML is cached.
+    const { buttonLabel, experiment } = resolveButtonLabel(
+      {
+        buttonLabel: mount.getAttribute("data-button-label") || "",
+        testName: mount.getAttribute("data-ab-test-name") || "",
+        buttonLabelB: mount.getAttribute("data-button-label-b") || "",
+        hasStripe: Boolean(settings.stripePublicKey),
+      },
+      (name) => assignVariant(name),
+    );
 
     createRoot(mount).render(
       <CampaignDonateApp
@@ -53,6 +64,8 @@ const initAll = () => {
         presets={presets}
         certificateUrl={certificateUrl}
         thankYouUrl={thankYouUrl}
+        buttonLabel={buttonLabel}
+        experiment={experiment}
       />,
     );
   });

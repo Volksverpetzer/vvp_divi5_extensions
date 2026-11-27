@@ -85,3 +85,16 @@ export const MonthlySteadyOnly: Story = {
     stripePublicKey: "",
   },
 };
+
+/**
+ * A/B test on the Stripe button's label, as seen in variant B. On the live
+ * page the variant is picked per page view in frontend.tsx; the Visual
+ * Builder preview always shows variant A, the regular label.
+ */
+export const ButtonLabelVariantB: Story = {
+  args: {
+    ...Playground.args,
+    buttonLabel: "Jetzt helfen",
+    experiment: { name: "button-xmas2026", variant: "B" },
+  },
+};

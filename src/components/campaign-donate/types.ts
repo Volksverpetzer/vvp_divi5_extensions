@@ -1,5 +1,6 @@
 import { type ModuleLibrary } from "@divi/types";
 import { type SteadyPlan } from "./steady";
+import { type Experiment } from "../../utils/experiment";
 
 export interface CampaignDonateAttrs {
   module: object;
@@ -12,6 +13,9 @@ export interface CampaignDonateAttrs {
   steadyPlans: object;
   certificateUrl: object;
   thankYouUrl: object;
+  buttonLabel: object;
+  abTestName: object;
+  buttonLabelB: object;
 }
 
 export type CampaignDonateEditProps =
@@ -38,6 +42,13 @@ export interface CampaignDonateAppProps {
    * thank-you notice in the form. Only http(s) or root-relative URLs.
    */
   thankYouUrl?: string;
+  /** Text of the Stripe button; defaults to „Mit Karte/SEPA spenden“. */
+  buttonLabel?: string;
+  /**
+   * The A/B test this page view takes part in, if any. Its name and variant
+   * are added to every Plausible event of the form.
+   */
+  experiment?: Experiment;
   /** Builder preview only — skips network calls, form is inert. */
   preview?: boolean;
 }

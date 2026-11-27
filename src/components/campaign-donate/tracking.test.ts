@@ -36,6 +36,25 @@ describe("trackDonateEvent", () => {
     });
   });
 
+  it("adds the A/B test's name and variant", () => {
+    const plausible = vi.fn();
+    window.plausible = plausible;
+    trackDonateEvent("Checkout Attempted", {
+      campaign: "xmas2026",
+      interval: "once",
+      experiment: "btn-xmas",
+      variant: "B",
+    });
+    expect(plausible).toHaveBeenCalledWith("Checkout Attempted", {
+      props: {
+        campaign: "xmas2026",
+        interval: "once",
+        experiment: "btn-xmas",
+        variant: "B",
+      },
+    });
+  });
+
   it("does nothing without the Plausible script", () => {
     expect(() =>
       trackDonateEvent("DonateConversion", {

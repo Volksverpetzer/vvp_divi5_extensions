@@ -24,6 +24,7 @@ import {
 import { parseCustomAmount } from "./amount";
 import { trackDonateEvent, type DonateEventProps } from "./tracking";
 import { type CampaignDonateAppProps } from "./types";
+import { DEFAULT_STRIPE_BUTTON_LABEL } from "./mount-config";
 
 // Inline (not delegated to an imported helper) so static analysis tracking
 // this value's flow into the href sink below can see the guard directly:
@@ -183,6 +184,8 @@ export const CampaignDonateApp = ({
   steadyPlans = [],
   certificateUrl,
   thankYouUrl,
+  buttonLabel = DEFAULT_STRIPE_BUTTON_LABEL,
+  experiment,
   preview = false,
 }: CampaignDonateAppProps): ReactElement => {
   const monthly = interval === "month";
@@ -235,7 +238,12 @@ export const CampaignDonateApp = ({
     if (preview) return;
     trackDonateEvent(
       event,
-      { campaign: campaignKey, interval: monthly ? "month" : "once" },
+      {
+        campaign: campaignKey,
+        interval: monthly ? "month" : "once",
+        experiment: experiment?.name,
+        variant: experiment?.variant,
+      },
       props,
     );
   };
@@ -688,7 +696,7 @@ export const CampaignDonateApp = ({
               disabled={loading || amount <= 0}
               onClick={handleStripeSubmit}
             >
-              {loading ? "Lädt…" : "Mit Karte/SEPA spenden"}
+              {loading ? "Lädt…" : buttonLabel}
             </Button>
           )}
 

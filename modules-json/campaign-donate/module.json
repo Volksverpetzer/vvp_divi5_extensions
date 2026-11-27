@@ -270,6 +270,78 @@
           }
         }
       }
+    },
+    "buttonLabel": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 50,
+            "render": true,
+            "attrName": "buttonLabel.innerContent",
+            "label": "Button-Text (optional)",
+            "description": "Text des Karte/SEPA-Buttons. Leer lassen für „Mit Karte/SEPA spenden“. Beim A/B-Test ist das Variante A.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "abTestName": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 55,
+            "render": true,
+            "attrName": "abTestName.innerContent",
+            "label": "A/B-Test: Name (optional)",
+            "description": "Kennung des Tests, z. B. button-xmas2026. Zusammen mit „Variante B“ sieht jeder Seitenaufruf zufällig (50/50) Variante A oder B; alle Plausible-Events des Formulars bekommen dann die Props experiment und variant. Für jeden neuen Test einen neuen Namen wählen. Leer lassen für keinen Test.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "buttonLabelB": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 56,
+            "render": true,
+            "attrName": "buttonLabelB.innerContent",
+            "label": "A/B-Test: Button-Text Variante B",
+            "description": "Alternativer Text des Karte/SEPA-Buttons für Variante B. Der Test läuft nur, wenn auch ein Name gesetzt ist. Die PayPal-Buttons können nicht getestet werden.",
+            "features": {
+              "sticky": false,
+              "dynamicContent": false
+            },
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
     }
   },
   "settings": {

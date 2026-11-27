@@ -498,6 +498,24 @@ TrendingList reads each article's author(s) from **PublishPress Authors** (if av
 
 ---
 
+### Spenden-Formular: A/B-Test des Button-Texts
+
+The Stripe button's label („Mit Karte/SEPA spenden“) can be changed with „Button-Text (optional)“ and A/B-tested against a second label:
+
+1. Set „A/B-Test: Name“ to a new, unique name per test (e.g. `button-xmas2026`); reusing a name mixes the results of two tests.
+2. Set „A/B-Test: Button-Text Variante B“. Variant A is the regular label. The test only runs with both fields set and a Stripe button on the form; the PayPal buttons are drawn by PayPal's SDK and can't be tested.
+3. In Plausible (site settings → Custom properties), add the properties `experiment` and `variant` once, so they show in the dashboard.
+
+Each page view is assigned A or B at random (50/50) **in the browser**: the page HTML is cached, so a variant picked in PHP would be the same for everyone. Nothing is stored on the device (no cookie, no localStorage), so the test needs no consent; the unit of the test is the page view, and a returning visitor may see the other variant next time. Two forms with the same test name on one page always show the same variant. The Visual Builder preview always shows variant A.
+
+Every Plausible event of the form then carries `experiment` and `variant`. To read a test, filter by `experiment = <name>` and break the goals down by `variant`:
+
+- **Main metric:** `Checkout Attempted` ÷ `Checkout Button Viewed` per variant (click-through on the Stripe button). Count Stripe only: `Checkout Attempted` with `provider = paypal` is a PayPal click, which isn't affected by the label.
+- **Secondary:** `DonateConversion` per `Checkout Button Viewed`, and the sum of `amount`. Donations are much rarer than clicks, so these need far more traffic before a difference means anything.
+- **Sample size:** at around 5 % click-through, telling 5 % from 6 % apart takes roughly 7,500 `Checkout Button Viewed` per variant. Decide on the run time beforehand and don't stop the test as soon as one variant looks ahead.
+
+When the test is over, put the winning label into „Button-Text (optional)“ and clear both A/B-Test fields.
+
 ## API Contract
 
 ### Search endpoint (POST)

@@ -1,5 +1,7 @@
 import {
+  DEFAULT_STRIPE_BUTTON_LABEL,
   normalizeApiBaseUrl,
+  resolveButtonLabel,
   resolveMountSettings,
   type MountSettings,
 } from "./mount-config";
@@ -93,5 +95,73 @@ describe("normalizeApiBaseUrl", () => {
       apiBaseUrl: `${root}/api/campaign-summary`,
     });
     expect(resolved?.apiBaseUrl).toBe(root);
+  });
+});
+
+describe("resolveButtonLabel", () => {
+  const settings = {
+    buttonLabel: "",
+    testName: "",
+    buttonLabelB: "",
+    hasStripe: true,
+  };
+  const pickB = vi.fn(() => "B" as const);
+  const pickA = () => "A" as const;
+
+  it("uses the default label without a test", () => {
+    expect(resolveButtonLabel(settings, pickB)).toEqual({
+      buttonLabel: DEFAULT_STRIPE_BUTTON_LABEL,
+    });
+    expect(pickB).not.toHaveBeenCalled();
+  });
+
+  it("uses the configured label", () => {
+    expect(
+      resolveButtonLabel({ ...settings, buttonLabel: " Jetzt spenden " }, pickB)
+        .buttonLabel,
+    ).toBe("Jetzt spenden");
+  });
+
+  it.each([
+    ["no name", { buttonLabelB: "Jetzt helfen" }],
+    ["no variant B label", { testName: "btn-xmas" }],
+    [
+      "no Stripe button",
+      { testName: "btn-xmas", buttonLabelB: "Jetzt helfen", hasStripe: false },
+    ],
+  ])("runs no test with %s", (_, overrides) => {
+    expect(resolveButtonLabel({ ...settings, ...overrides }, pickB)).toEqual({
+      buttonLabel: DEFAULT_STRIPE_BUTTON_LABEL,
+    });
+  });
+
+  it("shows variant B's label in variant B", () => {
+    expect(
+      resolveButtonLabel(
+        { ...settings, testName: " btn-xmas ", buttonLabelB: "Jetzt helfen" },
+        pickB,
+      ),
+    ).toEqual({
+      buttonLabel: "Jetzt helfen",
+      experiment: { name: "btn-xmas", variant: "B" },
+    });
+    expect(pickB).toHaveBeenCalledWith("btn-xmas");
+  });
+
+  it("shows the regular label in variant A", () => {
+    expect(
+      resolveButtonLabel(
+        {
+          ...settings,
+          buttonLabel: "Jetzt spenden",
+          testName: "btn-xmas",
+          buttonLabelB: "Jetzt helfen",
+        },
+        pickA,
+      ),
+    ).toEqual({
+      buttonLabel: "Jetzt spenden",
+      experiment: { name: "btn-xmas", variant: "A" },
+    });
   });
 });
