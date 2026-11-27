@@ -12,6 +12,7 @@ import { relatedItems } from "./components/related-items";
 import { campaignProgress } from "./components/campaign-progress";
 import { campaignDonate } from "./components/campaign-donate";
 import { ctaBox } from "./components/cta-box";
+import { shareLink } from "./components/share-link";
 import { audioEmbed } from "./components/audio-embed";
 import { articleCard } from "./components/article-card";
 
@@ -99,6 +100,15 @@ addAction(
   "vvp/ctaBox",
   () => {
     registerModule(ctaBox.metadata, omit(ctaBox, "metadata"));
+  },
+);
+
+// Register Share Link module with DIVI.
+addAction(
+  "divi.moduleLibrary.registerModuleLibraryStore.after",
+  "vvp/shareLink",
+  () => {
+    registerModule(shareLink.metadata, omit(shareLink, "metadata"));
   },
 );
 

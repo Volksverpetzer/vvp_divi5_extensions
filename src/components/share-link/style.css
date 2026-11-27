@@ -1,0 +1,122 @@
+/* Share link — frontend styles */
+@import "../../styles/vvp-tokens.css";
+
+.vvp-share-link {
+  display: flex;
+  align-items: center;
+  gap: var(--vvp-spacing-xl, 20px);
+  padding: var(--vvp-spacing-lg, 16px) var(--vvp-spacing-xl, 20px);
+  border-radius: var(--vvp-radius-md, 12px);
+  background: var(--vvp-surface, #f4f6fb);
+  color: var(--vvp-text, inherit);
+  font-family: var(--vvp-font-family, inherit);
+}
+
+.vvp-share-link__qr {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--vvp-spacing-xs, 4px);
+}
+
+.vvp-share-link__qr-code {
+  width: 120px;
+  height: 120px;
+  background: #fff;
+  border-radius: var(--vvp-radius-sm, 8px);
+  overflow: hidden;
+}
+
+.vvp-share-link__qr-code svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.vvp-share-link__qr-label {
+  font-size: var(--vvp-font-size-xs, 12px);
+  color: var(--vvp-text-muted, inherit);
+}
+
+.vvp-share-link__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--vvp-spacing-sm, 8px);
+}
+
+.vvp-share-link__title,
+.vvp-share-link__text,
+.vvp-share-link__status {
+  margin: 0;
+}
+
+.vvp-share-link__url {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--vvp-link-text, inherit);
+}
+
+.vvp-share-link__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vvp-spacing-sm, 8px);
+}
+
+.vvp-share-link__status {
+  min-height: 1.5em;
+  font-size: var(--vvp-font-size-sm, 14px);
+}
+
+/* Both buttons are secondary; the preferred one is emphasised via CSS:
+   copy on pointer devices, share on touch (where it also comes first).
+   ui-web's `.vvp-ui-btn--secondary:hover:not(:disabled)` is (0,3,0), so the
+   emphasised button repeats :hover:not(:disabled) at (0,4,0). */
+.vvp-share-link .vvp-share-link__btn {
+  border: 1px solid var(--vvp-primary);
+}
+
+@media not all and (pointer: coarse) {
+  .vvp-share-link .vvp-share-link__btn--copy,
+  .vvp-share-link .vvp-share-link__btn--copy:hover:not(:disabled),
+  .vvp-share-link .vvp-share-link__btn--copy:focus-visible {
+    background: var(--vvp-primary);
+    color: var(--vvp-on-primary);
+  }
+
+  .vvp-share-link .vvp-share-link__btn--copy:hover:not(:disabled) {
+    background: var(--vvp-primary-muted);
+  }
+}
+
+@media (pointer: coarse) {
+  .vvp-share-link__qr {
+    display: none;
+  }
+
+  .vvp-share-link .vvp-share-link__btn--share {
+    order: -1;
+  }
+
+  .vvp-share-link .vvp-share-link__btn--share,
+  .vvp-share-link .vvp-share-link__btn--share:hover:not(:disabled),
+  .vvp-share-link .vvp-share-link__btn--share:focus-visible {
+    background: var(--vvp-primary);
+    color: var(--vvp-on-primary);
+  }
+
+  .vvp-share-link .vvp-share-link__btn--share:hover:not(:disabled) {
+    background: var(--vvp-primary-muted);
+  }
+}
+
+@media (max-width: 480px) {
+  .vvp-share-link {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

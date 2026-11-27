@@ -7,6 +7,7 @@ import * as relatedItemsIcon from "./icons/related-items";
 import * as campaignProgressIcon from "./icons/campaign-progress";
 import * as campaignDonateIcon from "./icons/campaign-donate";
 import * as ctaBoxIcon from "./icons/cta-box";
+import * as shareLinkIcon from "./icons/share-link";
 import * as audioEmbedIcon from "./icons/audio-embed";
 import * as articleCardIcon from "./icons/article-card";
 
@@ -22,6 +23,7 @@ addFilter("divi.iconLibrary.icon.map", "vvp/divi5", (icons) => {
     [campaignProgressIcon.name]: campaignProgressIcon,
     [campaignDonateIcon.name]: campaignDonateIcon,
     [ctaBoxIcon.name]: ctaBoxIcon,
+    [shareLinkIcon.name]: shareLinkIcon,
     [audioEmbedIcon.name]: audioEmbedIcon,
     [articleCardIcon.name]: articleCardIcon,
   };

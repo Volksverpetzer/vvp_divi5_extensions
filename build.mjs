@@ -104,6 +104,10 @@ const frontends = [
     entry: "./src/components/cta-box/frontend.tsx",
   },
   {
+    name: "share-link-frontend",
+    entry: "./src/components/share-link/frontend.tsx",
+  },
+  {
     name: "audio-embed-frontend",
     entry: "./src/components/audio-embed/frontend.tsx",
   },

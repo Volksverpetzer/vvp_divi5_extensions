@@ -21,6 +21,7 @@ use VVP\Divi5\RelatedItems\RelatedItems;
 use VVP\Divi5\CampaignProgress\CampaignProgress;
 use VVP\Divi5\CampaignDonate\CampaignDonate;
 use VVP\Divi5\CtaBox\CtaBox;
+use VVP\Divi5\ShareLink\ShareLink;
 use VVP\Divi5\AudioEmbed\AudioEmbed;
 use VVP\Divi5\ArticleCard\ArticleCard;
 
@@ -36,6 +37,7 @@ add_action(
         $dependency_tree->add_dependency(new CampaignProgress());
         $dependency_tree->add_dependency(new CampaignDonate());
         $dependency_tree->add_dependency(new CtaBox());
+        $dependency_tree->add_dependency(new ShareLink());
         $dependency_tree->add_dependency(new AudioEmbed());
         $dependency_tree->add_dependency(new ArticleCard());
     }
