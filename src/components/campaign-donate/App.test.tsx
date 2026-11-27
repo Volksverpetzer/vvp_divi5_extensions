@@ -1,5 +1,5 @@
 import * as React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { CampaignDonateApp } from "./App";
 
 // No network in tests: the form loads Stripe.js on mount.
@@ -48,5 +48,34 @@ describe("CampaignDonateApp A/B test", () => {
         amount: "100",
       }),
     });
+  });
+
+  it("carries the variant through the Stripe return URL", async () => {
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(
+        new Response(JSON.stringify({ error: "test" }), { status: 400 }),
+      );
+    try {
+      render(
+        <CampaignDonateApp
+          {...props}
+          buttonLabel="Jetzt helfen"
+          experiment={{ name: "button-xmas2026", variant: "B" }}
+        />,
+      );
+      fireEvent.click(screen.getByRole("button", { name: "Jetzt helfen" }));
+      await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+      const [, init] = fetchMock.mock.calls[0] as unknown as [
+        string,
+        RequestInit,
+      ];
+      const { returnUrl } = JSON.parse(init.body as string);
+      expect(returnUrl).toContain(
+        "vvp_cd_ab=button-xmas2026%3AB&vvp_cd_session_id={CHECKOUT_SESSION_ID}",
+      );
+    } finally {
+      fetchMock.mockRestore();
+    }
   });
 });

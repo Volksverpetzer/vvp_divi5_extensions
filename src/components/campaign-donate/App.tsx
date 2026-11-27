@@ -24,7 +24,11 @@ import {
 import { parseCustomAmount } from "./amount";
 import { trackDonateEvent, type DonateEventProps } from "./tracking";
 import { type CampaignDonateAppProps } from "./types";
-import { DEFAULT_STRIPE_BUTTON_LABEL } from "./mount-config";
+import {
+  DEFAULT_STRIPE_BUTTON_LABEL,
+  EXPERIMENT_RETURN_PARAM,
+} from "./mount-config";
+import { experimentToParam } from "../../utils/experiment";
 
 // Inline (not delegated to an imported helper) so static analysis tracking
 // this value's flow into the href sink below can see the guard directly:
@@ -299,6 +303,7 @@ export const CampaignDonateApp = ({
     if (!sessionId) return;
 
     params.delete("vvp_cd_session_id");
+    params.delete(EXPERIMENT_RETURN_PARAM);
     const cleanedSearch = params.toString();
     window.history.replaceState(
       null,
@@ -553,7 +558,12 @@ export const CampaignDonateApp = ({
       // before redirecting the browser back here.
       const currentUrl = window.location.href.split("#")[0];
       const separator = currentUrl.includes("?") ? "&" : "?";
-      const returnUrl = `${currentUrl}${separator}vvp_cd_session_id={CHECKOUT_SESSION_ID}`;
+      // During an A/B test, the variant goes along, so the events after the
+      // return count for the variant this checkout started under.
+      const experimentParam = experiment
+        ? `${EXPERIMENT_RETURN_PARAM}=${encodeURIComponent(experimentToParam(experiment))}&`
+        : "";
+      const returnUrl = `${currentUrl}${separator}${experimentParam}vvp_cd_session_id={CHECKOUT_SESSION_ID}`;
 
       const response = await fetch(
         `${apiBaseUrl}/api/create-checkout-session`,

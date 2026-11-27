@@ -54,6 +54,12 @@ export const resolveMountSettings = (
   return hasPaymentOption ? resolved : null;
 };
 
+/**
+ * Return-URL parameter carrying the A/B variant a Stripe checkout started
+ * under, so the page view after a redirect-based payment keeps it.
+ */
+export const EXPERIMENT_RETURN_PARAM = "vvp_cd_ab";
+
 export const DEFAULT_STRIPE_BUTTON_LABEL = "Mit Karte/SEPA spenden";
 
 export type ButtonLabelSettings = {
