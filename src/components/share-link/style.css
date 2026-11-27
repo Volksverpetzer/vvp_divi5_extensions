@@ -120,3 +120,57 @@
     align-items: stretch;
   }
 }
+
+/* Copied state: the button background and border fade away and the second
+   word crossfades "kopieren" -> "kopiert!" while "Link" stays in place;
+   after the reset the button fades back the same way. Placed last and at
+   (0,5,0) on hover so it beats the emphasis rules above. */
+.vvp-share-link .vvp-share-link__btn--copy {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.vvp-share-link .vvp-share-link__btn--copy.is-copied,
+.vvp-share-link .vvp-share-link__btn--copy.is-copied:hover:not(:disabled),
+.vvp-share-link .vvp-share-link__btn--copy.is-copied:focus-visible {
+  background: transparent;
+  border-color: transparent;
+  color: var(--vvp-text, inherit);
+  cursor: default;
+}
+
+.vvp-share-link__copy-swap {
+  display: inline-grid;
+}
+
+.vvp-share-link__copy-idle,
+.vvp-share-link__copy-done {
+  grid-area: 1 / 1;
+  justify-self: start;
+  transition: opacity 0.3s ease;
+}
+
+.vvp-share-link__copy-done,
+.vvp-share-link__btn--copy.is-copied .vvp-share-link__copy-idle {
+  opacity: 0;
+}
+
+.vvp-share-link__btn--copy.is-copied .vvp-share-link__copy-done {
+  opacity: 1;
+}
+
+/* Success is shown on the button; the line keeps its space (no layout
+   jump) and stays readable for screen readers. */
+.vvp-share-link__status--sr {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vvp-share-link .vvp-share-link__btn--copy,
+  .vvp-share-link__copy-idle,
+  .vvp-share-link__copy-done {
+    transition: none;
+  }
+}

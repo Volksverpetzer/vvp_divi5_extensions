@@ -35,7 +35,7 @@ const mount = async (
 
 const button = (label: string) =>
   Array.from(container.querySelectorAll("button")).find(
-    (b) => b.textContent === label,
+    (b) => (b.getAttribute("aria-label") ?? b.textContent) === label,
   );
 
 const status = () =>
@@ -150,10 +150,21 @@ describe("ShareLinkApp", () => {
     expect(plausible).toHaveBeenCalledWith("Link Copied", {
       props: { location: "share", url: URL_FULL },
     });
+    const copyBtn = button("Link kopieren")!;
+    const statusLine = container.querySelector(".vvp-share-link__status")!;
+    expect(copyBtn.classList.contains("is-copied")).toBe(true);
+    expect(copyBtn.getAttribute("aria-label")).toBe("Link kopieren");
+    expect(statusLine.classList.contains("vvp-share-link__status--sr")).toBe(
+      true,
+    );
     await act(async () => {
       vi.advanceTimersByTime(2000);
     });
     expect(status()).toBe("");
+    expect(copyBtn.classList.contains("is-copied")).toBe(false);
+    expect(statusLine.classList.contains("vvp-share-link__status--sr")).toBe(
+      false,
+    );
   });
 
   it("copy failure shows an error", async () => {
@@ -163,6 +174,14 @@ describe("ShareLinkApp", () => {
     });
     await flush();
     expect(status()).toBe("Konnte Link nicht kopieren.");
+    expect(button("Link kopieren")!.classList.contains("is-copied")).toBe(
+      false,
+    );
+    expect(
+      container
+        .querySelector(".vvp-share-link__status")!
+        .classList.contains("vvp-share-link__status--sr"),
+    ).toBe(false);
     expect(plausible).not.toHaveBeenCalled();
   });
 
