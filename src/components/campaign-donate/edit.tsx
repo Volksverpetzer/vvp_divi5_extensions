@@ -42,6 +42,10 @@ export const CampaignDonateEdit = (
     (attrs as any).certificateUrl?.innerContent?.desktop?.value?.trim() ?? "";
   const thankYouUrl =
     (attrs as any).thankYouUrl?.innerContent?.desktop?.value?.trim() ?? "";
+  // The preview always shows variant A, the regular label.
+  const buttonLabel =
+    (attrs as any).buttonLabel?.innerContent?.desktop?.value?.trim() ||
+    undefined;
   const steadyPlans = parseSteadyPlans(
     (attrs as any).steadyPlans?.innerContent?.desktop?.value ?? "",
   );
@@ -76,6 +80,7 @@ export const CampaignDonateEdit = (
           steadyPlans={steadyPlans}
           certificateUrl={certificateUrl}
           thankYouUrl={thankYouUrl}
+          buttonLabel={buttonLabel}
           preview
         />
       </div>

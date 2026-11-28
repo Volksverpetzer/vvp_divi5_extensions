@@ -51,6 +51,11 @@ trait RenderCallbackTrait
         $certificate_url   = trim($attrs['certificateUrl']['innerContent']['desktop']['value'] ?? '');
         $steady_plans      = trim($attrs['steadyPlans']['innerContent']['desktop']['value'] ?? '');
         $thank_you_url     = trim($attrs['thankYouUrl']['innerContent']['desktop']['value'] ?? '');
+        // The A/B variant is picked in the browser (frontend.tsx), since
+        // this HTML is page-cached; PHP only passes both labels on.
+        $button_label      = trim($attrs['buttonLabel']['innerContent']['desktop']['value'] ?? '');
+        $ab_test_name      = trim($attrs['abTestName']['innerContent']['desktop']['value'] ?? '');
+        $button_label_b    = trim($attrs['buttonLabelB']['innerContent']['desktop']['value'] ?? '');
 
         $parent       = BlockParserStore::get_parent($block->parsed_block['id'], $block->parsed_block['storeInstance']);
         $parent_attrs = $parent->attrs ?? [];
@@ -89,6 +94,9 @@ trait RenderCallbackTrait
                         'data-certificate-url'  => esc_attr($certificate_url),
                         'data-steady-plans'     => esc_attr($steady_plans),
                         'data-thank-you-url'    => esc_attr($thank_you_url),
+                        'data-button-label'     => esc_attr($button_label),
+                        'data-ab-test-name'     => esc_attr($ab_test_name),
+                        'data-button-label-b'   => esc_attr($button_label_b),
                     ],
                     'childrenSanitizer' => 'esc_html',
                     'children'          => '',

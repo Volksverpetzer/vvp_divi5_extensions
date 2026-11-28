@@ -24,11 +24,17 @@ export const toPlausibleProps = (
  * Sends a Spenden-Formular event to Plausible (volksverpetzer.de's script).
  * Event names match the crowdfunding app's (crowdfunding.volksverpetzer.de),
  * so both can be compared with the same goals. Every event carries the
- * campaign key and the interval of the form.
+ * campaign key and the interval of the form, and during an A/B test also the
+ * test's name (`experiment`) and the variant shown (`variant`, A or B).
  */
 export const trackDonateEvent = (
   event: string,
-  base: { campaign: string; interval: "once" | "month" },
+  base: {
+    campaign: string;
+    interval: "once" | "month";
+    experiment?: string;
+    variant?: string;
+  },
   props: DonateEventProps = {},
 ): void => {
   trackEvent(event, toPlausibleProps({ ...base, ...props }));

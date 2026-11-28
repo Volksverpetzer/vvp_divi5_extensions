@@ -9,4 +9,7 @@ export const placeholderContent = {
   steadyPlans: { innerContent: { desktop: { value: "" } } },
   certificateUrl: { innerContent: { desktop: { value: "" } } },
   thankYouUrl: { innerContent: { desktop: { value: "" } } },
+  buttonLabel: { innerContent: { desktop: { value: "" } } },
+  abTestName: { innerContent: { desktop: { value: "" } } },
+  buttonLabelB: { innerContent: { desktop: { value: "" } } },
 };
