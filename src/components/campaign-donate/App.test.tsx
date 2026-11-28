@@ -78,4 +78,55 @@ describe("CampaignDonateApp A/B test", () => {
       fetchMock.mockRestore();
     }
   });
+
+  describe("after a Stripe return", () => {
+    const failedReturn = async (search: string) => {
+      const plausible = vi.fn();
+      window.plausible = plausible;
+      const fetchMock = vi
+        .spyOn(globalThis, "fetch")
+        .mockResolvedValue(
+          new Response(JSON.stringify({ recorded: false, error: "nope" })),
+        );
+      window.history.replaceState(null, "", `/weihnachten/${search}`);
+      try {
+        render(
+          <CampaignDonateApp
+            {...props}
+            buttonLabel="Jetzt helfen"
+            experiment={{ name: "header-test", variant: "A" }}
+          />,
+        );
+        await waitFor(() =>
+          expect(plausible).toHaveBeenCalledWith(
+            "Checkout Failed",
+            expect.anything(),
+          ),
+        );
+        return plausible.mock.calls.find(
+          ([event]) => event === "Checkout Failed",
+        )?.[1]?.props;
+      } finally {
+        fetchMock.mockRestore();
+        window.history.replaceState(null, "", "/");
+      }
+    };
+
+    it("counts for the test carried in the return URL, not this form's", async () => {
+      const eventProps = await failedReturn(
+        "?vvp_cd_ab=footer-test%3AB&vvp_cd_session_id=cs_1",
+      );
+      expect(eventProps).toMatchObject({
+        experiment: "footer-test",
+        variant: "B",
+      });
+      expect(window.location.search).toBe("");
+    });
+
+    it("counts for no test when the return URL carries none", async () => {
+      const eventProps = await failedReturn("?vvp_cd_session_id=cs_1");
+      expect(eventProps).not.toHaveProperty("experiment");
+      expect(eventProps).not.toHaveProperty("variant");
+    });
+  });
 });

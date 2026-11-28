@@ -28,7 +28,11 @@ import {
   DEFAULT_STRIPE_BUTTON_LABEL,
   EXPERIMENT_RETURN_PARAM,
 } from "./mount-config";
-import { experimentToParam } from "../../utils/experiment";
+import {
+  experimentFromParam,
+  experimentToParam,
+  type Experiment,
+} from "../../utils/experiment";
 
 // Inline (not delegated to an imported helper) so static analysis tracking
 // this value's flow into the href sink below can see the guard directly:
@@ -238,15 +242,21 @@ export const CampaignDonateApp = ({
   // Plausible events, named like the crowdfunding app's so /weihnachten and
   // crowdfunding.volksverpetzer.de can be compared. Never in the Visual
   // Builder or Storybook (preview).
-  const track = (event: string, props?: DonateEventProps) => {
+  // `test` is the A/B test the event counts for: this form's own, except
+  // after a Stripe return (see the return effect below).
+  const track = (
+    event: string,
+    props?: DonateEventProps,
+    test: Experiment | null = experiment ?? null,
+  ) => {
     if (preview) return;
     trackDonateEvent(
       event,
       {
         campaign: campaignKey,
         interval: monthly ? "month" : "once",
-        experiment: experiment?.name,
-        variant: experiment?.variant,
+        experiment: test?.name,
+        variant: test?.variant,
       },
       props,
     );
@@ -281,11 +291,12 @@ export const CampaignDonateApp = ({
   const finishDonation = (
     finalAmount: number,
     provider: "stripe" | "paypal",
+    test: Experiment | null = experiment ?? null,
   ) => {
     // "DonateConversion", not the crowdfunding site's "Donation Success":
     // the app sends it to the same Plausible site (volksverpetzer.de), and
     // it keeps the goal's history.
-    track("DonateConversion", { amount: finalAmount, provider });
+    track("DonateConversion", { amount: finalAmount, provider }, test);
     setCompletedAmount(finalAmount);
     setDonationComplete(true);
     window.dispatchEvent(new CustomEvent(DONATION_COMPLETE_EVENT));
@@ -302,6 +313,14 @@ export const CampaignDonateApp = ({
     const sessionId = params.get("vvp_cd_session_id");
     if (!sessionId) return;
 
+    // The first form on the page to mount handles the return, which may not
+    // be the form the checkout started in. So its events count for the A/B
+    // test carried in the return URL (none if the URL carries none), not for
+    // this form's own test.
+    // null, not undefined: an undefined argument would fall back to the
+    // form's own test.
+    const returnTest =
+      experimentFromParam(params.get(EXPERIMENT_RETURN_PARAM)) ?? null;
     params.delete("vvp_cd_session_id");
     params.delete(EXPERIMENT_RETURN_PARAM);
     const cleanedSearch = params.toString();
@@ -320,22 +339,26 @@ export const CampaignDonateApp = ({
       .then((response) => response.json())
       .then((json) => {
         if (json?.recorded) {
-          finishDonation(json.amount ?? 0, "stripe");
+          finishDonation(json.amount ?? 0, "stripe", returnTest);
         } else {
-          track("Checkout Failed", {
-            amount: checkoutAmount,
-            provider: "stripe",
-            reason: json?.error ?? "unconfirmed",
-          });
+          track(
+            "Checkout Failed",
+            {
+              amount: checkoutAmount,
+              provider: "stripe",
+              reason: json?.error ?? "unconfirmed",
+            },
+            returnTest,
+          );
           setError(json?.error ?? "Zahlung konnte nicht bestätigt werden.");
         }
       })
       .catch(() => {
-        track("Checkout Error", {
-          amount: checkoutAmount,
-          provider: "stripe",
-          message: "finalize",
-        });
+        track(
+          "Checkout Error",
+          { amount: checkoutAmount, provider: "stripe", message: "finalize" },
+          returnTest,
+        );
         setError("Zahlung konnte nicht bestätigt werden.");
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps

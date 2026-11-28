@@ -53,6 +53,21 @@ export const experimentToParam = (experiment: Experiment): string =>
   `${experiment.name}:${experiment.variant}`;
 
 /**
+ * The experiment in a parameter value from `experimentToParam`, or undefined
+ * when the value is missing or malformed.
+ */
+export const experimentFromParam = (
+  value: string | null,
+): Experiment | undefined => {
+  if (!value) return undefined;
+  const separator = value.lastIndexOf(":");
+  const name = value.slice(0, separator);
+  const variant = value.slice(separator + 1);
+  if (separator <= 0 || (variant !== "A" && variant !== "B")) return undefined;
+  return { name, variant };
+};
+
+/**
  * The variant of test `name` in a parameter value from `experimentToParam`,
  * or undefined when the value is missing, malformed or for another test.
  */
@@ -60,9 +75,6 @@ export const variantFromParam = (
   value: string | null,
   name: string,
 ): Variant | undefined => {
-  if (!value) return undefined;
-  const separator = value.lastIndexOf(":");
-  if (separator < 0 || value.slice(0, separator) !== name) return undefined;
-  const variant = value.slice(separator + 1);
-  return variant === "A" || variant === "B" ? variant : undefined;
+  const experiment = experimentFromParam(value);
+  return experiment?.name === name ? experiment.variant : undefined;
 };

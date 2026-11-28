@@ -1,5 +1,6 @@
 import {
   assignVariant,
+  experimentFromParam,
   experimentToParam,
   variantFromParam,
   type Variant,
@@ -56,7 +57,21 @@ describe("carried variants", () => {
     ["btn", "btn"],
     ["other:A", "btn"],
     ["btn:C", "btn"],
+    [":A", ""],
   ])("ignores %j for test %s", (value, name) => {
     expect(variantFromParam(value, name)).toBeUndefined();
+  });
+});
+
+describe("experimentFromParam", () => {
+  it("reads name and variant", () => {
+    expect(experimentFromParam("button:xmas:A")).toEqual({
+      name: "button:xmas",
+      variant: "A",
+    });
+  });
+
+  it.each([null, "", "btn", ":B", "btn:C"])("ignores %j", (value) => {
+    expect(experimentFromParam(value)).toBeUndefined();
   });
 });
